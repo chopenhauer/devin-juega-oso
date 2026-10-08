@@ -53,6 +53,14 @@ const { timeFor } = Engine;
 
   const avatarGrids = [...document.querySelectorAll('.avatars')];
   const avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
+  const press = (el, on) => {
+    el.classList.toggle('selected', on);
+    el.setAttribute('aria-pressed', String(on));
+  };
+  const extraLabel = (b) => {
+    const left = b.querySelector('.count')?.textContent;
+    return `${b.title}${left ? `, quedan ${left}` : ''}${b.classList.contains('used') ? ' (ya usado)' : ''}`;
+  };
   const firstFreeAvatar = (taken) => avatarChoices.find((a) => a !== taken);
 
   // Each player must have a different avatar: the other player's pick is disabled.
@@ -62,6 +70,7 @@ const { timeFor } = Engine;
       grid.querySelectorAll('.avatar-btn').forEach((b) => {
         const taken = b.dataset.avatar === avatars[1 - p];
         b.classList.toggle('selected', b.dataset.avatar === avatars[p]);
+        b.setAttribute('aria-pressed', String(b.dataset.avatar === avatars[p]));
         b.disabled = taken;
         b.title = taken ? 'Ya lo ha elegido el otro jugador' : '';
       });
@@ -92,8 +101,8 @@ const { timeFor } = Engine;
 
   function setGameMode(mode) {
     gameMode = mode;
-    q('modeTwo').classList.toggle('selected', mode === 'two');
-    q('modeSolo').classList.toggle('selected', mode === 'solo');
+    press(q('modeTwo'), mode === 'two');
+    press(q('modeSolo'), mode === 'solo');
     q('difficultyWrap').classList.toggle('hidden', mode !== 'solo');
 
     const p2Config = namesIn[1].closest('.pconfig');
@@ -120,13 +129,13 @@ const { timeFor } = Engine;
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
   q('difficultyEasy').addEventListener('click', () => {
     difficulty = 'easy';
-    q('difficultyEasy').classList.add('selected');
-    q('difficultyHard').classList.remove('selected');
+    press(q('difficultyEasy'), true);
+    press(q('difficultyHard'), false);
   });
   q('difficultyHard').addEventListener('click', () => {
     difficulty = 'hard';
-    q('difficultyHard').classList.add('selected');
-    q('difficultyEasy').classList.remove('selected');
+    press(q('difficultyHard'), true);
+    press(q('difficultyEasy'), false);
   });
   function openHelp() {
     q('sidebar').classList.remove('open');
@@ -201,6 +210,7 @@ const { timeFor } = Engine;
       const machineSide = gameMode === 'solo' && p === 1;
       const canUse = p === current && !over && !replaying && !machineSide && !machineThinking;
       b.classList.toggle('selected', b.dataset.letter === selected[p]);
+      b.setAttribute('aria-pressed', String(b.dataset.letter === selected[p]));
       b.disabled = !canUse;
     });
 
@@ -228,6 +238,9 @@ const { timeFor } = Engine;
       // SOS is global: once either player uses it, both buttons become consumed.
       sosBtns[i].disabled = !humanCanAct || sosUsed;
       sosBtns[i].classList.toggle('used', sosUsed);
+      [hintBtns[i], lastBtns[i], swapBtns[i], sosBtns[i]].forEach((b) =>
+        b.setAttribute('aria-label', extraLabel(b)),
+      );
 
       [
         [hintBtns[i], hintUsed],
@@ -328,6 +341,10 @@ const { timeFor } = Engine;
       const c = document.createElement('button');
       c.type = 'button';
       c.className = 'cell';
+      c.setAttribute(
+        'aria-label',
+        `Fila ${Math.floor(i / size) + 1}, columna ${(i % size) + 1}: ${v || 'vacía'}`,
+      );
 
       if (v) c.classList.add('filled');
       if (i === justPlaced) c.classList.add('placed');
@@ -613,6 +630,7 @@ const { timeFor } = Engine;
     clearInterval(timer);
     updateControls();
     q('winnerOverlay').classList.remove('hidden');
+    q('rematch').focus({ preventScroll: true });
 
     if (w === null) {
       q('winnerAvatar').textContent = '🤝';

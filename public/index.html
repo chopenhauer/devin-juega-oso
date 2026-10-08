@@ -14,6 +14,7 @@
   </head>
   <body>
     <main class="app">
+      <h1 class="visually-hidden">OSO · el juego de Julia</h1>
       <section class="panel">
         <div id="setupScreen" class="setup">
           <div id="setupSteps" class="setup-steps">
@@ -115,7 +116,7 @@
             </div>
             <div class="step inactive" data-step="mode">
               <h2 class="step-title">¿Cómo queréis jugar?</h2>
-              <div class="mode-choice" aria-label="Modo de juego">
+              <div class="mode-choice" role="group" aria-label="Modo de juego">
                 <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
                 <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
               </div>
@@ -146,18 +147,18 @@
                     aria-label="Nombre del jugador 1"
                   />
                   <div class="avatars" data-player="0">
-                    <button class="avatar-btn selected" data-avatar="🐻">🐻</button
-                    ><button class="avatar-btn" data-avatar="🐼">🐼</button>
-                    <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
-                    ><button class="avatar-btn" data-avatar="🧸">🧸</button>
-                    <button class="avatar-btn" data-avatar="🦊">🦊</button
-                    ><button class="avatar-btn" data-avatar="🐯">🐯</button>
-                    <button class="avatar-btn" data-avatar="🦁">🦁</button
-                    ><button class="avatar-btn" data-avatar="🐸">🐸</button>
-                    <button class="avatar-btn" data-avatar="🐵">🐵</button
-                    ><button class="avatar-btn" data-avatar="🐨">🐨</button>
-                    <button class="avatar-btn" data-avatar="🐧">🐧</button
-                    ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+                    <button type="button" class="avatar-btn selected" data-avatar="🐻">🐻</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐼">🐼</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                    ><button type="button" class="avatar-btn" data-avatar="🧸">🧸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦊">🦊</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐯">🐯</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦁">🦁</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐸">🐸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐵">🐵</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐨">🐨</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
+                    ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
                   </div>
                 </div>
 
@@ -173,18 +174,18 @@
                     aria-label="Nombre del jugador 2"
                   />
                   <div class="avatars" data-player="1">
-                    <button class="avatar-btn" data-avatar="🐻">🐻</button
-                    ><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
-                    <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
-                    ><button class="avatar-btn" data-avatar="🧸">🧸</button>
-                    <button class="avatar-btn" data-avatar="🦊">🦊</button
-                    ><button class="avatar-btn" data-avatar="🐯">🐯</button>
-                    <button class="avatar-btn" data-avatar="🦁">🦁</button
-                    ><button class="avatar-btn" data-avatar="🐸">🐸</button>
-                    <button class="avatar-btn" data-avatar="🐵">🐵</button
-                    ><button class="avatar-btn" data-avatar="🐨">🐨</button>
-                    <button class="avatar-btn" data-avatar="🐧">🐧</button
-                    ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐻">🐻</button
+                    ><button type="button" class="avatar-btn selected" data-avatar="🐼">🐼</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                    ><button type="button" class="avatar-btn" data-avatar="🧸">🧸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦊">🦊</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐯">🐯</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦁">🦁</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐸">🐸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐵">🐵</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐨">🐨</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
+                    ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
                   </div>
                 </div>
               </div>
@@ -215,7 +216,7 @@
               <p class="step-lead">Cuanto más grande, más tiempo y más OSOs posibles.</p>
               <div class="setup-actions">
                 <div>
-                  <div class="small-label">Tablero</div>
+                  <label class="small-label" for="sizeSelect">Tablero</label>
                   <select id="sizeSelect">
                     <option value="4">4 × 4 · 1:30</option>
                     <option value="5" selected>5 × 5 · 2:00</option>
@@ -318,7 +319,7 @@
 
           <button id="menuTab" class="menu-tab" aria-label="Abrir menú">☰</button>
           <aside id="sidebar" class="sidebar">
-            <h3>Partida</h3>
+            <h2>Partida</h2>
             <button id="gameHelp">❓ Reglas / Ayuda</button>
             <button id="restartMatch">Reiniciar tablero</button>
             <button id="newGame">Nueva partida</button>
@@ -421,7 +422,14 @@
             <div class="mode-flash-sub">Recalculando la partida desde el principio…</div>
           </div>
         </div>
-        <div id="winnerOverlay" class="winner-overlay hidden">
+        <div
+          id="winnerOverlay"
+          class="winner-overlay hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="winnerTitle"
+          aria-describedby="winnerSub"
+        >
           <div id="confetti" class="confetti"></div>
           <div>
             <div id="winnerAvatar" class="winner-avatar">🐻</div>
@@ -435,6 +443,6 @@
         </div>
       </section>
     </main>
-    <p class="credits">Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻</p>
+    <footer class="credits">Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻</footer>
   </body>
 </html>

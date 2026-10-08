@@ -25,6 +25,12 @@
   --tile: #fff7e8;
   --tile-edge: #dcc29a;
   --tile-ink: #3b2a6b;
+  --r-xs: 10px;
+  --r-sm: 14px;
+  --r-md: 18px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
   --font: 'Fredoka', 'Baloo 2', ui-rounded, 'Nunito', 'Segoe UI', system-ui, sans-serif;
 }
 * {
@@ -98,7 +104,7 @@ select:focus-visible {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 28px;
+  border-radius: var(--r-xl);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
   box-shadow:
     0 30px 80px rgba(5, 2, 30, 0.55),
@@ -162,7 +168,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
   height: 86px;
   display: grid;
   place-items: center;
-  border-radius: 22px;
+  border-radius: var(--r-lg);
   font-size: 60px;
   font-weight: 700;
   line-height: 1;
@@ -211,14 +217,14 @@ body:has(#gameScreen:not(.hidden)) .credits {
   max-width: 440px;
   margin: 0 auto;
   padding: 5px;
-  border-radius: 18px;
+  border-radius: var(--r-md);
   background: rgba(0, 0, 0, 0.25);
   border: 1px solid var(--line);
 }
 .mode-btn {
   min-height: 48px;
   border: 0;
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: transparent;
   color: var(--muted);
   font-size: 16px;
@@ -256,7 +262,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
 .difficulty-btn {
   min-height: 44px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: var(--glass);
   color: #fff;
   font-size: 15px;
@@ -280,7 +286,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
   gap: 14px;
   padding: 14px 16px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r-md);
   background: var(--glass);
   color: #fff;
   text-align: left;
@@ -298,7 +304,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
   flex: 0 0 44px;
   height: 44px;
   place-items: center;
-  border-radius: 12px;
+  border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.12);
   font-size: 24px;
 }
@@ -316,7 +322,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
 .help-toggle {
   min-height: 42px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--glass);
   color: #fff;
   font-size: 15px;
@@ -331,7 +337,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
 }
 .pconfig {
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: var(--r-lg);
   padding: 12px;
   background: var(--glass);
 }
@@ -382,7 +388,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
   width: 100%;
   min-height: 46px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: rgba(0, 0, 0, 0.28);
   color: #fff;
   font-size: 18px;
@@ -406,7 +412,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
   aspect-ratio: 1;
   min-width: 0;
   border: 2px solid transparent;
-  border-radius: 12px;
+  border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.09);
   font-size: 22px;
   padding: 0;
@@ -433,7 +439,7 @@ body:has(#gameScreen:not(.hidden)) .credits {
 select {
   min-height: 54px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--r-md);
   background: rgba(0, 0, 0, 0.3);
   color: #fff;
   font-size: 17px;
@@ -447,7 +453,7 @@ select option {
 .primary {
   min-height: 54px;
   border: 0;
-  border-radius: 18px;
+  border-radius: var(--r-md);
   background: linear-gradient(180deg, #ffe066, var(--accent2));
   color: #4a2300;
   padding: 0 34px;
@@ -490,7 +496,7 @@ select option {
   align-items: center;
   gap: 8px;
   border: 2px solid var(--line);
-  border-radius: 22px;
+  border-radius: var(--r-lg);
   padding: 9px;
   transition:
     border-color 0.25s,
@@ -596,7 +602,7 @@ select option {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   padding: 3px 8px;
-  border-radius: 9px;
+  border-radius: var(--r-xs);
   background: rgba(0, 0, 0, 0.28);
 }
 .score-wrap {
@@ -605,7 +611,7 @@ select option {
   gap: 4px;
 }
 .score-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
   color: var(--muted);
@@ -649,7 +655,7 @@ select option {
   display: flex;
   gap: 6px;
   padding: 5px;
-  border-radius: 18px;
+  border-radius: var(--r-md);
   background: rgba(0, 0, 0, 0.28);
   border: 1px solid var(--line);
 }
@@ -657,7 +663,7 @@ select option {
   flex: 1;
   min-height: 52px;
   border: 0;
-  border-radius: 13px;
+  border-radius: var(--r-sm);
   background: var(--tile);
   color: var(--tile-ink);
   font-size: 30px;
@@ -723,7 +729,7 @@ select option {
   color: #4a2300;
   display: grid;
   place-items: center;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -771,7 +777,7 @@ select option {
 .board-shell {
   width: 100%;
   max-width: max(300px, calc(100dvh - 430px));
-  border-radius: 24px;
+  border-radius: var(--r-xl);
   padding: 8px;
   background: linear-gradient(180deg, #2a1d6e, #160e42);
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -790,7 +796,7 @@ select option {
   position: relative;
   aspect-ratio: 1;
   border: 0;
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04));
   display: grid;
   place-items: center;
@@ -943,7 +949,7 @@ select option {
 .sidebar.open {
   transform: translate(0, -50%);
 }
-.sidebar h3 {
+.sidebar h2 {
   margin: 0 0 6px;
   font-size: 17px;
   font-weight: 700;
@@ -953,7 +959,7 @@ select option {
   min-height: 44px;
   margin-top: 8px;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
   font-size: 14px;
@@ -1011,7 +1017,7 @@ select option {
 .secondary {
   min-height: 54px;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: var(--r-md);
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   padding: 0 20px;
@@ -1063,7 +1069,7 @@ select option {
   align-items: center;
   margin-left: 6px;
   padding: 2px 8px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.16);
   color: #fff;
   font-size: 10px;
@@ -1254,7 +1260,7 @@ body.sea-theme::before {
   overflow: auto;
   background: linear-gradient(180deg, #2c1a6a, #1a0f48);
   border: 1px solid var(--line);
-  border-radius: 26px;
+  border-radius: var(--r-xl);
   padding: 22px;
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
   animation: dialogIn 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
@@ -1316,7 +1322,7 @@ body.sea-theme::before {
   align-items: center;
   padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.06);
   color: #ddd8ff;
   font-size: 15px;
@@ -1347,7 +1353,7 @@ body.sea-theme::before {
   align-items: start;
   padding: 11px 12px;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: rgba(255, 255, 255, 0.06);
 }
 .extra-icon {
@@ -1386,7 +1392,7 @@ body.sea-theme::before {
   }
   .panel {
     padding: 6px;
-    border-radius: 20px;
+    border-radius: var(--r-lg);
   }
   .setup {
     gap: 12px;
@@ -1399,7 +1405,7 @@ body.sea-theme::before {
     width: 62px;
     height: 68px;
     font-size: 46px;
-    border-radius: 17px;
+    border-radius: var(--r-md);
   }
   .brand-bear {
     font-size: 44px;
@@ -1409,7 +1415,7 @@ body.sea-theme::before {
   }
   .pconfig {
     padding: 8px;
-    border-radius: 18px;
+    border-radius: var(--r-md);
   }
   .preview {
     width: 58px;
@@ -1427,7 +1433,7 @@ body.sea-theme::before {
   }
   .player-panel {
     padding: 6px;
-    border-radius: 17px;
+    border-radius: var(--r-md);
     gap: 6px;
   }
   .avatar {
@@ -1450,12 +1456,12 @@ body.sea-theme::before {
   .letter-choice {
     padding: 4px;
     gap: 4px;
-    border-radius: 14px;
+    border-radius: var(--r-sm);
   }
   .letter {
     min-height: 44px;
     font-size: 26px;
-    border-radius: 11px;
+    border-radius: var(--r-xs);
   }
   .tools {
     gap: 5px;
@@ -1472,14 +1478,14 @@ body.sea-theme::before {
   }
   .board-shell {
     padding: 5px;
-    border-radius: 18px;
+    border-radius: var(--r-md);
     max-width: max(280px, calc(100dvh - 300px));
   }
   .board {
     gap: 4px;
   }
   .cell {
-    border-radius: 10px;
+    border-radius: var(--r-xs);
   }
   .message {
     font-size: 13px;
@@ -1495,7 +1501,7 @@ body.sea-theme::before {
   }
   .help-dialog {
     max-height: 96vh;
-    border-radius: 20px;
+    border-radius: var(--r-lg);
     padding: 16px;
   }
   .help-title {
@@ -1622,7 +1628,7 @@ body.sea-theme::before {
   min-height: 46px;
   padding: 0 18px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--glass);
   color: #fff;
   font-size: 15px;
@@ -1643,7 +1649,7 @@ body.sea-theme::before {
   max-width: 440px;
   padding: 22px 16px;
   border: 1px solid var(--line);
-  border-radius: 24px;
+  border-radius: var(--r-xl);
   background: var(--glass);
   text-align: center;
 }
@@ -1660,7 +1666,7 @@ body.sea-theme::before {
   place-items: center;
   width: 58px;
   height: 62px;
-  border-radius: 15px;
+  border-radius: var(--r-sm);
   background: #fff6e5;
   box-shadow: 0 5px 0 #d9c4a0;
   color: #2b1366;
@@ -1713,7 +1719,7 @@ body.sea-theme::before {
 }
 .extras-list li {
   padding: 10px 12px;
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: rgba(0, 0, 0, 0.2);
 }
 .extras-list b {
@@ -1721,7 +1727,7 @@ body.sea-theme::before {
 }
 .demo-clock {
   padding: 8px 18px;
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   background: rgba(0, 0, 0, 0.3);
   font-size: 34px;
   font-weight: 700;
@@ -1761,7 +1767,7 @@ body.sea-theme::before {
 .progress {
   height: 8px;
   overflow: hidden;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.12);
 }
 .progress span {
@@ -1824,7 +1830,7 @@ body.sea-theme::before {
   content: '';
   width: 9px;
   height: 9px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: rgba(255, 255, 255, 0.35);
   transition:
     width 0.25s,
@@ -1846,4 +1852,21 @@ body.sea-theme::before {
     transition: none;
     animation: none;
   }
+}
+
+/* ACCESSIBILITY UTILITIES */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Invisible hit area so the small extras reach ~44 px touch targets without growing visually. */
+.power::after,
+.sos-power::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
 }
