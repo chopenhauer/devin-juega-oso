@@ -13,6 +13,7 @@ public/               Sitio estático que publica Vercel (sin build)
   css/styles.css      Estilos
   js/engine.js        Reglas puras: detección de OSO/SOS, recálculo, pistas, IA, replay SOS
   js/app.js           Interfaz: estado de la partida, reloj, eventos y render (usa engine.js)
+  js/onboarding.js    Inicio por pasos (bienvenida, cómo se juega, modo, jugadores, tablero)
   fonts/              Fredoka (subconjunto latino, woff2) + licencia OFL
   favicon.svg
 tests/unit/           Tests del motor (node:test)
@@ -23,6 +24,8 @@ old-references/       Versiones históricas del juego (no se publican)
 
 `engine.js` no toca el DOM ni variables globales, así que las reglas se prueban sin navegador.
 `app.js` es un módulo ES que mantiene el estado de la partida y delega las reglas al motor.
+`onboarding.js` solo navega entre los pasos del inicio y guarda las últimas elecciones en
+`localStorage` (clave `oso.prefs.v1`); la explicación inicial se muestra solo la primera vez.
 
 ## Desarrollo
 

@@ -9,98 +9,179 @@
     <link rel="preload" href="/fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/styles.css" />
     <script type="module" src="/js/app.js"></script>
+    <script type="module" src="/js/onboarding.js"></script>
   </head>
   <body>
     <main class="app">
       <section class="panel">
         <div id="setupScreen" class="setup">
-          <div class="brand-bear" aria-hidden="true">🐻</div>
-          <div class="brand" aria-label="OSO"><span>O</span><span>S</span><span>O</span></div>
-          <div class="tagline">Conecta · forma · gana</div>
-          <div class="mode-choice" aria-label="Modo de juego">
-            <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
-            <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
-          </div>
-          <div id="difficultyWrap" class="difficulty-wrap hidden">
-            <div class="difficulty-title">Dificultad de la máquina</div>
-            <div class="difficulty-choice">
-              <button id="difficultyEasy" class="difficulty-btn selected" type="button">🙂 Fácil</button>
-              <button id="difficultyHard" class="difficulty-btn" type="button">🧠 Difícil</button>
+          <div class="step" data-step="welcome">
+            <div class="brand-bear" aria-hidden="true">🐻</div>
+            <div class="brand" aria-label="OSO"><span>O</span><span>S</span><span>O</span></div>
+            <div class="tagline">Conecta · forma · gana</div>
+            <p class="step-lead">
+              Un juego de letras para dos jugadores, o contra la máquina: coloca O y S en el tablero y forma
+              la palabra OSO más veces que tu rival.
+            </p>
+            <div class="intro-actions">
+              <button id="introStart" class="primary" type="button">Cómo se juega →</button
+              ><button id="introSkip" class="secondary" type="button">Saltar e ir a jugar</button>
             </div>
           </div>
-          <div class="help-row">
-            <button id="helpToggle" class="help-toggle" type="button">❓ Reglas / Ayuda</button>
+          <div class="step hidden" data-step="rules-1">
+            <div class="rule-card">
+              <div class="rule-emoji" aria-hidden="true">✏️</div>
+              <h2 class="step-title">Por turnos, pon una O o una S</h2>
+              <div class="demo-row">
+                <span class="demo-tile">O</span><span class="demo-tile empty"></span
+                ><span class="demo-tile pop">S</span>
+              </div>
+              <p class="step-lead">Elige tu letra abajo y tócala en cualquier casilla vacía del tablero.</p>
+            </div>
           </div>
-
-          <div class="players-setup">
-            <div class="pconfig">
-              <div class="small-label">Jugador 1</div>
-              <div id="preview1" class="preview">🐻</div>
-              <input
-                id="nickname1"
-                class="nickname"
-                value=""
-                placeholder="Jugador 1"
-                maxlength="16"
-                aria-label="Nombre del jugador 1"
-              />
-              <div class="avatars" data-player="0">
-                <button class="avatar-btn selected" data-avatar="🐻">🐻</button
-                ><button class="avatar-btn" data-avatar="🐼">🐼</button>
-                <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
-                ><button class="avatar-btn" data-avatar="🧸">🧸</button>
-                <button class="avatar-btn" data-avatar="🦊">🦊</button
-                ><button class="avatar-btn" data-avatar="🐯">🐯</button>
-                <button class="avatar-btn" data-avatar="🦁">🦁</button
-                ><button class="avatar-btn" data-avatar="🐸">🐸</button>
-                <button class="avatar-btn" data-avatar="🐵">🐵</button
-                ><button class="avatar-btn" data-avatar="🐨">🐨</button>
-                <button class="avatar-btn" data-avatar="🐧">🐧</button
-                ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+          <div class="step hidden" data-step="rules-2">
+            <div class="rule-card">
+              <div class="rule-emoji" aria-hidden="true">⭐</div>
+              <h2 class="step-title">Forma O-S-O y suma un punto</h2>
+              <div class="demo-row win">
+                <span class="demo-tile">O</span><span class="demo-tile">S</span
+                ><span class="demo-tile">O</span>
+              </div>
+              <p class="step-lead">
+                En horizontal, vertical o diagonal. Si consigues un OSO, ganas 10 segundos y vuelves a jugar.
+              </p>
+            </div>
+          </div>
+          <div class="step hidden" data-step="rules-3">
+            <div class="rule-card">
+              <div class="rule-emoji" aria-hidden="true">🎁</div>
+              <h2 class="step-title">Cada uno tiene 4 extras, de un solo uso</h2>
+              <ul class="extras-list">
+                <li><b>💡 Pista</b> te sugiere una jugada</li>
+                <li><b>👁️ Ver</b> marca la última jugada rival</li>
+                <li><b>🔄 Cambio</b> convierte una letra del tablero (O ↔ S)</li>
+                <li><b>🛟 SOS</b> cambia el objetivo a S-O-S para los dos y recalcula la partida</li>
+              </ul>
+            </div>
+          </div>
+          <div class="step hidden" data-step="rules-4">
+            <div class="rule-card">
+              <div class="rule-emoji" aria-hidden="true">⏱️</div>
+              <h2 class="step-title">Vigila tu reloj</h2>
+              <div class="demo-clock">2:00</div>
+              <p class="step-lead">
+                Cada jugador tiene su propio tiempo. Si se te acaba, pierdes. Cuando el tablero se llena, gana
+                quien tenga más puntos.
+              </p>
+            </div>
+          </div>
+          <div class="step hidden" data-step="mode">
+            <h2 class="step-title">¿Cómo queréis jugar?</h2>
+            <div class="mode-choice" aria-label="Modo de juego">
+              <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
+              <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
+            </div>
+            <div id="difficultyWrap" class="difficulty-wrap hidden">
+              <div class="difficulty-title">Dificultad de la máquina</div>
+              <div class="difficulty-choice">
+                <button id="difficultyEasy" class="difficulty-btn selected" type="button">🙂 Fácil</button>
+                <button id="difficultyHard" class="difficulty-btn" type="button">🧠 Difícil</button>
               </div>
             </div>
+            <div class="help-row">
+              <button id="replayIntro" class="help-toggle" type="button">👀 Cómo se juega</button>
+              <button id="helpToggle" class="help-toggle" type="button">❓ Reglas completas</button>
+            </div>
+          </div>
+          <div class="step hidden" data-step="players">
+            <h2 class="step-title">¿Quién juega?</h2>
+            <div class="players-setup">
+              <div class="pconfig">
+                <div class="small-label">Jugador 1</div>
+                <div id="preview1" class="preview">🐻</div>
+                <input
+                  id="nickname1"
+                  class="nickname"
+                  value=""
+                  placeholder="Jugador 1"
+                  maxlength="16"
+                  aria-label="Nombre del jugador 1"
+                />
+                <div class="avatars" data-player="0">
+                  <button class="avatar-btn selected" data-avatar="🐻">🐻</button
+                  ><button class="avatar-btn" data-avatar="🐼">🐼</button>
+                  <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                  ><button class="avatar-btn" data-avatar="🧸">🧸</button>
+                  <button class="avatar-btn" data-avatar="🦊">🦊</button
+                  ><button class="avatar-btn" data-avatar="🐯">🐯</button>
+                  <button class="avatar-btn" data-avatar="🦁">🦁</button
+                  ><button class="avatar-btn" data-avatar="🐸">🐸</button>
+                  <button class="avatar-btn" data-avatar="🐵">🐵</button
+                  ><button class="avatar-btn" data-avatar="🐨">🐨</button>
+                  <button class="avatar-btn" data-avatar="🐧">🐧</button
+                  ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+                </div>
+              </div>
 
-            <div class="pconfig">
-              <div class="small-label">Jugador 2</div>
-              <div id="preview2" class="preview">🐼</div>
-              <input
-                id="nickname2"
-                class="nickname"
-                value=""
-                placeholder="Jugador 2"
-                maxlength="16"
-                aria-label="Nombre del jugador 2"
-              />
-              <div class="avatars" data-player="1">
-                <button class="avatar-btn" data-avatar="🐻">🐻</button
-                ><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
-                <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
-                ><button class="avatar-btn" data-avatar="🧸">🧸</button>
-                <button class="avatar-btn" data-avatar="🦊">🦊</button
-                ><button class="avatar-btn" data-avatar="🐯">🐯</button>
-                <button class="avatar-btn" data-avatar="🦁">🦁</button
-                ><button class="avatar-btn" data-avatar="🐸">🐸</button>
-                <button class="avatar-btn" data-avatar="🐵">🐵</button
-                ><button class="avatar-btn" data-avatar="🐨">🐨</button>
-                <button class="avatar-btn" data-avatar="🐧">🐧</button
-                ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+              <div class="pconfig">
+                <div class="small-label">Jugador 2</div>
+                <div id="preview2" class="preview">🐼</div>
+                <input
+                  id="nickname2"
+                  class="nickname"
+                  value=""
+                  placeholder="Jugador 2"
+                  maxlength="16"
+                  aria-label="Nombre del jugador 2"
+                />
+                <div class="avatars" data-player="1">
+                  <button class="avatar-btn" data-avatar="🐻">🐻</button
+                  ><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
+                  <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                  ><button class="avatar-btn" data-avatar="🧸">🧸</button>
+                  <button class="avatar-btn" data-avatar="🦊">🦊</button
+                  ><button class="avatar-btn" data-avatar="🐯">🐯</button>
+                  <button class="avatar-btn" data-avatar="🦁">🦁</button
+                  ><button class="avatar-btn" data-avatar="🐸">🐸</button>
+                  <button class="avatar-btn" data-avatar="🐵">🐵</button
+                  ><button class="avatar-btn" data-avatar="🐨">🐨</button>
+                  <button class="avatar-btn" data-avatar="🐧">🐧</button
+                  ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="setup-actions">
-            <div>
-              <div class="small-label">Tablero</div>
-              <select id="sizeSelect">
-                <option value="4">4 × 4 · 1:30</option>
-                <option value="5" selected>5 × 5 · 2:00</option>
-                <option value="6">6 × 6 · 2:30</option>
-                <option value="7">7 × 7 · 3:00</option>
-                <option value="8">8 × 8 · 4:00</option>
-              </select>
+          <div class="step hidden" data-step="board">
+            <h2 class="step-title">Elige el tablero</h2>
+            <p class="step-lead">Cuanto más grande, más tiempo y más OSOs posibles.</p>
+            <div class="setup-actions">
+              <div>
+                <div class="small-label">Tablero</div>
+                <select id="sizeSelect">
+                  <option value="4">4 × 4 · 1:30</option>
+                  <option value="5" selected>5 × 5 · 2:00</option>
+                  <option value="6">6 × 6 · 2:30</option>
+                  <option value="7">7 × 7 · 3:00</option>
+                  <option value="8">8 × 8 · 4:00</option>
+                </select>
+              </div>
+              <button id="startGame" class="primary">¡A jugar!</button>
             </div>
-            <button id="startGame" class="primary">Jugar</button>
+            <p id="setupSummary" class="setup-summary" aria-live="polite"></p>
           </div>
+          <nav class="wizard-nav" aria-label="Pasos">
+            <button id="stepBack" class="secondary" type="button">← Atrás</button>
+            <div
+              class="progress"
+              role="progressbar"
+              aria-label="Progreso"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              <span id="stepProgress"></span>
+            </div>
+            <button id="stepNext" class="primary" type="button">Siguiente →</button>
+          </nav>
         </div>
 
         <div id="gameScreen" class="game hidden">

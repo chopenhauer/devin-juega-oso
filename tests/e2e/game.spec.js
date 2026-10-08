@@ -4,6 +4,14 @@ const cell = (page, i) => page.locator('.cell').nth(i);
 const boardText = (page) =>
   page.locator('.cell').evaluateAll((cells) => cells.map((c) => c.textContent.trim() || '.').join(''));
 
+async function startGame(page, { solo = false } = {}) {
+  if (await page.locator('#introSkip').isVisible()) await page.click('#introSkip');
+  if (solo) await page.click('#modeSolo');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  await page.click('#startGame');
+}
+
 test.beforeEach(async ({ page }, testInfo) => {
   testInfo.errors = [];
   page.on('pageerror', (e) => testInfo.errors.push(e.message));
@@ -20,7 +28,7 @@ test.afterEach(async ({}, testInfo) => {
 test('names fall back to placeholders and the clock runs (B01, T4.1)', async ({ page }) => {
   await expect(page.locator('#nickname1')).toHaveValue('');
   await expect(page.locator('#nickname1')).toHaveAttribute('placeholder', 'Jugador 1');
-  await page.click('#startGame');
+  await startGame(page);
   await expect(page.locator('#name1')).toHaveText('Jugador 1');
   await expect(page.locator('#name2')).toHaveText('Jugador 2');
   await expect(page.locator('#timer1')).not.toHaveText('2:00', { timeout: 3000 });
@@ -28,7 +36,7 @@ test('names fall back to placeholders and the clock runs (B01, T4.1)', async ({ 
 });
 
 test('help pauses the clock during a game', async ({ page }) => {
-  await page.click('#startGame');
+  await startGame(page);
   await page.click('#menuTab');
   await page.click('#gameHelp');
   const paused = await page.locator('#timer1').textContent();
@@ -43,7 +51,7 @@ test('help pauses the clock during a game', async ({ page }) => {
 test('B03: SOS replay forgets a sequence destroyed by a swap; labels and counters update', async ({
   page,
 }) => {
-  await page.click('#startGame');
+  await startGame(page);
   await page.click('.letter[data-player="0"][data-letter="S"]', { force: true });
   await cell(page, 0).click({ force: true });
   await cell(page, 1).click({ force: true });
@@ -59,13 +67,13 @@ test('B03: SOS replay forgets a sequence destroyed by a swap; labels and counter
 });
 
 test('B04: leaving during the SOS replay does not touch the next game', async ({ page }) => {
-  await page.click('#startGame');
+  await startGame(page);
   for (let i = 0; i < 6; i++) await cell(page, i).click({ force: true });
   await page.click('#sos1', { force: true });
   await page.waitForTimeout(1200);
   await page.click('#menuTab');
   await page.click('#newGame');
-  await page.click('#startGame');
+  await startGame(page);
   await page.waitForTimeout(3000);
   expect(await boardText(page)).toBe('.'.repeat(25));
   await expect(page.locator('#score1')).toHaveText('0');
@@ -73,8 +81,7 @@ test('B04: leaving during the SOS replay does not touch the next game', async ({
 });
 
 test('B02: clicks while the machine thinks are ignored; solo panel is upright', async ({ page }) => {
-  await page.click('#modeSolo');
-  await page.click('#startGame');
+  await startGame(page, { solo: true });
   await expect(page.locator('#name2')).toHaveText('Máquina');
   expect(await page.locator('#side2').evaluate((e) => getComputedStyle(e).transform)).toBe('none');
   await cell(page, 0).click({ force: true });
@@ -87,8 +94,7 @@ test('B02: clicks while the machine thinks are ignored; solo panel is upright', 
 
 test('a full game against the machine ends with a winner screen', async ({ page }) => {
   test.setTimeout(90_000);
-  await page.click('#modeSolo');
-  await page.click('#startGame');
+  await startGame(page, { solo: true });
   const overlay = page.locator('#winnerOverlay');
   for (let turn = 0; turn < 40 && !(await overlay.isVisible()); turn++) {
     const empty = (await boardText(page)).indexOf('.');
