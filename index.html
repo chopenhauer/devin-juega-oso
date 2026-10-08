@@ -106,6 +106,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .pconfig:last-child .preview{box-shadow:0 0 0 4px var(--p2),0 8px 22px var(--p2glow)}
 .nickname{width:100%;min-height:46px;border:1px solid var(--line);border-radius:14px;background:rgba(0,0,0,.28);color:#fff;font-size:18px;font-weight:600;text-align:center;padding:8px}
 .nickname:disabled{opacity:.6}
+.nickname::placeholder{color:rgba(255,255,255,.5)}
 .avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:10px}
 .avatar-btn{aspect-ratio:1;min-width:0;border:2px solid transparent;border-radius:12px;background:rgba(255,255,255,.09);font-size:22px;padding:0;transition:transform .15s,background .15s}
 .avatar-btn.selected{background:rgba(255,255,255,.92);border-color:#fff;transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
@@ -144,6 +145,7 @@ select option{color:#222;background:#fff}
 @keyframes glow1{50%{box-shadow:0 0 8px var(--p1glow)}}
 @keyframes glow2{50%{box-shadow:0 0 8px var(--p2glow)}}
 .player-panel.top{transform:rotate(180deg)}
+.game.solo .player-panel.top,.game.solo .turnbar-top{transform:none}
 .identity{display:flex;align-items:center;gap:10px;min-width:0}
 .avatar{
   width:48px;height:48px;
@@ -436,7 +438,7 @@ select option{color:#222;background:#fff}
     <div class="pconfig">
       <div class="small-label">Jugador 1</div>
       <div id="preview1" class="preview">🐻</div>
-      <input id="nickname1" class="nickname" value="Jugador 1" maxlength="16">
+      <input id="nickname1" class="nickname" value="" placeholder="Jugador 1" maxlength="16" aria-label="Nombre del jugador 1">
       <div class="avatars" data-player="0">
         <button class="avatar-btn selected" data-avatar="🐻">🐻</button><button class="avatar-btn" data-avatar="🐼">🐼</button>
         <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button><button class="avatar-btn" data-avatar="🧸">🧸</button>
@@ -450,7 +452,7 @@ select option{color:#222;background:#fff}
     <div class="pconfig">
       <div class="small-label">Jugador 2</div>
       <div id="preview2" class="preview">🐼</div>
-      <input id="nickname2" class="nickname" value="Jugador 2" maxlength="16">
+      <input id="nickname2" class="nickname" value="" placeholder="Jugador 2" maxlength="16" aria-label="Nombre del jugador 2">
       <div class="avatars" data-player="1">
         <button class="avatar-btn" data-avatar="🐻">🐻</button><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
         <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button><button class="avatar-btn" data-avatar="🧸">🧸</button>
@@ -538,6 +540,7 @@ select option{color:#222;background:#fff}
   <button id="menuTab" class="menu-tab" aria-label="Abrir menú">☰</button>
   <aside id="sidebar" class="sidebar">
     <h3>Partida</h3>
+    <button id="gameHelp">❓ Reglas / Ayuda</button>
     <button id="restartMatch">Reiniciar tablero</button>
     <button id="newGame">Nueva partida</button>
     <button id="closeMenu">Cerrar</button>
@@ -577,7 +580,7 @@ select option{color:#222;background:#fff}
 
     <div class="help-section">
       <h3>Contra la máquina</h3>
-      <p><strong>Fácil:</strong> juega de forma más relajada. <strong>Difícil:</strong> intenta completar, bloquear y preparar mejores jugadas.</p>
+      <p><strong>Fácil:</strong> juega de forma más relajada. <strong>Difícil:</strong> siempre aprovecha la jugada que más puntos le da; si no hay, juega en el centro.</p>
     </div>
 
     <div class="help-foot">Cada extra puede usarse una sola vez por jugador. El cambio OSO → SOS es global: cuando alguien lo activa, queda consumido para ambos.</div>
@@ -615,7 +618,7 @@ const hintBtns=[q('hint1'),q('hint2')],lastBtns=[q('last1'),q('last2')],swapBtns
 
 let avatars=['🐻','🐼'],names=['Jugador 1','Jugador 2'],size=5,board=[],current=0,scores=[0,0],times=[120,120],gameMode='two',difficulty='easy';
 let justPlaced=null,justScored=new Set();
-let selected=['O','O'],scored=new Map(),history=[],extras=[],timer=null,lastTick=0,over=false,hintCell=null,lastCell=null,swapMode=null,machineTimeout=null,machineThinking=false,targetWord='OSO',sosUsed=false,replaying=false;
+let selected=['O','O'],scored=new Map(),history=[],extras=[],timer=null,lastTick=0,over=false,hintCell=null,lastCell=null,swapMode=null,machineTimeout=null,machineThinking=false,targetWord='OSO',sosUsed=false,replaying=false,gameId=0,helpPaused=false;
 
 document.querySelectorAll('.avatars').forEach(grid=>{
   const p=+grid.dataset.player;
@@ -644,7 +647,7 @@ function setGameMode(mode){
     avatars[1]='🤖';
     previews[1].textContent='🤖';
   }else{
-    if(namesIn[1].value==='Máquina')namesIn[1].value='Jugador 2';
+    if(namesIn[1].value==='Máquina')namesIn[1].value='';
     namesIn[1].disabled=false;
     p2Avatars.style.opacity='';
     p2Avatars.style.pointerEvents='';
@@ -660,15 +663,36 @@ q('difficultyEasy').addEventListener('click',()=>{
 q('difficultyHard').addEventListener('click',()=>{
   difficulty='hard';q('difficultyHard').classList.add('selected');q('difficultyEasy').classList.remove('selected');
 });
-q('helpToggle').addEventListener('click',()=>q('helpModal').classList.remove('hidden'));
-q('helpClose').addEventListener('click',()=>q('helpModal').classList.add('hidden'));
-q('helpModal').addEventListener('click',e=>{if(e.target===q('helpModal'))q('helpModal').classList.add('hidden')});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!q('helpModal').classList.contains('hidden'))q('helpModal').classList.add('hidden')});
+function openHelp(){
+  q('sidebar').classList.remove('open');
+  q('helpModal').classList.remove('hidden');
+  if(game.classList.contains('hidden')||over||replaying||helpPaused)return;
+  if(settle())return;
+  helpPaused=true;
+  clearInterval(timer);
+  clearTimeout(machineTimeout);
+  machineThinking=false;
+  updateControls();
+}
+function closeHelp(){
+  q('helpModal').classList.add('hidden');
+  if(!helpPaused)return;
+  helpPaused=false;
+  lastTick=performance.now();
+  timer=setInterval(tick,100);
+  updateControls();
+  maybeMachineTurn();
+}
+q('helpToggle').addEventListener('click',openHelp);
+q('gameHelp').addEventListener('click',openHelp);
+q('helpClose').addEventListener('click',closeHelp);
+q('helpModal').addEventListener('click',e=>{if(e.target===q('helpModal'))closeHelp()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!q('helpModal').classList.contains('hidden'))closeHelp()});
 
 
 document.querySelectorAll('.letter').forEach(b=>b.addEventListener('click',()=>{
   const p=+b.dataset.player;
-  if(over||p!==current)return;
+  if(over||replaying||helpPaused||p!==current||machineThinking||(gameMode==='solo'&&p===1))return;
   selected[p]=b.dataset.letter;
   swapMode=null;
   updateControls();
@@ -726,19 +750,32 @@ function updateControls(){
     // SOS is global: once either player uses it, both buttons become consumed.
     sosBtns[i].disabled=!humanCanAct||sosUsed;
     sosBtns[i].classList.toggle('used',sosUsed);
+
+    [[hintBtns[i],hintUsed],[lastBtns[i],lastUsed],[swapBtns[i],swapUsed],[sosBtns[i],sosUsed]]
+      .forEach(([btn,used])=>{btn.querySelector('.count').textContent=used?'0':'1'});
   });
+  document.querySelectorAll('.score-label').forEach(e=>e.textContent=targetWord==='SOS'?'SOS':'OSOS');
+  game.classList.toggle('solo',gameMode==='solo');
 
   turnBarTop.textContent=
     over ? 'Partida terminada' :
+    helpPaused ? '⏸ Pausa: ayuda abierta' :
     replaying ? '🛟 Recalculando SOS…' :
     machineThinking ? '🤖 La máquina está pensando…' :
     `${avatars[current]} Turno de ${names[current]} · ${targetWord}`;
 }
 
-function reset(){
+function stopGame(){
+  gameId++;
   clearInterval(timer);
   clearTimeout(machineTimeout);
   machineThinking=false;
+  replaying=false;
+  helpPaused=false;
+  q('modeFlash').classList.add('hidden');
+}
+function reset(){
+  stopGame();
   board=Array(size*size).fill('');
   current=0;
   scores=[0,0];
@@ -766,14 +803,19 @@ function reset(){
   lastTick=performance.now();
   timer=setInterval(tick,100);
 }
-function tick(){
-  if(over)return;
-  const now=performance.now(),dt=(now-lastTick)/1000;
+// Charges the active player for the time elapsed since the last settlement.
+// Returns true if that player ran out of time (the game is then finished).
+function settle(){
+  if(over)return true;
+  if(replaying||helpPaused)return false;
+  const now=performance.now();
+  times[current]=Math.max(0,times[current]-(now-lastTick)/1000);
   lastTick=now;
-  times[current]=Math.max(0,times[current]-dt);
   updateTimers();
-  if(times[current]<=0)finish(1-current,'tiempo');
+  if(times[current]<=0){finish(1-current,'tiempo');return true;}
+  return false;
 }
+function tick(){settle()}
 function render(){
   boardEl.innerHTML='';
   boardEl.style.gridTemplateColumns=`repeat(${size},minmax(0,1fr))`;
@@ -815,8 +857,12 @@ function paint(){
     else if(own[i].has(1))c.classList.add('p2');
   });
 }
-function cellClick(i){
-  if(over||replaying)return;
+function cellClick(i,byMachine=false){
+  if(over||replaying||helpPaused)return;
+  const machineTurn=gameMode==='solo'&&current===1;
+  if(machineTurn!==byMachine||(machineThinking&&!byMachine))return;
+  if(swapMode!==current&&board[i])return;
+  if(settle())return;
 
   if(swapMode===current){
     if(!board[i]){
@@ -836,7 +882,6 @@ function cellClick(i){
     lastCell=null;
     msg.textContent=`🔄 ${names[p]} cambia la letra a ${board[i]}.`;
     current=1-current;
-    lastTick=performance.now();
     render();
     updateControls();
 
@@ -867,7 +912,6 @@ function cellClick(i){
     msg.textContent=`¡${avatars[p]} ${names[p]} consigue ${made.length===1?'un '+targetWord:made.length+' '+targetWord}! +${BONUS*made.length}s`;
   }else{
     current=1-current;
-    lastTick=performance.now();
     msg.textContent=`Turno de ${avatars[current]} ${names[current]}`;
   }
 
@@ -900,7 +944,7 @@ function findNew(idx,word=targetWord){
   }
   return found;
 }
-function rebuildScores(){
+function rebuildScores(author=current){
   const previous=new Map(scored);
   scored=new Map();
   scores=[0,0];
@@ -924,7 +968,7 @@ function rebuildScores(){
           board[cells[1]]===targetWord[1] &&
           board[cells[2]]===targetWord[2]
         ){
-          const owner=previous.has(key)?previous.get(key):current;
+          const owner=previous.has(key)?previous.get(key):author;
           scored.set(key,owner);
           scores[owner]++;
         }
@@ -956,7 +1000,7 @@ function bestHint(){
 }
 
 hintBtns.forEach((b,p)=>b.addEventListener('click',()=>{
-  if(b.disabled||p!==current||!extras[p].hint||over||replaying)return;
+  if(b.disabled||p!==current||!extras[p].hint||over||replaying||settle())return;
 
   const h=bestHint();
   if(!h)return;
@@ -973,7 +1017,7 @@ hintBtns.forEach((b,p)=>b.addEventListener('click',()=>{
 }));
 
 lastBtns.forEach((b,p)=>b.addEventListener('click',()=>{
-  if(b.disabled||p!==current||!extras[p].last||over||replaying)return;
+  if(b.disabled||p!==current||!extras[p].last||over||replaying||settle())return;
 
   const m=[...history].reverse().find(x=>x.player!==p);
   if(!m)return;
@@ -989,7 +1033,7 @@ lastBtns.forEach((b,p)=>b.addEventListener('click',()=>{
 }));
 
 swapBtns.forEach((b,p)=>b.addEventListener('click',()=>{
-  if(b.disabled||p!==current||!extras[p].swap||over||replaying)return;
+  if(b.disabled||p!==current||!extras[p].swap||over||replaying||settle())return;
 
   swapMode=swapMode===p?null:p;
   hintCell=null;
@@ -1094,17 +1138,18 @@ function chooseMachineMove(){
 }
 
 function maybeMachineTurn(){
-  if(gameMode!=='solo'||current!==1||over||replaying)return;
+  if(gameMode!=='solo'||current!==1||over||replaying||helpPaused)return;
 
   clearTimeout(machineTimeout);
   machineThinking=true;
   updateControls();
+  const id=gameId;
 
   machineTimeout=setTimeout(()=>{
-    if(over||current!==1||gameMode!=='solo')return;
+    machineThinking=false;
+    if(id!==gameId||over||replaying||helpPaused||current!==1||gameMode!=='solo'){updateControls();return;}
 
     const move=chooseMachineMove();
-    machineThinking=false;
 
     if(!move){
       endByScore();
@@ -1113,7 +1158,7 @@ function maybeMachineTurn(){
 
     selected[1]=move.letter;
     updateControls();
-    cellClick(move.index);
+    cellClick(move.index,true);
 
     if(!over&&current===1){
       maybeMachineTurn();
@@ -1125,7 +1170,9 @@ function maybeMachineTurn(){
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
 async function activateSOS(player){
-  if(over||sosUsed||replaying||player!==current)return;
+  if(over||sosUsed||replaying||helpPaused||player!==current)return;
+  if(settle())return;
+  const id=gameId;
 
   // Global, one-time power-up: consume it for both players immediately.
   sosUsed=true;
@@ -1149,6 +1196,7 @@ async function activateSOS(player){
   q('modeFlash').classList.remove('hidden');
   updateControls();
   await sleep(900);
+  if(id!==gameId)return;
   q('modeFlash').classList.add('hidden');
 
   targetWord='SOS';
@@ -1159,26 +1207,27 @@ async function activateSOS(player){
   render();
   msg.textContent='🛟 Reproduciendo la partida con criterio SOS…';
   await sleep(220);
+  if(id!==gameId)return;
 
   for(const move of savedHistory){
     if(move.power==='swap'){
       if(board[move.index]) board[move.index]=board[move.index]==='O'?'S':'O';
+      rebuildScores(move.player);
     }else{
       board[move.index]=move.letter;
+      findNew(move.index,'SOS').forEach(k=>{
+        scored.set(k,move.player);
+        scores[move.player]++;
+      });
+      scoresEl.forEach((e,i)=>e.textContent=scores[i]);
     }
-
-    const made=findNew(move.index,'SOS');
-    made.forEach(k=>{
-      scored.set(k,move.player);
-      scores[move.player]++;
-    });
-    scoresEl.forEach((e,i)=>e.textContent=scores[i]);
 
     render();
     const cell=boardEl.children[move.index];
     if(cell)cell.classList.add('replay-mark');
     msg.textContent=`${avatars[move.player]} ${names[move.player]} → ${board[move.index]||move.letter}`;
     await sleep(260);
+    if(id!==gameId)return;
   }
 
   times=savedTimes;
@@ -1263,8 +1312,8 @@ q('restartMatch').addEventListener('click',()=>{
 });
 
 q('newGame').addEventListener('click',()=>{
-  clearInterval(timer);
-  clearTimeout(machineTimeout);
+  stopGame();
+  over=true;
   q('sidebar').classList.remove('open');
   game.classList.add('hidden');
   setup.classList.remove('hidden');
@@ -1273,7 +1322,7 @@ q('newGame').addEventListener('click',()=>{
 q('rematch').addEventListener('click',reset);
 
 q('changePlayers').addEventListener('click',()=>{
-  clearTimeout(machineTimeout);
+  stopGame();
   q('winnerOverlay').classList.add('hidden');
   game.classList.add('hidden');
   setup.classList.remove('hidden');
