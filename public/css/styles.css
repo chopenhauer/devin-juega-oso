@@ -1418,10 +1418,22 @@ select option {
 }
 
 /* Onboarding wizard */
+.setup-steps {
+  display: grid;
+  align-items: center;
+}
 .step {
   display: grid;
+  grid-area: 1 / 1;
+  align-content: center;
   gap: 16px;
+}
+.step:not(.inactive) {
   animation: stepIn 0.3s ease;
+}
+.step.inactive {
+  visibility: hidden;
+  pointer-events: none;
 }
 .step.hidden {
   display: none;
@@ -1580,11 +1592,12 @@ select option {
   display: none;
 }
 .setup.solo-setup .players-setup {
-  grid-template-columns: minmax(0, 300px);
-  justify-content: center;
+  grid-template-columns: minmax(0, 1fr);
+  justify-self: center;
+  width: 50%;
 }
 .setup[data-step='welcome'] .wizard-nav {
-  display: none;
+  visibility: hidden;
 }
 .wizard-nav {
   display: grid;
@@ -1618,6 +1631,74 @@ select option {
   .demo-tile,
   .demo-row.win .demo-tile,
   .demo-clock {
+    animation: none;
+  }
+}
+
+/* Rules carousel */
+.carousel {
+  grid-template-columns: minmax(0, 1fr);
+  padding-right: 0;
+  padding-left: 0;
+  overflow: hidden;
+  gap: 14px;
+}
+.slides {
+  display: flex;
+  justify-self: stretch;
+  width: 100%;
+  min-width: 0;
+  transition: transform 0.35s ease;
+  touch-action: pan-y;
+  user-select: none;
+}
+.rule-slide {
+  display: grid;
+  flex: 0 0 100%;
+  justify-items: center;
+  align-content: center;
+  gap: 16px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+}
+.dot {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.dot::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  transition:
+    width 0.25s,
+    background 0.25s;
+}
+.dot[aria-current='true']::before {
+  width: 26px;
+  background: var(--accent);
+}
+.avatar-btn:disabled {
+  opacity: 0.22;
+  filter: grayscale(1);
+  cursor: not-allowed;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .slides,
+  .step:not(.inactive) {
+    transition: none;
     animation: none;
   }
 }

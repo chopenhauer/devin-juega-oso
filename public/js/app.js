@@ -51,17 +51,44 @@ const { timeFor } = Engine;
     gameId = 0,
     helpPaused = false;
 
-  document.querySelectorAll('.avatars').forEach((grid) => {
+  const avatarGrids = [...document.querySelectorAll('.avatars')];
+  const avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
+  const firstFreeAvatar = (taken) => avatarChoices.find((a) => a !== taken);
+
+  // Each player must have a different avatar: the other player's pick is disabled.
+  function syncAvatars() {
+    avatarGrids.forEach((grid) => {
+      const p = +grid.dataset.player;
+      grid.querySelectorAll('.avatar-btn').forEach((b) => {
+        const taken = b.dataset.avatar === avatars[1 - p];
+        b.classList.toggle('selected', b.dataset.avatar === avatars[p]);
+        b.disabled = taken;
+        b.title = taken ? 'Ya lo ha elegido el otro jugador' : '';
+      });
+      previews[p].textContent = avatars[p];
+    });
+  }
+
+  avatarGrids.forEach((grid) => {
     const p = +grid.dataset.player;
     grid.querySelectorAll('.avatar-btn').forEach((b) =>
       b.addEventListener('click', () => {
-        grid.querySelectorAll('.avatar-btn').forEach((x) => x.classList.remove('selected'));
-        b.classList.add('selected');
+        if (b.dataset.avatar === avatars[1 - p]) return;
         avatars[p] = b.dataset.avatar;
-        previews[p].textContent = avatars[p];
+        syncAvatars();
       }),
     );
   });
+
+  // Restores saved avatars (dispatched by onboarding.js) without a temporary clash.
+  document.addEventListener('oso:avatars', (e) => {
+    const [first, second] = e.detail;
+    if (avatarChoices.includes(first)) avatars[0] = first;
+    if (avatarChoices.includes(second)) avatars[1] = second;
+    if (avatars[1] === avatars[0]) avatars[1] = firstFreeAvatar(avatars[0]);
+    syncAvatars();
+  });
+  syncAvatars();
 
   function setGameMode(mode) {
     gameMode = mode;
@@ -84,9 +111,10 @@ const { timeFor } = Engine;
       namesIn[1].disabled = false;
       p2Avatars.style.opacity = '';
       p2Avatars.style.pointerEvents = '';
-      if (avatars[1] === '🤖') avatars[1] = '🐼';
+      if (avatars[1] === '🤖') avatars[1] = avatars[0] === '🐼' ? firstFreeAvatar('🐼') : '🐼';
       previews[1].textContent = avatars[1];
     }
+    syncAvatars();
   }
   q('modeTwo').addEventListener('click', () => setGameMode('two'));
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
