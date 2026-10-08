@@ -4,16 +4,16 @@ Guía viva del aspecto de OSO. Todo el estilo está en `public/css/styles.css`.
 
 ## Tokens (`:root`)
 
-| Grupo | Tokens | Uso |
-| --- | --- | --- |
-| Fondo | `--bg1` `--bg2` `--bg3` | Degradado nocturno de la app |
-| Superficies | `--glass` `--glass2` `--line` | Paneles y tarjetas de cristal |
-| Texto | `--ink` `--muted` | Texto principal y secundario |
-| Acción | `--accent` `--accent2` | Botón principal y foco |
-| Jugadores | `--p1*` (azul) · `--p2*` (rosa) | Paneles, letras y OSOs de cada jugador |
-| Fichas | `--tile` `--tile-edge` `--tile-ink` | Letras del tablero |
-| Radios | `--r-xs` 10 · `--r-sm` 14 · `--r-md` 18 · `--r-lg` 22 · `--r-xl` 28 · `--r-pill` | Esquinas: usa siempre un token, nunca un valor suelto |
-| Tipografía | `--font` (Fredoka autoalojada) | Toda la interfaz |
+| Grupo       | Tokens                                                                           | Uso                                                   |
+| ----------- | -------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Fondo       | `--bg1` `--bg2` `--bg3`                                                          | Degradado nocturno de la app                          |
+| Superficies | `--glass` `--glass2` `--line`                                                    | Paneles y tarjetas de cristal                         |
+| Texto       | `--ink` `--muted`                                                                | Texto principal y secundario                          |
+| Acción      | `--accent` `--accent2`                                                           | Botón principal y foco                                |
+| Jugadores   | `--p1*` (azul) · `--p2*` (rosa)                                                  | Paneles, letras y OSOs de cada jugador                |
+| Fichas      | `--tile` `--tile-edge` `--tile-ink`                                              | Letras del tablero                                    |
+| Radios      | `--r-xs` 10 · `--r-sm` 14 · `--r-md` 18 · `--r-lg` 22 · `--r-xl` 28 · `--r-pill` | Esquinas: usa siempre un token, nunca un valor suelto |
+| Tipografía  | `--font` (Fredoka autoalojada)                                                   | Toda la interfaz                                      |
 
 ## Componentes
 
@@ -42,7 +42,7 @@ Arreglado: falta de `h1`, créditos fuera de una región (`<footer>`), selector 
 
 1. **Escala tipográfica:** hay 26 tamaños distintos; reducirlos a unos 7 tokens (`--fs-xs` … `--fs-display`).
 2. **Colores semánticos:** hay 53 colores sueltos; pasarlos a tokens (`--success`, `--danger`, `--sea-*`), lo que también prepararía los temas de temporada.
-3. **Tablero con teclado:** moverse con las flechas por el tablero (patrón *grid* con un solo tabulador), como en los juegos de tablero web accesibles.
+3. **Tablero con teclado:** moverse con las flechas por el tablero (patrón _grid_ con un solo tabulador), como en los juegos de tablero web accesibles.
 4. **OSOs sin depender del color:** añadir a los OSOs de cada jugador un borde o patrón distinto, para jugadores daltónicos.
 5. **Sonido y vibración opcionales:** un sonido corto al poner una letra y al puntuar, con un interruptor (como Wordle o Duolingo). Va con T4.4.
 6. **Menú lateral como diálogo:** encerrar el foco dentro del menú, cerrarlo con Escape y devolver el foco a ☰.
