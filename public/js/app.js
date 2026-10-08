@@ -240,7 +240,7 @@ const { timeFor } = Engine;
     });
     document
       .querySelectorAll('.score-label')
-      .forEach((e) => (e.textContent = targetWord === 'SOS' ? 'SOS' : 'OSOS'));
+      .forEach((e) => (e.textContent = targetWord === 'SOS' ? 'puntos SOS' : 'puntos OSO'));
     game.classList.toggle('solo', gameMode === 'solo');
 
     turnBarTop.textContent = over

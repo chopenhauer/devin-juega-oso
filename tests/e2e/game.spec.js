@@ -70,7 +70,7 @@ test('B03: SOS replay forgets a sequence destroyed by a swap; labels and counter
   await page.click('#sos1', { force: true });
   await expect(page.locator('#message')).toContainText('Marcador recalculado: 0 – 0', { timeout: 6000 });
   expect((await boardText(page)).slice(0, 3)).toBe('OOS');
-  await expect(page.locator('.score-label').first()).toHaveText('SOS');
+  await expect(page.locator('.score-label').first()).toHaveText('puntos SOS');
   await expect(page.locator('#sos1 .count')).toHaveText('0');
   await expect(page.locator('body')).toHaveClass(/sea-theme/);
 });
@@ -87,7 +87,7 @@ test('B04: leaving during the SOS replay does not touch the next game', async ({
   await page.waitForTimeout(3000);
   expect(await boardText(page)).toBe('.'.repeat(25));
   await expect(page.locator('#score1')).toHaveText('0');
-  await expect(page.locator('.score-label').first()).toHaveText('OSOS');
+  await expect(page.locator('.score-label').first()).toHaveText('puntos OSO');
 });
 
 test('B02: clicks while the machine thinks are ignored; solo panel is upright', async ({ page }) => {
