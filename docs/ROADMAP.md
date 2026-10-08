@@ -69,6 +69,33 @@ Un salón de la fama con las mejores partidas y rachas.
 - **Pantalla:** acceso desde el inicio («🏆 Hall of fame») y al terminar la partida («¡Nuevo
   récord!»), con botón para borrar el historial.
 
+### Temas de temporada (idea de Julia)
+
+Que el juego cambie de skin según la época del año, para que se sienta distinto en cada fiesta.
+
+| Tema                | Fechas (orientativas) | Ideas                                                                                                             |
+| ------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Halloween           | 15 oct – 2 nov        | Osos disfrazados (bruja, vampiro, fantasma), calabazas, murciélagos y telarañas; fondo naranja y morado.          |
+| Navidad             | 1 dic – 6 ene         | Nieve cayendo, gorro de Papá Noel para los osos, luces y regalos bajo el tablero; victoria con lluvia de regalos. |
+| Año Nuevo           | 31 dic – 1 ene        | Fuegos artificiales al ganar, serpentinas y las 12 uvas como cuenta atrás en el reloj.                            |
+| San Valentín        | 7 – 14 feb            | Corazones flotando, fichas en rosa y rojo, osos con lazos.                                                        |
+| Carnaval            | Semana de carnaval    | Osos con antifaz y confeti de colores.                                                                            |
+| Primavera           | Mar – may             | Flores, mariposas y tonos verdes suaves.                                                                          |
+| Verano              | Jul – ago             | Escenario de playa: arena, sol, olas y osos con gafas de sol y flotador.                                          |
+| Otoño               | Sep – nov             | Hojas cayendo y tonos ocres.                                                                                      |
+| Cumpleaños de Julia | Su fecha              | Tarta, globos y confeti extra (la fecha se guardaría solo en el dispositivo).                                     |
+
+- **Cosas temáticas:** además del fondo y los colores, pequeños elementos por tema (una calabaza en
+  Halloween, regalos en Navidad, una sombrilla en verano), por ejemplo en las fichas, el tablero o
+  la pantalla de victoria.
+- **Cómo se activa:** automáticamente según la fecha del dispositivo, con un ajuste para elegir el
+  tema a mano o volver al clásico.
+- **Técnica:** una clase en `body` por tema (como `sea-theme` del SOS) con variables CSS y dibujos
+  SVG o emoji propios, sin recursos externos para respetar la CSP. Animaciones suaves y quietas
+  con «reducir movimiento».
+- **A decidir:** si las cosas temáticas son solo decoración o cambian algo de la partida, y cómo
+  convive cada tema con el tema marino del extra OSO→SOS.
+
 ### Regalos y extras desbloqueables
 
 Pequeños regalos que se desbloquean jugando (por ejemplo al ganar, al formar varios OSO seguidos
