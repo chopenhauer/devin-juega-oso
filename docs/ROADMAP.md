@@ -68,6 +68,30 @@ Un salón de la fama con las mejores partidas y rachas.
 - **Pantalla:** acceso desde el inicio («🏆 Hall of fame») y al terminar la partida («¡Nuevo
   récord!»), con botón para borrar el historial.
 
+### Créditos en las pantallas iniciales
+
+Mención visible al inicio: «Hecho por Julia y JoseLuis — Vilarequi — con amor». Probar varias
+versiones (pie de la bienvenida, firma bajo el logo, sello discreto en todos los pasos) y elegir
+la que quede más natural. Ojo: la bienvenida solo sale la primera vez, así que conviene que se vea
+también en el paso Modo.
+
+### Regalos y extras desbloqueables
+
+Pequeños regalos que se desbloquean jugando (por ejemplo al ganar, al formar varios OSO seguidos
+o al completar partidas): avatares nuevos, temas o skins (como el marino del SOS), fichas
+especiales o un extra adicional en la siguiente partida.
+
+- **A decidir:** qué se desbloquea, con qué logro, si es por jugador o por dispositivo y si los
+  regalos dan ventaja en la partida o son solo cosméticos.
+- **Guardado:** en `localStorage`, igual que las preferencias y el hall of fame local.
+
+### Intercambio de tiempo por ayudas
+
+Que el jugador consiga ventajas a cambio de dedicar tiempo de su reloj: más pistas, ayudas
+adicionales u otros extras del roadmap. Es la misma idea que el **Modo Mercado (T4.6/T4.7)**, que
+ya define costes orientativos; las decisiones pendientes son las mismas (costes, límite de
+compras, margen mínimo de tiempo y modo 1 jugador).
+
 ## Otras ideas y decisiones abiertas
 
 - **Reloj con la pestaña dormida:** si se duerme la pestaña o el dispositivo, ese tiempo no se
