@@ -4,6 +4,7 @@ Juego web de O y S para dos jugadores (o contra la máquina), creado por JoseLui
 
 - Producción: https://devin-juega-oso.vercel.app (cada push a `main` se publica solo).
 - Cada rama y PR genera una preview en Vercel.
+- Roadmap e ideas de mejora: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Estructura
 
