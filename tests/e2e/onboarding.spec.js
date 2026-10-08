@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(({ page }) =>
+  page.route(/clarity\.ms|c\.bing\.com/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+  ),
+);
+
 const step = (page) => page.locator('#setupScreen').getAttribute('data-step');
 
 test('first visit walks through the intro, then remembers choices', async ({ page }) => {

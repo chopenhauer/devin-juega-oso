@@ -12,7 +12,14 @@ async function startGame(page, { solo = false } = {}) {
   await page.click('#startGame');
 }
 
+// Never send test traffic to Microsoft Clarity.
+const stubClarity = (page) =>
+  page.route(/clarity\.ms|c\.bing\.com/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+  );
+
 test.beforeEach(async ({ page }, testInfo) => {
+  await stubClarity(page);
   testInfo.errors = [];
   page.on('pageerror', (e) => testInfo.errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && testInfo.errors.push(m.text()));
@@ -104,4 +111,11 @@ test('a full game against the machine ends with a winner screen', async ({ page 
   }
   await expect(overlay).toBeVisible({ timeout: 5000 });
   await expect(page.locator('#winnerTitle')).not.toBeEmpty();
+});
+
+test('loads the Microsoft Clarity tag without CSP errors', async ({ page }) => {
+  const tag = page.waitForRequest(/www\.clarity\.ms\/tag\/yuj6hlg34s/);
+  await page.reload();
+  await tag;
+  expect(await page.evaluate(() => typeof window.clarity)).toBe('function');
 });

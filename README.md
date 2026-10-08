@@ -49,7 +49,9 @@ actualizaciones mensuales de dependencias y acciones.
 - `vercel.json` define cabeceras para todo el sitio: Content-Security-Policy estricta (solo recursos
   propios, sin scripts ni estilos inline), `frame-ancestors 'none'` / `X-Frame-Options`, `nosniff`,
   `Referrer-Policy: no-referrer`, `Permissions-Policy` y aislamiento de origen.
-- No hay recursos de terceros: la fuente se sirve desde el propio dominio.
+- Único tercero: Microsoft Clarity (analítica), cargado desde `public/js/clarity.js`; la CSP solo
+  abre sus dominios (`*.clarity.ms`, `c.bing.com`). La fuente se sirve desde el propio dominio.
+  Los tests e2e sustituyen Clarity por una respuesta vacía para no enviar datos.
 - El texto que escriben los jugadores (nombres) se pinta siempre con `textContent`, nunca como HTML.
 - `.vercelignore` solo sube `public/` y `vercel.json`; tests, configuración y versiones antiguas no se publican.
 
