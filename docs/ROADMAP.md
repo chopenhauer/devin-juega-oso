@@ -12,6 +12,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   seguridad, tests unitarios y e2e, CI y Dependabot.
 - Inicio por pasos (bienvenida, carrusel de reglas, modo, jugadores, tablero), elecciones
   recordadas en el navegador, avatares exclusivos y panel de altura fija.
+- Paso «¿Cómo vais a jugar?» con 2 jugadores: _Enfrentados_ (panel del jugador 2 girado) o _Misma
+  vista_; por defecto Enfrentados en móvil y tablet, Misma vista en escritorio.
 - Analítica con Microsoft Clarity.
 
 ## Roadmap F4 (pendiente)
@@ -67,8 +69,6 @@ Un salón de la fama con las mejores partidas y rachas.
 
 ## Otras ideas y decisiones abiertas
 
-- **Elegir la vista al empezar:** _Enfrentados_ o _Misma vista_ (juegaoso.com ya lo tiene). Por
-  defecto Enfrentados en móvil y tablet, Misma vista en escritorio.
 - **Reloj con la pestaña dormida:** si se duerme la pestaña o el dispositivo, ese tiempo no se
   descuenta y funciona como una pausa gratis. Decidir si se mantiene así.
 - **B06 · la máquina en Difícil no defiende:** se mantuvo a propósito; se puede mejorar si se

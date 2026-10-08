@@ -246,6 +246,52 @@ select:focus-visible {
   border: 2px solid var(--accent);
   box-shadow: 0 0 18px rgba(255, 210, 63, 0.35);
 }
+.view-choice {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--glass);
+  color: #fff;
+  text-align: left;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.view-btn[aria-pressed='true'] {
+  background: rgba(255, 210, 63, 0.18);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 18px rgba(255, 210, 63, 0.35);
+}
+.view-icon {
+  display: grid;
+  flex: 0 0 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 24px;
+}
+.view-text {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--muted);
+}
+.view-text strong {
+  font-size: 17px;
+  color: #fff;
+}
 .help-toggle {
   min-height: 42px;
   border: 1px solid var(--line);
@@ -467,7 +513,9 @@ select option {
   transform: rotate(180deg);
 }
 .game.solo .player-panel.top,
-.game.solo .turnbar-top {
+.game.solo .turnbar-top,
+.game.same-view .player-panel.top,
+.game.same-view .turnbar-top {
   transform: none;
 }
 .identity {

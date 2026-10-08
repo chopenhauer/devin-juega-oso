@@ -106,6 +106,7 @@ test('players cannot pick the same avatar, also after restoring a swap', async (
   await expect(page.locator('#preview2')).toHaveText('🐻');
 
   await page.click('#stepNext');
+  await page.click('#stepNext');
   await page.click('#startGame');
   await page.reload();
   await expect(page.locator('#preview1')).toHaveText('🐼');
@@ -118,8 +119,52 @@ test('back from the game menu returns to the mode step', async ({ page }) => {
   await page.click('#introSkip');
   await page.click('#stepNext');
   await page.click('#stepNext');
+  await page.click('#stepNext');
   await page.click('#startGame');
   await page.click('#menuTab');
   await page.click('#newGame');
   expect(await step(page)).toBe('mode');
+});
+
+const rotated = (page, selector) =>
+  page.locator(selector).evaluate((e) => getComputedStyle(e).transform !== 'none');
+
+test('two players choose the orientation; solo skips that step', async ({ page }, testInfo) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  const heights = [await panelHeight(page)];
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  expect(await step(page)).toBe('view');
+  heights.push(await panelHeight(page));
+  expect(Math.max(...heights) - Math.min(...heights), `panel heights ${heights}`).toBeLessThanOrEqual(1);
+  const defaultView = testInfo.project.name === 'desktop' ? '#viewSame' : '#viewFacing';
+  await expect(page.locator(defaultView)).toHaveAttribute('aria-pressed', 'true');
+
+  await page.click('#viewSame');
+  await expect(page.locator('#viewFacing')).toHaveAttribute('aria-pressed', 'false');
+  await page.click('#stepNext');
+  await expect(page.locator('#setupSummary')).toContainText('(misma vista)');
+  await page.click('#startGame');
+  expect(await rotated(page, '#side2')).toBe(false);
+  expect(await rotated(page, '#turnBarTop')).toBe(false);
+
+  await page.reload();
+  await expect(page.locator('#viewSame')).toHaveAttribute('aria-pressed', 'true');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  await page.click('#viewFacing');
+  await page.click('#stepNext');
+  await expect(page.locator('#setupSummary')).toContainText('(enfrentados)');
+  await page.click('#startGame');
+  expect(await rotated(page, '#side2')).toBe(true);
+
+  await page.click('#menuTab');
+  await page.click('#newGame');
+  await page.click('#modeSolo');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  expect(await step(page)).toBe('board');
+  await page.click('#stepBack');
+  expect(await step(page)).toBe('players');
 });
