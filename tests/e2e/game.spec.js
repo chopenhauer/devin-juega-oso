@@ -72,6 +72,7 @@ test('B03: SOS replay forgets a sequence destroyed by a swap; labels and counter
   expect((await boardText(page)).slice(0, 3)).toBe('OOS');
   await expect(page.locator('.score-label').first()).toHaveText('SOS');
   await expect(page.locator('#sos1 .count')).toHaveText('0');
+  await expect(page.locator('body')).toHaveClass(/sea-theme/);
 });
 
 test('B04: leaving during the SOS replay does not touch the next game', async ({ page }) => {
@@ -81,6 +82,7 @@ test('B04: leaving during the SOS replay does not touch the next game', async ({
   await page.waitForTimeout(1200);
   await page.click('#menuTab');
   await page.click('#newGame');
+  await expect(page.locator('body')).not.toHaveClass(/sea-theme/);
   await startGame(page);
   await page.waitForTimeout(3000);
   expect(await boardText(page)).toBe('.'.repeat(25));

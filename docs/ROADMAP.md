@@ -15,6 +15,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Paso «¿Cómo vais a jugar?» con 2 jugadores: _Enfrentados_ (panel del jugador 2 girado) o _Misma
   vista_; por defecto Enfrentados en móvil y tablet, Misma vista en escritorio.
 - Analítica con Microsoft Clarity.
+- Tema marino con olas suaves al activar el extra OSO→SOS.
 
 ## Roadmap F4 (pendiente)
 

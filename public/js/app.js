@@ -263,6 +263,12 @@ const { timeFor } = Engine;
     helpPaused = false;
     q('modeFlash').classList.add('hidden');
   }
+  // OSO→SOS switches the whole page to a calmer sea theme until the game ends.
+  function setSeaTheme(on) {
+    game.closest('.panel').classList.toggle('sos-mode', on);
+    document.body.classList.toggle('sea-theme', on);
+  }
+
   function reset() {
     stopGame();
     board = Array(size * size).fill('');
@@ -282,7 +288,7 @@ const { timeFor } = Engine;
     replaying = false;
     [...hintBtns, ...lastBtns, ...swapBtns, ...sosBtns].forEach((btn) => btn.classList.remove('used'));
     q('modeFlash').classList.add('hidden');
-    q('gameScreen').closest('.panel').classList.remove('sos-mode');
+    setSeaTheme(false);
     hintCell = null;
     lastCell = null;
     swapMode = null;
@@ -550,7 +556,7 @@ const { timeFor } = Engine;
     const savedHistory = history.map((m) => ({ ...m }));
     const savedTimes = [...times];
 
-    q('gameScreen').closest('.panel').classList.add('sos-mode');
+    setSeaTheme(true);
     q('modeFlash').classList.remove('hidden');
     updateControls();
     await sleep(900);
@@ -669,6 +675,7 @@ const { timeFor } = Engine;
     q('sidebar').classList.remove('open');
     game.classList.add('hidden');
     setup.classList.remove('hidden');
+    setSeaTheme(false);
   });
 
   q('rematch').addEventListener('click', reset);
@@ -678,5 +685,6 @@ const { timeFor } = Engine;
     q('winnerOverlay').classList.add('hidden');
     game.classList.add('hidden');
     setup.classList.remove('hidden');
+    setSeaTheme(false);
   });
 })();
