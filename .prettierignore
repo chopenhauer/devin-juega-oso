@@ -1,0 +1,5 @@
+old-references/
+public/fonts/
+package-lock.json
+test-results/
+playwright-report/

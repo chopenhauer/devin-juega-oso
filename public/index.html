@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>OSO · el juego de Julia</title>
+    <meta name="theme-color" content="#1b1145" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script type="module" src="/js/app.js"></script>
+  </head>
+  <body>
+    <main class="app">
+      <section class="panel">
+        <div id="setupScreen" class="setup">
+          <div class="brand-bear" aria-hidden="true">🐻</div>
+          <div class="brand" aria-label="OSO"><span>O</span><span>S</span><span>O</span></div>
+          <div class="tagline">Conecta · forma · gana</div>
+          <div class="mode-choice" aria-label="Modo de juego">
+            <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
+            <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
+          </div>
+          <div id="difficultyWrap" class="difficulty-wrap hidden">
+            <div class="difficulty-title">Dificultad de la máquina</div>
+            <div class="difficulty-choice">
+              <button id="difficultyEasy" class="difficulty-btn selected" type="button">🙂 Fácil</button>
+              <button id="difficultyHard" class="difficulty-btn" type="button">🧠 Difícil</button>
+            </div>
+          </div>
+          <div class="help-row">
+            <button id="helpToggle" class="help-toggle" type="button">❓ Reglas / Ayuda</button>
+          </div>
+
+          <div class="players-setup">
+            <div class="pconfig">
+              <div class="small-label">Jugador 1</div>
+              <div id="preview1" class="preview">🐻</div>
+              <input
+                id="nickname1"
+                class="nickname"
+                value=""
+                placeholder="Jugador 1"
+                maxlength="16"
+                aria-label="Nombre del jugador 1"
+              />
+              <div class="avatars" data-player="0">
+                <button class="avatar-btn selected" data-avatar="🐻">🐻</button
+                ><button class="avatar-btn" data-avatar="🐼">🐼</button>
+                <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                ><button class="avatar-btn" data-avatar="🧸">🧸</button>
+                <button class="avatar-btn" data-avatar="🦊">🦊</button
+                ><button class="avatar-btn" data-avatar="🐯">🐯</button>
+                <button class="avatar-btn" data-avatar="🦁">🦁</button
+                ><button class="avatar-btn" data-avatar="🐸">🐸</button>
+                <button class="avatar-btn" data-avatar="🐵">🐵</button
+                ><button class="avatar-btn" data-avatar="🐨">🐨</button>
+                <button class="avatar-btn" data-avatar="🐧">🐧</button
+                ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+              </div>
+            </div>
+
+            <div class="pconfig">
+              <div class="small-label">Jugador 2</div>
+              <div id="preview2" class="preview">🐼</div>
+              <input
+                id="nickname2"
+                class="nickname"
+                value=""
+                placeholder="Jugador 2"
+                maxlength="16"
+                aria-label="Nombre del jugador 2"
+              />
+              <div class="avatars" data-player="1">
+                <button class="avatar-btn" data-avatar="🐻">🐻</button
+                ><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
+                <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                ><button class="avatar-btn" data-avatar="🧸">🧸</button>
+                <button class="avatar-btn" data-avatar="🦊">🦊</button
+                ><button class="avatar-btn" data-avatar="🐯">🐯</button>
+                <button class="avatar-btn" data-avatar="🦁">🦁</button
+                ><button class="avatar-btn" data-avatar="🐸">🐸</button>
+                <button class="avatar-btn" data-avatar="🐵">🐵</button
+                ><button class="avatar-btn" data-avatar="🐨">🐨</button>
+                <button class="avatar-btn" data-avatar="🐧">🐧</button
+                ><button class="avatar-btn" data-avatar="🦄">🦄</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="setup-actions">
+            <div>
+              <div class="small-label">Tablero</div>
+              <select id="sizeSelect">
+                <option value="4">4 × 4 · 1:30</option>
+                <option value="5" selected>5 × 5 · 2:00</option>
+                <option value="6">6 × 6 · 2:30</option>
+                <option value="7">7 × 7 · 3:00</option>
+                <option value="8">8 × 8 · 4:00</option>
+              </select>
+            </div>
+            <button id="startGame" class="primary">Jugar</button>
+          </div>
+        </div>
+
+        <div id="gameScreen" class="game hidden">
+          <div id="side2" class="player-panel p2 top">
+            <div class="identity">
+              <div id="avatar2" class="avatar">🐼</div>
+              <div class="player-info">
+                <div class="name">
+                  <span id="name2">Jugador 2</span
+                  ><span id="machineBadge" class="machine-badge hidden">Máquina</span>
+                </div>
+                <div class="stats">
+                  <span id="timer2" class="timer">2:00</span>
+                  <span class="score-wrap"
+                    ><span class="score-label">OSOS</span><span id="score2" class="score">0</span></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div></div>
+            <div class="controls-row">
+              <div class="letter-choice">
+                <button class="letter" data-player="1" data-letter="O">O</button>
+                <button class="letter" data-player="1" data-letter="S">S</button>
+              </div>
+              <div class="tools">
+                <button id="hint2" class="power" title="Pista">💡<span class="count">1</span></button>
+                <button id="last2" class="power" title="Última jugada">👁️<span class="count">1</span></button>
+                <button id="swap2" class="power" title="Cambiar una letra">
+                  🔄<span class="count">1</span></button
+                ><button id="sos2" class="sos-power" title="Cambiar de OSO a SOS">
+                  🛟<span class="count">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="center-area">
+            <div id="turnBarTop" class="turnbar turnbar-top"></div>
+            <div class="board-shell"><div id="board" class="board"></div></div>
+            <div id="message" class="message" aria-live="polite"></div>
+          </div>
+
+          <div id="side1" class="player-panel p1">
+            <div class="identity">
+              <div id="avatar1" class="avatar">🐻</div>
+              <div class="player-info">
+                <div id="name1" class="name">Jugador 1</div>
+                <div class="stats">
+                  <span id="timer1" class="timer">2:00</span>
+                  <span class="score-wrap"
+                    ><span class="score-label">OSOS</span><span id="score1" class="score">0</span></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div></div>
+            <div class="controls-row">
+              <div class="letter-choice">
+                <button class="letter" data-player="0" data-letter="O">O</button>
+                <button class="letter" data-player="0" data-letter="S">S</button>
+              </div>
+              <div class="tools">
+                <button id="hint1" class="power" title="Pista">💡<span class="count">1</span></button>
+                <button id="last1" class="power" title="Última jugada">👁️<span class="count">1</span></button>
+                <button id="swap1" class="power" title="Cambiar una letra">
+                  🔄<span class="count">1</span></button
+                ><button id="sos1" class="sos-power" title="Cambiar de OSO a SOS">
+                  🛟<span class="count">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button id="menuTab" class="menu-tab" aria-label="Abrir menú">☰</button>
+          <aside id="sidebar" class="sidebar">
+            <h3>Partida</h3>
+            <button id="gameHelp">❓ Reglas / Ayuda</button>
+            <button id="restartMatch">Reiniciar tablero</button>
+            <button id="newGame">Nueva partida</button>
+            <button id="closeMenu">Cerrar</button>
+          </aside>
+        </div>
+
+        <div
+          id="helpModal"
+          class="help-modal hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="helpTitle"
+        >
+          <div class="help-dialog">
+            <div class="help-head">
+              <div>
+                <h2 id="helpTitle" class="help-title">Cómo se juega a OSO</h2>
+                <p class="help-sub">Forma palabras, suma puntos y encadena turnos.</p>
+              </div>
+              <button id="helpClose" class="help-close" type="button" aria-label="Cerrar ayuda">✕</button>
+            </div>
+
+            <div class="help-section">
+              <h3>Dinámica básica</h3>
+              <div class="help-steps">
+                <div class="help-step">
+                  <span class="num">1</span>
+                  <div><b>Elige O o S</b> y colócala en una casilla vacía.</div>
+                </div>
+                <div class="help-step">
+                  <span class="num">2</span>
+                  <div><b>Forma OSO</b> en horizontal, vertical o diagonal para sumar 1 punto.</div>
+                </div>
+                <div class="help-step">
+                  <span class="num">3</span>
+                  <div><b>Si formas OSO, vuelves a jugar</b> y recibes +10 segundos.</div>
+                </div>
+                <div class="help-step">
+                  <span class="num">4</span>
+                  <div>
+                    <b>La partida termina</b> cuando se llena el tablero o alguien se queda sin tiempo.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="help-section">
+              <h3>Extras</h3>
+              <div class="extras-list">
+                <div class="extra-line">
+                  <div class="extra-icon">💡</div>
+                  <div class="extra-copy">
+                    <strong>Pista</strong>Recomienda una letra y una casilla para tu siguiente movimiento.
+                  </div>
+                </div>
+                <div class="extra-line">
+                  <div class="extra-icon">👁️</div>
+                  <div class="extra-copy">
+                    <strong>Última jugada rival</strong>Marca en el tablero cuál fue el último movimiento del
+                    oponente.
+                  </div>
+                </div>
+                <div class="extra-line">
+                  <div class="extra-icon">🔄</div>
+                  <div class="extra-copy">
+                    <strong>Cambiar una letra</strong>Convierte una ficha ya colocada de O a S o de S a O.
+                    Después pasa el turno.
+                  </div>
+                </div>
+                <div class="extra-line">
+                  <div class="extra-icon">🛟</div>
+                  <div class="extra-copy">
+                    <strong>OSO → SOS</strong>Cambia el objetivo de toda la partida a SOS, reproduce las
+                    jugadas anteriores, recalcula el marcador y continúa. No se puede deshacer.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="help-section">
+              <h3>Contra la máquina</h3>
+              <p>
+                <strong>Fácil:</strong> juega de forma más relajada. <strong>Difícil:</strong> siempre
+                aprovecha la jugada que más puntos le da; si no hay, juega en el centro.
+              </p>
+            </div>
+
+            <div class="help-foot">
+              Cada extra puede usarse una sola vez por jugador. El cambio OSO → SOS es global: cuando alguien
+              lo activa, queda consumido para ambos.
+            </div>
+          </div>
+        </div>
+
+        <div id="modeFlash" class="mode-flash hidden">
+          <div class="mode-flash-card">
+            <div class="mode-flash-icon">🛟</div>
+            <div class="mode-flash-title">¡Ahora es SOS!</div>
+            <div class="mode-flash-sub">Recalculando la partida desde el principio…</div>
+          </div>
+        </div>
+        <div id="winnerOverlay" class="winner-overlay hidden">
+          <div id="confetti" class="confetti"></div>
+          <div>
+            <div id="winnerAvatar" class="winner-avatar">🐻</div>
+            <div id="winnerTitle" class="winner-title">¡Ganador!</div>
+            <div id="winnerSub" class="winner-sub"></div>
+            <div class="winner-actions">
+              <button id="rematch" class="primary">Revancha</button>
+              <button id="changePlayers" class="secondary">Cambiar jugadores</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
