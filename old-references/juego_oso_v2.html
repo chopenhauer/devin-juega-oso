@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OSO</title>
+<style>
+:root{
+  --bg:#efeae1;--paper:#fffdf8;--card:#f7f2e9;--ink:#20242b;--muted:#746e66;
+  --line:#d8cfc1;--dark:#28231f;--p1:#3567d6;--p2:#d65353;--gold:#e8b64f;
+}
+*{box-sizing:border-box} body{margin:0;min-height:100vh;background:linear-gradient(#faf7f1,var(--bg));
+font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);display:flex;justify-content:center}
+button,input,select{font:inherit} button{touch-action:manipulation}
+.app{width:min(100%,760px);padding:6px;position:relative}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:7px;position:relative;overflow:hidden}
+.hidden{display:none!important}
+
+/* SETUP */
+.setup{display:grid;gap:12px;padding:5px}.setup h1{text-align:center;margin:0;font-size:40px;letter-spacing:-.06em}
+.setup p{text-align:center;margin:0;color:var(--muted);font-size:13px}
+.players-setup{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.pconfig{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:8px;min-width:0}
+.label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.preview{width:52px;height:52px;margin:5px auto;display:grid;place-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;font-size:32px}
+.nickname{width:100%;min-height:42px;border:1px solid var(--line);border-radius:11px;background:#fff;text-align:center;font-size:16px;font-weight:800;color:var(--ink)}
+.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:7px}
+.avatar-btn{aspect-ratio:1;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:19px;padding:0;cursor:pointer}
+.avatar-btn.selected{border:2px solid var(--dark);background:#eee8df}
+.setup-actions{display:flex;align-items:end;justify-content:center;gap:8px;flex-wrap:wrap}
+select{min-height:43px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);padding:0 12px;font-weight:800}
+.primary{min-height:43px;border:0;border-radius:12px;background:var(--dark);color:#fff;padding:0 20px;font-weight:900;cursor:pointer}
+
+/* SHARED TABLE */
+.game{display:grid;gap:4px}
+.player-side{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;align-items:center;
+  background:var(--card);border:2px solid transparent;border-radius:14px;padding:5px;transition:.15s ease
+}
+.player-side.top{transform:rotate(180deg)}
+.player-side.active{background:#fff}
+.player-side.p1.active{border-color:var(--p1)} .player-side.p2.active{border-color:var(--p2)}
+.identity{display:flex;align-items:center;gap:5px;min-width:0}
+.avatar{width:30px;height:30px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center;font-size:18px;background:#fff;flex:0 0 auto}
+.meta{min-width:0}.name{font-size:10px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.statline{display:flex;align-items:baseline;gap:5px}.timer{font-size:12px;font-weight:950;font-variant-numeric:tabular-nums;color:var(--muted)}
+.score{font-size:20px;font-weight:950}.p1 .score,.p1.active .timer{color:var(--p1)}.p2 .score,.p2.active .timer{color:var(--p2)}
+
+.side-controls{display:flex;gap:4px;align-items:center}
+.letters{display:flex;background:#ebe5dc;border:1px solid var(--line);border-radius:10px;padding:2px;gap:2px}
+.letter{width:34px;height:32px;border:0;border-radius:8px;background:transparent;font-size:17px;font-weight:950;color:var(--ink);cursor:pointer}
+.letter.selected{background:var(--dark);color:#fff}
+.player-side:not(.active) .letter{opacity:.38}
+.power{width:34px;height:32px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:15px;padding:0;cursor:pointer;position:relative}
+.power .count{position:absolute;right:2px;bottom:1px;font-size:7px;font-weight:900;color:var(--muted)}
+.power:disabled{opacity:.3;cursor:default}
+.power.mode{outline:3px solid var(--gold);outline-offset:-2px;background:#fff7db}
+
+.turnbar{display:flex;align-items:center;justify-content:center;min-height:24px;font-size:10px;font-weight:900;color:var(--muted)}
+.board-shell{background:#d7cab7;border:1px solid #c2b197;border-radius:15px;padding:3px}
+.board{display:grid;gap:2px;width:100%}
+.cell{aspect-ratio:1;border:0;border-radius:7px;background:#fffdf8;position:relative;display:grid;place-items:center;padding:0;overflow:hidden;cursor:pointer;color:var(--ink);
+font-size:clamp(22px,9vw,52px);font-weight:950;box-shadow:inset 0 0 0 1px rgba(120,105,84,.16)}
+.cell span{position:relative;z-index:2}.cell:after{content:"";position:absolute;inset:2px;border-radius:5px;opacity:0}
+.cell.p1:after{background:color-mix(in srgb,var(--p1) 22%,transparent);opacity:1}.cell.p2:after{background:color-mix(in srgb,var(--p2) 22%,transparent);opacity:1}
+.cell.both:after{background:linear-gradient(135deg,color-mix(in srgb,var(--p1) 22%,transparent) 0 48%,color-mix(in srgb,var(--p2) 22%,transparent) 52% 100%);opacity:1}
+.cell.hint{outline:3px solid var(--gold);outline-offset:-3px}.cell.last{box-shadow:inset 0 0 0 3px #111}
+.cell.swap-target{outline:3px dashed var(--gold);outline-offset:-3px}
+.message{text-align:center;min-height:20px;font-size:11px;font-weight:900;margin:0}
+.low{animation:pulse .7s infinite}@keyframes pulse{50%{opacity:.35}}
+
+/* COLLAPSIBLE SIDEBAR */
+.menu-tab{
+  position:absolute;right:0;top:42%;z-index:15;width:28px;height:52px;border:1px solid var(--line);border-right:0;
+  border-radius:11px 0 0 11px;background:var(--dark);color:#fff;font-size:16px;font-weight:900;cursor:pointer
+}
+.sidebar{
+  position:absolute;right:0;top:29%;z-index:14;width:158px;background:#fff;border:1px solid var(--line);border-right:0;border-radius:15px 0 0 15px;
+  padding:10px;transform:translateX(100%);transition:transform .18s ease;box-shadow:-10px 12px 24px rgba(0,0,0,.08)
+}
+.sidebar.open{transform:translateX(0)}.sidebar h3{font-size:12px;margin:0 0 8px}.sidebar button{width:100%;min-height:39px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font-size:11px;font-weight:850;cursor:pointer;margin-top:5px}
+
+/* WINNER */
+.winner-overlay{position:absolute;inset:0;z-index:30;background:rgba(255,253,248,.95);display:grid;place-items:center;text-align:center;padding:20px}
+.winner-avatar{font-size:64px}.winner-title{font-size:28px;font-weight:950;letter-spacing:-.04em}.winner-sub{font-size:13px;color:var(--muted);margin-top:4px}
+.winner-actions{display:flex;gap:7px;justify-content:center;margin-top:13px}.secondary{min-height:40px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);padding:0 12px;font-size:11px;font-weight:850}
+.confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}.confetti i{position:absolute;top:-16px;width:8px;height:13px;border-radius:2px;animation:fall 2.7s linear forwards}
+@keyframes fall{to{transform:translateY(720px) rotate(760deg)}}
+
+@media(max-width:520px){
+ .app{padding:3px}.panel{padding:4px;border-radius:16px}
+ .setup h1{font-size:33px}.players-setup{gap:4px}.pconfig{padding:5px}.preview{width:44px;height:44px;font-size:27px}
+ .avatars{grid-template-columns:repeat(4,1fr)}.avatar-btn{font-size:17px}
+ .player-side{padding:4px;gap:3px;border-radius:11px}.avatar{width:26px;height:26px;font-size:16px}.name{font-size:9px}.timer{font-size:11px}.score{font-size:18px}
+ .side-controls{gap:2px}.letters{gap:1px;padding:1px}.letter,.power{width:30px;height:29px}.letter{font-size:16px}.power{font-size:13px}
+ .turnbar{min-height:18px;font-size:9px}.board-shell{padding:2px;border-radius:11px}.board{gap:2px}.cell{border-radius:5px}
+ .message{font-size:10px;min-height:18px}.sidebar{width:145px}.menu-tab{width:26px;height:48px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="panel">
+
+<div id="setupScreen" class="setup">
+  <h1>OSO 🐻</h1>
+  <p>Un tablero, dos lados. Cada jugador juega desde su propio extremo.</p>
+  <div class="players-setup">
+    <div class="pconfig">
+      <div class="label">Jugador 1</div><div id="preview1" class="preview">🐻</div>
+      <input id="nickname1" class="nickname" value="Jugador 1" maxlength="16">
+      <div class="avatars" data-player="0">
+        <button class="avatar-btn selected" data-avatar="🐻">🐻</button><button class="avatar-btn" data-avatar="🐼">🐼</button>
+        <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button><button class="avatar-btn" data-avatar="🧸">🧸</button>
+        <button class="avatar-btn" data-avatar="🦊">🦊</button><button class="avatar-btn" data-avatar="🐯">🐯</button>
+        <button class="avatar-btn" data-avatar="🦁">🦁</button><button class="avatar-btn" data-avatar="🐸">🐸</button>
+        <button class="avatar-btn" data-avatar="🐵">🐵</button><button class="avatar-btn" data-avatar="🐨">🐨</button>
+        <button class="avatar-btn" data-avatar="🐧">🐧</button><button class="avatar-btn" data-avatar="🦄">🦄</button>
+      </div>
+    </div>
+    <div class="pconfig">
+      <div class="label">Jugador 2</div><div id="preview2" class="preview">🐼</div>
+      <input id="nickname2" class="nickname" value="Jugador 2" maxlength="16">
+      <div class="avatars" data-player="1">
+        <button class="avatar-btn" data-avatar="🐻">🐻</button><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
+        <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button><button class="avatar-btn" data-avatar="🧸">🧸</button>
+        <button class="avatar-btn" data-avatar="🦊">🦊</button><button class="avatar-btn" data-avatar="🐯">🐯</button>
+        <button class="avatar-btn" data-avatar="🦁">🦁</button><button class="avatar-btn" data-avatar="🐸">🐸</button>
+        <button class="avatar-btn" data-avatar="🐵">🐵</button><button class="avatar-btn" data-avatar="🐨">🐨</button>
+        <button class="avatar-btn" data-avatar="🐧">🐧</button><button class="avatar-btn" data-avatar="🦄">🦄</button>
+      </div>
+    </div>
+  </div>
+  <div class="setup-actions">
+    <div><div class="label">Tablero</div><select id="sizeSelect">
+      <option value="4">4 × 4 · 1:30</option><option value="5" selected>5 × 5 · 2:00</option>
+      <option value="6">6 × 6 · 2:30</option><option value="7">7 × 7 · 3:00</option><option value="8">8 × 8 · 4:00</option>
+    </select></div>
+    <button id="startGame" class="primary">Jugar</button>
+  </div>
+</div>
+
+<div id="gameScreen" class="game hidden">
+  <!-- PLAYER 2: rotated, with controls on their physical side -->
+  <div id="side2" class="player-side p2 top">
+    <div class="identity">
+      <div id="avatar2" class="avatar">🐼</div>
+      <div class="meta"><div id="name2" class="name">Jugador 2</div><div class="statline"><span id="timer2" class="timer">2:00</span><span>·</span><span id="score2" class="score">0</span></div></div>
+    </div>
+    <div class="side-controls">
+      <div class="letters">
+        <button class="letter" data-player="1" data-letter="O">O</button><button class="letter" data-player="1" data-letter="S">S</button>
+      </div>
+      <button id="hint2" class="power" title="Pista">💡<span class="count">1</span></button>
+      <button id="last2" class="power" title="Última jugada rival">👁️<span class="count">1</span></button>
+      <button id="swap2" class="power" title="Girar una letra O/S">🔄<span class="count">1</span></button>
+    </div>
+  </div>
+
+  <div id="turnBar" class="turnbar"></div>
+  <div class="board-shell"><div id="board" class="board"></div></div>
+  <div id="message" class="message" aria-live="polite"></div>
+
+  <!-- PLAYER 1 -->
+  <div id="side1" class="player-side p1">
+    <div class="identity">
+      <div id="avatar1" class="avatar">🐻</div>
+      <div class="meta"><div id="name1" class="name">Jugador 1</div><div class="statline"><span id="timer1" class="timer">2:00</span><span>·</span><span id="score1" class="score">0</span></div></div>
+    </div>
+    <div class="side-controls">
+      <div class="letters">
+        <button class="letter" data-player="0" data-letter="O">O</button><button class="letter" data-player="0" data-letter="S">S</button>
+      </div>
+      <button id="hint1" class="power" title="Pista">💡<span class="count">1</span></button>
+      <button id="last1" class="power" title="Última jugada rival">👁️<span class="count">1</span></button>
+      <button id="swap1" class="power" title="Girar una letra O/S">🔄<span class="count">1</span></button>
+    </div>
+  </div>
+
+  <button id="menuTab" class="menu-tab" aria-label="Abrir menú">☰</button>
+  <aside id="sidebar" class="sidebar" aria-label="Menú de partida">
+    <h3>Partida</h3>
+    <button id="restartMatch">Reiniciar tablero</button>
+    <button id="newGame">Nueva partida</button>
+    <button id="closeMenu">Cerrar</button>
+  </aside>
+</div>
+
+<div id="winnerOverlay" class="winner-overlay hidden">
+  <div id="confetti" class="confetti"></div>
+  <div>
+    <div id="winnerAvatar" class="winner-avatar">🐻</div>
+    <div id="winnerTitle" class="winner-title">¡Ganador!</div>
+    <div id="winnerSub" class="winner-sub"></div>
+    <div class="winner-actions"><button id="rematch" class="primary">Revancha</button><button id="changePlayers" class="secondary">Cambiar jugadores</button></div>
+  </div>
+</div>
+
+</section>
+</main>
+
+<script>
+(()=>{
+const BONUS=10,timeFor=n=>Math.ceil((30+n*n*3)/30)*30;
+const q=id=>document.getElementById(id);
+const setup=q('setupScreen'),game=q('gameScreen'),boardEl=q('board'),msg=q('message'),turnBar=q('turnBar');
+const namesIn=[q('nickname1'),q('nickname2')],previews=[q('preview1'),q('preview2')],namesEl=[q('name1'),q('name2')],avatarsEl=[q('avatar1'),q('avatar2')],timers=[q('timer1'),q('timer2')],scoresEl=[q('score1'),q('score2')],sides=[q('side1'),q('side2')];
+const hintBtns=[q('hint1'),q('hint2')],lastBtns=[q('last1'),q('last2')],swapBtns=[q('swap1'),q('swap2')];
+let avatars=['🐻','🐼'],names=['Jugador 1','Jugador 2'],size=5,board=[],current=0,scores=[0,0],times=[120,120],selected=['O','O'],scored=new Map(),history=[],extras=[],timer=null,lastTick=0,over=false,hintCell=null,lastCell=null,swapMode=null;
+
+document.querySelectorAll('.avatars').forEach(grid=>{
+ const p=+grid.dataset.player;
+ grid.querySelectorAll('.avatar-btn').forEach(b=>b.addEventListener('click',()=>{
+   grid.querySelectorAll('.avatar-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');
+   avatars[p]=b.dataset.avatar;previews[p].textContent=avatars[p];
+ }));
+});
+
+document.querySelectorAll('.letter').forEach(b=>b.addEventListener('click',()=>{
+ const p=+b.dataset.player;if(p!==current||over)return;
+ selected[p]=b.dataset.letter;swapMode=null;
+ updateControls();render();msg.textContent=`${avatars[p]} ${names[p]} jugará ${selected[p]}.`;
+}));
+
+function fmt(v){v=Math.max(0,Math.ceil(v));return Math.floor(v/60)+':'+String(v%60).padStart(2,'0')}
+function updateTimers(){timers.forEach((e,i)=>{e.textContent=fmt(times[i]);e.classList.toggle('low',times[i]<=20&&!over)})}
+function updateControls(){
+ sides.forEach((s,i)=>s.classList.toggle('active',i===current&&!over));
+ document.querySelectorAll('.letter').forEach(b=>{
+   const p=+b.dataset.player;b.classList.toggle('selected',b.dataset.letter===selected[p]);
+   b.disabled=p!==current||over;
+ });
+ [0,1].forEach(i=>{
+   hintBtns[i].disabled=i!==current||over||!extras[i].hint;
+   lastBtns[i].disabled=i!==current||over||!extras[i].last||!history.some(m=>m.player!==i);
+   swapBtns[i].disabled=i!==current||over||!extras[i].swap||!board.some(Boolean);
+   swapBtns[i].classList.toggle('mode',swapMode===i);
+ });
+ turnBar.textContent=over?'Partida terminada':`${avatars[current]} Turno de ${names[current]}`;
+}
+function reset(){
+ clearInterval(timer);board=Array(size*size).fill('');current=0;scores=[0,0];times=[timeFor(size),timeFor(size)];
+ selected=['O','O'];scored=new Map();history=[];extras=[{hint:1,last:1,swap:1},{hint:1,last:1,swap:1}];
+ over=false;hintCell=null;lastCell=null;swapMode=null;scoresEl.forEach(e=>e.textContent='0');
+ q('winnerOverlay').classList.add('hidden');render();updateTimers();updateControls();msg.textContent=`${avatars[0]} ${names[0]} empieza.`;
+ lastTick=performance.now();timer=setInterval(tick,100);
+}
+function tick(){if(over)return;const now=performance.now(),dt=(now-lastTick)/1000;lastTick=now;times[current]=Math.max(0,times[current]-dt);updateTimers();if(times[current]<=0)finish(1-current,'tiempo')}
+
+function render(){
+ boardEl.innerHTML='';boardEl.style.gridTemplateColumns=`repeat(${size},minmax(0,1fr))`;
+ board.forEach((v,i)=>{
+   const c=document.createElement('button');c.className='cell';c.type='button';
+   if(i===hintCell)c.classList.add('hint');if(i===lastCell)c.classList.add('last');if(swapMode===current&&v)c.classList.add('swap-target');
+   const s=document.createElement('span');s.textContent=v;c.appendChild(s);c.addEventListener('click',()=>cellClick(i));boardEl.appendChild(c);
+ });paint();
+}
+function paint(){
+ const own=Array.from({length:size*size},()=>new Set());
+ for(const [k,p] of scored.entries())k.split('-').map(Number).forEach(i=>own[i].add(p));
+ [...boardEl.children].forEach((c,i)=>{if(own[i].size===2)c.classList.add('both');else if(own[i].has(0))c.classList.add('p1');else if(own[i].has(1))c.classList.add('p2')});
+}
+function cellClick(i){
+ if(over)return;
+ if(swapMode===current){
+   if(!board[i]){msg.textContent='🔄 Elige una casilla que ya tenga O o S.';return}
+   const p=current;extras[p].swap=0;board[i]=board[i]==='O'?'S':'O';history.push({player:p,index:i,letter:board[i],power:'swap'});
+   swapMode=null;rebuildScores();hintCell=null;lastCell=null;
+   msg.textContent=`🔄 ${names[p]} ha girado la letra: ahora es ${board[i]}.`;
+   current=1-current;lastTick=performance.now();render();updateControls();
+   if(board.every(Boolean))endByScore();
+   return;
+ }
+ if(board[i])return;
+ const p=current;board[i]=selected[p];history.push({player:p,index:i,letter:selected[p]});
+ const made=findNew(i);made.forEach(k=>scored.set(k,p));
+ if(made.length){scores[p]+=made.length;times[p]+=BONUS*made.length;scoresEl[p].textContent=scores[p];updateTimers();msg.textContent=`¡${avatars[p]} ${names[p]} consigue ${made.length===1?'un OSO':made.length+' OSO'}! +${BONUS*made.length}s`;}
+ else{current=1-current;lastTick=performance.now();msg.textContent=`Turno de ${avatars[current]} ${names[current]}`;}
+ hintCell=null;lastCell=null;render();updateControls();if(board.every(Boolean))endByScore();
+}
+function findNew(idx){
+ const r0=Math.floor(idx/size),c0=idx%size,dirs=[[0,1],[1,0],[1,1],[1,-1]],found=[];
+ for(const [dr,dc] of dirs)for(let off=-2;off<=0;off++){const cells=[];for(let k=0;k<3;k++){const r=r0+(off+k)*dr,c=c0+(off+k)*dc;if(r<0||c<0||r>=size||c>=size){cells.length=0;break}cells.push(r*size+c)}
+ if(cells.length===3&&cells.includes(idx)&&board[cells[0]]==='O'&&board[cells[1]]==='S'&&board[cells[2]]==='O'){const key=cells.join('-');if(!scored.has(key)&&!found.includes(key))found.push(key)}}
+ return found;
+}
+function rebuildScores(){
+ const previous=new Map(scored);scored=new Map();scores=[0,0];
+ // Preserve owner when a previously scored OSO still exists; newly-created OSOs from swap belong to current player.
+ const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+ for(let r=0;r<size;r++)for(let c=0;c<size;c++)for(const [dr,dc] of dirs){
+   const r2=r+2*dr,c2=c+2*dc;if(r2<0||c2<0||r2>=size||c2>=size)continue;
+   const cells=[r*size+c,(r+dr)*size+(c+dc),r2*size+c2],key=cells.join('-');
+   if(board[cells[0]]==='O'&&board[cells[1]]==='S'&&board[cells[2]]==='O'){const owner=previous.has(key)?previous.get(key):current;scored.set(key,owner);scores[owner]++}
+ }
+ scoresEl.forEach((e,i)=>e.textContent=scores[i]);
+}
+function bestHint(){
+ for(let i=0;i<board.length;i++)if(!board[i])for(const l of ['O','S']){board[i]=l;const n=findNew(i).length;board[i]='';if(n)return{index:i,letter:l}}
+ const empties=board.map((v,i)=>v?null:i).filter(v=>v!==null);if(!empties.length)return null;
+ const center=(size*size-1)/2;empties.sort((a,b)=>Math.abs(a-center)-Math.abs(b-center));return{index:empties[0],letter:selected[current]};
+}
+hintBtns.forEach((b,p)=>b.addEventListener('click',()=>{
+ if(p!==current||!extras[p].hint)return;const h=bestHint();if(!h)return;extras[p].hint=0;selected[p]=h.letter;hintCell=h.index;lastCell=null;swapMode=null;
+ render();updateControls();msg.textContent=`💡 Prueba ${h.letter} en la casilla marcada.`;
+}));
+lastBtns.forEach((b,p)=>b.addEventListener('click',()=>{
+ if(p!==current||!extras[p].last)return;const m=[...history].reverse().find(x=>x.player!==p);if(!m)return;extras[p].last=0;lastCell=m.index;hintCell=null;swapMode=null;render();updateControls();msg.textContent=`👁️ Última jugada rival: ${m.letter}.`;
+}));
+swapBtns.forEach((b,p)=>b.addEventListener('click',()=>{
+ if(p!==current||!extras[p].swap)return;swapMode=swapMode===p?null:p;hintCell=null;lastCell=null;render();updateControls();
+ msg.textContent=swapMode===p?'🔄 Elige una letra del tablero para darle la vuelta O ↔ S.':'Cambio cancelado.';
+}));
+
+function endByScore(){if(scores[0]===scores[1])finish(null,'empate');else finish(scores[0]>scores[1]?0:1,'puntos')}
+function finish(w,reason){
+ over=true;clearInterval(timer);updateControls();const ov=q('winnerOverlay');ov.classList.remove('hidden');
+ if(w===null){q('winnerAvatar').textContent='🤝';q('winnerTitle').textContent='¡Empate!';q('winnerSub').textContent=`${scores[0]} – ${scores[1]}`;}
+ else{q('winnerAvatar').textContent=avatars[w];q('winnerTitle').textContent=`¡Gana ${names[w]}!`;q('winnerSub').textContent=reason==='tiempo'?`El rival se quedó sin tiempo · ${scores[0]} – ${scores[1]}`:`Resultado final: ${scores[0]} – ${scores[1]}`;confetti();}
+}
+function confetti(){const h=q('confetti');h.innerHTML='';const cs=['#3567d6','#d65353','#e8b64f','#55a56d','#9b6bd6','#e88b45'];for(let i=0;i<80;i++){const x=document.createElement('i');x.style.left=Math.random()*100+'%';x.style.background=cs[i%cs.length];x.style.animationDelay=Math.random()+'s';h.appendChild(x)}}
+
+q('startGame').addEventListener('click',()=>{names=[namesIn[0].value.trim()||'Jugador 1',namesIn[1].value.trim()||'Jugador 2'];size=+q('sizeSelect').value;namesEl.forEach((e,i)=>e.textContent=names[i]);avatarsEl.forEach((e,i)=>e.textContent=avatars[i]);setup.classList.add('hidden');game.classList.remove('hidden');reset()});
+q('menuTab').addEventListener('click',()=>q('sidebar').classList.toggle('open'));q('closeMenu').addEventListener('click',()=>q('sidebar').classList.remove('open'));
+q('restartMatch').addEventListener('click',()=>{q('sidebar').classList.remove('open');reset()});
+q('newGame').addEventListener('click',()=>{clearInterval(timer);q('sidebar').classList.remove('open');game.classList.add('hidden');setup.classList.remove('hidden')});
+q('rematch').addEventListener('click',reset);q('changePlayers').addEventListener('click',()=>{q('winnerOverlay').classList.add('hidden');game.classList.add('hidden');setup.classList.remove('hidden')});
+})();
+</script>
+</section>
+</main>
+</body>
+</html>

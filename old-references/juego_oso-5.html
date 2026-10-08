@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OSO</title>
+<style>
+  :root{
+    --bg:#f5f3ee; --card:#fff; --ink:#1e293b; --muted:#64748b;
+    --p1:#2563eb; --p2:#e11d48; --line:#d7d4cd; --accent:#111827;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; display:flex; justify-content:center;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background:linear-gradient(180deg,#faf9f6,var(--bg)); color:var(--ink);
+  }
+  .app{width:min(100%,780px); padding:22px 16px 36px}
+  header{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:16px}
+  h1{font-size:clamp(40px,9vw,72px);line-height:.9;margin:0;letter-spacing:-.06em}
+  .tag{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+  .panel{
+    background:rgba(255,255,255,.9); border:1px solid #e8e5de; border-radius:24px;
+    padding:16px; box-shadow:0 12px 34px rgba(30,41,59,.08);
+  }
+
+  .setup{
+    display:grid; gap:14px; max-width:460px; margin:12px auto;
+  }
+  .setup h2{margin:0;font-size:28px;letter-spacing:-.03em}
+  .setup p{margin:0;color:var(--muted);line-height:1.45}
+  .field{display:grid;gap:6px}
+  .field label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .field input{
+    width:100%;border:1px solid #d9dee7;background:#fff;border-radius:14px;
+    padding:13px 14px;font:inherit;font-weight:700;color:var(--ink);outline:none;
+  }
+  .field input:focus{border-color:#94a3b8;box-shadow:0 0 0 3px rgba(148,163,184,.18)}
+  .start-btn{
+    border:none;border-radius:16px;padding:14px 18px;background:var(--accent);color:#fff;
+    font:inherit;font-weight:900;cursor:pointer;font-size:16px;
+  }
+
+  .hidden{display:none !important}
+
+  .topbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-bottom:14px}
+  .player{
+    padding:12px 13px;border-radius:16px;background:#f8fafc;border:2px solid transparent;
+    transition:.18s ease;
+  }
+  .player.active{transform:translateY(-1px);background:white}
+  #p1Box.active{border-color:var(--p1);box-shadow:0 6px 18px color-mix(in srgb,var(--p1) 18%, transparent)}
+  #p2Box.active{border-color:var(--p2);box-shadow:0 6px 18px color-mix(in srgb,var(--p2) 18%, transparent)}
+  .name{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}
+  .score-row{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-top:4px}
+  .score{font-size:34px;font-weight:900;line-height:1}
+  .timer{font-size:21px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  #p1Box .score,#p1Box .timer{color:var(--p1)}
+  #p2Box .score,#p2Box .timer{color:var(--p2)}
+  .timer.low{animation:pulse .75s infinite}
+  @keyframes pulse{50%{opacity:.42}}
+
+  .turn{text-align:center;font-weight:800;font-size:13px;color:var(--muted)}
+
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;margin:4px 0 16px}
+  button,select{appearance:none;border:none;border-radius:14px;font:inherit;font-weight:800}
+  select{padding:10px 35px 10px 12px;background:#eef2f7;color:var(--ink)}
+  .letter{
+    width:60px;height:48px;font-size:22px;background:#eef2f7;color:#334155;cursor:pointer;
+  }
+  .letter.selected{background:var(--accent);color:white;transform:translateY(-1px)}
+  .secondary{padding:11px 14px;background:#eef2f7;color:#334155;cursor:pointer}
+
+  .board{
+    display:grid; gap:6px;
+    width:min(92vw,620px);
+    margin:0 auto; user-select:none; touch-action:manipulation;
+  }
+  .cell{
+    position:relative;display:grid;place-items:center;
+    width:100%; aspect-ratio:1 / 1;
+    background:#fbfbfa;border:1px solid var(--line);border-radius:14px;
+    font-weight:950;font-size:clamp(23px,7vw,56px);cursor:pointer;
+    transition:transform .09s ease, background .2s ease, box-shadow .2s ease;
+    overflow:hidden;color:#263244;padding:0;
+  }
+  .cell:active{transform:scale(.96)}
+  .cell.filled{cursor:default}
+  .cell span{position:relative;z-index:2}
+  .cell::after{
+    content:"";position:absolute;inset:5px;border-radius:10px;opacity:0;z-index:1;
+  }
+  .cell.p1::after{background:color-mix(in srgb,var(--p1) 22%,transparent);opacity:1}
+  .cell.p2::after{background:color-mix(in srgb,var(--p2) 22%,transparent);opacity:1}
+  .cell.both::after{
+    background:linear-gradient(135deg,
+      color-mix(in srgb,var(--p1) 26%,transparent) 0 48%,
+      color-mix(in srgb,var(--p2) 26%,transparent) 52% 100%);
+    opacity:1
+  }
+
+  .message{text-align:center;min-height:26px;margin:14px 0 2px;font-weight:800}
+  .rules{font-size:13px;color:var(--muted);line-height:1.5;margin:12px 5px 0;text-align:center}
+  .winner{font-size:18px;color:var(--accent)}
+
+  @media (max-width:520px){
+    .app{padding:16px 10px 24px}.panel{padding:11px;border-radius:20px}
+    .topbar{gap:6px}.player{padding:10px}.score{font-size:27px}.timer{font-size:17px}
+    .name{font-size:10px}.board{gap:4px}
+    .cell{border-radius:10px}.cell::after{inset:3px;border-radius:7px}
+    .controls{gap:7px}.letter{width:54px}
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <div>
+      <div class="tag">Juego para 2 jugadores</div>
+      <h1>OSO</h1>
+    </div>
+    <div class="tag">Forma OSO · suma · repite</div>
+  </header>
+
+  <section class="panel">
+    <div id="setupScreen" class="setup">
+      <h2>¿Quién juega?</h2>
+      <p>Cada jugador empieza con 3 minutos. Cada OSO suma 1 punto y añade 10 segundos.</p>
+
+      <div class="field">
+        <label for="nickname1">Jugador 1</label>
+        <input id="nickname1" maxlength="16" placeholder="Nickname" value="Jugador 1">
+      </div>
+
+      <div class="field">
+        <label for="nickname2">Jugador 2</label>
+        <input id="nickname2" maxlength="16" placeholder="Nickname" value="Jugador 2">
+      </div>
+
+      <div class="field">
+        <label for="setupSize">Tamaño del tablero</label>
+        <select id="setupSize">
+          <option value="4">4 × 4</option>
+          <option value="5" selected>5 × 5</option>
+          <option value="6">6 × 6</option>
+          <option value="7">7 × 7</option>
+          <option value="8">8 × 8</option>
+        </select>
+      </div>
+
+      <button id="startGame" class="start-btn">Empezar partida</button>
+    </div>
+
+    <div id="gameScreen" class="hidden">
+      <div class="topbar">
+        <div class="player active" id="p1Box">
+          <div class="name" id="name1">Jugador 1</div>
+          <div class="score-row">
+            <div class="score" id="score1">0</div>
+            <div class="timer" id="timer1">3:00</div>
+          </div>
+        </div>
+
+        <div class="turn" id="turnLabel">Turno<br>Jugador 1</div>
+
+        <div class="player" id="p2Box">
+          <div class="name" id="name2">Jugador 2</div>
+          <div class="score-row">
+            <div class="score" id="score2">0</div>
+            <div class="timer" id="timer2">3:00</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <select id="sizeSelect" aria-label="Tamaño del tablero">
+          <option value="4">4 × 4</option>
+          <option value="5">5 × 5</option>
+          <option value="6">6 × 6</option>
+          <option value="7">7 × 7</option>
+          <option value="8">8 × 8</option>
+        </select>
+        <button class="letter selected" data-letter="O">O</button>
+        <button class="letter" data-letter="S">S</button>
+        <button class="secondary" id="newGame">Nueva partida</button>
+      </div>
+
+      <div id="board" class="board"></div>
+      <div id="message" class="message"></div>
+      <div class="rules">
+        Elige <b>O</b> o <b>S</b> y toca una casilla. Cada nuevo <b>OSO</b> horizontal,
+        vertical o diagonal vale 1 punto y <b>+10 segundos</b>. Si completas un OSO, vuelves a jugar.
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const INITIAL_TIME = 180;
+  const BONUS_TIME = 10;
+
+  const setupScreen = document.getElementById('setupScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const nicknameInputs = [document.getElementById('nickname1'), document.getElementById('nickname2')];
+  const setupSize = document.getElementById('setupSize');
+
+  const boardEl = document.getElementById('board');
+  const sizeSelect = document.getElementById('sizeSelect');
+  const message = document.getElementById('message');
+  const turnLabel = document.getElementById('turnLabel');
+  const scoreEls = [document.getElementById('score1'), document.getElementById('score2')];
+  const timerEls = [document.getElementById('timer1'), document.getElementById('timer2')];
+  const nameEls = [document.getElementById('name1'), document.getElementById('name2')];
+  const boxes = [document.getElementById('p1Box'), document.getElementById('p2Box')];
+  const letterBtns = [...document.querySelectorAll('.letter')];
+
+  let size = 5, board = [], current = 0, scores = [0,0], selected = 'O';
+  let scored = new Map();
+  let gameOver = false;
+  let playerNames = ['Jugador 1','Jugador 2'];
+  let times = [INITIAL_TIME, INITIAL_TIME];
+  let timerInterval = null;
+  let lastTick = null;
+
+  function cleanName(value, fallback){
+    const v = value.trim();
+    return v || fallback;
+  }
+
+  function startGameFromSetup(){
+    playerNames = [
+      cleanName(nicknameInputs[0].value, 'Jugador 1'),
+      cleanName(nicknameInputs[1].value, 'Jugador 2')
+    ];
+    size = +setupSize.value;
+    sizeSelect.value = String(size);
+    nameEls[0].textContent = playerNames[0];
+    nameEls[1].textContent = playerNames[1];
+    setupScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    resetMatch();
+  }
+
+  function resetMatch(){
+    clearInterval(timerInterval);
+    size = +sizeSelect.value;
+    board = Array(size*size).fill('');
+    current = 0;
+    scores = [0,0];
+    times = [INITIAL_TIME, INITIAL_TIME];
+    scored = new Map();
+    gameOver = false;
+    selected = 'O';
+
+    scoreEls[0].textContent = scoreEls[1].textContent = '0';
+    letterBtns.forEach(b => b.classList.toggle('selected', b.dataset.letter === 'O'));
+
+    render();
+    updateTimers();
+    setTurnUI();
+    message.textContent = `${playerNames[0]} empieza.`;
+    message.classList.remove('winner');
+
+    lastTick = performance.now();
+    timerInterval = setInterval(tick, 100);
+  }
+
+  function tick(){
+    if(gameOver) return;
+    const now = performance.now();
+    const elapsed = (now - lastTick) / 1000;
+    lastTick = now;
+
+    times[current] = Math.max(0, times[current] - elapsed);
+    updateTimers();
+
+    if(times[current] <= 0){
+      finishByTime(current);
+    }
+  }
+
+  function updateTimers(){
+    timerEls.forEach((el,i)=>{
+      const total = Math.max(0, Math.ceil(times[i]));
+      const m = Math.floor(total/60);
+      const s = total%60;
+      el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+      el.classList.toggle('low', total <= 20 && !gameOver);
+    });
+  }
+
+  function render(){
+    boardEl.innerHTML = '';
+    boardEl.style.gridTemplateColumns = `repeat(${size}, minmax(0,1fr))`;
+
+    board.forEach((v,i)=>{
+      const c = document.createElement('button');
+      c.className = 'cell' + (v ? ' filled':'');
+      c.dataset.i = i;
+      c.setAttribute('aria-label', v ? `Casilla ${v}` : 'Casilla vacía');
+
+      const span = document.createElement('span');
+      span.textContent = v;
+      c.appendChild(span);
+
+      c.addEventListener('click', ()=>play(i));
+      boardEl.appendChild(c);
+    });
+
+    paintScoredCells();
+  }
+
+  function setTurnUI(){
+    boxes.forEach((b,i)=>b.classList.toggle('active', i===current && !gameOver));
+    turnLabel.innerHTML = gameOver
+      ? 'Partida<br>terminada'
+      : `Turno<br>${escapeHtml(playerNames[current])}`;
+  }
+
+  function play(i){
+    if(gameOver || board[i]) return;
+
+    board[i] = selected;
+    const created = findNewOSOsThrough(i);
+
+    created.forEach(key => scored.set(key,current));
+
+    if(created.length){
+      scores[current] += created.length;
+      times[current] += BONUS_TIME * created.length;
+      scoreEls[current].textContent = scores[current];
+      updateTimers();
+
+      const bonus = BONUS_TIME * created.length;
+      message.textContent =
+        `¡${playerNames[current]} consigue ${created.length === 1 ? 'un OSO' : created.length + ' OSO'}! +${bonus}s y vuelve a jugar.`;
+    } else {
+      current = 1-current;
+      lastTick = performance.now();
+      message.textContent = `Turno de ${playerNames[current]}.`;
+    }
+
+    render();
+
+    if(board.every(Boolean)) finishByBoard();
+    else setTurnUI();
+  }
+
+  function findNewOSOsThrough(index){
+    const r0 = Math.floor(index/size), c0 = index%size;
+    const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+    const found = [];
+
+    for(const [dr,dc] of dirs){
+      for(let offset=-2; offset<=0; offset++){
+        const cells = [];
+
+        for(let k=0;k<3;k++){
+          const r = r0+(offset+k)*dr;
+          const c = c0+(offset+k)*dc;
+
+          if(r<0 || c<0 || r>=size || c>=size){
+            cells.length = 0;
+            break;
+          }
+          cells.push(r*size+c);
+        }
+
+        if(cells.length !== 3 || !cells.includes(index)) continue;
+
+        if(board[cells[0]]==='O' && board[cells[1]]==='S' && board[cells[2]]==='O'){
+          const key = cells.join('-');
+          if(!scored.has(key) && !found.includes(key)) found.push(key);
+        }
+      }
+    }
+    return found;
+  }
+
+  function paintScoredCells(){
+    const owners = Array.from({length:size*size},()=>new Set());
+
+    for(const [key,player] of scored.entries()){
+      key.split('-').map(Number).forEach(i=>owners[i].add(player));
+    }
+
+    [...boardEl.children].forEach((cell,i)=>{
+      if(owners[i].size === 2) cell.classList.add('both');
+      else if(owners[i].has(0)) cell.classList.add('p1');
+      else if(owners[i].has(1)) cell.classList.add('p2');
+    });
+  }
+
+  function finishByBoard(){
+    finishCommon();
+
+    if(scores[0] === scores[1]){
+      message.textContent = `Empate: ${scores[0]} – ${scores[1]}.`;
+    } else {
+      const w = scores[0] > scores[1] ? 0 : 1;
+      message.textContent = `🏆 Gana ${playerNames[w]}: ${scores[w]} – ${scores[1-w]}.`;
+    }
+  }
+
+  function finishByTime(loser){
+    finishCommon();
+    const winner = 1-loser;
+    message.textContent = `⏱️ Se acabó el tiempo de ${playerNames[loser]}. Gana ${playerNames[winner]}.`;
+  }
+
+  function finishCommon(){
+    gameOver = true;
+    clearInterval(timerInterval);
+    updateTimers();
+    setTurnUI();
+    message.classList.add('winner');
+  }
+
+  function escapeHtml(str){
+    return str.replace(/[&<>"']/g, ch => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
+    })[ch]);
+  }
+
+  letterBtns.forEach(btn=>btn.addEventListener('click',()=>{
+    selected = btn.dataset.letter;
+    letterBtns.forEach(b=>b.classList.toggle('selected', b===btn));
+  }));
+
+  sizeSelect.addEventListener('change',()=>{
+    if(!gameOver && board.some(Boolean)){
+      const ok = confirm('Cambiar el tamaño reiniciará la partida. ¿Continuar?');
+      if(!ok){
+        sizeSelect.value = String(size);
+        return;
+      }
+    }
+    size = +sizeSelect.value;
+    resetMatch();
+  });
+
+  document.getElementById('newGame').addEventListener('click',()=>{
+    clearInterval(timerInterval);
+    gameScreen.classList.add('hidden');
+    setupScreen.classList.remove('hidden');
+    setupSize.value = sizeSelect.value;
+  });
+
+  document.getElementById('startGame').addEventListener('click',startGameFromSetup);
+
+  nicknameInputs.forEach(input=>{
+    input.addEventListener('keydown', e=>{
+      if(e.key === 'Enter') startGameFromSetup();
+    });
+  });
+})();
+</script>
+</body>
+</html>

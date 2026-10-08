@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OSO</title>
+<style>
+  :root{
+    --bg:#f3efe7;
+    --paper:#fffdf9;
+    --paper2:#f8f3ea;
+    --ink:#20242b;
+    --muted:#77716a;
+    --line:#ddd4c7;
+    --accent:#2a2520;
+    --p1:#3567d6;
+    --p2:#d65353;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 0%,rgba(255,255,255,.9),transparent 30%),
+      linear-gradient(180deg,#f8f5ef,var(--bg));
+  }
+  button,input,select{font:inherit}
+  button{touch-action:manipulation}
+  .app{width:min(100%,820px);padding:20px 14px 38px}
+
+  .brand{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:14px;
+    margin:2px 2px 16px;
+  }
+  .eyebrow{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    font-weight:900;color:var(--muted);margin-bottom:5px;
+  }
+  h1{
+    margin:0;font-size:clamp(48px,11vw,84px);line-height:.82;
+    letter-spacing:-.07em;font-weight:950;
+  }
+  .brand-bear{font-size:clamp(34px,7vw,54px);filter:drop-shadow(0 4px 2px rgba(0,0,0,.08))}
+
+  .panel{
+    background:rgba(255,253,249,.94);
+    border:1px solid rgba(210,199,184,.9);
+    border-radius:28px;padding:18px;
+    box-shadow:0 14px 40px rgba(79,65,48,.09);
+  }
+
+  .hidden{display:none!important}
+
+  /* SETUP */
+  .setup{display:grid;gap:18px}
+  .setup-head{text-align:center;padding:6px 4px 0}
+  .setup-head h2{margin:0;font-size:clamp(26px,6vw,38px);letter-spacing:-.045em}
+  .setup-head p{margin:7px auto 0;max-width:500px;color:var(--muted);font-size:14px;line-height:1.5}
+
+  .players-setup{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  }
+  .player-setup{
+    min-width:0;background:var(--paper2);border:1px solid var(--line);
+    border-radius:22px;padding:14px;
+  }
+  .player-setup-title{
+    font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.09em;
+    color:var(--muted);margin-bottom:10px;
+  }
+  .avatar-preview{
+    display:grid;place-items:center;width:74px;height:74px;margin:0 auto 11px;
+    border-radius:24px;background:#fff;border:1px solid var(--line);
+    font-size:45px;box-shadow:0 6px 16px rgba(70,58,44,.07);
+  }
+  .nickname{
+    width:100%;border:1px solid var(--line);background:#fff;border-radius:13px;
+    padding:11px 12px;font-size:16px;font-weight:800;color:var(--ink);outline:none;
+    text-align:center;
+  }
+  .nickname:focus{border-color:#a59b8d;box-shadow:0 0 0 3px rgba(165,155,141,.15)}
+
+  .avatar-label{
+    display:block;text-align:center;margin:12px 0 8px;
+    font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:var(--muted);
+  }
+  .avatar-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
+  }
+  .avatar-btn{
+    min-width:0;aspect-ratio:1/1;border:1px solid var(--line);background:#fff;
+    border-radius:13px;font-size:27px;cursor:pointer;
+    display:grid;place-items:center;transition:.15s ease;
+  }
+  .avatar-btn.selected{
+    border:2px solid var(--accent);background:#f0ebe2;
+    transform:translateY(-1px);
+  }
+
+  .setup-bottom{
+    display:flex;align-items:end;justify-content:center;gap:10px;flex-wrap:wrap;
+    padding-top:2px;
+  }
+  .size-wrap{display:grid;gap:5px}
+  .size-wrap label{
+    font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+  }
+  select{
+    appearance:none;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--ink);
+    padding:12px 38px 12px 13px;font-weight:850;
+  }
+  .start-btn{
+    border:0;border-radius:15px;background:var(--accent);color:#fff;
+    padding:13px 22px;font-weight:950;cursor:pointer;
+    box-shadow:0 6px 0 #171411;
+  }
+  .start-btn:active{transform:translateY(3px);box-shadow:0 3px 0 #171411}
+
+  /* GAME */
+  .scoreboard{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;
+    margin-bottom:14px;
+  }
+  .player-card{
+    min-width:0;border-radius:19px;border:2px solid transparent;
+    background:var(--paper2);padding:10px;display:grid;gap:7px;transition:.18s ease;
+  }
+  .player-card.active{background:#fff;transform:translateY(-1px)}
+  #p1Box.active{border-color:var(--p1)}
+  #p2Box.active{border-color:var(--p2)}
+  .player-line{display:flex;align-items:center;gap:8px;min-width:0}
+  .mini-avatar{
+    flex:0 0 auto;width:42px;height:42px;border-radius:14px;background:#fff;
+    border:1px solid var(--line);display:grid;place-items:center;font-size:26px;
+  }
+  .player-meta{min-width:0}
+  .name{
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    font-size:13px;font-weight:950;
+  }
+  .timer{font-size:15px;font-weight:950;font-variant-numeric:tabular-nums;color:var(--muted)}
+  #p1Box.active .timer{color:var(--p1)}
+  #p2Box.active .timer{color:var(--p2)}
+  .score-wrap{display:flex;justify-content:space-between;align-items:end}
+  .score-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:var(--muted)}
+  .score{font-size:34px;line-height:.9;font-weight:950}
+  #p1Box .score{color:var(--p1)}
+  #p2Box .score{color:var(--p2)}
+  .timer.low{animation:pulse .7s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+
+  .turn-pill{
+    align-self:center;border:1px solid var(--line);border-radius:999px;background:#fff;
+    padding:8px 10px;font-size:11px;text-align:center;font-weight:900;color:var(--muted);
+    min-width:82px;
+  }
+
+  .game-controls{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    margin:5px 0 14px;
+  }
+  .letter-choice{
+    display:flex;gap:7px;background:var(--paper2);border:1px solid var(--line);
+    padding:5px;border-radius:16px;
+  }
+  .letter{
+    width:58px;height:48px;border:0;border-radius:12px;background:transparent;color:var(--ink);
+    font-size:24px;font-weight:950;cursor:pointer;
+  }
+  .letter.selected{background:var(--accent);color:#fff}
+  .secondary{
+    border:1px solid var(--line);background:#fff;color:var(--ink);
+    padding:11px 13px;border-radius:13px;font-weight:850;cursor:pointer;
+  }
+
+  .board-shell{
+    background:#d7ccbb;border:1px solid #c8baa5;border-radius:22px;padding:7px;
+  }
+  .board{
+    display:grid;gap:5px;width:100%;margin:0 auto;user-select:none;touch-action:manipulation;
+  }
+  .cell{
+    position:relative;width:100%;aspect-ratio:1/1;
+    border:0;border-radius:11px;background:#fffdf9;color:#292b30;padding:0;
+    display:grid;place-items:center;overflow:hidden;cursor:pointer;
+    box-shadow:inset 0 0 0 1px rgba(136,118,94,.18);
+    font-size:clamp(22px,7.1vw,55px);font-weight:950;
+    transition:transform .08s ease,filter .15s ease;
+  }
+  .cell:active{transform:scale(.95)}
+  .cell.filled{cursor:default}
+  .cell span{position:relative;z-index:2}
+  .cell::after{
+    content:"";position:absolute;inset:4px;border-radius:8px;z-index:1;opacity:0;
+  }
+  .cell.p1::after{background:color-mix(in srgb,var(--p1) 22%,transparent);opacity:1}
+  .cell.p2::after{background:color-mix(in srgb,var(--p2) 22%,transparent);opacity:1}
+  .cell.both::after{
+    background:linear-gradient(135deg,
+      color-mix(in srgb,var(--p1) 25%,transparent) 0 48%,
+      color-mix(in srgb,var(--p2) 25%,transparent) 52% 100%);
+    opacity:1
+  }
+
+  .message{
+    min-height:28px;text-align:center;margin:13px 0 2px;font-size:14px;font-weight:900;
+  }
+  .winner{font-size:18px}
+  .rules{
+    text-align:center;font-size:12px;line-height:1.5;color:var(--muted);
+    max-width:600px;margin:8px auto 0;
+  }
+
+  @media (max-width:580px){
+    .app{padding:14px 8px 28px}
+    .panel{padding:11px;border-radius:22px}
+    .players-setup{grid-template-columns:1fr 1fr;gap:8px}
+    .player-setup{padding:10px;border-radius:18px}
+    .avatar-preview{width:62px;height:62px;font-size:39px;border-radius:19px}
+    .avatar-grid{grid-template-columns:repeat(2,1fr)}
+    .scoreboard{gap:5px}
+    .player-card{padding:7px}
+    .mini-avatar{width:35px;height:35px;font-size:22px;border-radius:11px}
+    .turn-pill{min-width:62px;padding:7px 5px;font-size:9px}
+    .score{font-size:28px}
+    .timer{font-size:13px}
+    .board-shell{padding:4px;border-radius:16px}
+    .board{gap:3px}
+    .cell{border-radius:8px}
+    .cell::after{inset:3px;border-radius:6px}
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="brand">
+    <div>
+      <div class="eyebrow">Juego para 2 jugadores</div>
+      <h1>OSO</h1>
+    </div>
+    <div class="brand-bear" aria-hidden="true">🐻</div>
+  </div>
+
+  <section class="panel">
+    <div id="setupScreen" class="setup">
+      <div class="setup-head">
+        <h2>Elegid vuestro oso</h2>
+        <p>3 minutos por jugador. Cada OSO vale 1 punto, añade 10 segundos y te permite volver a jugar.</p>
+      </div>
+
+      <div class="players-setup">
+        <div class="player-setup">
+          <div class="player-setup-title">Jugador 1</div>
+          <div id="preview1" class="avatar-preview">🐻</div>
+          <input id="nickname1" class="nickname" maxlength="16" value="Jugador 1" aria-label="Nickname jugador 1">
+          <span class="avatar-label">Tu oso</span>
+          <div class="avatar-grid" data-player="0">
+            <button type="button" class="avatar-btn selected" data-avatar="🐻">🐻</button>
+            <button type="button" class="avatar-btn" data-avatar="🐼">🐼</button>
+            <button type="button" class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button>
+            <button type="button" class="avatar-btn" data-avatar="🧸">🧸</button>
+          </div>
+        </div>
+
+        <div class="player-setup">
+          <div class="player-setup-title">Jugador 2</div>
+          <div id="preview2" class="avatar-preview">🐼</div>
+          <input id="nickname2" class="nickname" maxlength="16" value="Jugador 2" aria-label="Nickname jugador 2">
+          <span class="avatar-label">Tu oso</span>
+          <div class="avatar-grid" data-player="1">
+            <button type="button" class="avatar-btn" data-avatar="🐻">🐻</button>
+            <button type="button" class="avatar-btn selected" data-avatar="🐼">🐼</button>
+            <button type="button" class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button>
+            <button type="button" class="avatar-btn" data-avatar="🧸">🧸</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="setup-bottom">
+        <div class="size-wrap">
+          <label for="setupSize">Tablero</label>
+          <select id="setupSize">
+            <option value="4">4 × 4</option>
+            <option value="5" selected>5 × 5</option>
+            <option value="6">6 × 6</option>
+            <option value="7">7 × 7</option>
+            <option value="8">8 × 8</option>
+          </select>
+        </div>
+        <button id="startGame" class="start-btn" type="button">Jugar</button>
+      </div>
+    </div>
+
+    <div id="gameScreen" class="hidden">
+      <div class="scoreboard">
+        <div class="player-card active" id="p1Box">
+          <div class="player-line">
+            <div class="mini-avatar" id="gameAvatar1">🐻</div>
+            <div class="player-meta">
+              <div class="name" id="name1">Jugador 1</div>
+              <div class="timer" id="timer1">3:00</div>
+            </div>
+          </div>
+          <div class="score-wrap">
+            <span class="score-label">OSOS</span><span class="score" id="score1">0</span>
+          </div>
+        </div>
+
+        <div class="turn-pill" id="turnLabel">Turno<br>Jugador 1</div>
+
+        <div class="player-card" id="p2Box">
+          <div class="player-line">
+            <div class="mini-avatar" id="gameAvatar2">🐼</div>
+            <div class="player-meta">
+              <div class="name" id="name2">Jugador 2</div>
+              <div class="timer" id="timer2">3:00</div>
+            </div>
+          </div>
+          <div class="score-wrap">
+            <span class="score-label">OSOS</span><span class="score" id="score2">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-controls">
+        <div class="letter-choice" aria-label="Elige letra">
+          <button type="button" class="letter selected" data-letter="O">O</button>
+          <button type="button" class="letter" data-letter="S">S</button>
+        </div>
+        <button type="button" class="secondary" id="newGame">Nueva partida</button>
+      </div>
+
+      <div class="board-shell">
+        <div id="board" class="board"></div>
+      </div>
+
+      <div id="message" class="message" aria-live="polite"></div>
+      <div class="rules">
+        Forma <b>OSO</b> en horizontal, vertical o diagonal. Si una sola jugada crea varios OSO, todos cuentan.
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const INITIAL_TIME = 180;
+  const BONUS_TIME = 10;
+
+  const setupScreen = document.getElementById('setupScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const nicknameInputs = [document.getElementById('nickname1'), document.getElementById('nickname2')];
+  const setupSize = document.getElementById('setupSize');
+  const previews = [document.getElementById('preview1'), document.getElementById('preview2')];
+  const gameAvatars = [document.getElementById('gameAvatar1'), document.getElementById('gameAvatar2')];
+
+  const boardEl = document.getElementById('board');
+  const message = document.getElementById('message');
+  const turnLabel = document.getElementById('turnLabel');
+  const scoreEls = [document.getElementById('score1'), document.getElementById('score2')];
+  const timerEls = [document.getElementById('timer1'), document.getElementById('timer2')];
+  const nameEls = [document.getElementById('name1'), document.getElementById('name2')];
+  const boxes = [document.getElementById('p1Box'), document.getElementById('p2Box')];
+  const letterBtns = [...document.querySelectorAll('.letter')];
+
+  let size = 5;
+  let board = [];
+  let current = 0;
+  let scores = [0,0];
+  let selected = 'O';
+  let scored = new Map();
+  let gameOver = false;
+  let playerNames = ['Jugador 1','Jugador 2'];
+  let avatars = ['🐻','🐼'];
+  let times = [INITIAL_TIME, INITIAL_TIME];
+  let timerInterval = null;
+  let lastTick = null;
+
+  function cleanName(value, fallback){
+    const v = value.trim();
+    return v || fallback;
+  }
+
+  document.querySelectorAll('.avatar-grid').forEach(grid => {
+    const player = Number(grid.dataset.player);
+    grid.querySelectorAll('.avatar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        grid.querySelectorAll('.avatar-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        avatars[player] = btn.dataset.avatar;
+        previews[player].textContent = avatars[player];
+      });
+    });
+  });
+
+  function startGameFromSetup(){
+    playerNames = [
+      cleanName(nicknameInputs[0].value, 'Jugador 1'),
+      cleanName(nicknameInputs[1].value, 'Jugador 2')
+    ];
+    size = +setupSize.value;
+    nameEls[0].textContent = playerNames[0];
+    nameEls[1].textContent = playerNames[1];
+    gameAvatars[0].textContent = avatars[0];
+    gameAvatars[1].textContent = avatars[1];
+
+    setupScreen.classList.add('hidden');
+    gameScreen.classList.remove('hidden');
+    resetMatch();
+  }
+
+  function resetMatch(){
+    clearInterval(timerInterval);
+    board = Array(size * size).fill('');
+    current = 0;
+    scores = [0,0];
+    times = [INITIAL_TIME, INITIAL_TIME];
+    scored = new Map();
+    gameOver = false;
+    selected = 'O';
+
+    scoreEls[0].textContent = '0';
+    scoreEls[1].textContent = '0';
+    letterBtns.forEach(b => b.classList.toggle('selected', b.dataset.letter === 'O'));
+
+    render();
+    updateTimers();
+    setTurnUI();
+    message.textContent = `${avatars[0]} ${playerNames[0]} empieza.`;
+    message.classList.remove('winner');
+
+    lastTick = performance.now();
+    timerInterval = setInterval(tick, 100);
+  }
+
+  function tick(){
+    if(gameOver) return;
+    const now = performance.now();
+    const elapsed = (now - lastTick) / 1000;
+    lastTick = now;
+
+    times[current] = Math.max(0, times[current] - elapsed);
+    updateTimers();
+
+    if(times[current] <= 0) finishByTime(current);
+  }
+
+  function updateTimers(){
+    timerEls.forEach((el,i)=>{
+      const total = Math.max(0, Math.ceil(times[i]));
+      const m = Math.floor(total/60);
+      const s = total%60;
+      el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+      el.classList.toggle('low', total <= 20 && !gameOver);
+    });
+  }
+
+  function render(){
+    boardEl.innerHTML = '';
+    boardEl.style.gridTemplateColumns = `repeat(${size}, minmax(0,1fr))`;
+
+    board.forEach((v,i)=>{
+      const c = document.createElement('button');
+      c.type = 'button';
+      c.className = 'cell' + (v ? ' filled' : '');
+      c.setAttribute('aria-label', v ? `Casilla ${v}` : 'Casilla vacía');
+
+      const span = document.createElement('span');
+      span.textContent = v;
+      c.appendChild(span);
+
+      c.addEventListener('click', ()=>play(i));
+      boardEl.appendChild(c);
+    });
+
+    paintScoredCells();
+  }
+
+  function setTurnUI(){
+    boxes.forEach((b,i)=>b.classList.toggle('active', i===current && !gameOver));
+    if(gameOver){
+      turnLabel.innerHTML = 'Partida<br>terminada';
+    } else {
+      turnLabel.textContent = `${avatars[current]} ${playerNames[current]}`;
+    }
+  }
+
+  function play(i){
+    if(gameOver || board[i]) return;
+
+    board[i] = selected;
+    const created = findNewOSOsThrough(i);
+    created.forEach(key => scored.set(key,current));
+
+    if(created.length){
+      scores[current] += created.length;
+      times[current] += BONUS_TIME * created.length;
+      scoreEls[current].textContent = scores[current];
+      updateTimers();
+
+      const bonus = BONUS_TIME * created.length;
+      message.textContent = `¡${avatars[current]} ${playerNames[current]} consigue ${created.length === 1 ? 'un OSO' : created.length + ' OSO'}! +${bonus}s`;
+    } else {
+      current = 1-current;
+      lastTick = performance.now();
+      message.textContent = `Turno de ${avatars[current]} ${playerNames[current]}`;
+    }
+
+    render();
+
+    if(board.every(Boolean)) finishByBoard();
+    else setTurnUI();
+  }
+
+  function findNewOSOsThrough(index){
+    const r0 = Math.floor(index/size);
+    const c0 = index%size;
+    const dirs = [[0,1],[1,0],[1,1],[1,-1]];
+    const found = [];
+
+    for(const [dr,dc] of dirs){
+      for(let offset=-2; offset<=0; offset++){
+        const cells = [];
+        for(let k=0;k<3;k++){
+          const r = r0 + (offset+k)*dr;
+          const c = c0 + (offset+k)*dc;
+          if(r<0 || c<0 || r>=size || c>=size){
+            cells.length = 0;
+            break;
+          }
+          cells.push(r*size+c);
+        }
+
+        if(cells.length !== 3 || !cells.includes(index)) continue;
+
+        if(board[cells[0]]==='O' && board[cells[1]]==='S' && board[cells[2]]==='O'){
+          const key = cells.join('-');
+          if(!scored.has(key) && !found.includes(key)) found.push(key);
+        }
+      }
+    }
+    return found;
+  }
+
+  function paintScoredCells(){
+    const owners = Array.from({length:size*size},()=>new Set());
+
+    for(const [key,player] of scored.entries()){
+      key.split('-').map(Number).forEach(i => owners[i].add(player));
+    }
+
+    [...boardEl.children].forEach((cell,i)=>{
+      if(owners[i].size===2) cell.classList.add('both');
+      else if(owners[i].has(0)) cell.classList.add('p1');
+      else if(owners[i].has(1)) cell.classList.add('p2');
+    });
+  }
+
+  function finishByBoard(){
+    finishCommon();
+
+    if(scores[0]===scores[1]){
+      message.textContent = `🤝 Empate: ${scores[0]} – ${scores[1]}`;
+    } else {
+      const w = scores[0] > scores[1] ? 0 : 1;
+      message.textContent = `🏆 ${avatars[w]} ${playerNames[w]} gana ${scores[w]} – ${scores[1-w]}`;
+    }
+  }
+
+  function finishByTime(loser){
+    finishCommon();
+    const winner = 1-loser;
+    message.textContent = `⏱️ Se acabó el tiempo de ${playerNames[loser]}. 🏆 ${avatars[winner]} ${playerNames[winner]} gana.`;
+  }
+
+  function finishCommon(){
+    gameOver = true;
+    clearInterval(timerInterval);
+    updateTimers();
+    setTurnUI();
+    message.classList.add('winner');
+  }
+
+  letterBtns.forEach(btn => {
+    btn.addEventListener('click',()=>{
+      selected = btn.dataset.letter;
+      letterBtns.forEach(b => b.classList.toggle('selected', b===btn));
+    });
+  });
+
+  document.getElementById('startGame').addEventListener('click', startGameFromSetup);
+
+  nicknameInputs.forEach(input => {
+    input.addEventListener('keydown', e => {
+      if(e.key === 'Enter') startGameFromSetup();
+    });
+  });
+
+  document.getElementById('newGame').addEventListener('click',()=>{
+    clearInterval(timerInterval);
+    gameScreen.classList.add('hidden');
+    setupScreen.classList.remove('hidden');
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>OSO</title>
+<style>
+:root{
+  --bg:#f3eee5;
+  --paper:#fffaf2;
+  --ink:#352418;
+  --muted:#7b6b5d;
+  --line:#d8c5af;
+  --dark:#4a2f1f;
+  --p1:#2e7cf6;
+  --p1soft:#e9f3ff;
+  --p2:#ef5a66;
+  --p2soft:#ffecef;
+  --gold:#f3c34f;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  min-height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#eef5f8 0 9%,var(--bg) 9% 100%);
+  color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+button,input,select{font:inherit}
+button{touch-action:manipulation}
+.app{
+  width:min(100%,820px);
+  margin:auto;
+  padding:6px;
+}
+.panel{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #e8dccb;
+  border-radius:24px;
+  background:rgba(255,250,242,.98);
+  box-shadow:0 10px 34px rgba(87,61,37,.08);
+  padding:7px;
+}
+.hidden{display:none!important}
+
+/* SETUP */
+.setup{display:grid;gap:14px;padding:8px}
+.brand{text-align:center;font-size:44px;line-height:1;font-weight:1000;letter-spacing:.06em;color:var(--dark)}
+.tagline{text-align:center;color:var(--muted);font-size:14px;font-weight:700}
+.players-setup{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pconfig{border:1px solid var(--line);border-radius:18px;background:#fff;padding:10px}
+.pconfig:first-child{background:linear-gradient(180deg,#fff,var(--p1soft))}
+.pconfig:last-child{background:linear-gradient(180deg,#fff,var(--p2soft))}
+.small-label{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.preview{width:62px;height:62px;margin:7px auto;display:grid;place-items:center;border:2px solid var(--line);border-radius:50%;background:#fff;font-size:38px}
+.nickname{width:100%;min-height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:17px;font-weight:900;text-align:center;padding:8px}
+.avatars{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:8px}
+.avatar-btn{aspect-ratio:1;min-width:0;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:20px;padding:0}
+.avatar-btn.selected{border:2px solid var(--dark);background:#f2e6d6}
+.setup-actions{display:flex;justify-content:center;align-items:end;gap:8px;flex-wrap:wrap}
+select{min-height:44px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:16px;font-weight:900;padding:0 12px}
+.primary{min-height:46px;border:0;border-radius:13px;background:var(--dark);color:#fff;padding:0 22px;font-size:16px;font-weight:950;box-shadow:0 4px 0 #2f1e14}
+
+/* GAME */
+.game{
+  display:grid;
+  gap:6px;
+  align-items:center;
+}
+.player-panel{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  align-items:center;
+  gap:8px;
+  border:2px solid transparent;
+  border-radius:18px;
+  padding:8px;
+  background:#fff;
+}
+.player-panel.p1{background:linear-gradient(90deg,var(--p1soft),#fff)}
+.player-panel.p2{background:linear-gradient(90deg,var(--p2soft),#fff)}
+.player-panel.p1.active{border-color:var(--p1)}
+.player-panel.p2.active{border-color:var(--p2)}
+.player-panel.top{transform:rotate(180deg)}
+
+.identity{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.avatar{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid var(--line);
+  display:grid;place-items:center;
+  font-size:28px;
+  flex:0 0 auto;
+}
+.player-info{min-width:0}
+.name{
+  font-size:15px;
+  line-height:1.05;
+  font-weight:950;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.stats{display:flex;align-items:baseline;gap:8px;margin-top:3px}
+.timer{font-size:20px;line-height:1;font-weight:1000;font-variant-numeric:tabular-nums}
+.score-wrap{display:flex;align-items:baseline;gap:3px}
+.score-label{font-size:10px;font-weight:900;color:var(--muted)}
+.score{font-size:24px;line-height:1;font-weight:1000}
+.p1 .timer,.p1 .score{color:var(--p1)}
+.p2 .timer,.p2 .score{color:var(--p2)}
+
+.controls-row{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+}
+.letter-choice{
+  display:flex;
+  gap:6px;
+  padding:4px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:#eee4d6;
+}
+.letter{
+  flex:1;
+  min-height:48px;
+  border:0;
+  border-radius:11px;
+  background:#fff7ed;
+  color:var(--dark);
+  font-size:28px;
+  font-weight:1000;
+  box-shadow:0 3px 0 #d6c6b3;
+}
+.letter.selected{
+  background:var(--dark);
+  color:#fff;
+  box-shadow:0 3px 0 #27180f;
+}
+.letter:disabled{opacity:.42}
+
+.tools{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.power{
+  width:46px;height:46px;
+  position:relative;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  font-size:20px;
+  padding:0;
+  box-shadow:0 2px 0 rgba(90,63,38,.12);
+}
+.power .count{
+  position:absolute;
+  right:2px;top:2px;
+  width:15px;height:15px;
+  border-radius:50%;
+  background:var(--dark);
+  color:#fff;
+  display:grid;place-items:center;
+  font-size:9px;
+  font-weight:900;
+}
+.power:disabled{
+  opacity:.28;
+  filter:grayscale(1);
+  cursor:default;
+  box-shadow:none;
+  pointer-events:none;
+}
+.power.used{
+  opacity:.28;
+  filter:grayscale(1);
+  cursor:default;
+  box-shadow:none;
+  pointer-events:none;
+}
+.power.mode{
+  outline:3px solid var(--gold);
+  outline-offset:-2px;
+  background:#fff6ce;
+}
+
+/* BOARD */
+.center-area{
+  display:grid;
+  gap:5px;
+  align-items:center;
+}
+.turnbar-top{transform:rotate(180deg)}
+.turnbar{
+  min-height:26px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:950;
+}
+.board-shell{
+  border:2px solid #c9b79e;
+  border-radius:18px;
+  background:#cdbda8;
+  padding:4px;
+}
+.board{
+  display:grid;
+  gap:3px;
+  width:100%;
+}
+.cell{
+  position:relative;
+  aspect-ratio:1;
+  border:0;
+  border-radius:9px;
+  background:#fffaf2;
+  display:grid;
+  place-items:center;
+  padding:0;
+  overflow:hidden;
+  color:var(--dark);
+  font-size:clamp(24px,9.5vw,58px);
+  font-weight:1000;
+  box-shadow:inset 0 0 0 1px rgba(129,103,74,.16),0 1px 0 rgba(255,255,255,.55);
+}
+.cell span{position:relative;z-index:2}
+.cell::after{content:"";position:absolute;inset:3px;border-radius:7px;opacity:0}
+.cell.p1::after{background:color-mix(in srgb,var(--p1) 20%,transparent);opacity:1}
+.cell.p2::after{background:color-mix(in srgb,var(--p2) 20%,transparent);opacity:1}
+.cell.both::after{
+  background:linear-gradient(135deg,
+    color-mix(in srgb,var(--p1) 22%,transparent) 0 48%,
+    color-mix(in srgb,var(--p2) 22%,transparent) 52% 100%);
+  opacity:1;
+}
+.cell.hint{outline:4px solid var(--gold);outline-offset:-4px}
+.cell.last{box-shadow:inset 0 0 0 4px #4b3525}
+.cell.swap-target{outline:3px dashed var(--gold);outline-offset:-4px}
+.message{
+  min-height:28px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  font-size:14px;
+  font-weight:950;
+  color:var(--dark);
+  padding:2px 8px;
+}
+
+/* SIDE MENU */
+.menu-tab{
+  position:absolute;
+  top:47%;
+  right:0;
+  z-index:12;
+  width:34px;height:64px;
+  border:0;
+  border-radius:13px 0 0 13px;
+  background:var(--dark);
+  color:#fff;
+  font-size:21px;
+}
+.sidebar{
+  position:absolute;
+  right:0;
+  top:34%;
+  z-index:11;
+  width:180px;
+  border:1px solid var(--line);
+  border-right:0;
+  border-radius:17px 0 0 17px;
+  background:#fffaf2;
+  padding:10px;
+  transform:translateX(100%);
+  transition:transform .2s ease;
+  box-shadow:-10px 10px 24px rgba(76,55,35,.12);
+}
+.sidebar.open{transform:translateX(0)}
+.sidebar h3{margin:0 0 8px;font-size:15px}
+.sidebar button{
+  width:100%;
+  min-height:42px;
+  margin-top:6px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#fff;
+  color:var(--ink);
+  font-size:13px;
+  font-weight:900;
+}
+
+/* WINNER */
+.winner-overlay{
+  position:absolute;
+  inset:0;
+  z-index:20;
+  display:grid;
+  place-items:center;
+  background:rgba(255,250,242,.96);
+  text-align:center;
+  padding:20px;
+}
+.winner-avatar{font-size:76px}
+.winner-title{font-size:34px;font-weight:1000;letter-spacing:-.04em}
+.winner-sub{font-size:16px;color:var(--muted);font-weight:800;margin-top:4px}
+.winner-actions{display:flex;justify-content:center;gap:8px;margin-top:14px}
+.secondary{
+  min-height:44px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#fff;
+  color:var(--ink);
+  padding:0 14px;
+  font-size:13px;
+  font-weight:900;
+}
+.confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.confetti i{
+  position:absolute;
+  top:-18px;
+  width:9px;height:14px;
+  border-radius:2px;
+  animation:fall 2.7s linear forwards;
+}
+@keyframes fall{to{transform:translateY(780px) rotate(760deg)}}
+.low{animation:pulse .7s infinite}
+@keyframes pulse{50%{opacity:.35}}
+
+/* MOBILE */
+@media(max-width:600px){
+  body{
+    min-height:100dvh;
+    background:var(--bg);
+    align-items:center;
+  }
+  .app{padding:2px}
+  .panel{padding:4px;border-radius:14px;box-shadow:none}
+  .game{gap:4px}
+  .player-panel{
+    padding:5px;
+    border-radius:13px;
+    gap:5px;
+  }
+  .avatar{width:36px;height:36px;font-size:23px}
+  .name{font-size:14px}
+  .timer{font-size:18px}
+  .score{font-size:22px}
+  .controls-row{gap:5px}
+  .letter-choice{padding:3px;gap:4px;border-radius:12px}
+  .letter{min-height:42px;font-size:25px;border-radius:9px}
+  .tools{gap:3px}
+  .power{width:38px;height:38px;border-radius:10px;font-size:17px}
+  .turnbar{font-size:12px;min-height:22px}
+  .board-shell{padding:3px;border-radius:13px}
+  .board{gap:2px}
+  .cell{border-radius:6px}
+  .message{font-size:12px;min-height:22px}
+  .menu-tab{width:31px;height:56px}
+  .sidebar{width:165px}
+  .players-setup{gap:5px}
+  .pconfig{padding:6px}
+  .preview{width:48px;height:48px;font-size:30px}
+  .avatars{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:390px){
+  .player-panel{padding:4px}
+  .avatar{width:32px;height:32px;font-size:20px}
+  .name{font-size:12px}
+  .timer{font-size:16px}
+  .score{font-size:20px}
+  .letter{min-height:39px;font-size:23px}
+  .power{width:34px;height:34px;font-size:15px}
+}
+@media(max-height:760px) and (orientation:portrait){
+  .player-panel{padding-top:4px;padding-bottom:4px}
+  .avatar{width:32px;height:32px;font-size:20px}
+  .letter{min-height:38px}
+  .power{height:34px;width:34px}
+  .turnbar{min-height:18px}
+  .message{min-height:18px}
+}
+
+.mode-choice{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-width:420px;margin:0 auto}
+.mode-btn{min-height:46px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);font-size:14px;font-weight:950;padding:0 12px}
+.mode-btn.selected{background:var(--dark);color:#fff;border-color:var(--dark)}
+.machine-badge{display:inline-flex;align-items:center;gap:4px;margin-left:5px;padding:2px 6px;border-radius:999px;background:#eee6db;color:var(--muted);font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.05em}
+.player-panel.machine .controls-row{opacity:.48}
+.player-panel.machine .letter,.player-panel.machine .power{pointer-events:none}
+.thinking{animation:machineThink .7s ease-in-out infinite alternate}
+@keyframes machineThink{from{opacity:.55}to{opacity:1}}
+
+/* SOS MODE */
+.panel.sos-mode{--dark:#0f5966;--p1:#0e8fb5;--p1soft:#e5f8fd;--p2:#ff6b57;--p2soft:#fff0ea;--gold:#ffd35c;background:linear-gradient(180deg,#e9fbff,#fff6eb)}
+.panel.sos-mode .board-shell{background:#9fd5dd;border-color:#6fb7c2}
+.panel.sos-mode .cell{background:#f7ffff}
+.sos-power{width:46px;height:46px;position:relative;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:20px;padding:0;box-shadow:0 2px 0 rgba(90,63,38,.12)}
+.sos-power .count{position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:50%;background:var(--dark);color:#fff;display:grid;place-items:center;font-size:9px;font-weight:900}
+.sos-power:disabled{
+  opacity:.28;
+  filter:grayscale(1);
+  cursor:default;
+  box-shadow:none;
+  pointer-events:none;
+}
+.sos-power.used{
+  opacity:.28;
+  filter:grayscale(1);
+  cursor:default;
+  box-shadow:none;
+  pointer-events:none;
+}
+.mode-flash{position:absolute;inset:0;z-index:18;display:grid;place-items:center;background:rgba(232,252,255,.96);text-align:center;padding:20px}
+.mode-flash-card{display:grid;gap:8px;justify-items:center}
+.mode-flash-icon{font-size:64px;animation:bob .7s ease-in-out infinite alternate}
+.mode-flash-title{font-size:34px;font-weight:1000;letter-spacing:-.04em;color:#0f5966}
+.mode-flash-sub{font-size:15px;font-weight:800;color:#5c7479}
+@keyframes bob{from{transform:translateY(-4px) rotate(-4deg)}to{transform:translateY(4px) rotate(4deg)}}
+.replay-mark{animation:replayPulse .32s ease}
+@keyframes replayPulse{0%{transform:scale(.78)}70%{transform:scale(1.08)}100%{transform:scale(1)}}
+
+.help-toggle{min-height:42px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:14px;font-weight:900;padding:0 14px}
+.help-modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:rgba(20,14,10,.78);backdrop-filter:blur(4px)}
+.help-dialog{width:min(100%,680px);max-height:92vh;overflow:auto;background:#fffaf2;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+.help-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
+.help-title{margin:0;font-size:28px;line-height:1;font-weight:1000;letter-spacing:-.04em;color:var(--dark)}
+.help-sub{margin:5px 0 0;color:var(--muted);font-size:14px;line-height:1.4}
+.help-close{flex:0 0 auto;width:42px;height:42px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:20px;font-weight:900}
+.help-section{margin-top:16px}.help-section h3{margin:0 0 8px;font-size:15px;font-weight:950;color:var(--ink)}
+.help-section p{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+.help-steps{display:grid;gap:7px;margin-top:8px}
+.help-step{display:grid;grid-template-columns:auto minmax(0,1fr);gap:9px;align-items:start;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.help-step .num{width:24px;height:24px;border-radius:50%;background:var(--dark);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:950}
+.help-step b{color:var(--ink)}
+.extras-list{display:grid;gap:8px}
+.extra-line{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start;padding:10px 11px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.extra-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#f2e8dc;font-size:20px}
+.extra-copy{font-size:13px;line-height:1.42;color:var(--muted)}
+.extra-copy strong{display:block;color:var(--ink);font-size:14px;margin-bottom:2px}
+.help-foot{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.45}
+@media(max-width:600px){.help-modal{padding:8px}.help-dialog{max-height:96vh;border-radius:16px;padding:14px}.help-title{font-size:24px}}
+.difficulty-wrap{display:grid;gap:6px;max-width:420px;margin:0 auto}
+.difficulty-title{text-align:center;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.difficulty-choice{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.difficulty-btn{min-height:42px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:13px;font-weight:900}
+.difficulty-btn.selected{background:#efe4d5;border:2px solid var(--dark)}
+</style>
+</head>
+<body>
+<main class="app">
+<section class="panel">
+
+<div id="setupScreen" class="setup">
+  <div class="brand">OSO</div>
+  <div class="tagline">Conecta · forma · gana</div>
+  <div class="mode-choice" aria-label="Modo de juego">
+    <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
+    <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
+  </div>
+  <div id="difficultyWrap" class="difficulty-wrap hidden">
+    <div class="difficulty-title">Dificultad de la máquina</div>
+    <div class="difficulty-choice">
+      <button id="difficultyEasy" class="difficulty-btn selected" type="button">🙂 Fácil</button>
+      <button id="difficultyHard" class="difficulty-btn" type="button">🧠 Difícil</button>
+    </div>
+  </div>
+  <div style="text-align:center"><button id="helpToggle" class="help-toggle" type="button">❓ Reglas / Ayuda</button></div>
+
+  <div class="players-setup">
+    <div class="pconfig">
+      <div class="small-label">Jugador 1</div>
+      <div id="preview1" class="preview">🐻</div>
+      <input id="nickname1" class="nickname" value="Jugador 1" maxlength="16">
+      <div class="avatars" data-player="0">
+        <button class="avatar-btn selected" data-avatar="🐻">🐻</button><button class="avatar-btn" data-avatar="🐼">🐼</button>
+        <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button><button class="avatar-btn" data-avatar="🧸">🧸</button>
+        <button class="avatar-btn" data-avatar="🦊">🦊</button><button class="avatar-btn" data-avatar="🐯">🐯</button>
+        <button class="avatar-btn" data-avatar="🦁">🦁</button><button class="avatar-btn" data-avatar="🐸">🐸</button>
+        <button class="avatar-btn" data-avatar="🐵">🐵</button><button class="avatar-btn" data-avatar="🐨">🐨</button>
+        <button class="avatar-btn" data-avatar="🐧">🐧</button><button class="avatar-btn" data-avatar="🦄">🦄</button>
+      </div>
+    </div>
+
+    <div class="pconfig">
+      <div class="small-label">Jugador 2</div>
+      <div id="preview2" class="preview">🐼</div>
+      <input id="nickname2" class="nickname" value="Jugador 2" maxlength="16">
+      <div class="avatars" data-player="1">
+        <button class="avatar-btn" data-avatar="🐻">🐻</button><button class="avatar-btn selected" data-avatar="🐼">🐼</button>
+        <button class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button><button class="avatar-btn" data-avatar="🧸">🧸</button>
+        <button class="avatar-btn" data-avatar="🦊">🦊</button><button class="avatar-btn" data-avatar="🐯">🐯</button>
+        <button class="avatar-btn" data-avatar="🦁">🦁</button><button class="avatar-btn" data-avatar="🐸">🐸</button>
+        <button class="avatar-btn" data-avatar="🐵">🐵</button><button class="avatar-btn" data-avatar="🐨">🐨</button>
+        <button class="avatar-btn" data-avatar="🐧">🐧</button><button class="avatar-btn" data-avatar="🦄">🦄</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup-actions">
+    <div>
+      <div class="small-label">Tablero</div>
+      <select id="sizeSelect">
+        <option value="4">4 × 4 · 1:30</option>
+        <option value="5" selected>5 × 5 · 2:00</option>
+        <option value="6">6 × 6 · 2:30</option>
+        <option value="7">7 × 7 · 3:00</option>
+        <option value="8">8 × 8 · 4:00</option>
+      </select>
+    </div>
+    <button id="startGame" class="primary">Jugar</button>
+  </div>
+</div>
+
+<div id="gameScreen" class="game hidden">
+
+  <div id="side2" class="player-panel p2 top">
+    <div class="identity">
+      <div id="avatar2" class="avatar">🐼</div>
+      <div class="player-info">
+        <div class="name"><span id="name2">Jugador 2</span><span id="machineBadge" class="machine-badge hidden">Máquina</span></div>
+        <div class="stats">
+          <span id="timer2" class="timer">2:00</span>
+          <span class="score-wrap"><span class="score-label">OSOS</span><span id="score2" class="score">0</span></span>
+        </div>
+      </div>
+    </div>
+    <div></div>
+    <div class="controls-row">
+      <div class="letter-choice">
+        <button class="letter" data-player="1" data-letter="O">O</button>
+        <button class="letter" data-player="1" data-letter="S">S</button>
+      </div>
+      <div class="tools">
+        <button id="hint2" class="power" title="Pista">💡<span class="count">1</span></button>
+        <button id="last2" class="power" title="Última jugada">👁️<span class="count">1</span></button>
+        <button id="swap2" class="power" title="Cambiar una letra">🔄<span class="count">1</span></button><button id="sos2" class="sos-power" title="Cambiar de OSO a SOS">🛟<span class="count">1</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="center-area">
+    <div id="turnBarTop" class="turnbar turnbar-top"></div>
+    <div class="board-shell"><div id="board" class="board"></div></div>
+    <div id="message" class="message" aria-live="polite"></div>
+  </div>
+
+  <div id="side1" class="player-panel p1">
+    <div class="identity">
+      <div id="avatar1" class="avatar">🐻</div>
+      <div class="player-info">
+        <div id="name1" class="name">Jugador 1</div>
+        <div class="stats">
+          <span id="timer1" class="timer">2:00</span>
+          <span class="score-wrap"><span class="score-label">OSOS</span><span id="score1" class="score">0</span></span>
+        </div>
+      </div>
+    </div>
+    <div></div>
+    <div class="controls-row">
+      <div class="letter-choice">
+        <button class="letter" data-player="0" data-letter="O">O</button>
+        <button class="letter" data-player="0" data-letter="S">S</button>
+      </div>
+      <div class="tools">
+        <button id="hint1" class="power" title="Pista">💡<span class="count">1</span></button>
+        <button id="last1" class="power" title="Última jugada">👁️<span class="count">1</span></button>
+        <button id="swap1" class="power" title="Cambiar una letra">🔄<span class="count">1</span></button><button id="sos1" class="sos-power" title="Cambiar de OSO a SOS">🛟<span class="count">1</span></button>
+      </div>
+    </div>
+  </div>
+
+  <button id="menuTab" class="menu-tab" aria-label="Abrir menú">☰</button>
+  <aside id="sidebar" class="sidebar">
+    <h3>Partida</h3>
+    <button id="restartMatch">Reiniciar tablero</button>
+    <button id="newGame">Nueva partida</button>
+    <button id="closeMenu">Cerrar</button>
+  </aside>
+</div>
+
+
+<div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="help-dialog">
+    <div class="help-head">
+      <div>
+        <h2 id="helpTitle" class="help-title">Cómo se juega a OSO</h2>
+        <p class="help-sub">Forma palabras, suma puntos y encadena turnos.</p>
+      </div>
+      <button id="helpClose" class="help-close" type="button" aria-label="Cerrar ayuda">✕</button>
+    </div>
+
+    <div class="help-section">
+      <h3>Dinámica básica</h3>
+      <div class="help-steps">
+        <div class="help-step"><span class="num">1</span><div><b>Elige O o S</b> y colócala en una casilla vacía.</div></div>
+        <div class="help-step"><span class="num">2</span><div><b>Forma OSO</b> en horizontal, vertical o diagonal para sumar 1 punto.</div></div>
+        <div class="help-step"><span class="num">3</span><div><b>Si formas OSO, vuelves a jugar</b> y recibes +10 segundos.</div></div>
+        <div class="help-step"><span class="num">4</span><div><b>La partida termina</b> cuando se llena el tablero o alguien se queda sin tiempo.</div></div>
+      </div>
+    </div>
+
+    <div class="help-section">
+      <h3>Extras</h3>
+      <div class="extras-list">
+        <div class="extra-line"><div class="extra-icon">💡</div><div class="extra-copy"><strong>Pista</strong>Recomienda una letra y una casilla para tu siguiente movimiento.</div></div>
+        <div class="extra-line"><div class="extra-icon">👁️</div><div class="extra-copy"><strong>Última jugada rival</strong>Marca en el tablero cuál fue el último movimiento del oponente.</div></div>
+        <div class="extra-line"><div class="extra-icon">🔄</div><div class="extra-copy"><strong>Cambiar una letra</strong>Convierte una ficha ya colocada de O a S o de S a O. Después pasa el turno.</div></div>
+        <div class="extra-line"><div class="extra-icon">🛟</div><div class="extra-copy"><strong>OSO → SOS</strong>Cambia el objetivo de toda la partida a SOS, reproduce las jugadas anteriores, recalcula el marcador y continúa. No se puede deshacer.</div></div>
+      </div>
+    </div>
+
+    <div class="help-section">
+      <h3>Contra la máquina</h3>
+      <p><strong>Fácil:</strong> juega de forma más relajada. <strong>Difícil:</strong> intenta completar, bloquear y preparar mejores jugadas.</p>
+    </div>
+
+    <div class="help-foot">Cada extra puede usarse una sola vez por jugador. El cambio OSO → SOS es global: cuando alguien lo activa, queda consumido para ambos.</div>
+  </div>
+</div>
+
+<div id="modeFlash" class="mode-flash hidden"><div class="mode-flash-card"><div class="mode-flash-icon">🛟</div><div class="mode-flash-title">¡Ahora es SOS!</div><div class="mode-flash-sub">Recalculando la partida desde el principio…</div></div></div><div id="winnerOverlay" class="winner-overlay hidden">
+  <div id="confetti" class="confetti"></div>
+  <div>
+    <div id="winnerAvatar" class="winner-avatar">🐻</div>
+    <div id="winnerTitle" class="winner-title">¡Ganador!</div>
+    <div id="winnerSub" class="winner-sub"></div>
+    <div class="winner-actions">
+      <button id="rematch" class="primary">Revancha</button>
+      <button id="changePlayers" class="secondary">Cambiar jugadores</button>
+    </div>
+  </div>
+</div>
+
+</section>
+</main>
+
+<script>
+(()=>{
+const BONUS=10;
+const MACHINE_DELAY=650;
+const timeFor=n=>Math.ceil((30+n*n*3)/30)*30;
+const q=id=>document.getElementById(id);
+
+const setup=q('setupScreen'),game=q('gameScreen'),boardEl=q('board'),msg=q('message'),turnBarTop=q('turnBarTop');
+const namesIn=[q('nickname1'),q('nickname2')],previews=[q('preview1'),q('preview2')];
+const namesEl=[q('name1'),q('name2')],avatarsEl=[q('avatar1'),q('avatar2')];
+const timers=[q('timer1'),q('timer2')],scoresEl=[q('score1'),q('score2')],sides=[q('side1'),q('side2')];
+const hintBtns=[q('hint1'),q('hint2')],lastBtns=[q('last1'),q('last2')],swapBtns=[q('swap1'),q('swap2')],sosBtns=[q('sos1'),q('sos2')];
+
+let avatars=['🐻','🐼'],names=['Jugador 1','Jugador 2'],size=5,board=[],current=0,scores=[0,0],times=[120,120],gameMode='two',difficulty='easy';
+let selected=['O','O'],scored=new Map(),history=[],extras=[],timer=null,lastTick=0,over=false,hintCell=null,lastCell=null,swapMode=null,machineTimeout=null,machineThinking=false,targetWord='OSO',sosUsed=false,replaying=false;
+
+document.querySelectorAll('.avatars').forEach(grid=>{
+  const p=+grid.dataset.player;
+  grid.querySelectorAll('.avatar-btn').forEach(b=>b.addEventListener('click',()=>{
+    grid.querySelectorAll('.avatar-btn').forEach(x=>x.classList.remove('selected'));
+    b.classList.add('selected');
+    avatars[p]=b.dataset.avatar;
+    previews[p].textContent=avatars[p];
+  }));
+});
+
+function setGameMode(mode){
+  gameMode=mode;
+  q('modeTwo').classList.toggle('selected',mode==='two');
+  q('modeSolo').classList.toggle('selected',mode==='solo');
+  q('difficultyWrap').classList.toggle('hidden',mode!=='solo');
+
+  const p2Config=namesIn[1].closest('.pconfig');
+  const p2Avatars=p2Config.querySelector('.avatars');
+
+  if(mode==='solo'){
+    namesIn[1].value='Máquina';
+    namesIn[1].disabled=true;
+    p2Avatars.style.opacity='.35';
+    p2Avatars.style.pointerEvents='none';
+    avatars[1]='🤖';
+    previews[1].textContent='🤖';
+  }else{
+    if(namesIn[1].value==='Máquina')namesIn[1].value='Jugador 2';
+    namesIn[1].disabled=false;
+    p2Avatars.style.opacity='';
+    p2Avatars.style.pointerEvents='';
+    if(avatars[1]==='🤖')avatars[1]='🐼';
+    previews[1].textContent=avatars[1];
+  }
+}
+q('modeTwo').addEventListener('click',()=>setGameMode('two'));
+q('modeSolo').addEventListener('click',()=>setGameMode('solo'));
+q('difficultyEasy').addEventListener('click',()=>{
+  difficulty='easy';q('difficultyEasy').classList.add('selected');q('difficultyHard').classList.remove('selected');
+});
+q('difficultyHard').addEventListener('click',()=>{
+  difficulty='hard';q('difficultyHard').classList.add('selected');q('difficultyEasy').classList.remove('selected');
+});
+q('helpToggle').addEventListener('click',()=>q('helpModal').classList.remove('hidden'));
+q('helpClose').addEventListener('click',()=>q('helpModal').classList.add('hidden'));
+q('helpModal').addEventListener('click',e=>{if(e.target===q('helpModal'))q('helpModal').classList.add('hidden')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!q('helpModal').classList.contains('hidden'))q('helpModal').classList.add('hidden')});
+
+
+document.querySelectorAll('.letter').forEach(b=>b.addEventListener('click',()=>{
+  const p=+b.dataset.player;
+  if(over||p!==current)return;
+  selected[p]=b.dataset.letter;
+  swapMode=null;
+  updateControls();
+  render();
+  msg.textContent=`${avatars[p]} ${names[p]} jugará ${selected[p]}.`;
+}));
+
+function fmt(v){
+  v=Math.max(0,Math.ceil(v));
+  return Math.floor(v/60)+':'+String(v%60).padStart(2,'0');
+}
+function updateTimers(){
+  timers.forEach((e,i)=>{
+    e.textContent=fmt(times[i]);
+    e.classList.toggle('low',times[i]<=20&&!over);
+  });
+}
+function updateControls(){
+  sides.forEach((s,i)=>{
+    const isTurn=i===current&&!over&&!replaying;
+    s.classList.toggle('active',isTurn);
+    s.classList.toggle('machine',gameMode==='solo'&&i===1);
+    s.classList.toggle('thinking',machineThinking&&i===1);
+  });
+
+  document.querySelectorAll('.letter').forEach(b=>{
+    const p=+b.dataset.player;
+    const machineSide=gameMode==='solo'&&p===1;
+    const canUse=p===current&&!over&&!replaying&&!machineSide&&!machineThinking;
+    b.classList.toggle('selected',b.dataset.letter===selected[p]);
+    b.disabled=!canUse;
+  });
+
+  [0,1].forEach(i=>{
+    const machineSide=gameMode==='solo'&&i===1;
+    const isTurn=i===current&&!over&&!replaying&&!machineThinking;
+    const humanCanAct=isTurn&&!machineSide;
+
+    const hintUsed=!extras[i].hint;
+    const lastUsed=!extras[i].last;
+    const swapUsed=!extras[i].swap;
+
+    hintBtns[i].disabled=!humanCanAct||hintUsed;
+    hintBtns[i].classList.toggle('used',hintUsed);
+
+    const hasOpponentMove=history.some(m=>m.player!==i);
+    lastBtns[i].disabled=!humanCanAct||lastUsed||!hasOpponentMove;
+    lastBtns[i].classList.toggle('used',lastUsed);
+
+    const hasPlacedLetters=board.some(Boolean);
+    swapBtns[i].disabled=!humanCanAct||swapUsed||!hasPlacedLetters;
+    swapBtns[i].classList.toggle('used',swapUsed);
+    swapBtns[i].classList.toggle('mode',swapMode===i&&!swapUsed);
+
+    // SOS is global: once either player uses it, both buttons become consumed.
+    sosBtns[i].disabled=!humanCanAct||sosUsed;
+    sosBtns[i].classList.toggle('used',sosUsed);
+  });
+
+  turnBar.textContent=
+    over ? 'Partida terminada' :
+    replaying ? '🛟 Recalculando SOS…' :
+    machineThinking ? '🤖 La máquina está pensando…' :
+    `${avatars[current]} Turno de ${names[current]} · ${targetWord}`;
+}
+
+function reset(){
+  clearInterval(timer);
+  clearTimeout(machineTimeout);
+  machineThinking=false;
+  board=Array(size*size).fill('');
+  current=0;
+  scores=[0,0];
+  times=[timeFor(size),timeFor(size)];
+  selected=['O','O'];
+  scored=new Map();
+  history=[];
+  extras=[{hint:1,last:1,swap:1},{hint:1,last:1,swap:1}];
+  over=false;
+  targetWord='OSO';
+  sosUsed=false;
+  replaying=false;
+  [...hintBtns,...lastBtns,...swapBtns,...sosBtns].forEach(btn=>btn.classList.remove('used'));
+  q('modeFlash').classList.add('hidden');
+  q('gameScreen').closest('.panel').classList.remove('sos-mode');
+  hintCell=null;
+  lastCell=null;
+  swapMode=null;
+  scoresEl.forEach(e=>e.textContent='0');
+  q('winnerOverlay').classList.add('hidden');
+  render();
+  updateTimers();
+  updateControls();
+  msg.textContent=`${avatars[0]} ${names[0]} empieza.`;
+  lastTick=performance.now();
+  timer=setInterval(tick,100);
+}
+function tick(){
+  if(over)return;
+  const now=performance.now(),dt=(now-lastTick)/1000;
+  lastTick=now;
+  times[current]=Math.max(0,times[current]-dt);
+  updateTimers();
+  if(times[current]<=0)finish(1-current,'tiempo');
+}
+function render(){
+  boardEl.innerHTML='';
+  boardEl.style.gridTemplateColumns=`repeat(${size},minmax(0,1fr))`;
+
+  board.forEach((v,i)=>{
+    const c=document.createElement('button');
+    c.type='button';
+    c.className='cell';
+
+    if(i===hintCell)c.classList.add('hint');
+    if(i===lastCell)c.classList.add('last');
+    if(swapMode===current&&v)c.classList.add('swap-target');
+
+    const s=document.createElement('span');
+    s.textContent=v;
+    c.appendChild(s);
+    c.addEventListener('click',()=>cellClick(i));
+    boardEl.appendChild(c);
+  });
+
+  paint();
+}
+function paint(){
+  const own=Array.from({length:size*size},()=>new Set());
+
+  for(const [k,p] of scored.entries()){
+    k.split('-').map(Number).forEach(i=>own[i].add(p));
+  }
+
+  [...boardEl.children].forEach((c,i)=>{
+    if(own[i].size===2)c.classList.add('both');
+    else if(own[i].has(0))c.classList.add('p1');
+    else if(own[i].has(1))c.classList.add('p2');
+  });
+}
+function cellClick(i){
+  if(over||replaying)return;
+
+  if(swapMode===current){
+    if(!board[i]){
+      msg.textContent='🔄 Elige una casilla ocupada.';
+      return;
+    }
+
+    const p=current;
+    extras[p].swap=0;
+    updateControls();
+    board[i]=board[i]==='O'?'S':'O';
+    history.push({player:p,index:i,letter:board[i],power:'swap'});
+    swapMode=null;
+    rebuildScores();
+    hintCell=null;
+    lastCell=null;
+    msg.textContent=`🔄 ${names[p]} cambia la letra a ${board[i]}.`;
+    current=1-current;
+    lastTick=performance.now();
+    render();
+    updateControls();
+
+    if(board.every(Boolean))endByScore();
+    else maybeMachineTurn();
+    return;
+  }
+
+  if(board[i])return;
+
+  const p=current;
+  board[i]=selected[p];
+  history.push({player:p,index:i,letter:selected[p]});
+
+  const made=findNew(i);
+  made.forEach(k=>scored.set(k,p));
+
+  if(made.length){
+    scores[p]+=made.length;
+    times[p]+=BONUS*made.length;
+    scoresEl[p].textContent=scores[p];
+    updateTimers();
+    msg.textContent=`¡${avatars[p]} ${names[p]} consigue ${made.length===1?'un '+targetWord:made.length+' '+targetWord}! +${BONUS*made.length}s`;
+  }else{
+    current=1-current;
+    lastTick=performance.now();
+    msg.textContent=`Turno de ${avatars[current]} ${names[current]}`;
+  }
+
+  hintCell=null;
+  lastCell=null;
+  render();
+  updateControls();
+
+  if(board.every(Boolean)){
+    endByScore();
+  }else{
+    maybeMachineTurn();
+  }
+}
+function findNew(idx,word=targetWord){
+  const r0=Math.floor(idx/size),c0=idx%size,dirs=[[0,1],[1,0],[1,1],[1,-1]],found=[];
+  for(const [dr,dc] of dirs){
+    for(let off=-2;off<=0;off++){
+      const cells=[];
+      for(let k=0;k<3;k++){
+        const r=r0+(off+k)*dr,c=c0+(off+k)*dc;
+        if(r<0||c<0||r>=size||c>=size){cells.length=0;break}
+        cells.push(r*size+c);
+      }
+      if(cells.length===3&&cells.includes(idx)&&board[cells[0]]===word[0]&&board[cells[1]]===word[1]&&board[cells[2]]===word[2]){
+        const key=cells.join('-');
+        if(!scored.has(key)&&!found.includes(key))found.push(key);
+      }
+    }
+  }
+  return found;
+}
+function rebuildScores(){
+  const previous=new Map(scored);
+  scored=new Map();
+  scores=[0,0];
+  const dirs=[[0,1],[1,0],[1,1],[1,-1]];
+
+  for(let r=0;r<size;r++){
+    for(let c=0;c<size;c++){
+      for(const [dr,dc] of dirs){
+        const r2=r+2*dr,c2=c+2*dc;
+        if(r2<0||c2<0||r2>=size||c2>=size)continue;
+
+        const cells=[
+          r*size+c,
+          (r+dr)*size+(c+dc),
+          r2*size+c2
+        ];
+        const key=cells.join('-');
+
+        if(
+          board[cells[0]]===targetWord[0] &&
+          board[cells[1]]===targetWord[1] &&
+          board[cells[2]]===targetWord[2]
+        ){
+          const owner=previous.has(key)?previous.get(key):current;
+          scored.set(key,owner);
+          scores[owner]++;
+        }
+      }
+    }
+  }
+
+  scoresEl.forEach((e,i)=>e.textContent=scores[i]);
+}
+function bestHint(){
+  for(let i=0;i<board.length;i++){
+    if(board[i])continue;
+
+    for(const l of ['O','S']){
+      board[i]=l;
+      const n=findNew(i).length;
+      board[i]='';
+
+      if(n)return{index:i,letter:l};
+    }
+  }
+
+  const empties=board.map((v,i)=>v?null:i).filter(v=>v!==null);
+  if(!empties.length)return null;
+
+  const center=(size*size-1)/2;
+  empties.sort((a,b)=>Math.abs(a-center)-Math.abs(b-center));
+  return{index:empties[0],letter:selected[current]};
+}
+
+hintBtns.forEach((b,p)=>b.addEventListener('click',()=>{
+  if(b.disabled||p!==current||!extras[p].hint||over||replaying)return;
+
+  const h=bestHint();
+  if(!h)return;
+
+  extras[p].hint=0;
+  updateControls();
+  selected[p]=h.letter;
+  hintCell=h.index;
+  lastCell=null;
+  swapMode=null;
+  render();
+  updateControls();
+  msg.textContent=`💡 Prueba ${h.letter} en la casilla marcada.`;
+}));
+
+lastBtns.forEach((b,p)=>b.addEventListener('click',()=>{
+  if(b.disabled||p!==current||!extras[p].last||over||replaying)return;
+
+  const m=[...history].reverse().find(x=>x.player!==p);
+  if(!m)return;
+
+  extras[p].last=0;
+  updateControls();
+  lastCell=m.index;
+  hintCell=null;
+  swapMode=null;
+  render();
+  updateControls();
+  msg.textContent=`👁️ Última jugada rival: ${m.letter}.`;
+}));
+
+swapBtns.forEach((b,p)=>b.addEventListener('click',()=>{
+  if(b.disabled||p!==current||!extras[p].swap||over||replaying)return;
+
+  swapMode=swapMode===p?null:p;
+  hintCell=null;
+  lastCell=null;
+  render();
+  updateControls();
+  msg.textContent=swapMode===p
+    ?'🔄 Elige una letra del tablero para cambiar O ↔ S.'
+    :'Cambio cancelado.';
+}));
+
+
+function scorePotentialFor(letter,index){
+  if(board[index])return -999;
+  board[index]=letter;
+  const immediate=findNew(index).length;
+  board[index]='';
+
+  const center=(size-1)/2;
+  const r=Math.floor(index/size),c=index%size;
+  const centrality=1/(1+Math.abs(r-center)+Math.abs(c-center));
+  return immediate*100 + centrality;
+}
+
+function opponentThreats(){
+  const threats=new Set();
+  for(let i=0;i<board.length;i++){
+    if(board[i])continue;
+    for(const letter of ['O','S']){
+      board[i]=letter;
+      if(findNew(i).length)threats.add(i);
+      board[i]='';
+    }
+  }
+  return threats;
+}
+
+function chooseMachineMove(){
+  const empties=board.map((v,i)=>v?null:i).filter(v=>v!==null);
+  if(!empties.length)return null;
+
+  if(difficulty==='easy'){
+    const scoring=[];
+    for(let i=0;i<board.length;i++){
+      if(board[i])continue;
+      for(const letter of ['O','S']){
+        board[i]=letter;
+        const immediate=findNew(i).length;
+        board[i]='';
+        if(immediate>0)scoring.push({index:i,letter,score:immediate});
+      }
+    }
+    if(scoring.length && Math.random()<0.70){
+      scoring.sort((a,b)=>b.score-a.score);
+      return scoring[0];
+    }
+    const candidates=[];
+    for(const i of empties){
+      for(const letter of ['O','S']){
+        candidates.push({index:i,letter,score:scorePotentialFor(letter,i)+Math.random()*2});
+      }
+    }
+    candidates.sort((a,b)=>b.score-a.score);
+    const pool=candidates.slice(0,Math.min(6,candidates.length));
+    return pool[Math.floor(Math.random()*pool.length)];
+  }
+
+  let best=null,bestScore=-Infinity;
+  for(let i=0;i<board.length;i++){
+    if(board[i])continue;
+    for(const letter of ['O','S']){
+      board[i]=letter;
+      const immediate=findNew(i).length;
+      board[i]='';
+      if(immediate>0){
+        const score=immediate*1000+scorePotentialFor(letter,i);
+        if(score>bestScore){bestScore=score;best={index:i,letter};}
+      }
+    }
+  }
+  if(best)return best;
+
+  const threats=opponentThreats();
+  if(threats.size){
+    for(const i of threats){
+      for(const letter of ['O','S']){
+        const score=150+scorePotentialFor(letter,i);
+        if(score>bestScore){bestScore=score;best={index:i,letter};}
+      }
+    }
+    if(best)return best;
+  }
+
+  for(let i=0;i<board.length;i++){
+    if(board[i])continue;
+    for(const letter of ['O','S']){
+      const score=scorePotentialFor(letter,i)+(letter==='O'?0.15:0);
+      if(score>bestScore){bestScore=score;best={index:i,letter};}
+    }
+  }
+  return best;
+}
+
+function maybeMachineTurn(){
+  if(gameMode!=='solo'||current!==1||over||replaying)return;
+
+  clearTimeout(machineTimeout);
+  machineThinking=true;
+  updateControls();
+
+  machineTimeout=setTimeout(()=>{
+    if(over||current!==1||gameMode!=='solo')return;
+
+    const move=chooseMachineMove();
+    machineThinking=false;
+
+    if(!move){
+      endByScore();
+      return;
+    }
+
+    selected[1]=move.letter;
+    updateControls();
+    cellClick(move.index);
+
+    if(!over&&current===1){
+      maybeMachineTurn();
+    }
+  },MACHINE_DELAY);
+}
+
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+async function activateSOS(player){
+  if(over||sosUsed||replaying||player!==current)return;
+
+  // Global, one-time power-up: consume it for both players immediately.
+  sosUsed=true;
+  replaying=true;
+  sosBtns.forEach(btn=>{
+    btn.disabled=true;
+    btn.classList.add('used');
+  });
+  updateControls();
+  clearTimeout(machineTimeout);
+  clearInterval(timer);
+  machineThinking=false;
+  swapMode=null;
+  hintCell=null;
+  lastCell=null;
+
+  const savedHistory=history.map(m=>({...m}));
+  const savedTimes=[...times];
+
+  q('gameScreen').closest('.panel').classList.add('sos-mode');
+  q('modeFlash').classList.remove('hidden');
+  updateControls();
+  await sleep(900);
+  q('modeFlash').classList.add('hidden');
+
+  targetWord='SOS';
+  board=Array(size*size).fill('');
+  scores=[0,0];
+  scored=new Map();
+  scoresEl.forEach(e=>e.textContent='0');
+  render();
+  msg.textContent='🛟 Reproduciendo la partida con criterio SOS…';
+  await sleep(220);
+
+  for(const move of savedHistory){
+    if(move.power==='swap'){
+      if(board[move.index]) board[move.index]=board[move.index]==='O'?'S':'O';
+    }else{
+      board[move.index]=move.letter;
+    }
+
+    const made=findNew(move.index,'SOS');
+    made.forEach(k=>{
+      scored.set(k,move.player);
+      scores[move.player]++;
+    });
+    scoresEl.forEach((e,i)=>e.textContent=scores[i]);
+
+    render();
+    const cell=boardEl.children[move.index];
+    if(cell)cell.classList.add('replay-mark');
+    msg.textContent=`${avatars[move.player]} ${names[move.player]} → ${board[move.index]||move.letter}`;
+    await sleep(260);
+  }
+
+  times=savedTimes;
+  updateTimers();
+  replaying=false;
+  render();
+  updateControls();
+  msg.textContent=`🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores[0]} – ${scores[1]}.`;
+
+  lastTick=performance.now();
+  timer=setInterval(tick,100);
+  if(gameMode==='solo'&&current===1) maybeMachineTurn();
+}
+
+sosBtns.forEach((btn,p)=>btn.addEventListener('click',()=>{
+  if(btn.disabled||sosUsed||over||replaying||p!==current)return;
+  activateSOS(p);
+}));
+
+function endByScore(){
+  if(scores[0]===scores[1])finish(null,'empate');
+  else finish(scores[0]>scores[1]?0:1,'puntos');
+}
+function finish(w,reason){
+  over=true;
+  clearInterval(timer);
+  updateControls();
+  q('winnerOverlay').classList.remove('hidden');
+
+  if(w===null){
+    q('winnerAvatar').textContent='🤝';
+    q('winnerTitle').textContent='¡Empate!';
+    q('winnerSub').textContent=`${scores[0]} – ${scores[1]}`;
+  }else{
+    q('winnerAvatar').textContent=avatars[w];
+    q('winnerTitle').textContent=`¡Gana ${names[w]}!`;
+    q('winnerSub').textContent=reason==='tiempo'
+      ?`El rival se quedó sin tiempo · ${scores[0]} – ${scores[1]}`
+      :`Resultado final: ${scores[0]} – ${scores[1]}`;
+    confetti();
+  }
+}
+function confetti(){
+  const h=q('confetti');
+  h.innerHTML='';
+  const cs=['#2e7cf6','#ef5a66','#f4c34f','#55a56d','#9b6bd6','#e88b45'];
+
+  for(let i=0;i<90;i++){
+    const x=document.createElement('i');
+    x.style.left=Math.random()*100+'%';
+    x.style.background=cs[i%cs.length];
+    x.style.animationDelay=Math.random()+'s';
+    h.appendChild(x);
+  }
+}
+
+q('startGame').addEventListener('click',()=>{
+  names=[
+    namesIn[0].value.trim()||'Jugador 1',
+    gameMode==='solo'?'Máquina':(namesIn[1].value.trim()||'Jugador 2')
+  ];
+
+  if(gameMode==='solo')avatars[1]='🤖';
+
+  size=+q('sizeSelect').value;
+
+  namesEl.forEach((e,i)=>e.textContent=names[i]);
+  avatarsEl.forEach((e,i)=>e.textContent=avatars[i]);
+  q('machineBadge').classList.toggle('hidden',gameMode!=='solo');
+
+  setup.classList.add('hidden');
+  game.classList.remove('hidden');
+  reset();
+});
+
+q('menuTab').addEventListener('click',()=>q('sidebar').classList.toggle('open'));
+q('closeMenu').addEventListener('click',()=>q('sidebar').classList.remove('open'));
+
+q('restartMatch').addEventListener('click',()=>{
+  q('sidebar').classList.remove('open');
+  reset();
+});
+
+q('newGame').addEventListener('click',()=>{
+  clearInterval(timer);
+  clearTimeout(machineTimeout);
+  q('sidebar').classList.remove('open');
+  game.classList.add('hidden');
+  setup.classList.remove('hidden');
+});
+
+q('rematch').addEventListener('click',reset);
+
+q('changePlayers').addEventListener('click',()=>{
+  clearTimeout(machineTimeout);
+  q('winnerOverlay').classList.add('hidden');
+  game.classList.add('hidden');
+  setup.classList.remove('hidden');
+});
+})();
+</script>
+
+</section>
+</main>
+</body>
+</html>
