@@ -1089,15 +1089,16 @@ html::before {
     linear-gradient(170deg, #061f3d, #0a3560 55%, #0c4d6e);
 }
 body::after {
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 24vh;
+  inset: 0;
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 70 Q150 45 300 70 T600 70 T900 70 T1200 70 V120 H0Z' fill='%23b3ecff' fill-opacity='0.07'/%3E%3C/svg%3E")
-      0 100% / 900px 70% repeat-x,
+      0 100% / 900px 17vh repeat-x,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q150 20 300 60 T600 60 T900 60 T1200 60 V120 H0Z' fill='%2381d4fa' fill-opacity='0.09'/%3E%3C/svg%3E")
-      0 100% / 1200px 100% repeat-x;
+      0 100% / 1200px 24vh repeat-x,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60'%3E%3Cpath d='M0 30 Q30 15 60 30 T120 30 T180 30 T240 30' fill='none' stroke='%23b3ecff' stroke-opacity='0.10' stroke-width='2'/%3E%3C/svg%3E")
+      0 0 / 240px 60px repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60'%3E%3Cpath d='M0 30 Q30 15 60 30 T120 30 T180 30 T240 30' fill='none' stroke='%2381d4fa' stroke-opacity='0.08' stroke-width='3'/%3E%3C/svg%3E")
+      120px 45px / 360px 90px repeat;
   animation: waves 36s linear infinite;
 }
 body.sea-theme::after {
@@ -1114,7 +1115,9 @@ body.sea-theme::before {
   to {
     background-position:
       -900px 100%,
-      1200px 100%;
+      1200px 100%,
+      -480px 0,
+      480px 45px;
   }
 }
 @keyframes bubbles {
@@ -1137,7 +1140,23 @@ body.sea-theme::before {
   --p2b: #e0552a;
   --p2glow: rgba(255, 138, 92, 0.55);
   --accent: #7dffb2;
-  background: linear-gradient(180deg, rgba(20, 150, 180, 0.32), rgba(10, 40, 90, 0.3));
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60'%3E%3Cpath d='M0 30 Q30 15 60 30 T120 30 T180 30 T240 30' fill='none' stroke='%23b3ecff' stroke-opacity='0.07' stroke-width='2'/%3E%3C/svg%3E")
+      0 0 / 240px 60px repeat,
+    linear-gradient(180deg, rgba(20, 150, 180, 0.32), rgba(10, 40, 90, 0.3));
+  animation: panel-waves 36s linear infinite;
+}
+@keyframes panel-waves {
+  to {
+    background-position:
+      -480px 0,
+      0 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel.sos-mode {
+    animation: none;
+  }
 }
 .panel.sos-mode .board-shell {
   background: linear-gradient(180deg, #0b4f72, #05263f);
