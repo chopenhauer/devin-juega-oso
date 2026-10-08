@@ -16,6 +16,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   vista_; por defecto Enfrentados en móvil y tablet, Misma vista en escritorio.
 - Analítica con Microsoft Clarity.
 - Tema marino con olas suaves al activar el extra OSO→SOS.
+- Créditos en el pie de las pantallas de inicio: «Hecho por Julia y JoseLuis — Vilarequi — con amor».
 
 ## Roadmap F4 (pendiente)
 
@@ -67,13 +68,6 @@ Un salón de la fama con las mejores partidas y rachas.
   (RGPD); sería mejor usar solo alias o iniciales.
 - **Pantalla:** acceso desde el inicio («🏆 Hall of fame») y al terminar la partida («¡Nuevo
   récord!»), con botón para borrar el historial.
-
-### Créditos en las pantallas iniciales
-
-Mención visible al inicio: «Hecho por Julia y JoseLuis — Vilarequi — con amor». Probar varias
-versiones (pie de la bienvenida, firma bajo el logo, sello discreto en todos los pasos) y elegir
-la que quede más natural. Ojo: la bienvenida solo sale la primera vez, así que conviene que se vea
-también en el paso Modo.
 
 ### Regalos y extras desbloqueables
 

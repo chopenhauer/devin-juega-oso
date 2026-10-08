@@ -168,3 +168,15 @@ test('two players choose the orientation; solo skips that step', async ({ page }
   await page.click('#stepBack');
   expect(await step(page)).toBe('players');
 });
+
+test('credits show on the setup screens and hide during the game', async ({ page }) => {
+  await page.goto('/');
+  const credits = page.locator('.credits');
+  await expect(credits).toHaveText('Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻');
+  await expect(credits).toBeVisible();
+  await page.click('#introSkip');
+  await expect(credits).toBeVisible();
+  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  await page.click('#startGame');
+  await expect(credits).toBeHidden();
+});

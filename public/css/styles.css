@@ -109,6 +109,27 @@ select:focus-visible {
   display: none !important;
 }
 
+/* CREDITS (setup screens only) */
+.credits {
+  position: fixed;
+  right: 0;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  left: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0 12px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+body:has(#setupScreen:not(.hidden)) .app {
+  padding-bottom: 32px;
+}
+body:has(#gameScreen:not(.hidden)) .credits {
+  display: none;
+}
+
 /* SETUP */
 .setup {
   display: grid;
