@@ -17,6 +17,21 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.2.0] - 2026-10-09
+
+**Sonidos** ([9a77e3a](https://github.com/chopenhauer/devin-juega-oso/commit/9a77e3a))
+
+- Al acabar la partida suena una fanfarria si gana una persona (o varias), una melodía neutra si
+  hay empate y una melodía descendente si gana la Máquina.
+- Durante la partida: un «tic» al poner una letra, dos notas al formar OSO, un doble pitido cuando
+  a un jugador le quedan 20 s (una vez por partida) y, con 4 jugadores, un sonido al quedarse fuera.
+- Extras: 💡, 👁️ y 🔄 tienen un sonido corto propio; 🛟 SOS suena como una sirena de unos 1,5 s,
+  porque cambia las reglas para todos (idea de JoseLuis).
+- Botón 🔊 / 🔇 en la pantalla de inicio, junto al 🎨, y «Sonido» en el menú ☰ de la partida.
+  Se recuerda en el dispositivo y silencia todo, también la fanfarria del easter egg.
+- **Decisiones:** todo se genera en el navegador con Web Audio, sin archivos ni cambios en la CSP;
+  empieza encendido y a volumen suave; la repetición del SOS no suena para no tapar la sirena.
+
 ## [2.1.2] - 2026-10-09
 
 - En la celebración del easter egg el fondo se oscurece, para que el mensaje «¡Tienes más temas

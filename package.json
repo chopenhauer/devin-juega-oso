@@ -1,7 +1,7 @@
 {
   "name": "devin-juega-oso",
   "private": true,
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "OSO, el juego de Julia: juego web estático de O y S.",
   "type": "module",
   "engines": {

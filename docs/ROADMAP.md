@@ -39,6 +39,9 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Easter egg más festivo (2.1.1 y 2.1.2): las pulsaciones seguidas del 🎨 no abren y cierran el
   menú; al llegar a 6 caen huevos de Pascua por toda la pantalla con el fondo oscurecido, sale
   «¡Tienes más temas disponibles!» y suena una fanfarria. El menú no cambia de ancho.
+- Sonidos (2.2.0): final de partida (victoria, empate o gana la Máquina), letra, OSO, aviso de
+  20 s, quedarse fuera con 4, un sonido por extra y sirena para el SOS. Botón 🔊 / 🔇 en inicio y
+  en el menú ☰, recordado en el dispositivo.
 
 ## Priorización (octubre 2026)
 
@@ -64,12 +67,12 @@ los jugadores.
 | 15  | Reloj con la pestaña dormida                                    | Bajo       | Bajo          | Decisión pendiente; hoy funciona como una pausa                  |
 | 16  | Regalos desbloqueables                                          | —          | Medio         | Solo idea, sin planificar (JoseLuis no quiere hacerlo por ahora) |
 | 17  | Compartir por WhatsApp y email (boca a boca)                    | Alto       | Bajo          | Que corra la voz entre familias y amigos                         |
-| 18  | Sonido al acabar la partida y botón de silencio                 | Medio-alto | Bajo          | Más celebración; el silencio es imprescindible al haber sonidos  |
+| 18  | ✅ Sonidos y botón de silencio (hecho en 2.2.0)                 | Medio-alto | Bajo          | Más celebración; el silencio es imprescindible al haber sonidos  |
 | 19  | Tiempos por tablero según partidas reales (épica)               | Alto       | Medio         | Primero medir unas semanas; después ajustar con datos            |
 
 **Agrupación propuesta:** de la 2.1.0 ya están publicados los temas (4 y 7); quedan privacidad,
-proteger `main`, feedback rápido y tensión con poco tiempo (1, 2, 3 y 5). Compartir y sonidos (17
-y 18) son victorias rápidas que pueden ir antes o junto al hall of fame (6) en la 2.2.0. La
+proteger `main`, feedback rápido y tensión con poco tiempo (1, 2, 3 y 5). Los sonidos (18) salieron
+en la 2.2.0. Compartir (17) es una victoria rápida que puede ir antes o junto al hall of fame (6). La
 telemetría de los tiempos (19) conviene ponerla pronto, porque necesita semanas de partidas antes
 de poder ajustar nada. Mercado, equipos y ranking global (12, 9 y 13) cuando el feedback diga que
 se quieren.
@@ -283,15 +286,18 @@ Ajustar el reloj de cada tablero con lo que pasa en partidas reales, no con una 
 
 ### Sonidos
 
-- **Hoy:** solo suena la fanfarria del easter egg (2.1.1). Se genera en el navegador con Web
-  Audio, sin archivos y sin abrir la CSP.
-- **Revisar:** decidir el estilo (generados o archivos pequeños propios) y qué momentos tienen
-  sonido: formar OSO, poco tiempo (T4.3), tiempo agotado, empate…
-- **Primero:** un sonido al acabar la partida, junto al confeti, distinto si se gana, se empata o
-  gana la máquina.
-- **Silencio:** un botón 🔊 / 🔇 en la pantalla de inicio (junto al 🎨) y en el menú ☰ de la
-  partida. Se recuerda en el dispositivo y también silencia la fanfarria del easter egg.
-- **Decisiones abiertas:** si el sonido empieza encendido o apagado, y el volumen.
+**Hecho en 2.2.0.** Todo se genera en el navegador con Web Audio (sin archivos y sin abrir la CSP),
+empieza encendido y a volumen suave:
+
+- **Final de partida:** fanfarria si gana una persona (o varias), melodía neutra en el empate y
+  melodía descendente si gana la Máquina.
+- **Partida:** «tic» al poner letra, dos notas al formar OSO, doble pitido con 20 s (una vez por
+  jugador y partida) y sonido de «fuera» con 4 jugadores.
+- **Extras:** 💡, 👁️ y 🔄 con un sonido corto propio; 🛟 SOS con una sirena de ~1,5 s porque
+  cambia las reglas.
+- **Silencio:** botón 🔊 / 🔇 en la pantalla de inicio y «Sonido» en el menú ☰. Se recuerda en el
+  dispositivo y silencia todo, también la fanfarria del easter egg.
+- **Ideas:** ajustar volumen o quitar el «tic» si en casa resulta pesado.
 
 ### Compartir y boca a boca (viralidad)
 
