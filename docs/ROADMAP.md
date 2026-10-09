@@ -31,7 +31,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 
 | Tarea | Idea                            | Esfuerzo   | Notas                                                                                                                        |
 | ----- | ------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| T4.2  | Diseño por dispositivo          | Medio      | Fase 1 hecha (1 y 2 jugadores). Fase 2: diseños de 4 jugadores, junto con el modo 4 jugadores.                               |
+| T4.2  | Diseño por dispositivo          | Medio      | Hecho: fase 1 (1 y 2 jugadores) y fase 2 (4 jugadores en tablet y ordenador, versión 2.0.0).                                 |
 | T4.3  | Tensión con poco tiempo         | Bajo       | Con ≤ 20 s el fondo se tiñe poco a poco. Nunca solo color, ≤ 3 parpadeos/s, contraste AA, estático con «reducir movimiento». |
 | T4.4  | Vibración                       | Bajo       | Al colocar, puntuar, poco tiempo y ganar. Solo Android (iOS no soporta la Vibration API). Con ajuste para desactivarla.      |
 | T4.5  | Oso bailando al ganar           | Medio-alto | Necesita arte nuevo (SVG animado o Lottie, no GIF). Fotograma fijo con «reducir movimiento».                                 |
@@ -46,7 +46,8 @@ mínimo de tiempo tras comprar (propuesta: 10 s) y si existe en modo 1 jugador.
 
 ### Modo 4 jugadores
 
-Partidas de cuatro personas en el mismo dispositivo, por turnos. Reglas decididas con JoseLuis:
+**Hecho en la versión 2.0.0.** Partidas de cuatro personas en el mismo dispositivo, por turnos.
+Reglas decididas con JoseLuis:
 
 - **Turnos:** rotan 1 → 2 → 3 → 4; formar OSO da punto y repites turno, igual que ahora.
 - **Competición:** todos contra todos; gana quien tenga más puntos y, si hay empate en cabeza,

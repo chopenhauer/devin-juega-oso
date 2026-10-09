@@ -14,16 +14,27 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## Próximamente
 
-- **2.0.0 · Modo 4 jugadores** (en desarrollo). Decisiones: todos contra todos y gana quien tenga
-  más puntos (empate en cabeza = victoria compartida); turnos 1 → 2 → 3 → 4; tableros 6 × 6, 7 × 7 y
-  8 × 8 con el mismo reloj que con 2 jugadores; quien se queda sin tiempo queda fuera con sus
-  puntos y los demás siguen hasta que solo quede uno con tiempo; solo personas; cada jugador con 💡, 👁️ y 🔄 una vez;
-  👁️ marca la última jugada del rival anterior; 🛟 sigue siendo una vez por partida; solo en tablet u
-  ordenador (en móvil, desactivado con «En tablet u ordenador»).
-- **Marcador contra la máquina:** el marcador de la sesión sale ya desde la primera partida (con 2 y
-  4 jugadores, desde la segunda).
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
+
+## [2.0.0] - 2026-10-09
+
+**Modo 4 jugadores** ([d38323b](https://github.com/chopenhauer/devin-juega-oso/commit/d38323b), [b9daeea](https://github.com/chopenhauer/devin-juega-oso/commit/b9daeea), [5b8a6c6](https://github.com/chopenhauer/devin-juega-oso/commit/5b8a6c6))
+
+- Cuatro personas, cada una con su nombre, su avatar y su color, y un panel a cada lado del tablero.
+- Vistas «Enfrentados» (cada panel mira a su lado de la mesa) y «Misma vista» (todos derechos).
+- Al final salen los 4 marcadores, y el marcador de la sesión cuenta a los cuatro.
+- **Decisiones:** todos contra todos y gana quien tenga más puntos (empate en cabeza = victoria
+  compartida); turnos 1 → 2 → 3 → 4; tableros 6 × 6, 7 × 7 y 8 × 8 con el mismo reloj que con 2
+  jugadores; quien se queda sin tiempo queda fuera con sus puntos y los demás siguen hasta que solo
+  quede uno con tiempo; solo personas, sin máquina; cada jugador con 💡, 👁️ y 🔄 una vez; 👁️ marca la
+  última jugada de un rival; 🛟 sigue siendo una vez por partida; solo en tablet u ordenador (en
+  móvil, desactivado con «En tablet u ordenador»).
+
+**Marcador contra la máquina** ([af17f60](https://github.com/chopenhauer/devin-juega-oso/commit/af17f60))
+
+- El marcador de la sesión sale ya desde la primera partida contra la máquina (con 2 y 4 jugadores,
+  desde la segunda).
 
 ## [1.9.0] - 2026-10-09
 
