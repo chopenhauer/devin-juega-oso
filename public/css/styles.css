@@ -423,7 +423,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
   );
   border-color: color-mix(in srgb, var(--p1) 50%, transparent);
 }
-.pconfig:last-child {
+.pconfig:nth-child(2) {
   background: linear-gradient(
     180deg,
     color-mix(in srgb, var(--p2) 24%, transparent),
@@ -434,7 +434,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
 .pconfig:first-child .small-label {
   color: #a6e0ff;
 }
-.pconfig:last-child .small-label {
+.pconfig:nth-child(2) .small-label {
   color: #ffb8cc;
 }
 .preview {
@@ -453,7 +453,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
     0 0 0 4px var(--p1),
     0 8px 22px var(--p1glow);
 }
-.pconfig:last-child .preview {
+.pconfig:nth-child(2) .preview {
   box-shadow:
     0 0 0 4px var(--p2),
     0 8px 22px var(--p2glow);
@@ -2503,4 +2503,224 @@ body[data-theme='christmas'] .theme-decor::after {
     top: var(--y);
     bottom: auto;
   }
+}
+
+/* 4 PLAYERS (tablet and computer only): players 3 and 4 */
+:root {
+  --p3: #4ade80;
+  --p3b: #16a34a;
+  --p3glow: rgba(74, 222, 128, 0.55);
+  --p4: #c084fc;
+  --p4b: #9333ea;
+  --p4glow: rgba(192, 132, 252, 0.55);
+}
+.setup:not(.four-setup) .extra-player {
+  display: none;
+}
+.setup.four-setup .players-setup {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.pconfig:nth-child(3) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--p3) 24%, transparent),
+    color-mix(in srgb, var(--p3) 4%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--p3) 50%, transparent);
+}
+.pconfig:nth-child(4) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--p4) 24%, transparent),
+    color-mix(in srgb, var(--p4) 4%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--p4) 50%, transparent);
+}
+.pconfig:nth-child(3) .small-label {
+  color: #b9f5cf;
+}
+.pconfig:nth-child(4) .small-label {
+  color: #e6ccff;
+}
+.pconfig:nth-child(3) .preview {
+  box-shadow:
+    0 0 0 4px var(--p3),
+    0 8px 22px var(--p3glow);
+}
+.pconfig:nth-child(4) .preview {
+  box-shadow:
+    0 0 0 4px var(--p4),
+    0 8px 22px var(--p4glow);
+}
+.player-panel.p3 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--p3) 24%, transparent),
+    color-mix(in srgb, var(--p3) 4%, transparent)
+  );
+}
+.player-panel.p4 {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--p4) 24%, transparent),
+    color-mix(in srgb, var(--p4) 4%, transparent)
+  );
+}
+.player-panel.p3.active {
+  border-color: var(--p3);
+  box-shadow: 0 0 28px var(--p3glow);
+  animation: glow3 1.6s ease-in-out infinite;
+}
+.player-panel.p4.active {
+  border-color: var(--p4);
+  box-shadow: 0 0 28px var(--p4glow);
+  animation: glow4 1.6s ease-in-out infinite;
+}
+@keyframes glow3 {
+  50% {
+    box-shadow: 0 0 8px var(--p3glow);
+  }
+}
+@keyframes glow4 {
+  50% {
+    box-shadow: 0 0 8px var(--p4glow);
+  }
+}
+.p3 .avatar {
+  box-shadow:
+    0 0 0 3px var(--p3),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.p4 .avatar {
+  box-shadow:
+    0 0 0 3px var(--p4),
+    0 4px 12px rgba(0, 0, 0, 0.35);
+}
+.p3 .timer,
+.p3 .score {
+  color: color-mix(in srgb, var(--p3) 55%, #fff);
+}
+.p4 .timer,
+.p4 .score {
+  color: color-mix(in srgb, var(--p4) 55%, #fff);
+}
+.p3 .letter {
+  background: color-mix(in srgb, var(--p3) 22%, transparent);
+  color: color-mix(in srgb, var(--p3) 45%, #fff);
+}
+.p4 .letter {
+  background: color-mix(in srgb, var(--p4) 22%, transparent);
+  color: color-mix(in srgb, var(--p4) 45%, #fff);
+}
+.p3 .letter.selected,
+.p4 .letter.selected {
+  background: var(--tile);
+  color: var(--tile-ink);
+}
+.p3 .letter.selected {
+  box-shadow:
+    0 4px 0 var(--tile-edge),
+    0 0 0 2px var(--p3),
+    0 0 16px var(--p3glow);
+}
+.p4 .letter.selected {
+  box-shadow:
+    0 4px 0 var(--tile-edge),
+    0 0 0 2px var(--p4),
+    0 0 16px var(--p4glow);
+}
+.cell.p3 {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--p3) 65%, #fff), var(--p3));
+  color: #fff;
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--p3b) 70%, #000),
+    0 0 16px var(--p3glow);
+}
+.cell.p4 {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--p4) 65%, #fff), var(--p4));
+  color: #fff;
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--p4b) 70%, #000),
+    0 0 16px var(--p4glow);
+}
+.cell.p3 span,
+.cell.p4 span {
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.22);
+}
+
+/* 4-player game: one panel on each side of the board, turns clockwise from the bottom */
+.app:has(#gameScreen.four:not(.hidden)) {
+  width: min(100%, 1400px);
+}
+.game.four {
+  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(150px, 210px);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    '. top .'
+    'left board right'
+    '. bottom .';
+  gap: 8px 14px;
+  padding-right: 0;
+}
+.game.four #side1 {
+  grid-area: bottom;
+}
+.game.four #side2 {
+  grid-area: left;
+}
+.game.four #side3 {
+  grid-area: top;
+}
+.game.four #side4 {
+  grid-area: right;
+}
+.game.four .center-area {
+  grid-area: board;
+}
+.game.four .player-panel {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  width: auto;
+  margin-inline: 0;
+  padding: 7px;
+  transform: none;
+}
+.game.four .player-panel .controls-row {
+  grid-column: auto;
+  grid-template-columns: auto auto;
+}
+.game.four .tools {
+  display: flex;
+}
+.game.four .turnbar-top {
+  display: none;
+}
+.game.four .board-shell {
+  max-width: min(100%, calc(100dvh - 300px));
+}
+/* Same view: the side panels stand upright, stacked in their column */
+.game.four.same-view :is(#side2, #side4) {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.game.four.same-view :is(#side2, #side4) .controls-row {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+.game.four.same-view :is(#side2, #side4) .tools {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+}
+/* Facing (tablet on the table): each panel turned toward its seat */
+.game.four:not(.same-view) #side3 {
+  transform: rotate(180deg);
+}
+.game.four:not(.same-view) :is(#side2, #side4) {
+  width: 380px;
+  margin-inline: calc((100% - 380px) / 2);
+}
+.game.four:not(.same-view) #side2 {
+  transform: rotate(90deg);
+}
+.game.four:not(.same-view) #side4 {
+  transform: rotate(-90deg);
 }

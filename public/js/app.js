@@ -14,20 +14,21 @@ const { timeFor } = Engine;
     boardEl = q('board'),
     msg = q('message'),
     turnBarTop = q('turnBarTop');
-  const namesIn = [q('nickname1'), q('nickname2')],
-    previews = [q('preview1'), q('preview2')];
-  const namesEl = [q('name1'), q('name2')],
-    avatarsEl = [q('avatar1'), q('avatar2')];
-  const timers = [q('timer1'), q('timer2')],
-    scoresEl = [q('score1'), q('score2')],
-    sides = [q('side1'), q('side2')];
-  const hintBtns = [q('hint1'), q('hint2')],
-    lastBtns = [q('last1'), q('last2')],
-    swapBtns = [q('swap1'), q('swap2')],
-    sosBtns = [q('sos1'), q('sos2')];
+  const byPlayer = (prefix) => [1, 2, 3, 4].map((n) => q(prefix + n));
+  const namesIn = byPlayer('nickname'),
+    previews = byPlayer('preview');
+  const namesEl = byPlayer('name'),
+    avatarsEl = byPlayer('avatar');
+  const timers = byPlayer('timer'),
+    scoresEl = byPlayer('score'),
+    sides = byPlayer('side');
+  const hintBtns = byPlayer('hint'),
+    lastBtns = byPlayer('last'),
+    swapBtns = byPlayer('swap'),
+    sosBtns = byPlayer('sos');
 
   let avatars = ['🐻', '🐼'],
-    names = ['Jugador 1', 'Jugador 2'],
+    names = ['Jugador 1', 'Jugador 2', 'Jugador 3', 'Jugador 4'],
     size = 5,
     board = [],
     current = 0,
@@ -57,6 +58,16 @@ const { timeFor } = Engine;
 
   const avatarGrids = [...document.querySelectorAll('.avatars')];
   let avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
+  avatars = [...avatars, ...avatarChoices.filter((a) => !avatars.includes(a)).slice(0, 2)];
+  const playerCount = () => (gameMode === 'four' ? 4 : 2);
+  const rivalsOf = (p) => [...Array(playerCount()).keys()].filter((o) => o !== p);
+  // Later players give way when their avatar is already taken by an earlier one.
+  function dedupeAvatars() {
+    avatars.forEach((a, i) => {
+      const before = avatars.slice(0, i);
+      if (before.includes(a)) avatars[i] = avatarChoices.find((c) => !avatars.includes(c));
+    });
+  }
   const press = (el, on) => {
     el.classList.toggle('selected', on);
     el.setAttribute('aria-pressed', String(on));
@@ -67,16 +78,16 @@ const { timeFor } = Engine;
   };
   const firstFreeAvatar = (taken) => avatarChoices.find((a) => a !== taken);
 
-  // Each player must have a different avatar: the other player's pick is disabled.
+  // Each player must have a different avatar: the other players' picks are disabled.
   function syncAvatars() {
     avatarGrids.forEach((grid) => {
       const p = +grid.dataset.player;
       grid.querySelectorAll('.avatar-btn').forEach((b) => {
-        const taken = b.dataset.avatar === avatars[1 - p];
+        const taken = rivalsOf(p).some((o) => avatars[o] === b.dataset.avatar);
         b.classList.toggle('selected', b.dataset.avatar === avatars[p]);
         b.setAttribute('aria-pressed', String(b.dataset.avatar === avatars[p]));
         b.disabled = taken;
-        b.title = taken ? 'Ya lo ha elegido el otro jugador' : '';
+        b.title = taken ? 'Ya lo ha elegido otro jugador' : '';
       });
       previews[p].textContent = avatars[p];
     });
@@ -86,7 +97,7 @@ const { timeFor } = Engine;
     const p = +grid.dataset.player;
     grid.querySelectorAll('.avatar-btn').forEach((b) =>
       b.addEventListener('click', () => {
-        if (b.dataset.avatar === avatars[1 - p]) return;
+        if (rivalsOf(p).some((o) => avatars[o] === b.dataset.avatar)) return;
         avatars[p] = b.dataset.avatar;
         syncAvatars();
       }),
@@ -95,10 +106,10 @@ const { timeFor } = Engine;
 
   // Restores saved avatars (dispatched by onboarding.js) without a temporary clash.
   document.addEventListener('oso:avatars', (e) => {
-    const [first, second] = e.detail;
-    if (avatarChoices.includes(first)) avatars[0] = first;
-    if (avatarChoices.includes(second)) avatars[1] = second;
-    if (avatars[1] === avatars[0]) avatars[1] = firstFreeAvatar(avatars[0]);
+    e.detail.slice(0, 4).forEach((a, i) => {
+      if (avatarChoices.includes(a)) avatars[i] = a;
+    });
+    dedupeAvatars();
     syncAvatars();
   });
   syncAvatars();
@@ -208,6 +219,11 @@ const { timeFor } = Engine;
     gameMode = mode;
     press(q('modeTwo'), mode === 'two');
     press(q('modeSolo'), mode === 'solo');
+    press(q('modeFour'), mode === 'four');
+    const sizeSelect = q('sizeSelect');
+    [...sizeSelect.options].forEach((o) => (o.disabled = mode === 'four' && +o.value < 6));
+    if (mode === 'four' && +sizeSelect.value < 6) sizeSelect.value = '6';
+    if (mode === 'four') dedupeAvatars();
     const p2Config = namesIn[1].closest('.pconfig');
     const p2Avatars = p2Config.querySelector('.avatars');
     p2Config.querySelector('.small-label').textContent = mode === 'solo' ? 'Máquina' : 'Jugador 2';
@@ -233,6 +249,18 @@ const { timeFor } = Engine;
   }
   q('modeTwo').addEventListener('click', () => setGameMode('two'));
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
+  q('modeFour').addEventListener('click', () => setGameMode('four'));
+  // 4 players need a tablet or a computer: on phones the option stays disabled.
+  const roomForFour = matchMedia('(min-width: 700px) and (min-height: 600px)');
+  function syncFourAvailability() {
+    const ok = roomForFour.matches;
+    q('modeFour').disabled = !ok;
+    q('modeFour').classList.toggle('soon', !ok);
+    q('modeFour').querySelector('.soon-tag').hidden = ok;
+    if (!ok && gameMode === 'four' && game.classList.contains('hidden')) q('modeTwo').click();
+  }
+  roomForFour.addEventListener('change', syncFourAvailability);
+  syncFourAvailability();
   // The robot looks grumpier or furious depending on the difficulty.
   function setDifficulty(level) {
     difficulty = level;
@@ -393,6 +421,7 @@ const { timeFor } = Engine;
   }
   function updateControls() {
     sides.forEach((s, i) => {
+      s.classList.toggle('hidden', i >= scores.length);
       const isTurn = i === current && !over && !replaying;
       s.classList.toggle('active', isTurn);
       s.classList.toggle('machine', gameMode === 'solo' && i === 1);
@@ -408,7 +437,7 @@ const { timeFor } = Engine;
       b.disabled = !canUse;
     });
 
-    [0, 1].forEach((i) => {
+    scores.forEach((_, i) => {
       const machineSide = gameMode === 'solo' && i === 1;
       const isTurn = i === current && !over && !replaying && !machineThinking;
       const humanCanAct = isTurn && !machineSide;
@@ -449,6 +478,7 @@ const { timeFor } = Engine;
       .querySelectorAll('.score-label')
       .forEach((e) => (e.textContent = targetWord === 'SOS' ? 'puntos SOS' : 'puntos OSO'));
     game.classList.toggle('solo', gameMode === 'solo');
+    game.classList.toggle('four', gameMode === 'four');
 
     turnBarTop.textContent = over
       ? 'Partida terminada'
@@ -481,15 +511,13 @@ const { timeFor } = Engine;
     stopGame();
     board = Array(size * size).fill('');
     current = 0;
-    scores = [0, 0];
-    times = [timeFor(size), timeFor(size)];
-    selected = ['O', 'O'];
+    const n = playerCount();
+    scores = Array(n).fill(0);
+    times = Array(n).fill(timeFor(size));
+    selected = Array(n).fill('O');
     scored = new Map();
     history = [];
-    extras = [
-      { hint: 1, last: 1, swap: 1 },
-      { hint: 1, last: 1, swap: 1 },
-    ];
+    extras = Array.from({ length: n }, () => ({ hint: 1, last: 1, swap: 1 }));
     over = false;
     targetWord = 'OSO';
     sosUsed = false;
@@ -519,7 +547,7 @@ const { timeFor } = Engine;
     lastTick = now;
     updateTimers();
     if (times[current] <= 0) {
-      finish(1 - current, 'tiempo');
+      finish(gameMode === 'four' ? leaders(current) : 1 - current, 'tiempo');
       return true;
     }
     return false;
@@ -569,9 +597,8 @@ const { timeFor } = Engine;
     }
 
     [...boardEl.children].forEach((c, i) => {
-      if (own[i].size === 2) c.classList.add('both');
-      else if (own[i].has(0)) c.classList.add('p1');
-      else if (own[i].has(1)) c.classList.add('p2');
+      if (own[i].size > 1) c.classList.add('both');
+      else if (own[i].size) c.classList.add(`p${[...own[i]][0] + 1}`);
     });
   }
   function cellClick(i, byMachine = false) {
@@ -599,7 +626,7 @@ const { timeFor } = Engine;
       hintCell = null;
       lastCell = null;
       msg.textContent = `🔄 ${names[p]} cambia la letra a ${board[i]}.`;
-      current = 1 - current;
+      current = (current + 1) % scores.length;
       render();
       updateControls();
 
@@ -629,7 +656,7 @@ const { timeFor } = Engine;
       updateTimers();
       msg.textContent = `¡${avatars[p]} ${names[p]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`;
     } else {
-      current = 1 - current;
+      current = (current + 1) % scores.length;
       msg.textContent = `Turno de ${avatars[current]} ${names[current]}`;
     }
 
@@ -648,7 +675,7 @@ const { timeFor } = Engine;
     return Engine.findNew(board, size, scored, idx, word);
   }
   function rebuildScores(author = current) {
-    ({ scored, scores } = Engine.rebuildScores(board, size, targetWord, scored, author));
+    ({ scored, scores } = Engine.rebuildScores(board, size, targetWord, scored, author, scores.length));
     scoresEl.forEach((e, i) => (e.textContent = scores[i]));
   }
   function bestHint() {
@@ -803,7 +830,7 @@ const { timeFor } = Engine;
     replaying = false;
     render();
     updateControls();
-    msg.textContent = `🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores[0]} – ${scores[1]}.`;
+    msg.textContent = `🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores.join(' – ')}.`;
 
     lastTick = performance.now();
     timer = setInterval(tick, 100);
@@ -817,9 +844,18 @@ const { timeFor } = Engine;
     }),
   );
 
+  // Players with the top score; `out` (who ran out of time) can't win.
+  function leaders(out = null) {
+    const ids = scores.map((_, i) => i).filter((i) => i !== out);
+    const top = Math.max(...ids.map((i) => scores[i]));
+    const best = ids.filter((i) => scores[i] === top);
+    return best.length === 1 ? best[0] : best;
+  }
+  const joinNames = (list) =>
+    list.length < 2 ? list.join('') : `${list.slice(0, -1).join(', ')} y ${list.at(-1)}`;
   function endByScore() {
-    if (scores[0] === scores[1]) finish(null, 'empate');
-    else finish(scores[0] > scores[1] ? 0 : 1, 'puntos');
+    const top = [leaders()].flat();
+    finish(top.length === scores.length ? null : leaders(), 'puntos');
   }
   function finish(w, reason) {
     over = true;
@@ -828,17 +864,23 @@ const { timeFor } = Engine;
     q('winnerOverlay').classList.remove('hidden');
     q('rematch').focus({ preventScroll: true });
 
-    if (w === null) {
+    const result = scores.join(' – ');
+    const timeout =
+      gameMode === 'four' ? `${names[current]} se quedó sin tiempo` : 'El rival se quedó sin tiempo';
+    if (Array.isArray(w)) {
+      q('winnerAvatar').textContent = w.map((i) => avatars[i]).join('');
+      q('winnerTitle').textContent = `¡Ganan ${joinNames(w.map((i) => names[i]))}!`;
+      q('winnerSub').textContent = `${reason === 'tiempo' ? timeout : 'Victoria compartida'} · ${result}`;
+      confetti();
+    } else if (w === null) {
       q('winnerAvatar').textContent = '🤝';
       q('winnerTitle').textContent = '¡Empate!';
-      q('winnerSub').textContent = `${scores[0]} – ${scores[1]}`;
+      q('winnerSub').textContent = `${scores.join(' – ')}`;
     } else {
       q('winnerAvatar').textContent = avatars[w];
       q('winnerTitle').textContent = `¡Gana ${names[w]}!`;
       q('winnerSub').textContent =
-        reason === 'tiempo'
-          ? `El rival se quedó sin tiempo · ${scores[0]} – ${scores[1]}`
-          : `Resultado final: ${scores[0]} – ${scores[1]}`;
+        reason === 'tiempo' ? `${timeout} · ${result}` : `Resultado final: ${scores.join(' – ')}`;
       confetti();
     }
     showSession(recordSession(w));
@@ -852,7 +894,13 @@ const { timeFor } = Engine;
     } catch {
       /* unreadable or unavailable: start a new session */
     }
-    const key = sessionKey({ mode: gameMode, difficulty, names, avatars });
+    const n = scores.length;
+    const key = sessionKey({
+      mode: gameMode,
+      difficulty,
+      names: names.slice(0, n),
+      avatars: avatars.slice(0, n),
+    });
     session = recordGame(session, key, { scores, winner, size });
     try {
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -864,8 +912,10 @@ const { timeFor } = Engine;
   function showSession(st) {
     q('sessionBoard').classList.toggle('hidden', st.games < 2);
     if (st.games < 2) return;
-    const order = [0, 1].sort((a, b) => st.wins[b] - st.wins[a] || st.points[b] - st.points[a]);
-    const leader = st.wins[0] !== st.wins[1] ? order[0] : null;
+    const order = st.wins
+      .map((_, i) => i)
+      .sort((a, b) => st.wins[b] - st.wins[a] || st.points[b] - st.points[a]);
+    const leader = st.wins[order[0]] > st.wins[order[1]] ? order[0] : null;
     q('sessionRows').replaceChildren(
       ...order.map((p) => {
         const row = document.createElement('tr');
@@ -899,10 +949,8 @@ const { timeFor } = Engine;
   }
 
   q('startGame').addEventListener('click', () => {
-    names = [
-      namesIn[0].value.trim() || 'Jugador 1',
-      gameMode === 'solo' ? 'Máquina' : namesIn[1].value.trim() || 'Jugador 2',
-    ];
+    names = namesIn.map((input, i) => input.value.trim() || `Jugador ${i + 1}`);
+    if (gameMode === 'solo') names[1] = 'Máquina';
 
     if (gameMode === 'solo') avatars[1] = '🤖';
 
@@ -921,7 +969,7 @@ const { timeFor } = Engine;
 
   const sidebar = q('sidebar'),
     menuScrim = q('menuScrim'),
-    menuBtns = [q('menu1'), q('menu2')];
+    menuBtns = byPlayer('menu');
   let menuOpener = null;
   const panelAngle = (panel) => {
     const t = getComputedStyle(panel).transform;

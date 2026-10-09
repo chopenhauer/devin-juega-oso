@@ -11,8 +11,13 @@ const stepsEl = $('setupSteps');
 const steps = [...stepsEl.querySelectorAll('.step')];
 const slides = [...$('ruleSlides').children];
 const dots = [...setup.querySelectorAll('.carousel-dots .dot')];
-const nameInputs = [$('nickname1'), $('nickname2')];
+const nameInputs = [1, 2, 3, 4].map((n) => $(`nickname${n}`));
 const isSolo = () => $('modeSolo').classList.contains('selected');
+const isFour = () => $('modeFour').classList.contains('selected');
+const setSetupMode = (mode) => {
+  setup.classList.toggle('solo-setup', mode === 'solo');
+  setup.classList.toggle('four-setup', mode === 'four');
+};
 const viewButtons = [$('viewFacing'), $('viewSame')];
 const VIEWS = viewButtons.map((b) => b.dataset.view);
 // Facing (player 2's panel upside down) suits a phone or tablet flat on the table.
@@ -50,22 +55,25 @@ function applyPrefs(prefs) {
     if (typeof name === 'string') nameInputs[player].value = name.slice(0, 16);
   });
   if (prefs.mode === 'solo') $('modeSolo').click();
+  else if (prefs.mode === 'four' && !$('modeFour').disabled) $('modeFour').click();
   if (prefs.difficulty === 'hard') $('difficultyHard').click();
   if (VIEWS.includes(prefs.view)) setView(prefs.view);
   const size = $('sizeSelect');
-  if ([...size.options].some((o) => o.value === String(prefs.size))) size.value = String(prefs.size);
+  if ([...size.options].some((o) => o.value === String(prefs.size) && !o.disabled))
+    size.value = String(prefs.size);
 }
 
 function currentPrefs() {
   const solo = isSolo();
+  const count = solo ? 1 : isFour() ? 4 : 2;
   const selectedAvatar = (player) =>
     setup.querySelector(`.avatars[data-player="${player}"] .avatar-btn.selected`)?.dataset.avatar;
   return {
     seenIntro: true,
-    mode: solo ? 'solo' : 'two',
+    mode: solo ? 'solo' : isFour() ? 'four' : 'two',
     difficulty: $('difficultyHard').classList.contains('selected') ? 'hard' : 'easy',
-    avatars: solo ? [selectedAvatar(0)] : [selectedAvatar(0), selectedAvatar(1)],
-    names: solo ? [nameInputs[0].value.trim()] : nameInputs.map((i) => i.value.trim()),
+    avatars: Array.from({ length: count }, (_, i) => selectedAvatar(i)),
+    names: nameInputs.slice(0, count).map((i) => i.value.trim()),
     size: Number($('sizeSelect').value),
     view: currentView(),
   };
@@ -75,7 +83,7 @@ function summary() {
   const name = (i) => nameInputs[i].value.trim() || nameInputs[i].placeholder;
   const versus = isSolo()
     ? `${name(0)} contra la máquina (${$('difficultyHard').classList.contains('selected') ? 'difícil' : 'fácil'})`
-    : `${name(0)} contra ${name(1)} (${currentView() === 'same' ? 'misma vista' : 'enfrentados'})`;
+    : `${isFour() ? `${[0, 1, 2].map(name).join(', ')} y ${name(3)}` : `${name(0)} contra ${name(1)}`} (${currentView() === 'same' ? 'misma vista' : 'enfrentados'})`;
   return `${versus} · tablero ${$('sizeSelect').selectedOptions[0].textContent}`;
 }
 
@@ -83,15 +91,16 @@ function summary() {
 // step. Measured in both modes.
 function equalizeHeight() {
   if (!setup.offsetParent) return;
-  const solo = setup.classList.contains('solo-setup');
+  const mode = isSolo() ? 'solo' : isFour() ? 'four' : 'two';
   stepsEl.style.minHeight = '';
+  const modes = $('modeFour').disabled ? ['two', 'solo'] : ['two', 'solo', 'four'];
   const height = Math.max(
-    ...[false, true].map((asSolo) => {
-      setup.classList.toggle('solo-setup', asSolo);
+    ...modes.map((m) => {
+      setSetupMode(m);
       return stepsEl.offsetHeight;
     }),
   );
-  setup.classList.toggle('solo-setup', solo);
+  setSetupMode(mode);
   stepsEl.style.minHeight = `${height}px`;
 }
 
@@ -106,7 +115,7 @@ function setSlide(index) {
 function show(step, slideIndex = 0) {
   steps.forEach((s) => s.classList.toggle('inactive', s.dataset.step !== step));
   setup.dataset.step = step;
-  setup.classList.toggle('solo-setup', isSolo());
+  setSetupMode(isSolo() ? 'solo' : isFour() ? 'four' : 'two');
   $('stepBack').classList.toggle('invisible', step === 'welcome');
   $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '← Atrás';
   $('stepNext').classList.toggle('hidden', NO_NEXT.has(step));
@@ -149,8 +158,12 @@ $('stepNext').addEventListener('click', next);
 $('stepBack').addEventListener('click', back);
 $('introStart').addEventListener('click', () => show('rules'));
 $('introSkip').addEventListener('click', () => show('mode'));
-$('modeTwo').addEventListener('click', () => setup.classList.remove('solo-setup'));
-$('modeSolo').addEventListener('click', () => setup.classList.add('solo-setup'));
+$('modeTwo').addEventListener('click', () => setSetupMode('two'));
+$('modeSolo').addEventListener('click', () => setSetupMode('solo'));
+$('modeFour').addEventListener('click', () => {
+  setSetupMode('four');
+  equalizeHeight();
+});
 $('sizeSelect').addEventListener('change', () => ($('setupSummary').textContent = summary()));
 viewButtons.forEach((b) => b.addEventListener('click', () => setView(b.dataset.view)));
 $('startGame').addEventListener('click', () => {

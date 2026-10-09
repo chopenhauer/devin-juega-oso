@@ -144,7 +144,7 @@
                 <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
                 <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
                 <button id="modeFour" class="mode-btn soon" type="button" disabled>
-                  👨‍👩‍👧‍👦 4 jugadores <small class="soon-tag">Próximamente</small>
+                  👨‍👩‍👧‍👦 4 jugadores <small class="soon-tag">En tablet u ordenador</small>
                 </button>
               </div>
             </div>
@@ -212,6 +212,58 @@
                         <span class="robot-icon" data-mood="hard" aria-hidden="true"></span> Difícil
                       </button>
                     </div>
+                  </div>
+                </div>
+                <div class="pconfig extra-player">
+                  <div class="small-label">Jugador 3</div>
+                  <div id="preview3" class="preview">🐻</div>
+                  <input
+                    id="nickname3"
+                    class="nickname"
+                    value=""
+                    placeholder="Jugador 3"
+                    maxlength="16"
+                    aria-label="Nombre del jugador 1"
+                  />
+                  <div class="avatars" data-player="2">
+                    <button type="button" class="avatar-btn selected" data-avatar="🐻">🐻</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐼">🐼</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                    ><button type="button" class="avatar-btn" data-avatar="🧸">🧸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦊">🦊</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐯">🐯</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦁">🦁</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐸">🐸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐵">🐵</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐨">🐨</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
+                    ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
+                  </div>
+                </div>
+                <div class="pconfig extra-player">
+                  <div class="small-label">Jugador 4</div>
+                  <div id="preview4" class="preview">🐻</div>
+                  <input
+                    id="nickname4"
+                    class="nickname"
+                    value=""
+                    placeholder="Jugador 4"
+                    maxlength="16"
+                    aria-label="Nombre del jugador 1"
+                  />
+                  <div class="avatars" data-player="3">
+                    <button type="button" class="avatar-btn selected" data-avatar="🐻">🐻</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐼">🐼</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐻‍❄️">🐻‍❄️</button
+                    ><button type="button" class="avatar-btn" data-avatar="🧸">🧸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦊">🦊</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐯">🐯</button>
+                    <button type="button" class="avatar-btn" data-avatar="🦁">🦁</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐸">🐸</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐵">🐵</button
+                    ><button type="button" class="avatar-btn" data-avatar="🐨">🐨</button>
+                    <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
+                    ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
                   </div>
                 </div>
               </div>
@@ -369,6 +421,98 @@
                 <button id="swap1" class="power" title="Cambiar una letra">
                   🔄<span class="count">1</span></button
                 ><button id="sos1" class="sos-power" title="Cambiar de OSO a SOS">
+                  🛟<span class="count">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="side3" class="player-panel p3">
+            <div class="identity">
+              <div id="avatar3" class="avatar">🐻</div>
+              <div class="player-info">
+                <div id="name3" class="name">Jugador 1</div>
+                <div class="stats">
+                  <span id="timer3" class="timer">2:00</span>
+                  <span class="score-wrap"
+                    ><span class="score-label">puntos OSO</span><span id="score3" class="score">0</span></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="panel-menu">
+              <button
+                id="menu3"
+                class="menu-btn"
+                type="button"
+                aria-label="Abrir menú"
+                aria-haspopup="dialog"
+                aria-controls="sidebar"
+                aria-expanded="false"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="controls-row">
+              <div class="letter-choice">
+                <button class="letter" data-player="2" data-letter="O">
+                  O<span class="drag-hint" aria-hidden="true"></span>
+                </button>
+                <button class="letter" data-player="2" data-letter="S">
+                  S<span class="drag-hint" aria-hidden="true"></span>
+                </button>
+              </div>
+              <div class="tools">
+                <button id="hint3" class="power" title="Pista">💡<span class="count">1</span></button>
+                <button id="last3" class="power" title="Última jugada">👁️<span class="count">1</span></button>
+                <button id="swap3" class="power" title="Cambiar una letra">
+                  🔄<span class="count">1</span></button
+                ><button id="sos3" class="sos-power" title="Cambiar de OSO a SOS">
+                  🛟<span class="count">1</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div id="side4" class="player-panel p4">
+            <div class="identity">
+              <div id="avatar4" class="avatar">🐻</div>
+              <div class="player-info">
+                <div id="name4" class="name">Jugador 1</div>
+                <div class="stats">
+                  <span id="timer4" class="timer">2:00</span>
+                  <span class="score-wrap"
+                    ><span class="score-label">puntos OSO</span><span id="score4" class="score">0</span></span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="panel-menu">
+              <button
+                id="menu4"
+                class="menu-btn"
+                type="button"
+                aria-label="Abrir menú"
+                aria-haspopup="dialog"
+                aria-controls="sidebar"
+                aria-expanded="false"
+              >
+                ☰
+              </button>
+            </div>
+            <div class="controls-row">
+              <div class="letter-choice">
+                <button class="letter" data-player="3" data-letter="O">
+                  O<span class="drag-hint" aria-hidden="true"></span>
+                </button>
+                <button class="letter" data-player="3" data-letter="S">
+                  S<span class="drag-hint" aria-hidden="true"></span>
+                </button>
+              </div>
+              <div class="tools">
+                <button id="hint4" class="power" title="Pista">💡<span class="count">1</span></button>
+                <button id="last4" class="power" title="Última jugada">👁️<span class="count">1</span></button>
+                <button id="swap4" class="power" title="Cambiar una letra">
+                  🔄<span class="count">1</span></button
+                ><button id="sos4" class="sos-power" title="Cambiar de OSO a SOS">
                   🛟<span class="count">1</span>
                 </button>
               </div>
