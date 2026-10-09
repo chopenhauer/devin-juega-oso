@@ -44,7 +44,8 @@ test('first visit walks through the intro carousel, then remembers choices', asy
   heights.push(await panelHeight(page));
   await page.click('#stepNext');
   expect(await step(page)).toBe('players');
-  await expect(page.locator('#nickname2')).toBeHidden();
+  await expect(page.locator('#nickname2')).toBeDisabled();
+  await expect(page.locator('#nickname2')).toHaveValue('Máquina');
   await page.click('#difficultyHard');
   await page.fill('#nickname1', 'Julia');
   await avatar(page, 0, '🦊').click();

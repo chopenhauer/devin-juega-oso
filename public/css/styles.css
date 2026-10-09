@@ -1629,6 +1629,9 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   .avatars {
     grid-template-columns: repeat(4, 1fr);
   }
+  .pconfig .difficulty-wrap {
+    --avatar-cols: 4;
+  }
   .nickname {
     font-size: 16px;
   }
@@ -1938,7 +1941,7 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   text-align: center;
   font-weight: 600;
 }
-.setup.solo-setup .pconfig:nth-child(2) :is(.nickname, .avatars) {
+.setup.solo-setup .pconfig:nth-child(2) .avatars {
   display: none;
 }
 .setup[data-step='welcome'] .wizard-nav {
@@ -1983,28 +1986,43 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
 }
 .difficulty-wrap {
   display: none;
+  --avatar-cols: 6;
+  container-type: inline-size;
+  max-width: none;
   margin-top: 10px;
 }
 .setup.solo-setup .difficulty-wrap {
-  display: grid;
+  display: block;
 }
 .pconfig .difficulty-choice {
   grid-template-columns: 1fr;
+  gap: 5px;
 }
-.robot {
-  position: relative;
+.pconfig .difficulty-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: calc((100cqw - (var(--avatar-cols) - 1) * 5px) / var(--avatar-cols));
+  min-height: 0;
+  padding: 0 10px;
 }
-.robot::after {
-  content: '😠';
-  position: absolute;
-  right: -8px;
-  bottom: -6px;
-  font-size: 0.5em;
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+.robot-icon {
+  width: 1.9em;
+  height: 1.9em;
+  flex: 0 0 auto;
 }
-.robot[data-mood='hard']::after {
-  content: '🤬';
-  font-size: 0.6em;
+.robot-icon,
+.robot[data-mood] {
+  background: url('../img/robot-easy.svg') center / 78% no-repeat;
+}
+.robot-icon[data-mood='hard'],
+.robot[data-mood='hard'] {
+  background-image: url('../img/robot-hard.svg');
+}
+.robot[data-mood] {
+  background-color: #fff;
+  color: transparent;
 }
 .setup .preview.robot[data-mood='hard'],
 .avatar.robot[data-mood='hard'] {
