@@ -82,3 +82,17 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
   await expect(page.locator('#avatar2')).toHaveText('🎅');
   await expect(toggle).toBeHidden();
 });
+
+test('the rules modal is not covered by the 🎨 button or the credits', async ({ page }) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  const toggle = page.locator('#themeToggle');
+  await expect(toggle).toBeVisible();
+  await page.click('#helpToggle');
+  await expect(page.locator('#helpModal')).toBeVisible();
+  await expect(toggle).toBeHidden();
+  await expect(page.locator('.credits')).toBeHidden();
+  await page.click('#helpClose');
+  await expect(toggle).toBeVisible();
+  await expect(page.locator('.credits')).toBeVisible();
+});

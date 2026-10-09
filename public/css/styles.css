@@ -1440,6 +1440,10 @@ body.sea-theme::before {
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
+/* The modal lives inside .app's stacking context, so hide the fixed chrome above it. */
+body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .consent) {
+  display: none;
+}
 .help-dialog {
   width: min(100%, 680px);
   max-height: 92vh;
