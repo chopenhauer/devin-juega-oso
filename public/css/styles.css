@@ -995,8 +995,30 @@ select option {
   transition-delay: 0s;
   transform: translate(-50%, -50%) rotate(var(--menu-rot, 0deg));
 }
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.sidebar .menu-close {
+  flex: none;
+  width: 36px;
+  min-height: 36px;
+  height: 36px;
+  margin: 0;
+  position: relative;
+  border-radius: 50%;
+  font-size: 16px;
+}
+.sidebar .menu-close::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
 .sidebar h2 {
-  margin: 0 0 6px;
+  margin: 0;
   font-size: 17px;
   font-weight: 700;
 }

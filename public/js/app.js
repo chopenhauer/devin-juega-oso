@@ -773,7 +773,7 @@ const { timeFor } = Engine;
     sidebar.classList.add('open');
     menuScrim.classList.add('open');
     menuBtns.forEach((b) => b.setAttribute('aria-expanded', String(b === btn)));
-    requestAnimationFrame(() => sidebar.querySelector('button').focus());
+    requestAnimationFrame(() => q('gameHelp').focus());
   }
   function closeMenu(restoreFocus = true) {
     if (!sidebar.classList.contains('open')) return;
