@@ -88,3 +88,26 @@ test('the session leaderboard adds up games between the same players', async ({ 
   await page.click('#changePlayers');
   expect(await step(page)).toBe('players');
 });
+
+test('against the machine the session leaderboard shows from the first game', async ({ page }) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#modeSolo');
+  while (!(await page.locator('#startGame').isVisible())) await page.click('#stepNext');
+  await page.selectOption('#sizeSelect', '4');
+  await page.click('#startGame');
+  // The machine takes its time to think: only play on the human's turn.
+  while (!(await overlay(page).isVisible())) {
+    if (await page.locator('#side1').evaluate((e) => e.classList.contains('active'))) {
+      const empty = await page
+        .locator('.cell')
+        .evaluateAll((cs) => cs.findIndex((c) => !c.textContent.trim()));
+      if (empty >= 0) await page.locator('.cell').nth(empty).click();
+    }
+    await page.waitForTimeout(200);
+  }
+  await expect(page.locator('#sessionBoard')).toBeVisible();
+  await expect(page.locator('#sessionMeta')).toHaveText(/^1 partida/);
+  await expect(page.locator('#sessionRows tr')).toHaveCount(2);
+  await expect(page.locator('#sessionRows')).toContainText('Máquina');
+});

@@ -20,6 +20,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   puntos y los demás siguen hasta que solo quede uno con tiempo; solo personas; cada jugador con 💡, 👁️ y 🔄 una vez;
   👁️ marca la última jugada del rival anterior; 🛟 sigue siendo una vez por partida; solo en tablet u
   ordenador (en móvil, desactivado con «En tablet u ordenador»).
+- **Marcador contra la máquina:** el marcador de la sesión sale ya desde la primera partida (con 2 y
+  4 jugadores, desde la segunda).
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 

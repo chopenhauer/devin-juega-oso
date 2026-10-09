@@ -936,8 +936,10 @@ const { timeFor } = Engine;
     return standings(session);
   }
   function showSession(st) {
-    q('sessionBoard').classList.toggle('hidden', st.games < 2);
-    if (st.games < 2) return;
+    // Against the machine it shows from the first game; between people, from the second one.
+    const hidden = st.games < (gameMode === 'solo' ? 1 : 2);
+    q('sessionBoard').classList.toggle('hidden', hidden);
+    if (hidden) return;
     const order = st.wins
       .map((_, i) => i)
       .sort((a, b) => st.wins[b] - st.wins[a] || st.points[b] - st.points[a]);
@@ -958,7 +960,8 @@ const { timeFor } = Engine;
       }),
     );
     const draws = st.draws ? ` · ${st.draws} ${st.draws === 1 ? 'empate' : 'empates'}` : '';
-    q('sessionMeta').textContent = `${st.games} partidas seguidas${draws}`;
+    const games = st.games === 1 ? '1 partida' : `${st.games} partidas seguidas`;
+    q('sessionMeta').textContent = `${games}${draws}`;
   }
   function confetti() {
     const h = q('confetti');
