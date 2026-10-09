@@ -66,3 +66,8 @@ actualizaciones mensuales de dependencias y acciones.
 ## Despliegue
 
 Vercel sirve `public/` tal cual (`outputDirectory`, sin instalación ni build). No hay variables de entorno.
+
+## Licencia
+
+[MIT](LICENSE) © 2026 JoseLuis Vilar y Julia (Vilarequi). La fuente Fredoka de `public/fonts/`
+mantiene su propia licencia OFL.
