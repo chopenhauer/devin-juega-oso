@@ -86,3 +86,37 @@ test('dropping a tile outside the board or on a filled cell places nothing', asy
   await expect(page.locator('.cell.filled')).toHaveCount(1);
   await expect(page.locator('#side2 .letter[data-letter="S"]')).toHaveClass(/selected/);
 });
+
+test('a tile never stays hanging when the drag loses its pointer capture', async ({ page }) => {
+  await startTwoPlayers(page);
+  const o = page.locator('#side1 .letter[data-letter="O"]');
+  const [ox, oy] = await center(o);
+  const cell = page.locator('.cell').nth(12);
+  const [cx, cy] = await center(cell);
+
+  await page.mouse.move(ox, oy);
+  await page.mouse.down();
+  await page.mouse.move(ox + 20, oy - 40, { steps: 4 });
+  await expect(page.locator('.drag-tile')).toHaveCount(1);
+  await o.evaluate((b) => b.hasPointerCapture(1) && b.releasePointerCapture(1));
+  await page.mouse.move(cx, cy, { steps: 6 });
+  await expect(cell).toHaveClass(/drop-target/);
+  await page.mouse.up();
+  await expect(cell).toHaveText('O');
+  await expect(page.locator('.drag-tile')).toHaveCount(0);
+
+  const s = page.locator('#side2 .letter[data-letter="S"]');
+  const [sx, sy] = await center(s);
+  await page.mouse.move(sx, sy);
+  await page.mouse.down();
+  await page.mouse.move(sx + 20, sy + 40, { steps: 4 });
+  await expect(page.locator('.drag-tile')).toHaveCount(1);
+  await page.evaluate(() => window.dispatchEvent(new Event('blur')));
+  await expect(page.locator('.drag-tile')).toHaveCount(0);
+  await page.mouse.up();
+  await expect(page.locator('.cell.filled')).toHaveCount(1);
+
+  await page.locator('.cell').nth(0).click();
+  await expect(page.locator('.cell').nth(0)).toHaveText('S');
+  await expect(page.locator('.drag-tile')).toHaveCount(0);
+});

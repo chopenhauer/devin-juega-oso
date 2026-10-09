@@ -345,28 +345,38 @@ const { timeFor } = Engine;
       if (e.button !== 0 || drag || !chooseLetter(b)) return;
       suppressClick = false;
       drag = { button: b, x: e.clientX, y: e.clientY, ghost: null, target: null };
-      b.setPointerCapture(e.pointerId);
-    });
-    b.addEventListener('pointermove', (e) => {
-      if (!drag || drag.button !== b) return;
-      if (!drag.ghost) {
-        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < DRAG_THRESHOLD) return;
-        const cell = boardEl.querySelector('.cell').getBoundingClientRect();
-        const ghost = document.createElement('div');
-        ghost.className = 'drag-tile';
-        ghost.textContent = b.dataset.letter;
-        ghost.setAttribute('aria-hidden', 'true');
-        ghost.style.width = ghost.style.height = `${cell.width}px`;
-        ghost.style.fontSize = `${cell.width * 0.56}px`;
-        document.body.appendChild(ghost);
-        drag.ghost = ghost;
-        b.classList.add('dragging');
+      try {
+        b.setPointerCapture(e.pointerId);
+      } catch {
+        /* window listeners below still track the drag */
       }
-      moveDrag(e);
     });
-    b.addEventListener('pointerup', () => drag?.button === b && endDrag(true));
-    b.addEventListener('pointercancel', () => drag?.button === b && endDrag(false));
+    b.addEventListener('dragstart', (e) => e.preventDefault());
   });
+
+  // Tracked on window so a lost pointer capture never leaves a tile hanging.
+  window.addEventListener('pointermove', (e) => {
+    if (!drag) return;
+    if (e.pointerType === 'mouse' && e.buttons === 0) return endDrag(false);
+    const b = drag.button;
+    if (!drag.ghost) {
+      if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < DRAG_THRESHOLD) return;
+      const cell = boardEl.querySelector('.cell').getBoundingClientRect();
+      const ghost = document.createElement('div');
+      ghost.className = 'drag-tile';
+      ghost.textContent = b.dataset.letter;
+      ghost.setAttribute('aria-hidden', 'true');
+      ghost.style.width = ghost.style.height = `${cell.width}px`;
+      ghost.style.fontSize = `${cell.width * 0.56}px`;
+      document.body.appendChild(ghost);
+      drag.ghost = ghost;
+      b.classList.add('dragging');
+    }
+    moveDrag(e);
+  });
+  window.addEventListener('pointerup', () => drag && endDrag(true));
+  window.addEventListener('pointercancel', () => drag && endDrag(false));
+  window.addEventListener('blur', () => drag && endDrag(false));
 
   function fmt(v) {
     v = Math.max(0, Math.ceil(v));
@@ -464,6 +474,7 @@ const { timeFor } = Engine;
   }
 
   function reset() {
+    if (drag) endDrag(false);
     stopGame();
     board = Array(size * size).fill('');
     current = 0;
@@ -561,6 +572,7 @@ const { timeFor } = Engine;
     });
   }
   function cellClick(i, byMachine = false) {
+    if (drag) endDrag(false);
     if (over || replaying || helpPaused) return;
     const machineTurn = gameMode === 'solo' && current === 1;
     if (machineTurn !== byMachine || (machineThinking && !byMachine)) return;

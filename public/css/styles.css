@@ -668,6 +668,9 @@ select option {
   font-size: 30px;
   font-weight: 700;
   touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
   transition:
     transform 0.1s,
     box-shadow 0.1s,
