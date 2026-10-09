@@ -1044,6 +1044,7 @@ select option {
   background: radial-gradient(circle at 50% 40%, rgba(90, 45, 170, 0.94), rgba(12, 8, 40, 0.97));
   text-align: center;
   padding: 20px;
+  overflow-y: auto;
   animation: fadeIn 0.35s ease;
 }
 .winner-avatar {
@@ -1076,11 +1077,69 @@ select option {
   margin-top: 6px;
 }
 .winner-actions {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 20px;
-  flex-wrap: wrap;
+  max-width: 420px;
+  margin: 20px auto 0;
+}
+.winner-actions .rematch {
+  grid-column: 1 / -1;
+}
+.winner-actions .secondary {
+  padding: 0 12px;
+}
+.btn-sub {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.75;
+}
+.session-board {
+  max-width: 420px;
+  margin: 16px auto 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.07);
+  padding: 10px 14px;
+}
+.session-board h2 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.session-board table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+}
+.session-board th,
+.session-board td {
+  padding: 4px;
+  text-align: right;
+  font-weight: 700;
+}
+.session-board thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.session-board th:first-child {
+  text-align: left;
+  overflow: hidden;
+  max-width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.session-board tr.leader > * {
+  color: var(--accent);
+}
+.session-meta {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
 }
 .secondary {
   min-height: 54px;

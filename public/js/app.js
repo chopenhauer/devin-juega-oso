@@ -1,4 +1,5 @@
 import * as Engine from './engine.js';
+import { sessionKey, recordGame, standings } from './leaderboard.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
@@ -723,6 +724,48 @@ const { timeFor } = Engine;
           : `Resultado final: ${scores[0]} – ${scores[1]}`;
       confetti();
     }
+    showSession(recordSession(w));
+  }
+
+  const SESSION_KEY = 'oso.session.v1';
+  function recordSession(winner) {
+    let session = null;
+    try {
+      session = JSON.parse(localStorage.getItem(SESSION_KEY));
+    } catch {
+      /* unreadable or unavailable: start a new session */
+    }
+    const key = sessionKey({ mode: gameMode, difficulty, names, avatars });
+    session = recordGame(session, key, { scores, winner, size });
+    try {
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    } catch {
+      /* ignore */
+    }
+    return standings(session);
+  }
+  function showSession(st) {
+    q('sessionBoard').classList.toggle('hidden', st.games < 2);
+    if (st.games < 2) return;
+    const order = [0, 1].sort((a, b) => st.wins[b] - st.wins[a] || st.points[b] - st.points[a]);
+    const leader = st.wins[0] !== st.wins[1] ? order[0] : null;
+    q('sessionRows').replaceChildren(
+      ...order.map((p) => {
+        const row = document.createElement('tr');
+        row.classList.toggle('leader', p === leader);
+        const who = document.createElement('th');
+        who.scope = 'row';
+        who.textContent = `${p === leader ? '👑 ' : ''}${avatars[p]} ${names[p]}`;
+        const wins = document.createElement('td');
+        wins.textContent = st.wins[p];
+        const points = document.createElement('td');
+        points.textContent = st.points[p];
+        row.append(who, wins, points);
+        return row;
+      }),
+    );
+    const draws = st.draws ? ` · ${st.draws} ${st.draws === 1 ? 'empate' : 'empates'}` : '';
+    q('sessionMeta').textContent = `${st.games} partidas seguidas${draws}`;
   }
   function confetti() {
     const h = q('confetti');
@@ -813,11 +856,13 @@ const { timeFor } = Engine;
 
   q('rematch').addEventListener('click', reset);
 
-  q('changePlayers').addEventListener('click', () => {
+  function backToSetup() {
     stopGame();
     q('winnerOverlay').classList.add('hidden');
     game.classList.add('hidden');
     setup.classList.remove('hidden');
     setSeaTheme(false);
-  });
+  }
+  q('otherBoard').addEventListener('click', backToSetup);
+  q('changePlayers').addEventListener('click', backToSetup);
 })();

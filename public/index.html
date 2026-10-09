@@ -469,8 +469,25 @@
             <div id="winnerAvatar" class="winner-avatar">🐻</div>
             <div id="winnerTitle" class="winner-title">¡Ganador!</div>
             <div id="winnerSub" class="winner-sub"></div>
+            <section id="sessionBoard" class="session-board hidden" aria-labelledby="sessionTitle">
+              <h2 id="sessionTitle">Marcador de la sesión</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Jugador</th>
+                    <th scope="col">Victorias</th>
+                    <th scope="col">Puntos</th>
+                  </tr>
+                </thead>
+                <tbody id="sessionRows"></tbody>
+              </table>
+              <p id="sessionMeta" class="session-meta"></p>
+            </section>
             <div class="winner-actions">
-              <button id="rematch" class="primary">Revancha</button>
+              <button id="rematch" class="primary rematch" aria-label="Revancha, mismo tablero">
+                Revancha<span class="btn-sub">mismo tablero</span>
+              </button>
+              <button id="otherBoard" class="secondary">Otro tablero</button>
               <button id="changePlayers" class="secondary">Cambiar jugadores</button>
             </div>
           </div>

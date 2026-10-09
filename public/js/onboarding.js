@@ -177,6 +177,7 @@ $('startGame').addEventListener('click', () => {
 });
 $('newGame').addEventListener('click', () => show('mode'));
 $('changePlayers').addEventListener('click', () => show('players'));
+$('otherBoard').addEventListener('click', () => show('board'));
 window.addEventListener('resize', equalizeHeight);
 document.fonts?.ready.then(equalizeHeight);
 
