@@ -13,10 +13,11 @@ async function startGame(page, { solo = false } = {}) {
   await page.click('#startGame');
 }
 
-// Never send test traffic to Microsoft Clarity.
+// Never send test traffic to Microsoft Clarity or Google Analytics.
 const stubClarity = (page) =>
-  page.route(/clarity\.ms|c\.bing\.com/, (route) =>
-    route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+  page.route(
+    /clarity\.ms|c\.bing\.com|googletagmanager\.com|google-analytics\.com|analytics\.google\.com/,
+    (route) => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
   );
 
 test.beforeEach(async ({ page }, testInfo) => {
@@ -121,4 +122,12 @@ test('loads the Microsoft Clarity tag without CSP errors', async ({ page }) => {
   await page.reload();
   await tag;
   expect(await page.evaluate(() => typeof window.clarity)).toBe('function');
+});
+
+test('loads the Google Analytics tag without CSP errors', async ({ page }) => {
+  const tag = page.waitForRequest(/www\.googletagmanager\.com\/gtag\/js\?id=G-8ZJ4B238C4/);
+  await page.reload();
+  await tag;
+  expect(await page.evaluate(() => typeof window.gtag)).toBe('function');
+  expect(await page.evaluate(() => window.dataLayer.some((e) => e[0] === 'config'))).toBe(true);
 });

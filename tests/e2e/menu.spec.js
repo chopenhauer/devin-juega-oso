@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }, testInfo) => {
-  await page.route(/clarity\.ms|c\.bing\.com/, (route) =>
-    route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+  await page.route(
+    /clarity\.ms|c\.bing\.com|googletagmanager\.com|google-analytics\.com|analytics\.google\.com/,
+    (route) => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
   );
   testInfo.errors = [];
   page.on('pageerror', (e) => testInfo.errors.push(e.message));

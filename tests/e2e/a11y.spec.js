@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.beforeEach(async ({ page }) => {
-  await page.route(/clarity\.ms|c\.bing\.com/, (route) => route.fulfill({ status: 200, body: '' }));
+  await page.route(
+    /clarity\.ms|c\.bing\.com|googletagmanager\.com|google-analytics\.com|analytics\.google\.com/,
+    (route) => route.fulfill({ status: 200, body: '' }),
+  );
 });
 
 async function expectNoSeriousViolations(page) {
