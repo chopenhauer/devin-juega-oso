@@ -17,6 +17,11 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.1.2] - 2026-10-09
+
+- En la celebración del easter egg el fondo se oscurece, para que el mensaje «¡Tienes más temas
+  disponibles!» destaque. Con «reducir movimiento» también se oscurece, sin animación.
+
 ## [2.1.1] - 2026-10-09
 
 **Easter egg de los temas, más festivo**

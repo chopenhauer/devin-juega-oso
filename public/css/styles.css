@@ -2400,6 +2400,10 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   overflow: hidden;
   pointer-events: none;
 }
+.egg-party:not(:empty) {
+  background: rgba(8, 4, 28, 0.62);
+  animation: fadeIn 0.3s ease-out;
+}
 .egg-party span {
   position: absolute;
   top: -48px;
@@ -2422,6 +2426,7 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   .egg-party span {
     display: none;
   }
+  .egg-party:not(:empty),
   .egg-party p {
     animation: none;
   }

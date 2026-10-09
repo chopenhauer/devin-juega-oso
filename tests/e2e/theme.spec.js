@@ -139,6 +139,8 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   const party = page.locator('#eggParty');
   await expect(party).toContainText('¡Tienes más temas disponibles!');
   expect(await party.locator('span').count()).toBeGreaterThan(10);
+  const backdrop = () => party.evaluate((e) => getComputedStyle(e).backgroundColor);
+  expect(await backdrop()).not.toBe('rgba(0, 0, 0, 0)');
   expect(await page.evaluate(() => window.__fanfare)).toBe(1);
   await expect(page.locator('#themeMenu')).not.toContainText('temas disponibles');
   await expect(page.locator('#themeMenu .theme-option')).toHaveCount(23);
@@ -146,6 +148,7 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   expect(await page.locator('#themeMenu .theme-group').count()).toBe(2);
   expect((await page.locator('#themeMenu').boundingBox()).width).toBe(width);
   await expect(party).toBeEmpty({ timeout: 6000 });
+  expect(await backdrop()).toBe('rgba(0, 0, 0, 0)');
   await page.click('#themeOthers .theme-option >> nth=-1');
   await page.reload();
   await toggle.click();
