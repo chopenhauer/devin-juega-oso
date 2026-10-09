@@ -2653,7 +2653,7 @@ body[data-theme='christmas'] .theme-decor::after {
   width: min(100%, 1400px);
 }
 .game.four {
-  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(150px, 210px);
+  grid-template-columns: minmax(140px, 190px) minmax(0, 1fr) minmax(140px, 190px);
   grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
     'top top top'
@@ -2715,16 +2715,20 @@ body[data-theme='christmas'] .theme-decor::after {
   grid-template-columns: 1fr;
   justify-items: center;
 }
-.game.four.same-view :is(#side2, #side4) .tools {
+.game.four :is(#side2, #side4) .tools {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(2, auto);
+  gap: 6px;
+}
+.game.four.same-view :is(#side2, #side4) .letter-choice {
+  width: auto;
 }
 /* Facing (tablet on the table): each panel turned toward its seat */
 .game.four:not(.same-view) #side3 {
   transform: rotate(180deg);
 }
 .game.four:not(.same-view) {
-  grid-template-columns: 96px minmax(0, 1fr) 96px;
+  grid-template-columns: 118px minmax(0, 1fr) 118px;
 }
 .game.four:not(.same-view) .player-panel .controls-row {
   grid-template-columns: auto auto;
@@ -2738,4 +2742,15 @@ body[data-theme='christmas'] .theme-decor::after {
 }
 .game.four:not(.same-view) #side4 {
   transform: rotate(-90deg);
+}
+.game.four .player-panel .controls-row {
+  width: auto;
+}
+.game.four :is(#side2, #side4) .letter-choice {
+  width: auto;
+}
+@media (orientation: portrait) {
+  .game.four {
+    --side-w: min(560px, calc(100vw - 290px));
+  }
 }

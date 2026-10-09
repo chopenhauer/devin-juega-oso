@@ -805,7 +805,7 @@ const { timeFor } = Engine;
 
     targetWord = 'SOS';
     board = Array(size * size).fill('');
-    scores = [0, 0];
+    scores = Array(scores.length).fill(0);
     scored = new Map();
     scoresEl.forEach((e) => (e.textContent = '0'));
     render();
