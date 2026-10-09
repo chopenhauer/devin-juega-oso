@@ -1,6 +1,6 @@
 import * as Engine from './engine.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
-import { THEMES, themeOf, mapAvatars } from './themes.js';
+import { THEMES, themeOf, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
 const { timeFor } = Engine;
 (() => {
@@ -116,10 +116,25 @@ const { timeFor } = Engine;
 
   // THEMES: chosen from the 🎨 button on the setup screens and remembered.
   const THEME_KEY = 'oso.theme.v1';
+  // On a festival's day its theme shows by itself, unless someone already chose one that day.
+  const THEME_DAY_KEY = 'oso.themeDay.v1';
   const themeToggle = q('themeToggle'),
     themeMenu = q('themeMenu'),
-    themeOptions = [...themeMenu.querySelectorAll('.theme-option')];
+    themeOptions = () => [...themeMenu.querySelectorAll('.theme-option')];
   let theme = 'classic';
+  let allThemes = false;
+  const SKIN_VARS = ['g1', 'g2', 'd1', 'd2', 'd3', 'b1', 'b2'];
+  function paintSkin(t) {
+    const colours = t.bg ? [...t.bg, ...t.board] : [];
+    document.body.classList.toggle('skin', !!t.bg);
+    SKIN_VARS.forEach((k, i) =>
+      colours.length
+        ? document.body.style.setProperty(`--sk-${k}`, colours[i])
+        : document.body.style.removeProperty(`--sk-${k}`),
+    );
+    if (t.motion) document.body.dataset.motion = t.motion;
+    else delete document.body.dataset.motion;
+  }
   function renderDecor(list) {
     q('themeDecor').replaceChildren(
       ...Array.from({ length: list.length ? 16 : 0 }, (_, i) => {
@@ -148,22 +163,74 @@ const { timeFor } = Engine;
     );
     document.body.dataset.theme = theme;
     document.querySelectorAll('.brand-bear').forEach((e) => (e.textContent = t.icon));
+    paintSkin(t);
     renderDecor(t.decor);
-    themeOptions.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === theme)));
+    themeOptions().forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === theme)));
     syncAvatars();
     if (!save) return;
     try {
       localStorage.setItem(THEME_KEY, theme);
+      localStorage.setItem(THEME_DAY_KEY, isoDay(new Date()));
     } catch {
       /* ignore */
     }
+  }
+  function themeGroup(ids) {
+    const g = document.createElement('div');
+    g.className = 'theme-group';
+    g.append(
+      ...ids.map((id) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'theme-option';
+        b.dataset.theme = id;
+        b.textContent = `${THEMES[id].icon} ${THEMES[id].label}`;
+        b.setAttribute('aria-pressed', String(id === theme));
+        return b;
+      }),
+    );
+    return g;
+  }
+  function renderThemeMenu() {
+    const { menu, others, hidden } = themeMenuFor(new Date(), theme);
+    const parts = [themeGroup(menu)];
+    if (others.length) {
+      const list = themeGroup(others);
+      list.id = 'themeOthers';
+      const open = allThemes || others.includes(theme);
+      list.hidden = !open;
+      const more = document.createElement('button');
+      more.type = 'button';
+      more.id = 'themeMore';
+      more.className = 'theme-more';
+      more.textContent = 'Ver otros temas';
+      more.setAttribute('aria-controls', 'themeOthers');
+      more.setAttribute('aria-expanded', String(open));
+      more.addEventListener('click', () => {
+        list.hidden = !list.hidden;
+        more.setAttribute('aria-expanded', String(!list.hidden));
+      });
+      parts.push(more, list);
+    }
+    if (allThemes && hidden.length) {
+      const egg = document.createElement('p');
+      egg.className = 'theme-egg';
+      egg.textContent = '🥚 ¡Habéis encontrado todos los temas!';
+      const all = themeGroup(hidden);
+      all.id = 'themeAll';
+      parts.push(egg, all);
+    }
+    themeMenu.replaceChildren(...parts);
   }
   const THEME_HINT_KEY = 'oso.themeHint.v1';
   function toggleThemeMenu(open) {
     themeMenu.classList.toggle('hidden', !open);
     themeToggle.setAttribute('aria-expanded', String(open));
     if (!open) return;
-    themeOptions.find((b) => b.dataset.theme === theme)?.focus();
+    renderThemeMenu();
+    themeOptions()
+      .find((b) => b.dataset.theme === theme)
+      ?.focus();
     themeToggle.classList.remove('hint');
     try {
       localStorage.setItem(THEME_HINT_KEY, '1');
@@ -188,14 +255,27 @@ const { timeFor } = Engine;
     attributeFilter: ['data-step'],
   });
   syncThemeToggle();
-  themeToggle.addEventListener('click', () => toggleThemeMenu(themeMenu.classList.contains('hidden')));
-  themeOptions.forEach((b) =>
-    b.addEventListener('click', () => {
-      applyTheme(b.dataset.theme);
-      toggleThemeMenu(false);
-      themeToggle.focus();
-    }),
-  );
+  // Easter egg: more than 5 taps on 🎨 in a row (within 3 s) shows every theme until a reload.
+  const themeTaps = [];
+  themeToggle.addEventListener('click', () => {
+    const now = performance.now();
+    themeTaps.push(now);
+    while (now - themeTaps[0] > 3000) themeTaps.shift();
+    if (themeTaps.length > 5 && !allThemes) {
+      allThemes = true;
+      themeTaps.length = 0;
+      toggleThemeMenu(true);
+      return;
+    }
+    toggleThemeMenu(themeMenu.classList.contains('hidden'));
+  });
+  themeMenu.addEventListener('click', (e) => {
+    const b = e.target.closest('.theme-option');
+    if (!b) return;
+    applyTheme(b.dataset.theme);
+    toggleThemeMenu(false);
+    themeToggle.focus();
+  });
   document.addEventListener('click', (e) => {
     if (
       !themeMenu.classList.contains('hidden') &&
@@ -209,10 +289,17 @@ const { timeFor } = Engine;
     toggleThemeMenu(false);
     themeToggle.focus();
   });
-  try {
-    applyTheme(localStorage.getItem(THEME_KEY) ?? 'classic', false);
-  } catch {
-    applyTheme('classic', false);
+  {
+    const today = new Date();
+    let saved = 'classic',
+      choseToday = false;
+    try {
+      saved = localStorage.getItem(THEME_KEY) ?? 'classic';
+      choseToday = localStorage.getItem(THEME_DAY_KEY) === isoDay(today);
+    } catch {
+      /* ignore */
+    }
+    applyTheme((!choseToday && festivalOn(today)) || saved, false);
   }
 
   function setGameMode(mode) {

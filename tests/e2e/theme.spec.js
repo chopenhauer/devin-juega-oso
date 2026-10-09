@@ -22,6 +22,7 @@ test.afterEach(async ({}, testInfo) => {
 const selected = (page, p) => page.locator(`.avatars[data-player="${p}"] .avatar-btn.selected`);
 
 test('the 🎨 button switches theme avatars, icon and background, and remembers it', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-12-01T12:00:00'));
   await page.goto('/');
   const toggle = page.locator('#themeToggle');
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'classic');
@@ -95,4 +96,62 @@ test('the rules modal is not covered by the 🎨 button or the credits', async (
   await page.click('#helpClose');
   await expect(toggle).toBeVisible();
   await expect(page.locator('.credits')).toBeVisible();
+});
+
+const options = (page) => page.locator('#themeMenu .theme-option:visible');
+
+test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg shows them all', async ({
+  page,
+}) => {
+  await page.clock.setFixedTime(new Date('2026-10-08T12:00:00'));
+  await page.goto('/');
+  const toggle = page.locator('#themeToggle');
+  await toggle.click();
+  const main = await options(page).allTextContents();
+  expect(main.length).toBeLessThanOrEqual(5);
+  expect(main).toEqual(expect.arrayContaining(['🐻 Clásico', '🎃 Halloween', '🍂 Otoño']));
+  await expect(page.locator('#themeMore')).toHaveAttribute('aria-expanded', 'false');
+  await page.click('#themeMore');
+  await expect(page.locator('#themeMore')).toHaveAttribute('aria-expanded', 'true');
+  expect(await options(page).count()).toBeLessThanOrEqual(10);
+  await expect(page.locator('#themeOthers')).toContainText('Cumpleaños');
+  await expect(page.locator('#themeAll')).toHaveCount(0);
+  await page.click('.theme-option[data-theme="birthday"]');
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'birthday');
+  await expect(page.locator('body')).toHaveClass(/skin/);
+
+  await page.reload();
+  for (let i = 0; i < 6; i++) await toggle.click();
+  await expect(page.locator('.theme-egg')).toBeVisible();
+  await expect(page.locator('#themeMenu .theme-option')).toHaveCount(23);
+  await page.click('#themeAll .theme-option >> nth=0');
+  await page.reload();
+  await toggle.click();
+  await expect(page.locator('#themeAll')).toHaveCount(0);
+  await expect(page.locator('#themeMenu .theme-option[aria-pressed="true"]')).toBeVisible();
+});
+
+test('on a festival day its theme shows by itself, and the next day the chosen one comes back', async ({
+  page,
+}) => {
+  await page.clock.setFixedTime(new Date('2026-07-06T12:00:00'));
+  await page.goto('/');
+  await page.click('#themeToggle');
+  await page.click('.theme-option[data-theme="summer"]');
+  await page.clock.setFixedTime(new Date('2026-07-07T12:00:00'));
+  await page.reload();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'sanfermin');
+  await expect(page.locator('#brandIcon')).toHaveText('🐂');
+
+  await page.clock.setFixedTime(new Date('2026-07-08T09:00:00'));
+  await page.reload();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'summer');
+
+  await page.clock.setFixedTime(new Date('2026-07-07T18:00:00'));
+  await page.reload();
+  await page.click('#themeToggle');
+  await page.click('.theme-option[data-theme="classic"]');
+  await page.reload();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'classic');
+  await expect(page.locator('body')).not.toHaveClass(/skin/);
 });

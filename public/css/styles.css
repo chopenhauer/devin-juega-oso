@@ -2361,6 +2361,39 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   border-radius: var(--r-md);
   background: rgba(30, 18, 80, 0.97);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  max-height: calc(100dvh - max(12px, env(safe-area-inset-top)) - 70px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.theme-group {
+  display: grid;
+  gap: 6px;
+}
+.theme-group[hidden] {
+  display: none;
+}
+.theme-more {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+.theme-more::after {
+  content: ' ▾';
+}
+.theme-more[aria-expanded='true']::after {
+  content: ' ▴';
+}
+.theme-egg {
+  margin: 4px 2px 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
 }
 .theme-toggle.hint {
   animation: themeHint 0.7s ease-in-out 0.9s 2;
@@ -2493,6 +2526,25 @@ body[data-theme='christmas'] .theme-decor::after {
   opacity: 0.18;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q150 20 300 55 T600 50 T900 60 T1200 45 V120 H0Z' fill='%23ffffff'/%3E%3C/svg%3E")
     0 100% / 100% 100% no-repeat;
+}
+/* Data-driven themes: colours come from themes.js as --sk-* custom properties */
+body.skin {
+  background:
+    radial-gradient(1100px 700px at 10% -10%, var(--sk-g1) 0, transparent 60%),
+    radial-gradient(900px 600px at 110% 110%, var(--sk-g2) 0, transparent 55%),
+    linear-gradient(160deg, var(--sk-d1), var(--sk-d2) 55%, var(--sk-d3));
+  background-attachment: fixed;
+}
+body.skin .board-shell {
+  background: linear-gradient(180deg, var(--sk-b1), var(--sk-b2));
+}
+body[data-motion='fall'] .theme-decor span {
+  top: -60px;
+}
+body[data-motion='rise'] .theme-decor span {
+  top: auto;
+  bottom: -60px;
+  animation-name: decorRise;
 }
 @media (prefers-reduced-motion: reduce) {
   .theme-decor span,
