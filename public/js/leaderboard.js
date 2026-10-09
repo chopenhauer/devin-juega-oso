@@ -10,15 +10,16 @@ export function recordGame(session, key, { scores, winner, size }) {
 }
 
 export function standings(session) {
-  const wins = [0, 0],
-    points = [0, 0];
-  let draws = 0;
   const games = session?.games ?? [];
+  const players = games[0]?.scores.length ?? 2;
+  const wins = Array(players).fill(0),
+    points = Array(players).fill(0);
+  let draws = 0;
   for (const g of games) {
-    if (g.winner === null) draws++;
-    else wins[g.winner]++;
-    points[0] += g.scores[0];
-    points[1] += g.scores[1];
+    const winners = g.winner === null ? [] : [g.winner].flat();
+    if (!winners.length) draws++;
+    winners.forEach((w) => wins[w]++);
+    g.scores.forEach((s, i) => (points[i] += s));
   }
   return { games: games.length, wins, points, draws };
 }

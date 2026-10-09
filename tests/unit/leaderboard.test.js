@@ -34,3 +34,12 @@ test('an empty or unreadable session has no games', () => {
     1,
   );
 });
+
+test('standings handle four players and shared victories', () => {
+  let session = recordGame(null, 'k', { scores: [3, 1, 3, 0], winner: [0, 2], size: 6 });
+  session = recordGame(session, 'k', { scores: [0, 2, 1, 1], winner: 1, size: 7 });
+  const st = standings(session);
+  assert.deepEqual(st.wins, [1, 1, 1, 0]);
+  assert.deepEqual(st.points, [3, 3, 4, 1]);
+  assert.equal(st.draws, 0);
+});

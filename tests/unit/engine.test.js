@@ -97,3 +97,18 @@ test('easy machine scores when the dice allow it and always returns a legal move
   assert.ok(['O', 'S'].includes(move.letter));
   assert.equal(chooseMachineMove(Array(16).fill('S'), 4, new Map(), 'OSO', 'easy'), null);
 });
+
+test('rebuildScores and replayHistory support four players', () => {
+  const board = parse(['OSO.', 'OSO.', '....', '....']);
+  const { scores } = rebuildScores(board, 4, 'OSO', new Map([['0-1-2', 3]]), 2, 4);
+  assert.deepEqual(scores, [0, 0, 1, 1]);
+  const history = [
+    { player: 0, index: 0, letter: 'O' },
+    { player: 1, index: 1, letter: 'S' },
+    { player: 2, index: 2, letter: 'O' },
+    { player: 2, index: 5, letter: 'S' },
+    { player: 3, index: 4, letter: 'O' },
+    { player: 3, index: 6, letter: 'O' },
+  ];
+  assert.deepEqual(replayHistory(4, history, 'OSO', 4).scores, [0, 0, 1, 1]);
+});

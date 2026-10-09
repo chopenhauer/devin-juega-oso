@@ -38,9 +38,9 @@ export function findNew(board, size, scored, idx, word) {
 
 // Recomputes every sequence on the board. Sequences that survive keep their
 // owner from `previous`; brand-new ones go to `author`; destroyed ones vanish.
-export function rebuildScores(board, size, word, previous, author) {
+export function rebuildScores(board, size, word, previous, author, players = 2) {
   const scored = new Map();
-  const scores = [0, 0];
+  const scores = Array(players).fill(0);
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       for (const [dr, dc] of DIRECTIONS) {
@@ -148,7 +148,11 @@ export function replayMove(state, move, word) {
   const board = [...state.board];
   if (move.power === 'swap') {
     if (board[move.index]) board[move.index] = board[move.index] === 'O' ? 'S' : 'O';
-    return { size, board, ...rebuildScores(board, size, word, state.scored, move.player) };
+    return {
+      size,
+      board,
+      ...rebuildScores(board, size, word, state.scored, move.player, state.scores.length),
+    };
   }
   board[move.index] = move.letter;
   const scored = new Map(state.scored);
@@ -160,8 +164,13 @@ export function replayMove(state, move, word) {
   return { size, board, scored, scores };
 }
 
-export function replayHistory(size, history, word) {
-  let state = { size, board: Array(size * size).fill(''), scored: new Map(), scores: [0, 0] };
+export function replayHistory(size, history, word, players = 2) {
+  let state = {
+    size,
+    board: Array(size * size).fill(''),
+    scored: new Map(),
+    scores: Array(players).fill(0),
+  };
   for (const move of history) state = replayMove(state, move, word);
   return state;
 }

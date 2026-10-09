@@ -46,22 +46,21 @@ mínimo de tiempo tras comprar (propuesta: 10 s) y si existe en modo 1 jugador.
 
 ### Modo 4 jugadores
 
-Partidas de cuatro en el mismo dispositivo, por turnos.
+Partidas de cuatro personas en el mismo dispositivo, por turnos. Reglas decididas con JoseLuis:
 
-- **Reglas:** el turno rota 1 → 2 → 3 → 4; formar OSO da punto y repites turno, igual que ahora.
-  Cada jugador con su reloj y sus extras.
-- **Competición (decidido):** todos contra todos; gana quien tenga más puntos y, si hay empate en
-  cabeza, comparten la victoria.
-- **Tablero (decidido):** se elige entre 6 × 6, 7 × 7 y 8 × 8; tiempo inicial por ajustar.
-- **Configuración:** el paso Modo ya muestra «4 jugadores · Próximamente», desactivado; cuatro avatares exclusivos y cuatro
-  nombres (≤ 16 caracteres, por defecto «Jugador N»).
-- **Pantalla:** un panel por jugador; en tablet, uno en cada lado del dispositivo (vista
-  enfrentada a 4 bandas). En móvil, marcador compacto con los cuatro y el panel del turno actual
-  destacado.
-- **Motor:** `engine.js` hoy asume dos jugadores (puntos y extras por índice 0/1, «el otro
-  jugador»); hay que generalizarlo a N jugadores con tests.
-- **A decidir:** ¿Pueden ser máquinas algunos jugadores?
-  ¿Cómo funciona OSO→SOS y «ver la jugada rival» con varios rivales?
+- **Turnos:** rotan 1 → 2 → 3 → 4; formar OSO da punto y repites turno, igual que ahora.
+- **Competición:** todos contra todos; gana quien tenga más puntos y, si hay empate en cabeza,
+  comparten la victoria.
+- **Jugadores:** solo personas (sin máquinas), cada una con nombre, avatar exclusivo y color.
+- **Tablero y reloj:** se elige entre 6 × 6, 7 × 7 y 8 × 8, con el mismo reloj que con 2 jugadores
+  en ese tablero (2:30, 3:00 y 4:00 por jugador).
+- **Extras:** cada jugador tiene 💡, 👁️ y 🔄 una vez. 👁️ marca la última jugada del rival anterior
+  (la casilla más reciente de cualquiera de los otros tres). 🛟 (OSO → SOS) sigue siendo una sola vez
+  por partida, para quien lo use primero.
+- **Dispositivos:** tablet y ordenador, con un panel a cada lado del tablero. En «Enfrentados»
+  cada panel mira hacia su lado; en «Misma vista» todos quedan derechos. En móvil, «4 jugadores»
+  sale desactivado con la nota «En tablet u ordenador».
+- **Motor:** `engine.js` se generaliza a N jugadores, con tests.
 
 #### Evolución: equipos con 4 jugadores
 
