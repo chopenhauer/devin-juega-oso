@@ -42,9 +42,20 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'halloween');
   await expect(toggle).not.toHaveClass(/hint/);
+  await page.click('#introStart');
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'rules');
+  await expect(toggle).toBeVisible();
+  await page.reload();
   await page.click('#introSkip');
-  await expect(toggle).toBeHidden();
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'mode');
+  await expect(toggle).toBeVisible();
   await page.click('#stepNext');
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'players');
+  await expect(toggle).toBeHidden();
+  await page.click('#stepBack');
+  await expect(toggle).toBeVisible();
+  await page.click('#stepNext');
+  await expect(toggle).toBeHidden();
   await expect(selected(page, 0)).toHaveText('🎃');
   await expect(selected(page, 1)).toHaveText('🧛');
   const { violations } = await new AxeBuilder({ page })

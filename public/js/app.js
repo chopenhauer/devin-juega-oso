@@ -163,17 +163,18 @@ const { timeFor } = Engine;
   } catch {
     /* ignore */
   }
-  // The 🎨 button only lives on the first setup screen of each visit.
-  setTimeout(() => {
-    const firstStep = setup.dataset.step;
-    const observer = new MutationObserver(() => {
-      if (setup.dataset.step === firstStep) return;
-      toggleThemeMenu(false);
-      themeToggle.classList.add('hidden');
-      observer.disconnect();
-    });
-    observer.observe(setup, { attributes: true, attributeFilter: ['data-step'] });
+  // The 🎨 button lives on the intro screens, up to choosing the number of players.
+  const THEME_STEPS = ['welcome', 'rules', 'mode'];
+  const syncThemeToggle = () => {
+    const show = THEME_STEPS.includes(setup.dataset.step);
+    if (!show) toggleThemeMenu(false);
+    themeToggle.classList.toggle('hidden', !show);
+  };
+  new MutationObserver(syncThemeToggle).observe(setup, {
+    attributes: true,
+    attributeFilter: ['data-step'],
   });
+  syncThemeToggle();
   themeToggle.addEventListener('click', () => toggleThemeMenu(themeMenu.classList.contains('hidden')));
   themeOptions.forEach((b) =>
     b.addEventListener('click', () => {
