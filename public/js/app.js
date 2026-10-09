@@ -145,11 +145,35 @@ const { timeFor } = Engine;
       /* ignore */
     }
   }
+  const THEME_HINT_KEY = 'oso.themeHint.v1';
   function toggleThemeMenu(open) {
     themeMenu.classList.toggle('hidden', !open);
     themeToggle.setAttribute('aria-expanded', String(open));
-    if (open) themeOptions.find((b) => b.dataset.theme === theme)?.focus();
+    if (!open) return;
+    themeOptions.find((b) => b.dataset.theme === theme)?.focus();
+    themeToggle.classList.remove('hint');
+    try {
+      localStorage.setItem(THEME_HINT_KEY, '1');
+    } catch {
+      /* ignore */
+    }
   }
+  try {
+    themeToggle.classList.toggle('hint', !localStorage.getItem(THEME_HINT_KEY));
+  } catch {
+    /* ignore */
+  }
+  // The 🎨 button only lives on the first setup screen of each visit.
+  setTimeout(() => {
+    const firstStep = setup.dataset.step;
+    const observer = new MutationObserver(() => {
+      if (setup.dataset.step === firstStep) return;
+      toggleThemeMenu(false);
+      themeToggle.classList.add('hidden');
+      observer.disconnect();
+    });
+    observer.observe(setup, { attributes: true, attributeFilter: ['data-step'] });
+  });
   themeToggle.addEventListener('click', () => toggleThemeMenu(themeMenu.classList.contains('hidden')));
   themeOptions.forEach((b) =>
     b.addEventListener('click', () => {

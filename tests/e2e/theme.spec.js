@@ -19,9 +19,15 @@ const selected = (page, p) => page.locator(`.avatars[data-player="${p}"] .avatar
 
 test('the 🎨 button switches theme avatars, icon and background, and remembers it', async ({ page }) => {
   await page.goto('/');
+  const toggle = page.locator('#themeToggle');
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'classic');
-  await page.click('#themeToggle');
-  await expect(page.locator('#themeToggle')).toHaveAttribute('aria-expanded', 'true');
+  await expect(toggle).toHaveClass(/hint/);
+  const box = await toggle.boundingBox();
+  const card = await page.locator('.panel').boundingBox();
+  expect(box.y + box.height).toBeLessThanOrEqual(card.y);
+  await toggle.click();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(toggle).not.toHaveClass(/hint/);
   await expect(page.locator('.theme-option[data-theme="classic"]')).toBeFocused();
   await page.click('.theme-option[data-theme="halloween"]');
   await expect(page.locator('#themeMenu')).toBeHidden();
@@ -31,7 +37,9 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
 
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'halloween');
+  await expect(toggle).not.toHaveClass(/hint/);
   await page.click('#introSkip');
+  await expect(toggle).toBeHidden();
   await page.click('#stepNext');
   await expect(selected(page, 0)).toHaveText('🎃');
   await expect(selected(page, 1)).toHaveText('🧛');
@@ -41,13 +49,15 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
     .analyze();
   expect(violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')).toEqual([]);
 
-  await page.click('#themeToggle');
+  await page.reload();
+  await toggle.click();
   await page.keyboard.press('Escape');
   await expect(page.locator('#themeMenu')).toBeHidden();
-  await expect(page.locator('#themeToggle')).toBeFocused();
-
-  await page.click('#themeToggle');
+  await expect(toggle).toBeFocused();
+  await toggle.click();
   await page.click('.theme-option[data-theme="christmas"]');
+  await page.click('#introSkip');
+  await page.click('#stepNext');
   await expect(selected(page, 0)).toHaveText('⛄');
   await expect(selected(page, 1)).toHaveText('🎅');
   await page.click('#stepNext');
@@ -55,5 +65,5 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
   await page.click('#startGame');
   await expect(page.locator('#avatar1')).toHaveText('⛄');
   await expect(page.locator('#avatar2')).toHaveText('🎅');
-  await expect(page.locator('#themeToggle')).toBeHidden();
+  await expect(toggle).toBeHidden();
 });
