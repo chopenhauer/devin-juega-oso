@@ -269,7 +269,7 @@ const { timeFor } = Engine;
     attributeFilter: ['data-step'],
   });
   syncThemeToggle();
-  // Easter egg: more than 5 taps on 🎨 in a row (within 3 s) shows every theme until a reload.
+  // Easter egg: more than 5 taps on 🎨 in a row (less than 0.7 s apart) shows every theme until a reload.
   // Quick repeated taps keep the menu as it is instead of opening and closing it.
   const eggParty = q('eggParty');
   let eggTimer;
