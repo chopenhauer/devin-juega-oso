@@ -771,6 +771,7 @@ const { timeFor } = Engine;
 
       const p = current;
       extras[p].swap = 0;
+      play('place');
       updateControls();
       board[i] = board[i] === 'O' ? 'S' : 'O';
       justPlaced = i;
@@ -845,6 +846,7 @@ const { timeFor } = Engine;
       if (!h) return;
 
       extras[p].hint = 0;
+      play('hint');
       updateControls();
       selected[p] = h.letter;
       hintCell = h.index;
@@ -864,6 +866,7 @@ const { timeFor } = Engine;
       if (!m) return;
 
       extras[p].last = 0;
+      play('last');
       updateControls();
       lastCell = m.index;
       hintCell = null;
@@ -879,6 +882,7 @@ const { timeFor } = Engine;
       if (b.disabled || p !== current || !extras[p].swap || over || replaying || settle()) return;
 
       swapMode = swapMode === p ? null : p;
+      if (swapMode === p) play('swap');
       hintCell = null;
       lastCell = null;
       render();
@@ -936,6 +940,7 @@ const { timeFor } = Engine;
     // Global, one-time power-up: consume it for both players immediately.
     sosUsed = true;
     replaying = true;
+    play('sos');
     sosBtns.forEach((btn) => {
       btn.disabled = true;
       btn.classList.add('used');

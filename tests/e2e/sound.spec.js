@@ -100,3 +100,15 @@ test('the mute button on the intro and in the ☰ menu silences every sound and 
   expect(await sounds(page)).toEqual(['place']);
   expect(await page.evaluate(() => localStorage.getItem('oso.sound.v1'))).toBe('on');
 });
+
+test('each extra has its own sound and SOS sounds a longer alarm', async ({ page }) => {
+  await startTwoPlayers(page);
+  await play(page, [[0, 'O']]);
+  await page.click('#last2', { force: true });
+  await page.click('#hint2', { force: true });
+  await play(page, [[1, 'S']]);
+  await page.click('#swap1', { force: true });
+  await page.locator('.cell').nth(0).click({ force: true });
+  await page.click('#sos2', { force: true });
+  expect(await sounds(page)).toEqual(['place', 'last', 'hint', 'place', 'swap', 'place', 'sos']);
+});
