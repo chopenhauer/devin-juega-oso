@@ -54,7 +54,9 @@ actualizaciones mensuales de dependencias y acciones.
 - Terceros: solo analítica. Microsoft Clarity (`public/js/clarity.js`) y Google Analytics 4
   (`public/js/ga.js`); la CSP solo abre sus dominios (`*.clarity.ms`, `c.bing.com`,
   `*.googletagmanager.com`, `*.google-analytics.com`, `*.analytics.google.com`). La fuente se sirve
-  desde el propio dominio. Los tests e2e sustituyen Clarity y GA por respuestas vacías para no
+  desde el propio dominio. Un aviso de cookies (`public/js/consent.js`, `oso.consent.v1`) pide
+  permiso: Clarity solo se carga al aceptar y GA usa Consent Mode v2 (analítica denegada hasta
+  aceptar, publicidad siempre denegada). Los tests e2e sustituyen Clarity y GA por respuestas vacías para no
   enviar datos.
 - El texto que escriben los jugadores (nombres) se pinta siempre con `textContent`, nunca como HTML.
 - `.vercelignore` solo sube `public/` y `vercel.json`; tests, configuración y versiones antiguas no se publican.

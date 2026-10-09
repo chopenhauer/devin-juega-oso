@@ -21,6 +21,9 @@ const stubClarity = (page) =>
   );
 
 test.beforeEach(async ({ page }, testInfo) => {
+  await page.addInitScript(
+    () => localStorage.getItem('oso.consent.v1') ?? localStorage.setItem('oso.consent.v1', 'denied'),
+  );
   await stubClarity(page);
   testInfo.errors = [];
   page.on('pageerror', (e) => testInfo.errors.push(e.message));
@@ -118,6 +121,7 @@ test('a full game against the machine ends with a winner screen', async ({ page 
 });
 
 test('loads the Microsoft Clarity tag without CSP errors', async ({ page }) => {
+  await page.evaluate(() => localStorage.setItem('oso.consent.v1', 'granted'));
   const tag = page.waitForRequest(/www\.clarity\.ms\/tag\/yuj6hlg34s/);
   await page.reload();
   await tag;

@@ -135,6 +135,62 @@ body:has(#setupScreen:not(.hidden)) .app {
 body:has(#gameScreen:not(.hidden)) .credits {
   display: none;
 }
+.cookie-settings {
+  min-height: 24px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* COOKIE CONSENT (setup screens only; both choices equally prominent) */
+.consent {
+  position: fixed;
+  right: max(12px, env(safe-area-inset-right));
+  bottom: max(12px, env(safe-area-inset-bottom));
+  left: max(12px, env(safe-area-inset-left));
+  z-index: 20;
+  display: grid;
+  gap: 10px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: rgba(30, 18, 80, 0.97);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+.consent-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.consent-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.consent-btn {
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--glass2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.consent-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+body:has(#gameScreen:not(.hidden)) .consent {
+  display: none;
+}
 
 /* SETUP */
 .setup {

@@ -12,6 +12,7 @@
     <script src="/js/ga.js" async></script>
     <script type="module" src="/js/app.js"></script>
     <script type="module" src="/js/onboarding.js"></script>
+    <script type="module" src="/js/consent.js"></script>
   </head>
   <body>
     <button
@@ -512,6 +513,19 @@
         </div>
       </section>
     </main>
-    <footer class="credits">Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻</footer>
+    <footer class="credits">
+      <span class="credits-text">Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻</span>
+      · <button id="cookieSettings" type="button" class="cookie-settings">Cookies</button>
+    </footer>
+    <section id="consentBanner" class="consent hidden" aria-labelledby="consentText">
+      <p id="consentText" class="consent-text">
+        🍪 Usamos cookies de analítica (Google Analytics y Microsoft Clarity) para saber cómo se juega y
+        mejorar OSO. No hay publicidad.
+      </p>
+      <div class="consent-actions">
+        <button id="consentDeny" type="button" class="consent-btn">Rechazar</button>
+        <button id="consentAccept" type="button" class="consent-btn">Aceptar</button>
+      </div>
+    </section>
   </body>
 </html>

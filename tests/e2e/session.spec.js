@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.beforeEach(async ({ page }, testInfo) => {
+  await page.addInitScript(
+    () => localStorage.getItem('oso.consent.v1') ?? localStorage.setItem('oso.consent.v1', 'denied'),
+  );
   await page.route(
     /clarity\.ms|c\.bing\.com|googletagmanager\.com|google-analytics\.com|analytics\.google\.com/,
     (route) => route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),

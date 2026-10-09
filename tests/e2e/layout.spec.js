@@ -8,6 +8,9 @@ const VIEWPORTS = {
 const MODES = ['solo', 'same', 'facing'];
 
 test.beforeEach(async ({ page }, testInfo) => {
+  await page.addInitScript(
+    () => localStorage.getItem('oso.consent.v1') ?? localStorage.setItem('oso.consent.v1', 'denied'),
+  );
   test.skip(testInfo.project.name !== 'desktop', 'viewports are set per test');
   await page.route(
     /clarity\.ms|c\.bing\.com|googletagmanager\.com|google-analytics\.com|analytics\.google\.com/,
