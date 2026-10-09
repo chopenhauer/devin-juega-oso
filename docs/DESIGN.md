@@ -58,4 +58,4 @@ Arreglado: falta de `h1`, créditos fuera de una región (`<footer>`), selector 
 5. ~~**Sonido opcional**~~ hecho en 2.2.0 con el botón 🔊 / 🔇. Queda la vibración (T4.4).
 6. ~~**Menú lateral como diálogo**~~ hecho: cada panel de jugador tiene su ☰; el menú se abre girado hacia quien lo pulsa, encierra el foco, se cierra con Escape o tocando fuera y devuelve el foco a ☰.
 7. **Escritorio:** hecho en la partida con T4.2 (tablero grande y paneles a los lados); el panel de configuración sigue dejando espacio vacío.
-8. **Reglas animadas (FigJam):** animaciones cortas en los pasos de las reglas (arrastrar una letra, completar OSO, cuenta atrás de 5 s), quietas con «reducir movimiento». Planificado en el roadmap.
+8. ~~**Reglas animadas (FigJam)**~~ hecho en 2.3.0: animaciones solo CSS en los pasos de las reglas (arrastrar una letra, completar OSO, cuenta atrás de 5 s). Solo se anima la tarjeta visible (`.rule-slide.playing`) y el estado sin animación es el final de la jugada, que es lo que se ve con «reducir movimiento».

@@ -17,6 +17,26 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.3.0] - 2026-10-09
+
+**Reglas animadas del FigJam** ([c38dbc0](https://github.com/chopenhauer/devin-juega-oso/commit/c38dbc0))
+
+- Paso 1: una mano 👆 coge la S de abajo y la arrastra hasta una casilla vacía del tablero. El
+  texto dice ahora «arrástrala hasta una casilla vacía del tablero (o tócala)».
+- Paso 2: sigue donde lo dejó el paso 1. Arrastra una O al hueco, las tres fichas se ponen azules
+  con un «+1» y debajo salen ↔ horizontal, ↕ vertical y ⤡ diagonal.
+- Paso del reloj: cuenta de 0:07 a 0:00, en rojo desde 0:05, y se queda un momento en 0:00.
+- Cada tarjeta empieza su animación desde el principio al llegar a ella; solo se anima la visible.
+- Prueba en navegador de las animaciones y de «reducir movimiento».
+
+**Decisiones**
+
+- La 2.3.0 son las reglas animadas, como estaba previsto; «Escuchar y medir» pasa a la 2.4.0.
+- Con «reducir movimiento» todo se queda quieto mostrando el final de la jugada: la S puesta, OSO
+  en azul y el reloj en 0:05 en rojo.
+- Solo CSS, sin JavaScript nuevo salvo reiniciar la tarjeta visible. La tarjeta mide casi lo mismo
+  que antes (6 px más en un móvil de 390 px, sin scroll).
+
 ## [2.2.1] - 2026-10-09
 
 **Ajustes del FigJam** ([7589942](https://github.com/chopenhauer/devin-juega-oso/commit/7589942),

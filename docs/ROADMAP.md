@@ -44,6 +44,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   en el menú ☰, recordado en el dispositivo.
 - Ajustes del FigJam (2.2.1): navegación ← ❓ →, pantallas de modo, jugadores y tablero, ventana
   de «4 jugadores» en el móvil y anillo de selección de la ficha.
+- Reglas animadas del FigJam (2.3.0): arrastrar una letra, completar OSO con ↔ ↕ ⤡ y cuenta
+  atrás de los últimos 5 s en rojo, quietas con «reducir movimiento».
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
@@ -58,7 +60,7 @@ temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 | 1   | Política de privacidad                                             | Alto       | Bajo       | 2        |
 | 2   | Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos) | Alto       | Bajo       | 2        |
 | 3   | Feedback rápido 👍/👎 e «💡 Ideas» en el menú ☰                   | Alto       | Bajo       | 2        |
-| 4   | Reglas animadas (FigJam, segunda parte)                            | Alto       | Medio      | 1        |
+| 4   | ~~Reglas animadas (FigJam, segunda parte)~~ hecho en 2.3.0         | Alto       | Medio      | Hecho    |
 | 5   | Compartir por WhatsApp y email, con tarjeta del enlace             | Alto       | Bajo       | 3        |
 | 6   | Tensión con poco tiempo (T4.3)                                     | Medio-alto | Bajo       | 4        |
 | 7   | Hall of fame local                                                 | Alto       | Medio      | 4        |
@@ -85,7 +87,7 @@ antes de medir más. Mercado, equipos y ranking global, cuando el feedback diga 
 Cada fase es una versión menor con su rama, preview y aprobación. Las decisiones abiertas se
 preguntan una a una al empezar cada fase.
 
-1. **2.3.0 · Aprender jugando** (FigJam, segunda parte)
+1. ~~**2.3.0 · Aprender jugando**~~ hecho (FigJam, segunda parte)
    - Paso 1 de las reglas: una animación arrastra una letra hasta el tablero.
    - Paso 2: sigue y completa OSO, con ↔ horizontal, ↕ vertical y ⤡ diagonal.
    - Paso del reloj: cuenta atrás de los últimos 5 s que se pone en rojo y acaba en 0:00.
