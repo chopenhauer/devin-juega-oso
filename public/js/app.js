@@ -123,6 +123,7 @@ const { timeFor } = Engine;
     themeOptions = () => [...themeMenu.querySelectorAll('.theme-option')];
   let theme = 'classic';
   let allThemes = false;
+  const themeTaps = [];
   const SKIN_VARS = ['g1', 'g2', 'd1', 'd2', 'd3', 'b1', 'b2'];
   function paintSkin(t) {
     const colours = t.bg ? [...t.bg, ...t.board] : [];
@@ -195,7 +196,7 @@ const { timeFor } = Engine;
     const { menu, others, hidden } = themeMenuFor(new Date(), theme);
     const parts = [themeGroup(menu)];
     if (others.length) {
-      const list = themeGroup(others);
+      const list = themeGroup(allThemes ? [...others, ...hidden] : others);
       list.id = 'themeOthers';
       const open = allThemes || others.includes(theme);
       list.hidden = !open;
@@ -212,21 +213,16 @@ const { timeFor } = Engine;
       });
       parts.push(more, list);
     }
-    if (allThemes && hidden.length) {
-      const egg = document.createElement('p');
-      egg.className = 'theme-egg';
-      egg.textContent = '🥚 ¡Habéis encontrado todos los temas!';
-      const all = themeGroup(hidden);
-      all.id = 'themeAll';
-      parts.push(egg, all);
-    }
     themeMenu.replaceChildren(...parts);
   }
   const THEME_HINT_KEY = 'oso.themeHint.v1';
   function toggleThemeMenu(open) {
     themeMenu.classList.toggle('hidden', !open);
     themeToggle.setAttribute('aria-expanded', String(open));
-    if (!open) return;
+    if (!open) {
+      themeTaps.length = 0;
+      return;
+    }
     renderThemeMenu();
     themeOptions()
       .find((b) => b.dataset.theme === theme)
@@ -256,18 +252,64 @@ const { timeFor } = Engine;
   });
   syncThemeToggle();
   // Easter egg: more than 5 taps on 🎨 in a row (within 3 s) shows every theme until a reload.
-  const themeTaps = [];
-  themeToggle.addEventListener('click', () => {
-    const now = performance.now();
+  // Quick repeated taps keep the menu as it is instead of opening and closing it.
+  const eggParty = q('eggParty');
+  let eggTimer;
+  function playFanfare() {
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ac = new Ctx();
+      const t0 = ac.currentTime + 0.02;
+      [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5].forEach((f, i) => {
+        const o = ac.createOscillator(),
+          g = ac.createGain(),
+          t = t0 + i * 0.11,
+          d = i === 5 ? 0.5 : 0.16;
+        o.type = 'triangle';
+        o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+        o.connect(g).connect(ac.destination);
+        o.start(t);
+        o.stop(t + d + 0.02);
+      });
+      setTimeout(() => ac.close(), 1500);
+    } catch {
+      /* no sound */
+    }
+  }
+  function celebrateEgg() {
+    const eggs = ['🥚', '🐣', '🐰', '🌷', '🥚', '🐥'];
+    const drops = Array.from({ length: 36 }, (_, i) => {
+      const s = document.createElement('span');
+      s.textContent = eggs[i % eggs.length];
+      s.setAttribute('aria-hidden', 'true');
+      s.style.left = Math.random() * 100 + '%';
+      s.style.animationDelay = Math.random() * 0.8 + 's';
+      return s;
+    });
+    const msg = document.createElement('p');
+    msg.textContent = '🥚 ¡Tienes más temas disponibles!';
+    eggParty.replaceChildren(...drops, msg);
+    clearTimeout(eggTimer);
+    eggTimer = setTimeout(() => eggParty.replaceChildren(), 3600);
+    playFanfare();
+  }
+  themeToggle.addEventListener('click', (e) => {
+    const now = e.timeStamp;
+    const repeat = themeTaps.length > 0 && now - themeTaps[themeTaps.length - 1] < 700;
+    if (!repeat) themeTaps.length = 0;
     themeTaps.push(now);
-    while (now - themeTaps[0] > 3000) themeTaps.shift();
-    if (themeTaps.length > 5 && !allThemes) {
+    if (!allThemes && themeTaps.length > 5 && now - themeTaps[0] < 3000) {
       allThemes = true;
       themeTaps.length = 0;
       toggleThemeMenu(true);
+      celebrateEgg();
       return;
     }
-    toggleThemeMenu(themeMenu.classList.contains('hidden'));
+    if (!repeat) toggleThemeMenu(themeMenu.classList.contains('hidden'));
   });
   themeMenu.addEventListener('click', (e) => {
     const b = e.target.closest('.theme-option');

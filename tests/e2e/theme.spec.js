@@ -120,14 +120,36 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'birthday');
   await expect(page.locator('body')).toHaveClass(/skin/);
 
-  await page.reload();
-  for (let i = 0; i < 6; i++) await toggle.click();
-  await expect(page.locator('.theme-egg')).toBeVisible();
-  await expect(page.locator('#themeMenu .theme-option')).toHaveCount(23);
-  await page.click('#themeAll .theme-option >> nth=0');
+  await page.addInitScript(() => {
+    const A = window.AudioContext;
+    window.AudioContext = class extends A {
+      constructor(...args) {
+        super(...args);
+        window.__fanfare = (window.__fanfare ?? 0) + 1;
+      }
+    };
+  });
   await page.reload();
   await toggle.click();
-  await expect(page.locator('#themeAll')).toHaveCount(0);
+  const width = (await page.locator('#themeMenu').boundingBox()).width;
+  for (let i = 0; i < 5; i++) {
+    await toggle.click();
+    await expect(page.locator('#themeMenu')).toBeVisible();
+  }
+  const party = page.locator('#eggParty');
+  await expect(party).toContainText('¡Tienes más temas disponibles!');
+  expect(await party.locator('span').count()).toBeGreaterThan(10);
+  expect(await page.evaluate(() => window.__fanfare)).toBe(1);
+  await expect(page.locator('#themeMenu')).not.toContainText('temas disponibles');
+  await expect(page.locator('#themeMenu .theme-option')).toHaveCount(23);
+  await expect(page.locator('#themeMenu .theme-option:visible')).toHaveCount(23);
+  expect(await page.locator('#themeMenu .theme-group').count()).toBe(2);
+  expect((await page.locator('#themeMenu').boundingBox()).width).toBe(width);
+  await expect(party).toBeEmpty({ timeout: 6000 });
+  await page.click('#themeOthers .theme-option >> nth=-1');
+  await page.reload();
+  await toggle.click();
+  expect(await page.locator('#themeMenu .theme-option').count()).toBeLessThanOrEqual(10);
   await expect(page.locator('#themeMenu .theme-option[aria-pressed="true"]')).toBeVisible();
 });
 

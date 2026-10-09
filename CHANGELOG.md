@@ -17,6 +17,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.1.1] - 2026-10-09
+
+**Easter egg de los temas, más festivo**
+
+- Las pulsaciones seguidas del 🎨 ya no abren y cierran el menú: se queda como estaba.
+- Al llegar a 6 caen huevos de Pascua por toda la pantalla, sale «¡Tienes más temas disponibles!»
+  y suena una pequeña fanfarria (generada en el navegador, sin archivos de audio).
+- **Decisiones:** el menú mantiene su ancho y no lleva el mensaje; «Ver otros temas» se amplía con
+  todos los temas, sin separar los que ya estaban de los nuevos.
+
 ## [2.1.0] - 2026-10-09
 
 **Temas por fechas** ([4f5cb32](https://github.com/chopenhauer/devin-juega-oso/commit/4f5cb32))
