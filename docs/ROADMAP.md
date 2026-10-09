@@ -34,6 +34,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Modo 4 jugadores (2.0.0) y marcador de la sesión contra la máquina desde la primera partida.
 - Vista de 4 jugadores en el ordenador (2.0.1): en «Misma vista», tablero a la izquierda y las 4
   tarjetas apiladas a la derecha; en tablet, «Enfrentados» por defecto.
+- Temas por fechas (2.1.0): 23 temas, menú 🎨 con Clásico y las fiestas cercanas, «Ver otros
+  temas» hasta 10, el tema de la fiesta se pone solo ese día y easter egg con todos los temas.
 
 ## Priorización (octubre 2026)
 
@@ -45,10 +47,10 @@ los jugadores.
 | 1   | Política de privacidad                                          | Alto       | Bajo          | juegaoso.com es pública y juegan niños con GA y Clarity          |
 | 2   | Proteger `main` (solo publicar con el CI en verde)              | Medio      | Muy bajo      | Lo activa el dueño del repo en GitHub                            |
 | 3   | Feedback rápido 👍/👎 (evento de GA) e «💡 Ideas» en el menú ☰ | Alto       | Bajo          | Saber qué gusta                                                  |
-| 4   | Temas que se activan solos según la fecha                       | Alto       | Bajo          | Idea de Julia; Halloween y Navidad ya existen                    |
+| 4   | ✅ Temas que se activan solos según la fecha (2.1.0)            | Alto       | Bajo          | Hecho                                                            |
 | 5   | Tensión con poco tiempo (T4.3)                                  | Medio-alto | Bajo          | Más emoción con poco trabajo                                     |
 | 6   | Hall of fame local                                              | Alto       | Medio         | Récords y rachas en el dispositivo, sin servidor                 |
-| 7   | Más temas de temporada (Año Nuevo y Reyes primero)              | Alto       | Bajo cada uno | 11 pendientes; se hacen según se acerque cada fecha              |
+| 7   | ✅ Más temas de temporada (2.1.0)                               | Alto       | Bajo cada uno | Hechos los 20; se pueden ir afinando                             |
 | 8   | Feedback con texto libre (función de Vercel → email o issue)    | Alto       | Medio         | Backend pequeño con protección contra spam                       |
 | 9   | Equipos 2 contra 2 (3.0.0)                                      | Medio      | Medio         | Faltan decisiones: compañeros, turnos y extras                   |
 | 10  | Oso bailando al ganar (T4.5)                                    | Medio      | Medio-alto    | Necesita arte nuevo                                              |
@@ -145,7 +147,7 @@ recuerda en el dispositivo (`oso.theme.v1`). Código: `public/js/themes.js`.
 | 🎃 Halloween | 🎃 🧛 👻 🧙 🦇 💀 🕷️ 🧟 🐈‍⬛ 🦉 🍬 🩸 | Noche morada y naranja, gotas de sangre arriba, murciélagos y calabazas.    |
 | ⛄ Navidad   | ⛄ 🎅 🦌 🐧 🥕 ☕ 🎁 ❄️ 🎄 🍪 🧦 🐻‍❄️ | Noche azul con nieve cayendo, copos, regalos, café caliente y suelo nevado. |
 
-**Por hacer** (las fiestas de San Patricio a Acción de Gracias, las épocas y los lugares son ideas de los niños):
+**Hechos en 2.1.0** (las fiestas de San Patricio a Acción de Gracias, las épocas y los lugares son ideas de los niños):
 
 | Tema                   | Fechas (orientativas)              | Avatares e ideas                                                                           |
 | ---------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -168,11 +170,11 @@ recuerda en el dispositivo (`oso.theme.v1`). Código: `public/js/themes.js`.
 | Espacio                | Todo el año                        | 🚀 👽 🪐 🛸 👩‍🚀 🌙; estrellas fugaces y planetas.                                           |
 | Dinosaurios            | Todo el año                        | 🦖 🦕 🌋 🥚 🌿 🦴; volcán y selva prehistórica.                                            |
 | Piratas                | Todo el año                        | 🏴‍☠️ 🦜 💰 🗺️ ⚓ 🦈; mapa del tesoro (ojo: no mezclar con el tema marino del SOS).           |
-| Cumpleaños de Julia    | Su fecha                           | 🎂 🎈 🎁 🥳; tarta, globos y confeti extra (la fecha solo en el dispositivo).              |
+| Cumpleaños             | Sin fecha: se elige a mano         | 🎂 🎈 🎁 🥳; tarta, globos y confeti; para el cumple de cualquiera, sin guardar fechas.    |
 
 #### Menú de temas por fechas (idea de los niños)
 
-Con tantos temas, el menú 🎨 no puede enseñarlos todos. Propuesta:
+Con tantos temas, el menú 🎨 no puede enseñarlos todos. Hecho en 2.1.0:
 
 - **Menú:** como máximo 5 temas: siempre el Clásico y los que tengan su fecha cerca (de un mes
   antes a un mes después; por ejemplo San Fermín del 7 de junio al 7 de agosto).
@@ -182,9 +184,13 @@ Con tantos temas, el menú 🎨 no puede enseñarlos todos. Propuesta:
   los temas de fiesta quedan ahí.
 - **Easter egg:** pulsar el 🎨 más de 5 veces seguidas enseña todos los temas, aunque sean más de 10.
 - **Tipos de tema:** fiestas (con día), épocas del año (con periodo) y lugares (todo el año).
+- **Decisiones:**
+  - El tema de la fiesta solo dura ese día y después vuelve el elegido.
+  - Las épocas salen en el menú mientras duran.
+  - «Ver otros» empieza por Cumpleaños y alterna lugares y próximas fiestas.
+  - El easter egg son 6 pulsaciones en menos de 3 s y dura hasta recargar.
 
-- **Pendiente:** activar el tema solo según la fecha del dispositivo (con el selector para
-  volver al clásico), fichas y tablero con decoración del tema, y que el tema marino del SOS
+- **Pendiente:** fichas y tablero con decoración propia de cada tema, y que el tema marino del SOS
   sustituya o se mezcle con el de temporada (hoy lo sustituye mientras dura).
 - **Técnica:** `data-theme` en `body` con variables CSS, dibujos SVG en línea y emoji, sin recursos
   externos para respetar la CSP. Animaciones suaves y quietas con «reducir movimiento».

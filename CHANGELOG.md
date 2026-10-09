@@ -17,6 +17,30 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.1.0] - 2026-10-09
+
+**Temas por fechas** ([4f5cb32](https://github.com/chopenhauer/devin-juega-oso/commit/4f5cb32))
+
+- 20 temas nuevos, 23 en total. Cada uno tiene 12 avatares, colores, fondo, decoración y confeti:
+  - fiestas: Año Nuevo, Reyes Magos, San Valentín, Carnaval, San Patricio, Pascua, Sant Jordi, San
+    Juan, San Fermín y Acción de Gracias;
+  - épocas: Primavera, Verano y Otoño;
+  - lugares y aventuras: África, Antártida, Atlántida, Espacio, Dinosaurios y Piratas;
+  - Cumpleaños.
+- Menú 🎨 con un máximo de 5 temas: Clásico y las fiestas que estén a menos de un mes, antes o
+  después. «Ver otros temas» llega hasta 10 en total.
+- Easter egg: con 6 pulsaciones seguidas del 🎨 (en menos de 3 s) salen todos los temas hasta que se
+  recarga la página.
+- **Decisiones:**
+  - El día de la fiesta su tema se pone solo; al día siguiente vuelve el que se eligió. Si ese día se
+    elige otro a mano, se respeta.
+  - Las épocas solo salen en el menú mientras duran y nunca se ponen solas.
+  - Cumpleaños no tiene fecha, para no guardar la de nadie; se elige a mano en «Ver otros».
+  - «Ver otros» empieza por Cumpleaños y alterna un lugar o aventura con la próxima fiesta. El tema
+    puesto sale siempre en el menú.
+  - Pascua, Carnaval y Acción de Gracias calculan su día cada año.
+  - La mayoría de los temas son de los niños.
+
 ## [2.0.1] - 2026-10-09
 
 **Vista de 4 jugadores en el ordenador** ([e0bd3c6](https://github.com/chopenhauer/devin-juega-oso/commit/e0bd3c6), [6de8815](https://github.com/chopenhauer/devin-juega-oso/commit/6de8815))
