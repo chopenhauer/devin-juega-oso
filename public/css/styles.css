@@ -282,7 +282,13 @@ body:has(#gameScreen:not(.hidden)) .consent {
   border: 1px solid var(--line);
 }
 .mode-btn {
-  min-height: 48px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 2px;
+  min-height: 68px;
+  padding: 8px 4px;
+  line-height: 1.15;
   border: 0;
   border-radius: var(--r-sm);
   background: transparent;
@@ -293,11 +299,11 @@ body:has(#gameScreen:not(.hidden)) .consent {
     background 0.2s,
     color 0.2s;
 }
+.mode-emoji {
+  font-size: 24px;
+  line-height: 1;
+}
 .mode-btn.soon {
-  display: grid;
-  place-content: center;
-  gap: 2px;
-  padding: 6px 4px;
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -502,10 +508,25 @@ body:has(#gameScreen:not(.hidden)) .consent {
 }
 .setup-actions {
   display: flex;
-  justify-content: center;
-  align-items: end;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.select-wrap {
+  position: relative;
+  display: inline-block;
+}
+.select-wrap::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
 }
 .setup-actions .small-label {
   margin-bottom: 6px;
@@ -518,7 +539,8 @@ select {
   color: #fff;
   font-size: 17px;
   font-weight: 600;
-  padding: 0 14px;
+  padding: 0 48px 0 18px;
+  appearance: none;
 }
 select option {
   color: #222;
@@ -1924,9 +1946,17 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
   color: var(--muted);
 }
 .extras-list li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
   padding: 10px 12px;
   border-radius: var(--r-sm);
   background: rgba(0, 0, 0, 0.2);
+}
+.extra-emoji {
+  font-size: 20px;
+  text-align: center;
 }
 .extras-list b {
   color: #fff;
@@ -1953,7 +1983,8 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
 }
 .wizard-nav {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
+  justify-items: center;
   align-items: center;
   gap: 12px;
   justify-self: center;
@@ -1962,8 +1993,13 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
 }
 .wizard-nav .primary,
 .wizard-nav .secondary {
+  min-width: 76px;
   min-height: 46px;
   padding: 0 16px;
+  font-size: 22px;
+}
+.setup[data-step='mode'] #stepBack {
+  font-size: 15px;
 }
 .help-icon {
   justify-self: center;
@@ -2621,6 +2657,12 @@ body[data-motion='rise'] .theme-decor span {
 }
 .setup.four-setup .players-setup {
   grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.setup.four-setup .avatars {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.setup.four-setup .avatar-btn {
+  font-size: 20px;
 }
 .pconfig:nth-child(3) {
   background: linear-gradient(

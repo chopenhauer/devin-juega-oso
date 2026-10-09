@@ -72,7 +72,8 @@ test('first visit walks through the intro carousel, then remembers choices', asy
 
   await expect(page.locator('#stepBack')).toHaveText('👀 Cómo se juega');
   await page.click('#stepBack');
-  expect(await step(page)).toBe('welcome');
+  expect(await step(page)).toBe('rules');
+  await expect(setupScreen(page)).toHaveAttribute('data-slide', '0');
 });
 
 test('the carousel moves with swipes and dots', async ({ page }) => {
@@ -90,7 +91,7 @@ test('the carousel moves with swipes and dots', async ({ page }) => {
   await page.click('#stepNext');
   expect(await step(page)).toBe('mode');
   await page.click('#stepBack');
-  await expect(setupScreen(page)).toHaveAttribute('data-slide', '3');
+  await expect(setupScreen(page)).toHaveAttribute('data-slide', '0');
 });
 
 test('players cannot pick the same avatar, also after restoring a swap', async ({ page }) => {
@@ -175,7 +176,7 @@ test('two players choose the orientation; solo skips that step', async ({ page }
 test('credits show on the setup screens and hide during the game', async ({ page }) => {
   await page.goto('/');
   const credits = page.locator('.credits-text');
-  await expect(credits).toHaveText('Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻');
+  await expect(credits).toHaveText('Hecho por Julia y JoseLuis — Vilarequi — con ❤️');
   await expect(credits).toBeVisible();
   await page.click('#introSkip');
   await expect(credits).toBeVisible();
@@ -221,4 +222,32 @@ test('against the machine, the difficulty replaces the avatars and sets the robo
   await page.click('#startGame');
   await expect(page.locator('#avatar2')).toHaveAttribute('data-mood', 'hard');
   await expect(page.locator('#avatar2')).toHaveClass(/robot/);
+});
+
+test('wizard nav is ← ? → in every step and the board step keeps ¡A jugar! under the board choice', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await page.click('#introStart');
+  await expect(page.locator('#stepBack')).toHaveText('←');
+  await expect(page.locator('#stepBack')).toHaveAttribute('aria-label', 'Atrás');
+  await expect(page.locator('#stepNext')).toHaveText('→');
+  await expect(page.locator('#stepNext')).toHaveAttribute('aria-label', 'Siguiente');
+  const nav = await page.locator('.wizard-nav').boundingBox();
+  const help = await page.locator('#helpToggle').boundingBox();
+  expect(Math.abs(help.x + help.width / 2 - (nav.x + nav.width / 2))).toBeLessThan(2);
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
+  await expect(page.locator('.mode-btn .mode-emoji')).toHaveCount(3);
+  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  expect(await step(page)).toBe('board');
+  await expect(page.locator('.step-lead:visible')).toHaveText(
+    'Cuanto más grande, más tiempo y más puntos OSO posibles.',
+  );
+  await expect(page.locator('#setupSummary')).toHaveClass(/visually-hidden/);
+  await expect(page.locator('#stepNext')).toHaveClass(/invisible/);
+  const select = await page.locator('#sizeSelect').boundingBox();
+  const start = await page.locator('#startGame').boundingBox();
+  expect(start.y).toBeGreaterThan(select.y + select.height);
+  const help2 = await page.locator('#helpToggle').boundingBox();
+  expect(Math.abs(help2.x + help2.width / 2 - (nav.x + nav.width / 2))).toBeLessThan(2);
 });

@@ -109,10 +109,24 @@
                     <div class="rule-emoji" aria-hidden="true">🎁</div>
                     <h2 class="step-title">Cada uno tiene 4 extras, de un solo uso</h2>
                     <ul class="extras-list">
-                      <li><b>💡 Pista</b> te sugiere una jugada</li>
-                      <li><b>👁️ Ver</b> marca la última jugada rival</li>
-                      <li><b>🔄 Cambio</b> convierte una letra del tablero (O ↔ S)</li>
-                      <li><b>🛟 SOS</b> cambia el objetivo a S-O-S para los dos y recalcula la partida</li>
+                      <li>
+                        <span class="extra-emoji" aria-hidden="true">💡</span
+                        ><span><b>Pista</b> te sugiere una jugada</span>
+                      </li>
+                      <li>
+                        <span class="extra-emoji" aria-hidden="true">👁️</span
+                        ><span><b>Ver</b> marca la última jugada rival</span>
+                      </li>
+                      <li>
+                        <span class="extra-emoji" aria-hidden="true">🔄</span
+                        ><span><b>Cambio</b> convierte una letra del tablero (O ↔ S)</span>
+                      </li>
+                      <li>
+                        <span class="extra-emoji" aria-hidden="true">🛟</span
+                        ><span
+                          ><b>SOS</b> cambia el objetivo a S-O-S para los dos y recalcula la partida</span
+                        >
+                      </li>
                     </ul>
                   </div>
                   <div
@@ -147,10 +161,15 @@
               </div>
               <h2 class="step-title">¿Cómo queréis jugar?</h2>
               <div class="mode-choice" role="group" aria-label="Modo de juego">
-                <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
-                <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
+                <button id="modeSolo" class="mode-btn" type="button">
+                  <span class="mode-emoji" aria-hidden="true">🤖</span><span>1 jugador</span>
+                </button>
+                <button id="modeTwo" class="mode-btn selected" type="button">
+                  <span class="mode-emoji" aria-hidden="true">👥</span><span>2 jugadores</span>
+                </button>
                 <button id="modeFour" class="mode-btn soon" type="button" disabled>
-                  👨‍👩‍👧‍👦 4 jugadores <small class="soon-tag">En tablet u ordenador</small>
+                  <span class="mode-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span><span>4 jugadores</span>
+                  <small class="soon-tag">En tablet u ordenador</small>
                 </button>
               </div>
             </div>
@@ -297,25 +316,27 @@
             </div>
             <div class="step inactive" data-step="board">
               <h2 class="step-title">Elige el tablero</h2>
-              <p class="step-lead">Cuanto más grande, más tiempo y más OSOs posibles.</p>
+              <p class="step-lead">Cuanto más grande, más tiempo y más puntos OSO posibles.</p>
               <div class="setup-actions">
                 <div>
                   <label class="small-label" for="sizeSelect">Tablero</label>
-                  <select id="sizeSelect">
-                    <option value="4">4 × 4 · 1:30</option>
-                    <option value="5" selected>5 × 5 · 2:00</option>
-                    <option value="6">6 × 6 · 2:30</option>
-                    <option value="7">7 × 7 · 3:00</option>
-                    <option value="8">8 × 8 · 4:00</option>
-                  </select>
+                  <span class="select-wrap"
+                    ><select id="sizeSelect">
+                      <option value="4">4 × 4 · 1:30</option>
+                      <option value="5" selected>5 × 5 · 2:00</option>
+                      <option value="6">6 × 6 · 2:30</option>
+                      <option value="7">7 × 7 · 3:00</option>
+                      <option value="8">8 × 8 · 4:00</option>
+                    </select></span
+                  >
                 </div>
                 <button id="startGame" class="primary">¡A jugar!</button>
               </div>
-              <p id="setupSummary" class="setup-summary" aria-live="polite"></p>
+              <p id="setupSummary" class="setup-summary visually-hidden" aria-live="polite"></p>
             </div>
           </div>
           <nav class="wizard-nav" aria-label="Pasos">
-            <button id="stepBack" class="secondary" type="button">← Atrás</button>
+            <button id="stepBack" class="secondary" type="button" aria-label="Atrás">←</button>
             <button
               id="helpToggle"
               class="help-icon"
@@ -325,7 +346,7 @@
             >
               ❓
             </button>
-            <button id="stepNext" class="primary" type="button">Siguiente →</button>
+            <button id="stepNext" class="primary" type="button" aria-label="Siguiente">→</button>
           </nav>
         </div>
 
@@ -672,7 +693,7 @@
       </section>
     </main>
     <footer class="credits">
-      <span class="credits-text">Hecho por Julia y JoseLuis — Vilarequi — con amor 🐻</span>
+      <span class="credits-text">Hecho por Julia y JoseLuis — Vilarequi — con ❤️</span>
       · <span id="appVersion" class="credits-version"></span> ·
       <button id="cookieSettings" type="button" class="cookie-settings">Cookies</button>
     </footer>

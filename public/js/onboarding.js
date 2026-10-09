@@ -117,8 +117,9 @@ function show(step, slideIndex = 0) {
   setup.dataset.step = step;
   setSetupMode(isSolo() ? 'solo' : isFour() ? 'four' : 'two');
   $('stepBack').classList.toggle('invisible', step === 'welcome');
-  $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '← Atrás';
-  $('stepNext').classList.toggle('hidden', NO_NEXT.has(step));
+  $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '←';
+  $('stepBack').setAttribute('aria-label', step === 'mode' ? 'Cómo se juega' : 'Atrás');
+  $('stepNext').classList.toggle('invisible', NO_NEXT.has(step));
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
   equalizeHeight();
@@ -139,7 +140,7 @@ function next() {
 function back() {
   const step = setup.dataset.step;
   if (step === 'rules' && slide > 0) setSlide(slide - 1);
-  else if (step === 'mode') show('welcome');
+  else if (step === 'mode') show('rules');
   else show(neighbour(step, -1));
 }
 
