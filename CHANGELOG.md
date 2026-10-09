@@ -16,7 +16,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 - **2.0.0 · Modo 4 jugadores** (en desarrollo). Decisiones: todos contra todos y gana quien tenga
   más puntos (empate en cabeza = victoria compartida); turnos 1 → 2 → 3 → 4; tableros 6 × 6, 7 × 7 y
-  8 × 8 con el mismo reloj que con 2 jugadores; solo personas; cada jugador con 💡, 👁️ y 🔄 una vez;
+  8 × 8 con el mismo reloj que con 2 jugadores; quien se queda sin tiempo queda fuera con sus
+  puntos y los demás siguen hasta que solo quede uno con tiempo; solo personas; cada jugador con 💡, 👁️ y 🔄 una vez;
   👁️ marca la última jugada del rival anterior; 🛟 sigue siendo una vez por partida; solo en tablet u
   ordenador (en móvil, desactivado con «En tablet u ordenador»).
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con

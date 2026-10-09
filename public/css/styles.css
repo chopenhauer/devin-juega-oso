@@ -2754,3 +2754,7 @@ body[data-theme='christmas'] .theme-decor::after {
     --side-w: min(560px, calc(100vw - 290px));
   }
 }
+.game.four .player-panel.out {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}

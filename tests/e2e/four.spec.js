@@ -72,3 +72,38 @@ test('on a phone the 4 players option stays disabled', async ({ page }, testInfo
   await expect(page.locator('#modeFour')).toBeDisabled();
   await expect(page.locator('#modeFour')).toContainText('En tablet u ordenador');
 });
+
+test('with four players, whoever runs out of time is out and the others carry on', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', '4 players need a tablet or a computer');
+  await page.clock.install();
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#modeFour');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  await page.selectOption('#sizeSelect', '6');
+  await page.click('#startGame');
+
+  const side = (n) => page.locator(`#side${n}`);
+  await page.clock.runFor(151_000);
+  await expect(side(1)).toHaveClass(/\bout\b/);
+  await expect(side(2)).toHaveClass(/active/);
+  await expect(page.locator('#message')).toContainText('se queda sin tiempo');
+  await expect(page.locator('#winnerOverlay')).toBeHidden();
+
+  await cell(page, 0).click();
+  await expect(side(3)).toHaveClass(/active/);
+  await cell(page, 1).click();
+  await expect(side(4)).toHaveClass(/active/);
+  await cell(page, 2).click();
+  await expect(side(2)).toHaveClass(/active/);
+
+  await page.clock.runFor(151_000);
+  await expect(side(3)).toHaveClass(/active/);
+  await page.clock.runFor(151_000);
+  await expect(page.locator('#winnerOverlay')).toBeVisible();
+  await expect(page.locator('#winnerSub')).toHaveText(/\d+ – \d+ – \d+ – \d+/);
+});

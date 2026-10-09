@@ -54,6 +54,9 @@ Partidas de cuatro personas en el mismo dispositivo, por turnos. Reglas decidida
 - **Jugadores:** solo personas (sin máquinas), cada una con nombre, avatar exclusivo y color.
 - **Tablero y reloj:** se elige entre 6 × 6, 7 × 7 y 8 × 8, con el mismo reloj que con 2 jugadores
   en ese tablero (2:30, 3:00 y 4:00 por jugador).
+- **Sin tiempo:** quien se queda sin tiempo queda fuera, conserva sus puntos y los demás siguen.
+  La partida acaba al llenarse el tablero o cuando solo queda un jugador con tiempo; gana quien
+  tenga más puntos.
 - **Extras:** cada jugador tiene 💡, 👁️ y 🔄 una vez. 👁️ marca la última jugada del rival anterior
   (la casilla más reciente de cualquiera de los otros tres). 🛟 (OSO → SOS) sigue siendo una sola vez
   por partida, para quien lo use primero.

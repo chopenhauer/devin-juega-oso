@@ -424,6 +424,7 @@ const { timeFor } = Engine;
       s.classList.toggle('hidden', i >= scores.length);
       const isTurn = i === current && !over && !replaying;
       s.classList.toggle('active', isTurn);
+      s.classList.toggle('out', gameMode === 'four' && times[i] <= 0);
       s.classList.toggle('machine', gameMode === 'solo' && i === 1);
       s.classList.toggle('thinking', machineThinking && i === 1);
     });
@@ -547,10 +548,35 @@ const { timeFor } = Engine;
     lastTick = now;
     updateTimers();
     if (times[current] <= 0) {
-      finish(gameMode === 'four' ? leaders(current) : 1 - current, 'tiempo');
+      if (gameMode === 'four') knockOut(current);
+      else finish(1 - current, 'tiempo');
       return true;
     }
     return false;
+  }
+  // Next player with time left (with 4 players, whoever runs out of time is out).
+  function nextPlayer(from) {
+    const n = scores.length;
+    for (let k = 1; k <= n; k++) {
+      const p = (from + k) % n;
+      if (times[p] > 0) return p;
+    }
+    return from;
+  }
+  // 4 players: the player keeps their points, the others carry on until only one has time left.
+  function knockOut(p) {
+    if (times.filter((t) => t > 0).length <= 1) {
+      endByScore();
+      return;
+    }
+    if (drag) endDrag(false);
+    swapMode = null;
+    hintCell = null;
+    lastCell = null;
+    current = nextPlayer(p);
+    render();
+    updateControls();
+    msg.textContent = `⏱️ ${names[p]} se queda sin tiempo. Turno de ${avatars[current]} ${names[current]}`;
   }
   function tick() {
     settle();
@@ -626,7 +652,7 @@ const { timeFor } = Engine;
       hintCell = null;
       lastCell = null;
       msg.textContent = `🔄 ${names[p]} cambia la letra a ${board[i]}.`;
-      current = (current + 1) % scores.length;
+      current = nextPlayer(current);
       render();
       updateControls();
 
@@ -656,7 +682,7 @@ const { timeFor } = Engine;
       updateTimers();
       msg.textContent = `¡${avatars[p]} ${names[p]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`;
     } else {
-      current = (current + 1) % scores.length;
+      current = nextPlayer(current);
       msg.textContent = `Turno de ${avatars[current]} ${names[current]}`;
     }
 
