@@ -145,21 +145,43 @@ recuerda en el dispositivo (`oso.theme.v1`). Código: `public/js/themes.js`.
 | 🎃 Halloween | 🎃 🧛 👻 🧙 🦇 💀 🕷️ 🧟 🐈‍⬛ 🦉 🍬 🩸 | Noche morada y naranja, gotas de sangre arriba, murciélagos y calabazas.    |
 | ⛄ Navidad   | ⛄ 🎅 🦌 🐧 🥕 ☕ 🎁 ❄️ 🎄 🍪 🧦 🐻‍❄️ | Noche azul con nieve cayendo, copos, regalos, café caliente y suelo nevado. |
 
-**Por hacer:**
+**Por hacer** (las fiestas de San Patricio a Acción de Gracias, las épocas y los lugares son ideas de los niños):
 
-| Tema                | Fechas (orientativas) | Avatares e ideas                                                                           |
-| ------------------- | --------------------- | ------------------------------------------------------------------------------------------ |
-| Año Nuevo           | 31 dic – 1 ene        | 🎆 🥂 🍇 🕛 🎉 🥳; fuegos artificiales al ganar y las 12 uvas como cuenta atrás del reloj. |
-| Reyes Magos         | 5 – 6 ene             | 👑 🐪 🎁 ⭐ 🍰; roscón y estrella de Oriente.                                              |
-| San Valentín        | 7 – 14 feb            | 💘 🌹 💌 🧸 🍫 🦢; corazones flotando y fichas en rosa y rojo.                             |
-| Carnaval            | Semana de carnaval    | 🎭 🤡 🦸 🧚 🦹 🎊; antifaces y confeti.                                                    |
-| Pascua / primavera  | Mar – may             | 🐰 🐣 🥚 🌷 🦋 🐝; flores, mariposas y tonos verdes suaves.                                |
-| Verano en la playa  | Jul – ago             | 🏖️ 🦀 🐠 🐬 🍉 🍦 🕶️; arena, sol, sombrilla y osos con gafas.                              |
-| Otoño               | Sep – nov             | 🍂 🦔 🐿️ 🍄 🌰 🦉; hojas cayendo y tonos ocres.                                            |
-| Espacio             | Todo el año           | 🚀 👽 🪐 🛸 👩‍🚀 🌙; estrellas fugaces y planetas.                                           |
-| Dinosaurios         | Todo el año           | 🦖 🦕 🌋 🥚 🌿 🦴; volcán y selva prehistórica.                                            |
-| Piratas             | Todo el año           | 🏴‍☠️ 🦜 💰 🗺️ ⚓ 🦈; mapa del tesoro (ojo: no mezclar con el tema marino del SOS).           |
-| Cumpleaños de Julia | Su fecha              | 🎂 🎈 🎁 🥳; tarta, globos y confeti extra (la fecha solo en el dispositivo).              |
+| Tema                   | Fechas (orientativas)              | Avatares e ideas                                                                           |
+| ---------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------ |
+| Año Nuevo              | 31 dic – 1 ene                     | 🎆 🥂 🍇 🕛 🎉 🥳; fuegos artificiales al ganar y las 12 uvas como cuenta atrás del reloj. |
+| Reyes Magos            | 5 – 6 ene                          | 👑 🐪 🎁 ⭐ 🍰; roscón y estrella de Oriente.                                              |
+| San Valentín           | 7 – 14 feb                         | 💘 🌹 💌 🧸 🍫 🦢; corazones flotando y fichas en rosa y rojo.                             |
+| Carnaval               | Semana de carnaval                 | 🎭 🤡 🦸 🧚 🦹 🎊; antifaces y confeti.                                                    |
+| San Patricio           | 17 mar                             | ☘️ 🍀 🌈 🪙 🎩 🧚; tréboles y arcoíris con olla de oro.                                    |
+| Pascua                 | Domingo de Pascua (fecha variable) | 🐰 🐣 🥚 🧺 🍫 🌷; huevos de colores escondidos.                                           |
+| Sant Jordi             | 23 abr                             | 🐉 🌹 📚 🏰 🛡️ 👸; rosas, libros y un dragón amable.                                       |
+| San Juan               | 23 – 24 jun                        | 🔥 🎆 🎇 🌙 🌊 ✨; hogueras y fuegos artificiales.                                         |
+| San Fermín             | 7 jul                              | 🐂 🧣 🎉 🏃 🔴 ⚪; pañuelo rojo y toros en dibujo amable.                                  |
+| Acción de Gracias      | 4.º jueves de nov                  | 🦃 🥧 🌽 🍁 🍂 🥔; mesa de otoño.                                                          |
+| Primavera              | 21 mar – 20 jun                    | 🌷 🦋 🐝 🌸 🐞 🌱; flores, mariposas y tonos verdes suaves.                                |
+| Verano                 | 21 jun – 22 sep                    | 🏖️ 🦀 🐠 🐬 🍉 🍦 🕶️; arena, sol, sombrilla y osos con gafas.                              |
+| Otoño                  | 23 sep – 20 dic                    | 🍂 🦔 🐿️ 🍄 🌰 🦉; hojas cayendo y tonos ocres.                                            |
+| África                 | Todo el año                        | 🦁 🐘 🦒 🦓 🦏 🐊; sabana al atardecer.                                                    |
+| Antártida              | Todo el año                        | 🐧 🦭 🐋 🧊 🏔️ 🛷; hielo, auroras y nieve.                                                 |
+| Atlántida (imaginario) | Todo el año                        | 🧜 🐙 🐚 🔱 🏛️ 🐠; ciudad sumergida con burbujas.                                          |
+| Espacio                | Todo el año                        | 🚀 👽 🪐 🛸 👩‍🚀 🌙; estrellas fugaces y planetas.                                           |
+| Dinosaurios            | Todo el año                        | 🦖 🦕 🌋 🥚 🌿 🦴; volcán y selva prehistórica.                                            |
+| Piratas                | Todo el año                        | 🏴‍☠️ 🦜 💰 🗺️ ⚓ 🦈; mapa del tesoro (ojo: no mezclar con el tema marino del SOS).           |
+| Cumpleaños de Julia    | Su fecha                           | 🎂 🎈 🎁 🥳; tarta, globos y confeti extra (la fecha solo en el dispositivo).              |
+
+#### Menú de temas por fechas (idea de los niños)
+
+Con tantos temas, el menú 🎨 no puede enseñarlos todos. Propuesta:
+
+- **Menú:** como máximo 5 temas: siempre el Clásico y los que tengan su fecha cerca (de un mes
+  antes a un mes después; por ejemplo San Fermín del 7 de junio al 7 de agosto).
+- **Por defecto:** el Clásico, salvo el mismo día de la fiesta, que se pone ese tema solo (San
+  Valentín el 14 de febrero, San Fermín el 7 de julio).
+- **«Ver otros»:** despliega más temas, hasta 10 en total contando los del menú. El resto del año
+  los temas de fiesta quedan ahí.
+- **Easter egg:** pulsar el 🎨 más de 5 veces seguidas enseña todos los temas, aunque sean más de 10.
+- **Tipos de tema:** fiestas (con día), épocas del año (con periodo) y lugares (todo el año).
 
 - **Pendiente:** activar el tema solo según la fecha del dispositivo (con el selector para
   volver al clásico), fichas y tablero con decoración del tema, y que el tema marino del SOS
