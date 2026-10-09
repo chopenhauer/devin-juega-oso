@@ -36,6 +36,9 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   tarjetas apiladas a la derecha; en tablet, «Enfrentados» por defecto.
 - Temas por fechas (2.1.0): 23 temas, menú 🎨 con Clásico y las fiestas cercanas, «Ver otros
   temas» hasta 10, el tema de la fiesta se pone solo ese día y easter egg con todos los temas.
+- Easter egg más festivo (2.1.1 y 2.1.2): las pulsaciones seguidas del 🎨 no abren y cierran el
+  menú; al llegar a 6 caen huevos de Pascua por toda la pantalla con el fondo oscurecido, sale
+  «¡Tienes más temas disponibles!» y suena una fanfarria. El menú no cambia de ancho.
 
 ## Priorización (octubre 2026)
 
@@ -60,10 +63,16 @@ los jugadores.
 | 14  | Vibración (T4.4)                                                | Bajo       | Bajo          | Solo en Android                                                  |
 | 15  | Reloj con la pestaña dormida                                    | Bajo       | Bajo          | Decisión pendiente; hoy funciona como una pausa                  |
 | 16  | Regalos desbloqueables                                          | —          | Medio         | Solo idea, sin planificar (JoseLuis no quiere hacerlo por ahora) |
+| 17  | Compartir por WhatsApp y email (boca a boca)                    | Alto       | Bajo          | Que corra la voz entre familias y amigos                         |
+| 18  | Sonido al acabar la partida y botón de silencio                 | Medio-alto | Bajo          | Más celebración; el silencio es imprescindible al haber sonidos  |
+| 19  | Tiempos por tablero según partidas reales (épica)               | Alto       | Medio         | Primero medir unas semanas; después ajustar con datos            |
 
-**Agrupación propuesta:** 1–5 como versión 2.1.0; hall of fame (6) como 2.2.0; los
-temas (7) según el calendario; Mercado, equipos y ranking global (12, 9 y 13) cuando el feedback
-diga que se quieren.
+**Agrupación propuesta:** de la 2.1.0 ya están publicados los temas (4 y 7); quedan privacidad,
+proteger `main`, feedback rápido y tensión con poco tiempo (1, 2, 3 y 5). Compartir y sonidos (17
+y 18) son victorias rápidas que pueden ir antes o junto al hall of fame (6) en la 2.2.0. La
+telemetría de los tiempos (19) conviene ponerla pronto, porque necesita semanas de partidas antes
+de poder ajustar nada. Mercado, equipos y ranking global (12, 9 y 13) cuando el feedback diga que
+se quieren.
 
 ## Roadmap F4 (pendiente)
 
@@ -244,6 +253,68 @@ hay que decidir dos cosas:
     manda por email o como issue.
 - **A tener en cuenta:** juegan niños, así que no pedir nombre ni email (o que sea opcional),
   avisar de para qué se usa y no guardar más de lo necesario.
+
+### Tiempos por tablero según partidas reales (épica)
+
+Ajustar el reloj de cada tablero con lo que pasa en partidas reales, no con una fórmula.
+
+- **Hoy:** el tiempo por jugador sale de una fórmula (`timeFor` en `engine.js`): 4×4 1:30, 5×5
+  2:00, 6×6 2:30, 7×7 3:00 y 8×8 4:00. Es el mismo con 1, 2 y 4 jugadores.
+- **Objetivo:** que el **50 %** de las partidas terminen porque a alguien se le acaba el tiempo.
+  El 50 % es un parámetro (por ejemplo `TIMEOUT_TARGET = 0.5`) en un solo sitio, para poder
+  cambiarlo sin tocar el resto.
+- **Telemetría (paso 1):** un evento de GA al acabar cada partida (`game_end`) con:
+  - tablero, número de jugadores, contra la máquina o no, y dificultad;
+  - cómo terminó: tablero lleno, sin tiempo o abandonada (`game_start` sin `game_end`);
+  - tiempo disponible, tiempo usado y tiempo sobrante de cada jugador, número de jugadas y
+    versión del juego;
+  - sin nombres ni datos personales.
+  - **Ojo:** solo llega de quien acepta las cookies, así que la muestra puede estar sesgada.
+- **Herramientas (paso 2):**
+  - una exploración en GA4 con el porcentaje de partidas que terminan por tiempo en cada tablero;
+  - un script en el repo (`scripts/`) que lea los datos (exportación o GA4 Data API) y proponga
+    el tiempo de cada tablero para cumplir el objetivo. Con un objetivo del 50 %, la propuesta es
+    aproximadamente la mediana del tiempo que necesita el jugador más lento para acabar.
+- **Ajuste (paso 3):** pasar de la fórmula a una tabla de tiempos por tablero (y por modo, si
+  hace falta). Solo se ajusta un tablero cuando tiene suficientes partidas (por ejemplo 100), y
+  cada ajuste se publica como corrección con su entrada en el changelog.
+- **Decisiones abiertas:** si el objetivo es el mismo para todos los tableros y modos (1, 2 y 4
+  jugadores); si cuentan las partidas contra la máquina; y cada cuánto se revisa.
+
+### Sonidos
+
+- **Hoy:** solo suena la fanfarria del easter egg (2.1.1). Se genera en el navegador con Web
+  Audio, sin archivos y sin abrir la CSP.
+- **Revisar:** decidir el estilo (generados o archivos pequeños propios) y qué momentos tienen
+  sonido: formar OSO, poco tiempo (T4.3), tiempo agotado, empate…
+- **Primero:** un sonido al acabar la partida, junto al confeti, distinto si se gana, se empata o
+  gana la máquina.
+- **Silencio:** un botón 🔊 / 🔇 en la pantalla de inicio (junto al 🎨) y en el menú ☰ de la
+  partida. Se recuerda en el dispositivo y también silencia la fanfarria del easter egg.
+- **Decisiones abiertas:** si el sonido empieza encendido o apagado, y el volumen.
+
+### Compartir y boca a boca (viralidad)
+
+Que corra la voz: que quien juega lo comparta fácilmente con familia y amigos.
+
+- **Dónde:**
+  - en la pantalla final, por ejemplo «¡He ganado 7 a 5 en OSO 🐻! ¿Me ganas? juegaoso.com»;
+  - en la pantalla de inicio o en el pie, «Invita a alguien a jugar».
+- **Cómo:**
+  - en el móvil, el menú nativo de compartir (Web Share API), que ya incluye WhatsApp, Telegram,
+    email…;
+  - si no está disponible: botones de **WhatsApp** (`https://wa.me/?text=…`), **email**
+    (`mailto:?subject=…&body=…`) y «Copiar enlace»;
+  - sin SDKs ni botones de redes sociales, por la CSP y la privacidad de los niños.
+- **Que el enlace se vea bonito:** hoy la web no tiene descripción ni metadatos Open Graph. Hay
+  que añadir título, descripción e imagen (`og:image`) para que WhatsApp muestre una tarjeta con
+  el oso.
+- **Medir:** evento de GA `share` con el canal y enlaces con `utm_source` (`whatsapp`, `email`…)
+  para saber cuántas visitas llegan por boca a boca.
+- **Más adelante:** un enlace de reto («juega este tablero y este tema») o un código QR para
+  enseñarlo en la tablet.
+- **Decisiones abiertas:** si el texto incluye los nombres de los jugadores (por defecto no) y
+  dónde sale el botón.
 
 ## Otras ideas y decisiones abiertas
 
