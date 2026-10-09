@@ -2804,6 +2804,11 @@ body[data-theme='christmas'] .theme-decor::after {
     justify-content: flex-end;
     gap: 6px;
   }
+  .game.four.same-view :is(#side1, #side2, #side3, #side4) .letter {
+    flex: none;
+    width: 52px;
+    aspect-ratio: 1;
+  }
   .game.four.same-view .board-shell {
     max-width: min(100%, calc(100dvh - 130px));
   }
