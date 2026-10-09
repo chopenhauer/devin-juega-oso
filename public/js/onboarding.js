@@ -108,7 +108,13 @@ function equalizeHeight() {
 function setSlide(index) {
   slide = Math.max(0, Math.min(slides.length - 1, index));
   $('ruleSlides').style.transform = `translateX(-${slide * 100}%)`;
-  slides.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== slide)));
+  slides.forEach((s, i) => {
+    s.setAttribute('aria-hidden', String(i !== slide));
+    s.classList.remove('playing');
+  });
+  // Restart the active card's demo from the beginning.
+  void slides[slide].offsetWidth;
+  slides[slide].classList.add('playing');
   dots.forEach((d, i) => d.setAttribute('aria-current', String(i === slide)));
   setup.dataset.slide = String(slide);
 }

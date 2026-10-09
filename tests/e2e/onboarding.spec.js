@@ -250,3 +250,34 @@ test('wizard nav is ← ? → in every step and the board step keeps ¡A jugar! 
   const help2 = await page.locator('#helpToggle').boundingBox();
   expect(Math.abs(help2.x + help2.width / 2 - (nav.x + nav.width / 2))).toBeLessThan(2);
 });
+
+test('rule cards animate the move, restart when shown and stay still with reduced motion', async ({
+  page,
+}) => {
+  const card = (i) => page.locator(`.rule-slide[data-slide="${i}"]`);
+  const running = (i) =>
+    card(i).evaluate(
+      (el) => el.getAnimations({ subtree: true }).filter((a) => a.playState === 'running').length,
+    );
+  await page.goto('/');
+  await page.click('#introStart');
+  await expect(card(0)).toHaveClass(/playing/);
+  await expect(card(1)).not.toHaveClass(/playing/);
+  expect(await running(0)).toBeGreaterThan(0);
+  await page.click('#stepNext');
+  await expect(card(1)).toHaveClass(/playing/);
+  await expect(card(0)).not.toHaveClass(/playing/);
+  await expect(card(1).locator('.demo-dirs')).toContainText('diagonal');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  await expect(card(3)).toHaveClass(/playing/);
+  await expect(card(3).locator('.countdown span')).toHaveCount(8);
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.reload();
+  await page.click((await step(page)) === 'welcome' ? '#introStart' : '#stepBack');
+  await expect(card(0)).toHaveClass(/playing/);
+  expect(await running(0)).toBe(0);
+  await expect(card(0).locator('.demo-landed')).toHaveCSS('opacity', '1');
+  await expect(card(0).locator('.demo-ghost')).toHaveCSS('opacity', '0');
+});

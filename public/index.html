@@ -73,12 +73,19 @@
                   >
                     <div class="rule-emoji" aria-hidden="true">✏️</div>
                     <h2 class="step-title">Por turnos, pon una O o una S</h2>
-                    <div class="demo-row">
-                      <span class="demo-tile">O</span><span class="demo-tile empty"></span
-                      ><span class="demo-tile pop">S</span>
+                    <div class="demo demo-place" aria-hidden="true">
+                      <div class="demo-row">
+                        <span class="demo-tile">O</span
+                        ><span class="demo-tile target"><span class="demo-landed">S</span></span
+                        ><span class="demo-tile empty"></span>
+                      </div>
+                      <div class="demo-picker">
+                        <span class="demo-pick">O</span><span class="demo-pick selected">S</span>
+                      </div>
+                      <span class="demo-ghost">S<span class="demo-hand">👆</span></span>
                     </div>
                     <p class="step-lead">
-                      Elige tu letra abajo y tócala en cualquier casilla vacía del tablero.
+                      Elige tu letra abajo y arrástrala hasta una casilla vacía del tablero (o tócala).
                     </p>
                   </div>
                   <div
@@ -90,9 +97,19 @@
                   >
                     <div class="rule-emoji" aria-hidden="true">⭐</div>
                     <h2 class="step-title">Forma O-S-O y suma un punto</h2>
-                    <div class="demo-row win">
-                      <span class="demo-tile">O</span><span class="demo-tile">S</span
-                      ><span class="demo-tile">O</span>
+                    <div class="demo demo-score" aria-hidden="true">
+                      <div class="demo-row win">
+                        <span class="demo-tile">O</span><span class="demo-tile">S</span
+                        ><span class="demo-tile target"><span class="demo-landed">O</span></span>
+                      </div>
+                      <span class="demo-plus">+1</span>
+                      <div class="demo-picker">
+                        <span class="demo-pick selected">O</span><span class="demo-pick">S</span>
+                      </div>
+                      <span class="demo-ghost">O<span class="demo-hand">👆</span></span>
+                    </div>
+                    <div class="demo-dirs" aria-hidden="true">
+                      <span>↔ horizontal</span><span>↕ vertical</span><span>⤡ diagonal</span>
                     </div>
                     <p class="step-lead">
                       En horizontal, vertical o diagonal. Si consigues un OSO, ganas 10 segundos y vuelves a
@@ -138,7 +155,10 @@
                   >
                     <div class="rule-emoji" aria-hidden="true">⏱️</div>
                     <h2 class="step-title">Vigila tu reloj</h2>
-                    <div class="demo-clock">2:00</div>
+                    <div class="demo-clock countdown" aria-hidden="true">
+                      <span>0:07</span><span>0:06</span><span>0:05</span><span>0:04</span><span>0:03</span
+                      ><span>0:02</span><span>0:01</span><span>0:00</span>
+                    </div>
                     <p class="step-lead">
                       Cada jugador tiene su propio tiempo. Si se te acaba, pierdes. Cuando el tablero se
                       llena, gana quien tenga más puntos.
