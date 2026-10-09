@@ -116,6 +116,10 @@ select:focus-visible {
 }
 
 /* CREDITS (setup screens only) */
+.credits-version {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
 .credits {
   position: fixed;
   right: 0;

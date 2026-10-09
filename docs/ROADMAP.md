@@ -65,9 +65,15 @@ Partidas de cuatro en el mismo dispositivo, por turnos.
 
 #### Evolución: equipos con 4 jugadores
 
-Paso posterior al modo 4 jugadores: los cuatro pueden formar equipos (por ejemplo 2 contra 2) y se
-suman los puntos de cada equipo. A decidir: cómo se eligen los equipos, si el turno alterna entre
-equipos y si los compañeros comparten extras.
+Paso posterior al modo 4 jugadores (sería la versión 3.0.0). Al preparar una partida de cuatro se
+elige cómo competir:
+
+- **Cada uno por su cuenta:** todos contra todos, como en el modo 4 jugadores.
+- **Por equipos:** 2 contra 2; se suman los puntos de cada equipo y gana el equipo con más puntos.
+- **Nombre del equipo:** opcional. Por defecto «Equipo 1» contra «Equipo 2», o el nombre que le
+  pongan los jugadores.
+- **A decidir:** cómo se eligen los compañeros, si el turno alterna entre equipos y si los
+  compañeros comparten extras.
 
 ### Hall of fame
 

@@ -1,11 +1,13 @@
 import * as Engine from './engine.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
 import { THEMES, themeOf, mapAvatars } from './themes.js';
+import { VERSION } from './version.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
   const MACHINE_DELAY = 650;
   const q = (id) => document.getElementById(id);
+  q('appVersion').textContent = `v${VERSION}`;
 
   const setup = q('setupScreen'),
     game = q('gameScreen'),
