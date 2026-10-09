@@ -2181,3 +2181,157 @@ body.sea-theme::before {
     opacity: 0.7;
   }
 }
+
+/* THEMES (skins): only colours, background and decoration change */
+.theme-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 6;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 22px;
+  line-height: 1;
+}
+.theme-menu {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  z-index: 7;
+  display: grid;
+  gap: 6px;
+  min-width: 190px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: rgba(30, 18, 80, 0.97);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+.theme-option {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+}
+.theme-option[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.theme-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition: opacity 1.4s ease;
+}
+.theme-decor span {
+  position: absolute;
+  opacity: 0.28;
+  animation: decorFall linear infinite;
+}
+body.sea-theme .theme-decor {
+  opacity: 0;
+}
+@keyframes decorFall {
+  from {
+    transform: translateY(-60px) rotate(0deg);
+  }
+  to {
+    transform: translateY(110vh) rotate(200deg);
+  }
+}
+@keyframes decorRise {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(24px, -55vh);
+  }
+  100% {
+    transform: translate(0, -115vh);
+  }
+}
+@keyframes snowfall {
+  to {
+    background-position: 0 220px;
+  }
+}
+
+body[data-theme='halloween'] {
+  --accent: #ff9f1c;
+  --accent2: #ff6a00;
+  --muted: #d9bce6;
+  background:
+    radial-gradient(1100px 700px at 10% -10%, #6d1f8f 0, transparent 60%),
+    radial-gradient(900px 600px at 110% 110%, #a8410c 0, transparent 55%),
+    linear-gradient(160deg, #0f0619, #26093a 55%, #3a1206);
+  background-attachment: fixed;
+}
+body[data-theme='halloween'] .board-shell {
+  background: linear-gradient(180deg, #2e1240, #160822);
+}
+body[data-theme='halloween'] .theme-decor span {
+  top: auto;
+  bottom: -60px;
+  animation-name: decorRise;
+}
+body[data-theme='halloween'] .theme-decor::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 60px;
+  opacity: 0.85;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 60'%3E%3Cpath d='M0 0H120V10C110 10 108 14 106 30C105 38 98 38 97 30C95 16 90 10 80 10C70 10 68 22 66 44C65 52 58 52 57 44C55 22 50 10 40 10C30 10 28 16 26 24C25 30 19 30 18 24C16 14 10 10 0 10Z' fill='%23a3121f'/%3E%3C/svg%3E")
+    0 0 / 240px 60px repeat-x;
+}
+
+body[data-theme='christmas'] {
+  --muted: #c4d8f0;
+  background:
+    radial-gradient(1100px 700px at 10% -10%, #1f5fa8 0, transparent 60%),
+    radial-gradient(900px 600px at 110% 110%, #17704a 0, transparent 55%),
+    linear-gradient(160deg, #06152c, #0c2a52 55%, #123e66);
+  background-attachment: fixed;
+}
+body[data-theme='christmas']::before {
+  opacity: 0.8;
+  animation: snowfall 14s linear infinite;
+}
+body[data-theme='christmas'] .board-shell {
+  background: linear-gradient(180deg, #123a6b, #0a1f3d);
+}
+body[data-theme='christmas'] .theme-decor span {
+  top: -60px;
+}
+body[data-theme='christmas'] .theme-decor::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 12vh;
+  opacity: 0.18;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0 60 Q150 20 300 55 T600 50 T900 60 T1200 45 V120 H0Z' fill='%23ffffff'/%3E%3C/svg%3E")
+    0 100% / 100% 100% no-repeat;
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-decor span,
+  body[data-theme='christmas']::before {
+    animation: none;
+  }
+  body[data-theme] .theme-decor span {
+    top: var(--y);
+    bottom: auto;
+  }
+}

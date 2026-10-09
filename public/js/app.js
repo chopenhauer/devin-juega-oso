@@ -1,5 +1,6 @@
 import * as Engine from './engine.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
+import { THEMES, themeOf, mapAvatars } from './themes.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
@@ -53,7 +54,7 @@ const { timeFor } = Engine;
     helpPaused = false;
 
   const avatarGrids = [...document.querySelectorAll('.avatars')];
-  const avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
+  let avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
   const press = (el, on) => {
     el.classList.toggle('selected', on);
     el.setAttribute('aria-pressed', String(on));
@@ -100,6 +101,82 @@ const { timeFor } = Engine;
   });
   syncAvatars();
 
+  // THEMES: chosen from the 🎨 button on the setup screens and remembered.
+  const THEME_KEY = 'oso.theme.v1';
+  const themeToggle = q('themeToggle'),
+    themeMenu = q('themeMenu'),
+    themeOptions = [...themeMenu.querySelectorAll('.theme-option')];
+  let theme = 'classic';
+  function renderDecor(list) {
+    q('themeDecor').replaceChildren(
+      ...Array.from({ length: list.length ? 16 : 0 }, (_, i) => {
+        const s = document.createElement('span');
+        s.textContent = list[i % list.length];
+        s.style.left = `${(i * 61) % 100}%`;
+        s.style.setProperty('--y', `${5 + ((i * 37) % 85)}%`);
+        s.style.fontSize = `${18 + ((i * 11) % 22)}px`;
+        s.style.animationDuration = `${16 + ((i * 5) % 12)}s`;
+        s.style.animationDelay = `${-((i * 7) % 24)}s`;
+        return s;
+      }),
+    );
+  }
+  function applyTheme(id, save = true) {
+    const next = THEMES[id] ? id : 'classic';
+    avatars = mapAvatars(avatars, themeOf(theme), themeOf(next));
+    theme = next;
+    const t = themeOf(theme);
+    avatarChoices = t.avatars;
+    avatarGrids.forEach((g) =>
+      g.querySelectorAll('.avatar-btn').forEach((b, i) => {
+        b.dataset.avatar = t.avatars[i];
+        b.textContent = t.avatars[i];
+      }),
+    );
+    document.body.dataset.theme = theme;
+    q('brandIcon').textContent = t.icon;
+    renderDecor(t.decor);
+    themeOptions.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === theme)));
+    syncAvatars();
+    if (!save) return;
+    try {
+      localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      /* ignore */
+    }
+  }
+  function toggleThemeMenu(open) {
+    themeMenu.classList.toggle('hidden', !open);
+    themeToggle.setAttribute('aria-expanded', String(open));
+    if (open) themeOptions.find((b) => b.dataset.theme === theme)?.focus();
+  }
+  themeToggle.addEventListener('click', () => toggleThemeMenu(themeMenu.classList.contains('hidden')));
+  themeOptions.forEach((b) =>
+    b.addEventListener('click', () => {
+      applyTheme(b.dataset.theme);
+      toggleThemeMenu(false);
+      themeToggle.focus();
+    }),
+  );
+  document.addEventListener('click', (e) => {
+    if (
+      !themeMenu.classList.contains('hidden') &&
+      !themeMenu.contains(e.target) &&
+      !themeToggle.contains(e.target)
+    )
+      toggleThemeMenu(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || themeMenu.classList.contains('hidden')) return;
+    toggleThemeMenu(false);
+    themeToggle.focus();
+  });
+  try {
+    applyTheme(localStorage.getItem(THEME_KEY) ?? 'classic', false);
+  } catch {
+    applyTheme('classic', false);
+  }
+
   function setGameMode(mode) {
     gameMode = mode;
     press(q('modeTwo'), mode === 'two');
@@ -121,7 +198,8 @@ const { timeFor } = Engine;
       namesIn[1].disabled = false;
       p2Avatars.style.opacity = '';
       p2Avatars.style.pointerEvents = '';
-      if (avatars[1] === '🤖') avatars[1] = avatars[0] === '🐼' ? firstFreeAvatar('🐼') : '🐼';
+      if (avatars[1] === '🤖')
+        avatars[1] = avatars[0] === avatarChoices[1] ? firstFreeAvatar(avatarChoices[1]) : avatarChoices[1];
       previews[1].textContent = avatars[1];
     }
     syncAvatars();
@@ -770,7 +848,7 @@ const { timeFor } = Engine;
   function confetti() {
     const h = q('confetti');
     h.innerHTML = '';
-    const cs = ['#38b6ff', '#ff5d8f', '#ffd23f', '#7dffb2', '#b388ff', '#ff9f1c'];
+    const cs = themeOf(theme).confetti;
 
     for (let i = 0; i < 90; i++) {
       const x = document.createElement('i');

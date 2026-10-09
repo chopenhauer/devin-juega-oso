@@ -13,13 +13,30 @@
     <script type="module" src="/js/onboarding.js"></script>
   </head>
   <body>
+    <div id="themeDecor" class="theme-decor" aria-hidden="true"></div>
     <main class="app">
       <h1 class="visually-hidden">OSO · el juego de Julia</h1>
       <section class="panel">
         <div id="setupScreen" class="setup">
+          <button
+            id="themeToggle"
+            class="theme-toggle"
+            type="button"
+            aria-label="Cambiar tema"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="themeMenu"
+          >
+            🎨
+          </button>
+          <div id="themeMenu" class="theme-menu hidden" role="group" aria-label="Tema">
+            <button type="button" class="theme-option" data-theme="classic">🐻 Clásico</button>
+            <button type="button" class="theme-option" data-theme="halloween">🎃 Halloween</button>
+            <button type="button" class="theme-option" data-theme="christmas">⛄ Navidad</button>
+          </div>
           <div id="setupSteps" class="setup-steps">
             <div class="step" data-step="welcome">
-              <div class="brand-bear" aria-hidden="true">🐻</div>
+              <div id="brandIcon" class="brand-bear" aria-hidden="true">🐻</div>
               <div class="brand" aria-label="OSO"><span>O</span><span>S</span><span>O</span></div>
               <div class="tagline">Conecta · forma · gana</div>
               <p class="step-lead">

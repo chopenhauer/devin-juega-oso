@@ -81,29 +81,38 @@ Un salón de la fama con las mejores partidas y rachas.
 ### Temas de temporada (idea de Julia)
 
 Que el juego cambie de skin según la época del año, para que se sienta distinto en cada fiesta.
+Un tema cambia los avatares, el icono de portada, los colores, el fondo y el confeti de victoria;
+las reglas no cambian. Se elige con el botón 🎨 arriba a la derecha de la pantalla de inicio y se
+recuerda en el dispositivo (`oso.theme.v1`). Código: `public/js/themes.js`.
 
-| Tema                | Fechas (orientativas) | Ideas                                                                                                             |
-| ------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Halloween           | 15 oct – 2 nov        | Osos disfrazados (bruja, vampiro, fantasma), calabazas, murciélagos y telarañas; fondo naranja y morado.          |
-| Navidad             | 1 dic – 6 ene         | Nieve cayendo, gorro de Papá Noel para los osos, luces y regalos bajo el tablero; victoria con lluvia de regalos. |
-| Año Nuevo           | 31 dic – 1 ene        | Fuegos artificiales al ganar, serpentinas y las 12 uvas como cuenta atrás en el reloj.                            |
-| San Valentín        | 7 – 14 feb            | Corazones flotando, fichas en rosa y rojo, osos con lazos.                                                        |
-| Carnaval            | Semana de carnaval    | Osos con antifaz y confeti de colores.                                                                            |
-| Primavera           | Mar – may             | Flores, mariposas y tonos verdes suaves.                                                                          |
-| Verano              | Jul – ago             | Escenario de playa: arena, sol, olas y osos con gafas de sol y flotador.                                          |
-| Otoño               | Sep – nov             | Hojas cayendo y tonos ocres.                                                                                      |
-| Cumpleaños de Julia | Su fecha              | Tarta, globos y confeti extra (la fecha se guardaría solo en el dispositivo).                                     |
+**Ya hechos (v1):**
 
-- **Cosas temáticas:** además del fondo y los colores, pequeños elementos por tema (una calabaza en
-  Halloween, regalos en Navidad, una sombrilla en verano), por ejemplo en las fichas, el tablero o
-  la pantalla de victoria.
-- **Cómo se activa:** automáticamente según la fecha del dispositivo, con un ajuste para elegir el
-  tema a mano o volver al clásico.
-- **Técnica:** una clase en `body` por tema (como `sea-theme` del SOS) con variables CSS y dibujos
-  SVG o emoji propios, sin recursos externos para respetar la CSP. Animaciones suaves y quietas
-  con «reducir movimiento».
-- **A decidir:** si las cosas temáticas son solo decoración o cambian algo de la partida, y cómo
-  convive cada tema con el tema marino del extra OSO→SOS.
+| Tema         | Avatares                            | Fondo y decoración                                                          |
+| ------------ | ----------------------------------- | --------------------------------------------------------------------------- |
+| 🎃 Halloween | 🎃 🧛 👻 🧙 🦇 💀 🕷️ 🧟 🐈‍⬛ 🦉 🍬 🩸 | Noche morada y naranja, gotas de sangre arriba, murciélagos y calabazas.    |
+| ⛄ Navidad   | ⛄ 🎅 🦌 🐧 🥕 ☕ 🎁 ❄️ 🎄 🍪 🧦 🐻‍❄️ | Noche azul con nieve cayendo, copos, regalos, café caliente y suelo nevado. |
+
+**Por hacer:**
+
+| Tema                | Fechas (orientativas) | Avatares e ideas                                                                           |
+| ------------------- | --------------------- | ------------------------------------------------------------------------------------------ |
+| Año Nuevo           | 31 dic – 1 ene        | 🎆 🥂 🍇 🕛 🎉 🥳; fuegos artificiales al ganar y las 12 uvas como cuenta atrás del reloj. |
+| Reyes Magos         | 5 – 6 ene             | 👑 🐪 🎁 ⭐ 🍰; roscón y estrella de Oriente.                                              |
+| San Valentín        | 7 – 14 feb            | 💘 🌹 💌 🧸 🍫 🦢; corazones flotando y fichas en rosa y rojo.                             |
+| Carnaval            | Semana de carnaval    | 🎭 🤡 🦸 🧚 🦹 🎊; antifaces y confeti.                                                    |
+| Pascua / primavera  | Mar – may             | 🐰 🐣 🥚 🌷 🦋 🐝; flores, mariposas y tonos verdes suaves.                                |
+| Verano en la playa  | Jul – ago             | 🏖️ 🦀 🐠 🐬 🍉 🍦 🕶️; arena, sol, sombrilla y osos con gafas.                              |
+| Otoño               | Sep – nov             | 🍂 🦔 🐿️ 🍄 🌰 🦉; hojas cayendo y tonos ocres.                                            |
+| Espacio             | Todo el año           | 🚀 👽 🪐 🛸 👩‍🚀 🌙; estrellas fugaces y planetas.                                           |
+| Dinosaurios         | Todo el año           | 🦖 🦕 🌋 🥚 🌿 🦴; volcán y selva prehistórica.                                            |
+| Piratas             | Todo el año           | 🏴‍☠️ 🦜 💰 🗺️ ⚓ 🦈; mapa del tesoro (ojo: no mezclar con el tema marino del SOS).           |
+| Cumpleaños de Julia | Su fecha              | 🎂 🎈 🎁 🥳; tarta, globos y confeti extra (la fecha solo en el dispositivo).              |
+
+- **Pendiente:** activar el tema solo según la fecha del dispositivo (con el selector para
+  volver al clásico), fichas y tablero con decoración del tema, y que el tema marino del SOS
+  sustituya o se mezcle con el de temporada (hoy lo sustituye mientras dura).
+- **Técnica:** `data-theme` en `body` con variables CSS, dibujos SVG en línea y emoji, sin recursos
+  externos para respetar la CSP. Animaciones suaves y quietas con «reducir movimiento».
 
 ### Regalos y extras desbloqueables
 
