@@ -13,6 +13,7 @@ const slides = [...$('ruleSlides').children];
 const dots = [...setup.querySelectorAll('.carousel-dots .dot')];
 const nameInputs = [1, 2, 3, 4].map((n) => $(`nickname${n}`));
 const isSolo = () => $('modeSolo').classList.contains('selected');
+const fourLocked = () => $('modeFour').hasAttribute('data-locked');
 const isFour = () => $('modeFour').classList.contains('selected');
 const setSetupMode = (mode) => {
   setup.classList.toggle('solo-setup', mode === 'solo');
@@ -55,7 +56,7 @@ function applyPrefs(prefs) {
     if (typeof name === 'string') nameInputs[player].value = name.slice(0, 16);
   });
   if (prefs.mode === 'solo') $('modeSolo').click();
-  else if (prefs.mode === 'four' && !$('modeFour').disabled) $('modeFour').click();
+  else if (prefs.mode === 'four' && !fourLocked()) $('modeFour').click();
   if (prefs.difficulty === 'hard') $('difficultyHard').click();
   if (VIEWS.includes(prefs.view)) setView(prefs.view);
   const size = $('sizeSelect');
@@ -93,7 +94,7 @@ function equalizeHeight() {
   if (!setup.offsetParent) return;
   const mode = isSolo() ? 'solo' : isFour() ? 'four' : 'two';
   stepsEl.style.minHeight = '';
-  const modes = $('modeFour').disabled ? ['two', 'solo'] : ['two', 'solo', 'four'];
+  const modes = fourLocked() ? ['two', 'solo'] : ['two', 'solo', 'four'];
   const height = Math.max(
     ...modes.map((m) => {
       setSetupMode(m);
@@ -117,8 +118,9 @@ function show(step, slideIndex = 0) {
   setup.dataset.step = step;
   setSetupMode(isSolo() ? 'solo' : isFour() ? 'four' : 'two');
   $('stepBack').classList.toggle('invisible', step === 'welcome');
-  $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '← Atrás';
-  $('stepNext').classList.toggle('hidden', NO_NEXT.has(step));
+  $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '←';
+  $('stepBack').setAttribute('aria-label', step === 'mode' ? 'Cómo se juega' : 'Atrás');
+  $('stepNext').classList.toggle('invisible', NO_NEXT.has(step));
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
   equalizeHeight();
@@ -139,7 +141,7 @@ function next() {
 function back() {
   const step = setup.dataset.step;
   if (step === 'rules' && slide > 0) setSlide(slide - 1);
-  else if (step === 'mode') show('welcome');
+  else if (step === 'mode') show('rules');
   else show(neighbour(step, -1));
 }
 
@@ -161,6 +163,7 @@ $('introSkip').addEventListener('click', () => show('mode'));
 $('modeTwo').addEventListener('click', () => setSetupMode('two'));
 $('modeSolo').addEventListener('click', () => setSetupMode('solo'));
 $('modeFour').addEventListener('click', () => {
+  if (fourLocked()) return;
   setSetupMode('four');
   equalizeHeight();
 });

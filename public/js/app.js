@@ -371,14 +371,17 @@ const { timeFor } = Engine;
   }
   q('modeTwo').addEventListener('click', () => setGameMode('two'));
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
-  q('modeFour').addEventListener('click', () => setGameMode('four'));
+  q('modeFour').addEventListener('click', () => {
+    if (roomForFour.matches) setGameMode('four');
+    else q('fourDialog').showModal();
+  });
   // 4 players need a tablet or a computer: on phones the option stays disabled.
   const roomForFour = matchMedia('(min-width: 700px) and (min-height: 600px)');
   function syncFourAvailability() {
     const ok = roomForFour.matches;
-    q('modeFour').disabled = !ok;
+    if (ok) q('modeFour').removeAttribute('data-locked');
+    else q('modeFour').setAttribute('data-locked', 'true');
     q('modeFour').classList.toggle('soon', !ok);
-    q('modeFour').querySelector('.soon-tag').hidden = ok;
     if (!ok && gameMode === 'four' && game.classList.contains('hidden')) q('modeTwo').click();
   }
   roomForFour.addEventListener('change', syncFourAvailability);
