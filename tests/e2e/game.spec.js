@@ -45,7 +45,7 @@ test('names fall back to placeholders and the clock runs (B01, T4.1)', async ({ 
 
 test('help pauses the clock during a game', async ({ page }) => {
   await startGame(page);
-  await page.click('#menuTab');
+  await page.click('#menu1');
   await page.click('#gameHelp');
   const paused = await page.locator('#timer1').textContent();
   await page.waitForTimeout(1500);
@@ -80,7 +80,7 @@ test('B04: leaving during the SOS replay does not touch the next game', async ({
   for (let i = 0; i < 6; i++) await cell(page, i).click({ force: true });
   await page.click('#sos1', { force: true });
   await page.waitForTimeout(1200);
-  await page.click('#menuTab');
+  await page.click('#menu1');
   await page.click('#newGame');
   await expect(page.locator('body')).not.toHaveClass(/sea-theme/);
   await startGame(page);

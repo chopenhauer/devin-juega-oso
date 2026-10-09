@@ -262,7 +262,19 @@
                 </div>
               </div>
             </div>
-            <div></div>
+            <div class="panel-menu">
+              <button
+                id="menu2"
+                class="menu-btn"
+                type="button"
+                aria-label="Abrir menú"
+                aria-haspopup="dialog"
+                aria-controls="sidebar"
+                aria-expanded="false"
+              >
+                ☰
+              </button>
+            </div>
             <div class="controls-row">
               <div class="letter-choice">
                 <button class="letter" data-player="1" data-letter="O">
@@ -303,7 +315,19 @@
                 </div>
               </div>
             </div>
-            <div></div>
+            <div class="panel-menu">
+              <button
+                id="menu1"
+                class="menu-btn"
+                type="button"
+                aria-label="Abrir menú"
+                aria-haspopup="dialog"
+                aria-controls="sidebar"
+                aria-expanded="false"
+              >
+                ☰
+              </button>
+            </div>
             <div class="controls-row">
               <div class="letter-choice">
                 <button class="letter" data-player="0" data-letter="O">
@@ -325,14 +349,14 @@
             </div>
           </div>
 
-          <button id="menuTab" class="menu-tab" aria-label="Abrir menú">☰</button>
-          <aside id="sidebar" class="sidebar">
-            <h2>Partida</h2>
+          <div id="menuScrim" class="menu-scrim"></div>
+          <div id="sidebar" class="sidebar" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+            <h2 id="menuTitle">Partida</h2>
             <button id="gameHelp">❓ Reglas / Ayuda</button>
             <button id="restartMatch">Reiniciar tablero</button>
             <button id="newGame">Nueva partida</button>
             <button id="closeMenu">Cerrar</button>
-          </aside>
+          </div>
         </div>
 
         <div

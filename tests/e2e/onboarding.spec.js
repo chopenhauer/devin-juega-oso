@@ -121,7 +121,7 @@ test('back from the game menu returns to the mode step', async ({ page }) => {
   await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#startGame');
-  await page.click('#menuTab');
+  await page.click('#menu1');
   await page.click('#newGame');
   expect(await step(page)).toBe('mode');
 });
@@ -159,7 +159,7 @@ test('two players choose the orientation; solo skips that step', async ({ page }
   await page.click('#startGame');
   expect(await rotated(page, '#side2')).toBe(true);
 
-  await page.click('#menuTab');
+  await page.click('#menu1');
   await page.click('#newGame');
   await page.click('#modeSolo');
   await page.click('#stepNext');

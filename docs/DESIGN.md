@@ -45,5 +45,5 @@ Arreglado: falta de `h1`, créditos fuera de una región (`<footer>`), selector 
 3. **Tablero con teclado:** moverse con las flechas por el tablero (patrón _grid_ con un solo tabulador), como en los juegos de tablero web accesibles.
 4. **OSOs sin depender del color:** añadir a los OSOs de cada jugador un borde o patrón distinto, para jugadores daltónicos.
 5. **Sonido y vibración opcionales:** un sonido corto al poner una letra y al puntuar, con un interruptor (como Wordle o Duolingo). Va con T4.4.
-6. **Menú lateral como diálogo:** encerrar el foco dentro del menú, cerrarlo con Escape y devolver el foco a ☰.
+6. ~~**Menú lateral como diálogo**~~ hecho: cada panel de jugador tiene su ☰; el menú se abre girado hacia quien lo pulsa, encierra el foco, se cierra con Escape o tocando fuera y devuelve el foco a ☰.
 7. **Escritorio:** hecho en la partida con T4.2 (tablero grande y paneles a los lados); el panel de configuración sigue dejando espacio vacío.

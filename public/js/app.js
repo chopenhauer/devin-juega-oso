@@ -138,7 +138,7 @@ const { timeFor } = Engine;
     press(q('difficultyEasy'), false);
   });
   function openHelp() {
-    q('sidebar').classList.remove('open');
+    closeMenu(false);
     q('helpModal').classList.remove('hidden');
     if (game.classList.contains('hidden') || over || replaying || helpPaused) return;
     if (settle()) return;
@@ -757,18 +757,55 @@ const { timeFor } = Engine;
     reset();
   });
 
-  q('menuTab').addEventListener('click', () => q('sidebar').classList.toggle('open'));
-  q('closeMenu').addEventListener('click', () => q('sidebar').classList.remove('open'));
+  const sidebar = q('sidebar'),
+    menuScrim = q('menuScrim'),
+    menuBtns = [q('menu1'), q('menu2')];
+  let menuOpener = null;
+  const panelAngle = (panel) => {
+    const t = getComputedStyle(panel).transform;
+    if (!t || t === 'none') return 0;
+    const m = new DOMMatrixReadOnly(t);
+    return Math.round(Math.atan2(m.b, m.a) / (Math.PI / 2)) * 90;
+  };
+  function openMenu(btn) {
+    menuOpener = btn;
+    sidebar.style.setProperty('--menu-rot', `${panelAngle(btn.closest('.player-panel'))}deg`);
+    sidebar.classList.add('open');
+    menuScrim.classList.add('open');
+    menuBtns.forEach((b) => b.setAttribute('aria-expanded', String(b === btn)));
+    requestAnimationFrame(() => sidebar.querySelector('button').focus());
+  }
+  function closeMenu(restoreFocus = true) {
+    if (!sidebar.classList.contains('open')) return;
+    sidebar.classList.remove('open');
+    menuScrim.classList.remove('open');
+    menuBtns.forEach((b) => b.setAttribute('aria-expanded', 'false'));
+    if (restoreFocus) menuOpener?.focus();
+    menuOpener = null;
+  }
+  menuBtns.forEach((b) => b.addEventListener('click', () => openMenu(b)));
+  menuScrim.addEventListener('click', () => closeMenu());
+  q('closeMenu').addEventListener('click', () => closeMenu());
+  document.addEventListener('keydown', (e) => {
+    if (!sidebar.classList.contains('open')) return;
+    if (e.key === 'Escape') closeMenu();
+    if (e.key !== 'Tab') return;
+    const items = [...sidebar.querySelectorAll('button')];
+    const i = items.indexOf(document.activeElement);
+    const next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i + 1) % items.length;
+    e.preventDefault();
+    items[next].focus();
+  });
 
   q('restartMatch').addEventListener('click', () => {
-    q('sidebar').classList.remove('open');
+    closeMenu(false);
     reset();
   });
 
   q('newGame').addEventListener('click', () => {
     stopGame();
     over = true;
-    q('sidebar').classList.remove('open');
+    closeMenu(false);
     game.classList.add('hidden');
     setup.classList.remove('hidden');
     setSeaTheme(false);
