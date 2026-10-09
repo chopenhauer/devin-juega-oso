@@ -2656,20 +2656,29 @@ body[data-theme='christmas'] .theme-decor::after {
   grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(150px, 210px);
   grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    '. top .'
+    'top top top'
     'left board right'
-    '. bottom .';
+    'bottom bottom bottom';
+  --side-w: clamp(400px, calc(100dvh - 300px), 560px);
   gap: 8px 14px;
   padding-right: 0;
 }
 .game.four #side1 {
   grid-area: bottom;
+  justify-self: center;
+  width: min(100%, 720px);
+  margin-inline: 0;
+  transform: none;
 }
 .game.four #side2 {
   grid-area: left;
 }
 .game.four #side3 {
   grid-area: top;
+  justify-self: center;
+  width: min(100%, 720px);
+  margin-inline: 0;
+  transform: none;
 }
 .game.four #side4 {
   grid-area: right;
@@ -2714,9 +2723,15 @@ body[data-theme='christmas'] .theme-decor::after {
 .game.four:not(.same-view) #side3 {
   transform: rotate(180deg);
 }
+.game.four:not(.same-view) {
+  grid-template-columns: 96px minmax(0, 1fr) 96px;
+}
+.game.four:not(.same-view) .player-panel .controls-row {
+  grid-template-columns: auto auto;
+}
 .game.four:not(.same-view) :is(#side2, #side4) {
-  width: 380px;
-  margin-inline: calc((100% - 380px) / 2);
+  width: var(--side-w);
+  margin-inline: calc((100% - var(--side-w)) / 2);
 }
 .game.four:not(.same-view) #side2 {
   transform: rotate(90deg);
