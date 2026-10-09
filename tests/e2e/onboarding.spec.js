@@ -41,11 +41,11 @@ test('first visit walks through the intro carousel, then remembers choices', asy
   }
   expect(await step(page)).toBe('mode');
   await page.click('#modeSolo');
-  await page.click('#difficultyHard');
   heights.push(await panelHeight(page));
   await page.click('#stepNext');
   expect(await step(page)).toBe('players');
   await expect(page.locator('#nickname2')).toBeHidden();
+  await page.click('#difficultyHard');
   await page.fill('#nickname1', 'Julia');
   await avatar(page, 0, '🦊').click();
   heights.push(await panelHeight(page));
@@ -69,9 +69,7 @@ test('first visit walks through the intro carousel, then remembers choices', asy
   await expect(page.locator('#preview1')).toHaveText('🦊');
   await expect(page.locator('#sizeSelect')).toHaveValue('6');
 
-  await page.click('#replayIntro');
-  expect(await step(page)).toBe('rules');
-  await expect(setupScreen(page)).toHaveAttribute('data-slide', '0');
+  await expect(page.locator('#stepBack')).toHaveText('👀 Cómo se juega');
   await page.click('#stepBack');
   expect(await step(page)).toBe('welcome');
 });
@@ -183,4 +181,34 @@ test('credits show on the setup screens and hide during the game', async ({ page
   for (let i = 0; i < 3; i++) await page.click('#stepNext');
   await page.click('#startGame');
   await expect(credits).toBeHidden();
+});
+
+test('the mode step has the OSO header, a ❓ rules button and no progress bar', async ({ page }) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  const mode = page.locator('.step[data-step="mode"]');
+  await expect(mode.locator('.brand span')).toHaveText(['O', 'S', 'O']);
+  await expect(page.locator('[role="progressbar"]')).toHaveCount(0);
+  await expect(page.locator('#stepNext')).toBeVisible();
+  await page.click('#helpToggle');
+  await expect(page.locator('#helpModal')).toBeVisible();
+  await page.click('#helpClose');
+});
+
+test('against the machine, the difficulty replaces the avatars and sets the robot mood', async ({ page }) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#modeSolo');
+  await page.click('#stepNext');
+  const robot = page.locator('#preview2');
+  await expect(robot).toHaveText('🤖');
+  await expect(robot).toHaveAttribute('data-mood', 'easy');
+  await expect(page.locator('.avatars[data-player="1"]')).toBeHidden();
+  await expect(page.locator('#difficultyEasy')).toBeVisible();
+  await page.click('#difficultyHard');
+  await expect(robot).toHaveAttribute('data-mood', 'hard');
+  await page.click('#stepNext');
+  await page.click('#startGame');
+  await expect(page.locator('#avatar2')).toHaveAttribute('data-mood', 'hard');
+  await expect(page.locator('#avatar2')).toHaveClass(/robot/);
 });

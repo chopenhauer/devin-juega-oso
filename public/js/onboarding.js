@@ -20,7 +20,6 @@ const defaultView = () => (matchMedia('(min-width: 1024px) and (pointer: fine)')
 const currentView = () => viewButtons.find((b) => b.getAttribute('aria-pressed') === 'true').dataset.view;
 // The orientation step only applies to two players.
 const isVisible = (step) => step !== 'view' || !isSolo();
-const LAST_POSITION = STEPS.length - 2 + slides.length;
 let slide = 0;
 
 function loadPrefs() {
@@ -81,13 +80,10 @@ function summary() {
 }
 
 // Every step shares one grid cell, so the panel keeps the height of the tallest
-// step. Measured in both modes with the difficulty picker visible.
+// step. Measured in both modes.
 function equalizeHeight() {
   if (!setup.offsetParent) return;
   const solo = setup.classList.contains('solo-setup');
-  const difficulty = $('difficultyWrap');
-  const difficultyHidden = difficulty.classList.contains('hidden');
-  difficulty.classList.remove('hidden');
   stepsEl.style.minHeight = '';
   const height = Math.max(
     ...[false, true].map((asSolo) => {
@@ -96,19 +92,7 @@ function equalizeHeight() {
     }),
   );
   setup.classList.toggle('solo-setup', solo);
-  difficulty.classList.toggle('hidden', difficultyHidden);
   stepsEl.style.minHeight = `${height}px`;
-}
-
-function position() {
-  const index = STEPS.indexOf(setup.dataset.step);
-  return index <= 1 ? index + (index === 1 ? slide : 0) : index - 1 + slides.length;
-}
-
-function updateProgress() {
-  const percent = Math.round((position() / LAST_POSITION) * 100);
-  $('stepProgress').style.width = `${percent}%`;
-  $('stepProgress').parentElement.setAttribute('aria-valuenow', String(percent));
 }
 
 function setSlide(index) {
@@ -117,7 +101,6 @@ function setSlide(index) {
   slides.forEach((s, i) => s.setAttribute('aria-hidden', String(i !== slide)));
   dots.forEach((d, i) => d.setAttribute('aria-current', String(i === slide)));
   setup.dataset.slide = String(slide);
-  updateProgress();
 }
 
 function show(step, slideIndex = 0) {
@@ -125,10 +108,10 @@ function show(step, slideIndex = 0) {
   setup.dataset.step = step;
   setup.classList.toggle('solo-setup', isSolo());
   $('stepBack').classList.toggle('invisible', step === 'welcome');
+  $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '← Atrás';
   $('stepNext').classList.toggle('hidden', NO_NEXT.has(step));
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
-  updateProgress();
   equalizeHeight();
 }
 
@@ -147,7 +130,7 @@ function next() {
 function back() {
   const step = setup.dataset.step;
   if (step === 'rules' && slide > 0) setSlide(slide - 1);
-  else if (step === 'mode') show('rules', slides.length - 1);
+  else if (step === 'mode') show('welcome');
   else show(neighbour(step, -1));
 }
 
@@ -166,7 +149,6 @@ $('stepNext').addEventListener('click', next);
 $('stepBack').addEventListener('click', back);
 $('introStart').addEventListener('click', () => show('rules'));
 $('introSkip').addEventListener('click', () => show('mode'));
-$('replayIntro').addEventListener('click', () => show('rules'));
 $('modeTwo').addEventListener('click', () => setup.classList.remove('solo-setup'));
 $('modeSolo').addEventListener('click', () => setup.classList.add('solo-setup'));
 $('sizeSelect').addEventListener('change', () => ($('setupSummary').textContent = summary()));

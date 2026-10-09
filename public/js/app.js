@@ -134,7 +134,7 @@ const { timeFor } = Engine;
       }),
     );
     document.body.dataset.theme = theme;
-    q('brandIcon').textContent = t.icon;
+    document.querySelectorAll('.brand-bear').forEach((e) => (e.textContent = t.icon));
     renderDecor(t.decor);
     themeOptions.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === theme)));
     syncAvatars();
@@ -206,10 +206,10 @@ const { timeFor } = Engine;
     gameMode = mode;
     press(q('modeTwo'), mode === 'two');
     press(q('modeSolo'), mode === 'solo');
-    q('difficultyWrap').classList.toggle('hidden', mode !== 'solo');
-
     const p2Config = namesIn[1].closest('.pconfig');
     const p2Avatars = p2Config.querySelector('.avatars');
+    p2Config.querySelector('.small-label').textContent = mode === 'solo' ? 'Máquina' : 'Jugador 2';
+    previews[1].classList.toggle('robot', mode === 'solo');
 
     if (mode === 'solo') {
       namesIn[1].value = 'Máquina';
@@ -231,16 +231,16 @@ const { timeFor } = Engine;
   }
   q('modeTwo').addEventListener('click', () => setGameMode('two'));
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
-  q('difficultyEasy').addEventListener('click', () => {
-    difficulty = 'easy';
-    press(q('difficultyEasy'), true);
-    press(q('difficultyHard'), false);
-  });
-  q('difficultyHard').addEventListener('click', () => {
-    difficulty = 'hard';
-    press(q('difficultyHard'), true);
-    press(q('difficultyEasy'), false);
-  });
+  // The robot looks grumpier or furious depending on the difficulty.
+  function setDifficulty(level) {
+    difficulty = level;
+    press(q('difficultyEasy'), level === 'easy');
+    press(q('difficultyHard'), level === 'hard');
+    previews[1].dataset.mood = level;
+  }
+  q('difficultyEasy').addEventListener('click', () => setDifficulty('easy'));
+  q('difficultyHard').addEventListener('click', () => setDifficulty('hard'));
+  setDifficulty(difficulty);
   function openHelp() {
     closeMenu(false);
     q('helpModal').classList.remove('hidden');
@@ -908,6 +908,8 @@ const { timeFor } = Engine;
 
     namesEl.forEach((e, i) => (e.textContent = names[i]));
     avatarsEl.forEach((e, i) => (e.textContent = avatars[i]));
+    avatarsEl[1].classList.toggle('robot', gameMode === 'solo');
+    avatarsEl[1].dataset.mood = difficulty;
     q('machineBadge').classList.toggle('hidden', gameMode !== 'solo');
 
     setup.classList.add('hidden');

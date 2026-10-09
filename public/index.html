@@ -134,21 +134,15 @@
               </div>
             </div>
             <div class="step inactive" data-step="mode">
+              <div class="mode-brand" aria-hidden="true">
+                <div class="brand-bear">🐻</div>
+                <div class="brand"><span>O</span><span>S</span><span>O</span></div>
+                <div class="tagline">Conecta · forma · gana</div>
+              </div>
               <h2 class="step-title">¿Cómo queréis jugar?</h2>
               <div class="mode-choice" role="group" aria-label="Modo de juego">
                 <button id="modeTwo" class="mode-btn selected" type="button">👥 2 jugadores</button>
                 <button id="modeSolo" class="mode-btn" type="button">🤖 1 jugador</button>
-              </div>
-              <div id="difficultyWrap" class="difficulty-wrap hidden">
-                <div class="difficulty-title">Dificultad de la máquina</div>
-                <div class="difficulty-choice">
-                  <button id="difficultyEasy" class="difficulty-btn selected" type="button">🙂 Fácil</button>
-                  <button id="difficultyHard" class="difficulty-btn" type="button">🧠 Difícil</button>
-                </div>
-              </div>
-              <div class="help-row">
-                <button id="replayIntro" class="help-toggle" type="button">👀 Cómo se juega</button>
-                <button id="helpToggle" class="help-toggle" type="button">❓ Reglas completas</button>
               </div>
             </div>
             <div class="step inactive" data-step="players">
@@ -206,6 +200,15 @@
                     <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
                     ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
                   </div>
+                  <div id="difficultyWrap" class="difficulty-wrap">
+                    <div class="difficulty-title">Dificultad</div>
+                    <div class="difficulty-choice" role="group" aria-label="Dificultad de la máquina">
+                      <button id="difficultyEasy" class="difficulty-btn selected" type="button">
+                        😠 Fácil
+                      </button>
+                      <button id="difficultyHard" class="difficulty-btn" type="button">🤬 Difícil</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -251,15 +254,15 @@
           </div>
           <nav class="wizard-nav" aria-label="Pasos">
             <button id="stepBack" class="secondary" type="button">← Atrás</button>
-            <div
-              class="progress"
-              role="progressbar"
-              aria-label="Progreso"
-              aria-valuemin="0"
-              aria-valuemax="100"
+            <button
+              id="helpToggle"
+              class="help-icon"
+              type="button"
+              aria-label="Reglas completas"
+              title="Reglas completas"
             >
-              <span id="stepProgress"></span>
-            </div>
+              ❓
+            </button>
             <button id="stepNext" class="primary" type="button">Siguiente →</button>
           </nav>
         </div>

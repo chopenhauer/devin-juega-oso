@@ -295,7 +295,6 @@ body:has(#gameScreen:not(.hidden)) .consent {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 .difficulty-wrap {
-  display: grid;
   gap: 8px;
   width: 100%;
   max-width: 440px;
@@ -1924,13 +1923,8 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   text-align: center;
   font-weight: 600;
 }
-.setup.solo-setup .players-setup .pconfig:nth-child(2) {
+.setup.solo-setup .pconfig:nth-child(2) :is(.nickname, .avatars) {
   display: none;
-}
-.setup.solo-setup .players-setup {
-  grid-template-columns: minmax(0, 1fr);
-  justify-self: center;
-  width: 50%;
 }
 .setup[data-step='welcome'] .wizard-nav {
   visibility: hidden;
@@ -1949,18 +1943,76 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   min-height: 46px;
   padding: 0 16px;
 }
-.progress {
-  height: 8px;
-  overflow: hidden;
-  border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.12);
+.help-icon {
+  justify-self: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--glass);
+  font-size: 22px;
+  line-height: 1;
 }
-.progress span {
-  display: block;
-  width: 0;
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), #ff5d8f);
-  transition: width 0.3s ease;
+.mode-brand {
+  display: grid;
+  gap: 10px;
+}
+.mode-brand .brand span {
+  width: 56px;
+  height: 60px;
+  font-size: 40px;
+  border-radius: var(--r-md);
+}
+.mode-brand .brand-bear {
+  font-size: 40px;
+}
+.difficulty-wrap {
+  display: none;
+  margin-top: 10px;
+}
+.setup.solo-setup .difficulty-wrap {
+  display: grid;
+}
+.pconfig .difficulty-choice {
+  grid-template-columns: 1fr;
+}
+.robot {
+  position: relative;
+}
+.robot::after {
+  content: '😠';
+  position: absolute;
+  right: -8px;
+  bottom: -6px;
+  font-size: 0.5em;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
+}
+.robot[data-mood='hard']::after {
+  content: '🤬';
+  font-size: 0.6em;
+}
+.setup .preview.robot[data-mood='hard'],
+.avatar.robot[data-mood='hard'] {
+  box-shadow:
+    0 0 0 4px #ff3b3b,
+    0 0 26px rgba(255, 40, 40, 0.8);
+  animation: robotRage 1.8s ease-in-out infinite;
+}
+@keyframes robotRage {
+  0%,
+  78%,
+  100% {
+    rotate: 0deg;
+  }
+  84% {
+    rotate: -9deg;
+  }
+  90% {
+    rotate: 9deg;
+  }
+  95% {
+    rotate: -4deg;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .step,
