@@ -17,6 +17,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.0.1] - 2026-10-09
+
+**Vista de 4 jugadores en el ordenador** ([e0bd3c6](https://github.com/chopenhauer/devin-juega-oso/commit/e0bd3c6), [6de8815](https://github.com/chopenhauer/devin-juega-oso/commit/6de8815))
+
+- En «Misma vista», el tablero queda a la izquierda y las 4 tarjetas de jugador se apilan a la
+  derecha, en orden de turno y sin scroll.
+- Los botones O y S de esa vista son cuadrados, como las casillas del tablero.
+- **Decisiones:** en tablet se abre por defecto «Enfrentados» y en el ordenador «Misma vista»; se
+  puede cambiar en el paso «Vista».
+
 ## [2.0.0] - 2026-10-09
 
 **Modo 4 jugadores** ([d38323b](https://github.com/chopenhauer/devin-juega-oso/commit/d38323b), [b9daeea](https://github.com/chopenhauer/devin-juega-oso/commit/b9daeea), [5b8a6c6](https://github.com/chopenhauer/devin-juega-oso/commit/5b8a6c6))
