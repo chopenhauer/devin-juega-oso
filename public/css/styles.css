@@ -267,7 +267,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
 }
 .mode-choice {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
   width: 100%;
   max-width: 440px;
@@ -288,6 +288,21 @@ body:has(#gameScreen:not(.hidden)) .consent {
   transition:
     background 0.2s,
     color 0.2s;
+}
+.mode-btn.soon {
+  display: grid;
+  place-content: center;
+  gap: 2px;
+  padding: 6px 4px;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.soon-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent, #ffb703);
 }
 .mode-btn.selected {
   background: linear-gradient(180deg, #fff, #e6e0ff);

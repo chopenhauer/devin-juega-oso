@@ -51,7 +51,7 @@ Partidas de cuatro en el mismo dispositivo, por turnos.
 - **Reglas:** el turno rota 1 → 2 → 3 → 4; formar OSO da punto y repites turno, igual que ahora.
   Cada jugador con su reloj y sus extras.
 - **Tablero:** con cuatro se llena antes; probablemente mínimo 6 × 6 y tiempo inicial ajustado.
-- **Configuración:** nuevo modo «4 jugadores» en el paso Modo; cuatro avatares exclusivos y cuatro
+- **Configuración:** el paso Modo ya muestra «4 jugadores · Próximamente», desactivado; cuatro avatares exclusivos y cuatro
   nombres (≤ 16 caracteres, por defecto «Jugador N»).
 - **Pantalla:** un panel por jugador; en tablet, uno en cada lado del dispositivo (vista
   enfrentada a 4 bandas). En móvil, marcador compacto con los cuatro y el panel del turno actual

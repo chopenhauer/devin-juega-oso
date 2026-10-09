@@ -188,6 +188,9 @@ test('the mode step has the OSO header, a ❓ rules button and no progress bar',
   await page.click('#introSkip');
   const mode = page.locator('.step[data-step="mode"]');
   await expect(mode.locator('.brand span')).toHaveText(['O', 'S', 'O']);
+  await expect(mode.locator('.mode-btn')).toHaveText([/1 jugador/, /2 jugadores/, /4 jugadores/]);
+  await expect(page.locator('#modeFour')).toBeDisabled();
+  await expect(page.locator('#modeFour')).toContainText('Próximamente');
   await expect(page.locator('[role="progressbar"]')).toHaveCount(0);
   await expect(page.locator('#stepNext')).toBeVisible();
   await page.click('#helpToggle');
