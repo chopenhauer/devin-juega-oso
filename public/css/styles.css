@@ -1459,7 +1459,7 @@ body.sea-theme::before {
   backdrop-filter: blur(6px);
 }
 /* The modal lives inside .app's stacking context, so hide the fixed chrome above it. */
-body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .consent) {
+body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu, .credits, .consent) {
   display: none;
 }
 .help-dialog {
@@ -2348,6 +2348,19 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   font-size: 22px;
   line-height: 1;
 }
+.sound-toggle {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: calc(max(12px, env(safe-area-inset-right)) + 54px);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 20px;
+  line-height: 1;
+}
 .theme-menu {
   position: fixed;
   top: calc(max(12px, env(safe-area-inset-top)) + 54px);
@@ -2440,6 +2453,7 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .theme-menu, .credits, .con
   }
 }
 body:has(#gameScreen:not(.hidden)) .theme-toggle,
+body:has(#gameScreen:not(.hidden)) .sound-toggle,
 body:has(#gameScreen:not(.hidden)) .theme-menu {
   display: none;
 }

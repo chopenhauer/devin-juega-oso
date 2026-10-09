@@ -2,6 +2,7 @@ import * as Engine from './engine.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
 import { THEMES, themeOf, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
+import { play, isMuted, setMuted } from './sound.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
@@ -123,6 +124,7 @@ const { timeFor } = Engine;
     themeOptions = () => [...themeMenu.querySelectorAll('.theme-option')];
   let theme = 'classic';
   let allThemes = false;
+  let lowWarned = new Set();
   const themeTaps = [];
   const SKIN_VARS = ['g1', 'g2', 'd1', 'd2', 'd3', 'b1', 'b2'];
   function paintSkin(t) {
@@ -239,12 +241,28 @@ const { timeFor } = Engine;
   } catch {
     /* ignore */
   }
-  // The 🎨 button lives on the intro screens, up to choosing the number of players.
+  const soundToggle = q('soundToggle'),
+    soundMenu = q('soundMenu');
+  function syncSound() {
+    const m = isMuted();
+    soundToggle.textContent = m ? '🔇' : '🔊';
+    soundToggle.setAttribute('aria-pressed', String(m));
+    soundMenu.textContent = m ? '🔇 Sonido: silenciado' : '🔊 Sonido: activado';
+  }
+  [soundToggle, soundMenu].forEach((b) =>
+    b.addEventListener('click', () => {
+      setMuted(!isMuted());
+      syncSound();
+    }),
+  );
+  syncSound();
+  // The 🎨 and 🔊 buttons live on the intro screens, up to choosing the number of players.
   const THEME_STEPS = ['welcome', 'rules', 'mode'];
   const syncThemeToggle = () => {
     const show = THEME_STEPS.includes(setup.dataset.step);
     if (!show) toggleThemeMenu(false);
     themeToggle.classList.toggle('hidden', !show);
+    soundToggle.classList.toggle('hidden', !show);
   };
   new MutationObserver(syncThemeToggle).observe(setup, {
     attributes: true,
@@ -255,31 +273,6 @@ const { timeFor } = Engine;
   // Quick repeated taps keep the menu as it is instead of opening and closing it.
   const eggParty = q('eggParty');
   let eggTimer;
-  function playFanfare() {
-    try {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return;
-      const ac = new Ctx();
-      const t0 = ac.currentTime + 0.02;
-      [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5].forEach((f, i) => {
-        const o = ac.createOscillator(),
-          g = ac.createGain(),
-          t = t0 + i * 0.11,
-          d = i === 5 ? 0.5 : 0.16;
-        o.type = 'triangle';
-        o.frequency.value = f;
-        g.gain.setValueAtTime(0.0001, t);
-        g.gain.exponentialRampToValueAtTime(0.25, t + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, t + d);
-        o.connect(g).connect(ac.destination);
-        o.start(t);
-        o.stop(t + d + 0.02);
-      });
-      setTimeout(() => ac.close(), 1500);
-    } catch {
-      /* no sound */
-    }
-  }
   function celebrateEgg() {
     const eggs = ['🥚', '🐣', '🐰', '🌷', '🥚', '🐥'];
     const drops = Array.from({ length: 36 }, (_, i) => {
@@ -295,7 +288,7 @@ const { timeFor } = Engine;
     eggParty.replaceChildren(...drops, msg);
     clearTimeout(eggTimer);
     eggTimer = setTimeout(() => eggParty.replaceChildren(), 3600);
-    playFanfare();
+    play('egg');
   }
   themeToggle.addEventListener('click', (e) => {
     const now = e.timeStamp;
@@ -546,6 +539,10 @@ const { timeFor } = Engine;
     timers.forEach((e, i) => {
       e.textContent = fmt(times[i]);
       e.classList.toggle('low', times[i] <= 20 && !over);
+      if (times[i] <= 20 && times[i] > 0 && !over && !replaying && !lowWarned.has(i)) {
+        lowWarned.add(i);
+        play('low');
+      }
     });
   }
   function updateControls() {
@@ -652,6 +649,7 @@ const { timeFor } = Engine;
     targetWord = 'OSO';
     sosUsed = false;
     replaying = false;
+    lowWarned = new Set();
     [...hintBtns, ...lastBtns, ...swapBtns, ...sosBtns].forEach((btn) => btn.classList.remove('used'));
     q('modeFlash').classList.add('hidden');
     setSeaTheme(false);
@@ -706,6 +704,7 @@ const { timeFor } = Engine;
     render();
     updateControls();
     msg.textContent = `⏱️ ${names[p]} se queda sin tiempo. Turno de ${avatars[current]} ${names[current]}`;
+    play('timeout');
   }
   function tick() {
     settle();
@@ -801,6 +800,7 @@ const { timeFor } = Engine;
     justPlaced = i;
     made.forEach((k) => k.split('-').forEach((n) => justScored.add(+n)));
 
+    play(made.length ? 'score' : 'place');
     if (made.length) {
       scores[p] += made.length;
       times[p] += BONUS * made.length;
@@ -1038,6 +1038,7 @@ const { timeFor } = Engine;
         reason === 'tiempo' ? `${timeout} · ${result}` : `Resultado final: ${scores.join(' – ')}`;
       confetti();
     }
+    play(w === null ? 'draw' : gameMode === 'solo' && w === 1 ? 'lose' : 'win');
     showSession(recordSession(w));
   }
 
