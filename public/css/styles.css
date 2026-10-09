@@ -1870,3 +1870,93 @@ body.sea-theme::before {
   position: absolute;
   inset: -4px;
 }
+
+/* WIDE (desktop, iPad landscape): board in the middle, players at the sides */
+@media (min-width: 1000px) and (min-aspect-ratio: 4/3) and (min-height: 600px) {
+  .app:has(#gameScreen:not(.hidden)) {
+    width: min(100%, 1400px);
+  }
+  .game {
+    grid-template-columns: clamp(230px, 20vw, 320px) minmax(0, 1fr) clamp(230px, 20vw, 320px);
+    grid-template-areas: 'p1 board p2';
+    column-gap: 20px;
+    padding-right: 24px;
+  }
+  #side1 {
+    grid-area: p1;
+  }
+  #side2 {
+    grid-area: p2;
+  }
+  .center-area {
+    grid-area: board;
+  }
+  .board-shell {
+    max-width: min(100%, calc(100dvh - 130px));
+  }
+  .game .turnbar-top {
+    transform: none;
+  }
+  .controls-row {
+    grid-template-columns: 1fr;
+  }
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+  }
+
+  /* 1 player: the machine above the human, right of the board */
+  .game.solo {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      'board p2'
+      'board p1';
+    row-gap: 14px;
+  }
+  .game.solo #side2 {
+    align-self: end;
+  }
+  .game.solo #side1 {
+    align-self: start;
+  }
+
+  /* 2 players facing (tablet on the table): each panel turned toward its end */
+  .game:not(.solo, .same-view) {
+    grid-template-columns: 190px minmax(0, 1fr) 190px;
+  }
+  .game:not(.solo, .same-view) .player-panel {
+    width: 420px;
+    margin-inline: calc((100% - 420px) / 2);
+  }
+  .game:not(.solo, .same-view) #side1 {
+    transform: rotate(90deg);
+  }
+  .game:not(.solo, .same-view) #side2 {
+    transform: rotate(-90deg);
+  }
+  .game:not(.solo, .same-view) .controls-row {
+    grid-template-columns: 1fr auto;
+  }
+  .game:not(.solo, .same-view) .tools {
+    display: flex;
+  }
+}
+
+/* TABLET PORTRAIT: bigger board, each player panel in a single row */
+@media (min-width: 700px) and (orientation: portrait) {
+  .app:has(#gameScreen:not(.hidden)) {
+    width: min(100%, 1000px);
+  }
+  .player-panel {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .player-panel .controls-row {
+    grid-column: auto;
+    width: min(440px, 56vw);
+  }
+  .board-shell {
+    max-width: min(100%, calc(100dvh - 290px));
+  }
+}

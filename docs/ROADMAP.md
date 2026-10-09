@@ -17,12 +17,15 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Analítica con Microsoft Clarity.
 - Tema marino con olas suaves al activar el extra OSO→SOS.
 - Créditos en el pie de las pantallas de inicio: «Hecho por Julia y JoseLuis — Vilarequi — con amor».
+- T4.2 fase 1: escritorio e iPad con 1 y 2 jugadores. En horizontal, tablero grande en el centro y
+  paneles a los lados (girados hacia cada jugador en _Enfrentados_); en iPad vertical, tablero más
+  grande y paneles de una fila arriba y abajo.
 
 ## Roadmap F4 (pendiente)
 
 | Tarea | Idea                            | Esfuerzo   | Notas                                                                                                                        |
 | ----- | ------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| T4.2  | Diseño por dispositivo          | Medio      | Móvil en una columna; iPad y escritorio con tablero grande y paneles a los lados. Diseñar primero iPad.                      |
+| T4.2  | Diseño por dispositivo          | Medio      | Fase 1 hecha (1 y 2 jugadores). Fase 2: diseños de 4 jugadores, junto con el modo 4 jugadores.                               |
 | T4.3  | Tensión con poco tiempo         | Bajo       | Con ≤ 20 s el fondo se tiñe poco a poco. Nunca solo color, ≤ 3 parpadeos/s, contraste AA, estático con «reducir movimiento». |
 | T4.4  | Vibración                       | Bajo       | Al colocar, puntuar, poco tiempo y ganar. Solo Android (iOS no soporta la Vibration API). Con ajuste para desactivarla.      |
 | T4.5  | Oso bailando al ganar           | Medio-alto | Necesita arte nuevo (SVG animado o Lottie, no GIF). Fotograma fijo con «reducir movimiento».                                 |
