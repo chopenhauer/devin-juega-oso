@@ -42,6 +42,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Sonidos (2.2.0): final de partida (victoria, empate o gana la Máquina), letra, OSO, aviso de
   20 s, quedarse fuera con 4, un sonido por extra y sirena para el SOS. Botón 🔊 / 🔇 en inicio y
   en el menú ☰, recordado en el dispositivo.
+- Ajustes del FigJam (2.2.1): navegación ← ❓ →, pantallas de modo, jugadores y tablero, ventana
+  de «4 jugadores» en el móvil y anillo de selección de la ficha.
 
 ## Priorización (octubre 2026)
 

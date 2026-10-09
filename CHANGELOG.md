@@ -17,6 +17,28 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.2.1] - 2026-10-09
+
+**Ajustes del FigJam** ([7589942](https://github.com/chopenhauer/devin-juega-oso/commit/7589942),
+[cf9ab43](https://github.com/chopenhauer/devin-juega-oso/commit/cf9ab43))
+
+- Navegación de los pasos con 3 botones repartidos por igual: ←, ❓ y →. El ❓ queda siempre en el
+  centro, también en «Elige el tablero».
+- «👀 Cómo se juega» en la pantalla de modo lleva al primer paso de las reglas.
+- Pantalla de modo: el emoji arriba y el texto debajo.
+- Extras de las reglas: emojis en una columna centrada y frases alineadas a la izquierda.
+- Jugadores con 4: avatares en 3 filas de 4, más grandes.
+- Pantalla de tablero: «más puntos OSO posibles», sin la línea de resumen (sigue para lectores de
+  pantalla), más margen en la flecha del selector, la etiqueta separada y «¡A jugar!» debajo.
+- 4 jugadores en el móvil: el botón sale atenuado y, al pulsarlo, una ventana avisa «Solo
+  disponible en ordenador o tablet».
+- Ficha O/S seleccionada: el relieve va dentro de la ficha y el anillo del jugador la rodea entera.
+- Pie: «… — con ❤️».
+
+**Decisiones:** la bienvenida sigue saliendo solo la primera vez. En la pantalla de modo se mantiene
+el texto «👀 Cómo se juega» en lugar de solo ←, para que se entienda adónde lleva. Al publicar se
+borraron las ramas antiguas: en el repo queda solo `main`.
+
 ## [2.2.0] - 2026-10-09
 
 **Sonidos** ([9a77e3a](https://github.com/chopenhauer/devin-juega-oso/commit/9a77e3a))
