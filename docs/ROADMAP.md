@@ -14,7 +14,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   recordadas en el navegador, avatares exclusivos y panel de altura fija.
 - Paso «¿Cómo vais a jugar?» con 2 jugadores: _Enfrentados_ (panel del jugador 2 girado) o _Misma
   vista_; por defecto Enfrentados en móvil y tablet, Misma vista en escritorio.
-- Analítica con Microsoft Clarity.
+- Analítica con Google Analytics 4 y Microsoft Clarity, con aviso de cookies Aceptar / Rechazar
+  (Consent Mode v2; Clarity solo se carga tras aceptar y la publicidad queda siempre denegada).
 - Tema marino con olas suaves al activar el extra OSO→SOS.
 - Créditos en el pie de las pantallas de inicio: «Hecho por Julia y JoseLuis — Vilarequi — con amor».
 - T4.2 fase 1: escritorio e iPad con 1 y 2 jugadores. En horizontal, tablero grande en el centro y
@@ -26,6 +27,41 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Menú por jugador: un ☰ en el panel de cada jugador; el menú se abre girado hacia quien lo pulsa.
 - Fichas que se arrastran: la letra elegida tiene el color de las fichas del tablero, la otra se ve
   tenue, y un dedo animado indica que se puede arrastrar hasta el primer arrastre.
+- Temas de temporada Halloween y Navidad, con el botón 🎨 visible hasta «¿Cómo queréis jugar?».
+- Pantalla «¿Cómo queréis jugar?» con cabecera OSO, selector 1 · 2 · 4 jugadores y navegación
+  simple («Siguiente», «Cómo se juega» y ❓); tarjeta «Máquina» con robots de dificultad (1.9.0).
+- Versión en el pie y [`CHANGELOG.md`](../CHANGELOG.md) con las mejoras y decisiones de cada versión.
+- Modo 4 jugadores (2.0.0) y marcador de la sesión contra la máquina desde la primera partida.
+- Vista de 4 jugadores en el ordenador (2.0.1): en «Misma vista», tablero a la izquierda y las 4
+  tarjetas apiladas a la derecha; en tablet, «Enfrentados» por defecto.
+
+## Priorización (octubre 2026)
+
+Orden propuesto por valor y esfuerzo, estimados por Devin; se revisa cuando lleguen opiniones de
+los jugadores.
+
+| #   | Idea                                                            | Valor      | Esfuerzo      | Por qué                                                     |
+| --- | --------------------------------------------------------------- | ---------- | ------------- | ----------------------------------------------------------- |
+| 1   | Política de privacidad                                          | Alto       | Bajo          | juegaoso.com es pública y juegan niños con GA y Clarity     |
+| 2   | Proteger `main` (solo publicar con el CI en verde)              | Medio      | Muy bajo      | Lo activa el dueño del repo en GitHub                       |
+| 3   | Feedback rápido 👍/👎 (evento de GA) e «💡 Ideas» en el menú ☰ | Alto       | Bajo          | Saber qué gusta                                             |
+| 4   | Temas que se activan solos según la fecha                       | Alto       | Bajo          | Idea de Julia; Halloween y Navidad ya existen               |
+| 5   | Tensión con poco tiempo (T4.3)                                  | Medio-alto | Bajo          | Más emoción con poco trabajo                                |
+| 6   | Hall of fame local                                              | Alto       | Medio         | Récords y rachas en el dispositivo, sin servidor            |
+| 7   | Más temas de temporada (Año Nuevo y Reyes primero)              | Alto       | Bajo cada uno | 11 pendientes; se hacen según se acerque cada fecha         |
+| 8   | Feedback con texto libre (función de Vercel → email o issue)    | Alto       | Medio         | Backend pequeño con protección contra spam                  |
+| 9   | Regalos desbloqueables                                          | Alto       | Medio         | Mejor después del hall of fame, que guarda los logros       |
+| 10  | Equipos 2 contra 2 (3.0.0)                                      | Medio      | Medio         | Faltan decisiones: compañeros, turnos y extras              |
+| 11  | Oso bailando al ganar (T4.5)                                    | Medio      | Medio-alto    | Necesita arte nuevo                                         |
+| 12  | Máquina «Experto» (B06)                                         | Medio      | Medio         | Solo si Difícil se queda corta                              |
+| 13  | Modo Mercado / tiempo por ayudas (T4.6–T4.7)                    | Medio      | Alto          | Cambia las reglas; faltan costes y límites                  |
+| 14  | Hall of fame global                                             | Medio      | Alto          | Servidor, protección contra trampas y privacidad de menores |
+| 15  | Vibración (T4.4)                                                | Bajo       | Bajo          | Solo en Android                                             |
+| 16  | Reloj con la pestaña dormida                                    | Bajo       | Bajo          | Decisión pendiente; hoy funciona como una pausa             |
+
+**Agrupación propuesta:** 1–5 como versión 2.1.0; hall of fame y regalos (6 y 9) como 2.2.0; los
+temas (7) según el calendario; Mercado, equipos y ranking global (13, 10 y 14) cuando el feedback
+diga que se quieren.
 
 ## Roadmap F4 (pendiente)
 
