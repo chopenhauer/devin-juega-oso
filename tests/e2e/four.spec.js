@@ -65,12 +65,25 @@ test('four players take turns 1 → 2 → 3 → 4 and finish with four scores', 
   await expect(page.locator('#winnerSub')).toHaveText(/\d+ – \d+ – \d+ – \d+/);
 });
 
-test('on a phone the 4 players option stays disabled', async ({ page }, testInfo) => {
+test('on a phone the 4 players option explains itself in a pop-up', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile', 'phone only');
   await page.goto('/');
   await page.click('#introSkip');
-  await expect(page.locator('#modeFour')).toBeDisabled();
-  await expect(page.locator('#modeFour')).toContainText('En tablet u ordenador');
+  const four = page.locator('#modeFour');
+  await expect(four).toHaveAttribute('data-locked', 'true');
+  await expect(four).not.toContainText('ordenador');
+  await four.click();
+  const dialog = page.locator('#fourDialog');
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Solo disponible en ordenador o tablet');
+  await expect(four).not.toHaveClass(/selected/);
+  await expect(page.locator('#modeTwo')).toHaveClass(/selected/);
+  await dialog.getByRole('button', { name: 'Entendido' }).click();
+  await expect(dialog).toBeHidden();
+  await four.click();
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'mode');
 });
 
 test('with four players, whoever runs out of time is out and the others carry on', async ({

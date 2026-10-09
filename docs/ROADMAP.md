@@ -113,7 +113,7 @@ Reglas decididas con JoseLuis:
   por partida, para quien lo use primero.
 - **Dispositivos:** tablet y ordenador, con un panel a cada lado del tablero. En «Enfrentados»
   cada panel mira hacia su lado; en «Misma vista» todos quedan derechos. En móvil, «4 jugadores»
-  sale desactivado con la nota «En tablet u ordenador».
+  sale atenuado y, al pulsarlo, una ventana avisa «Solo disponible en ordenador o tablet».
 - **Motor:** `engine.js` se generaliza a N jugadores, con tests.
 
 #### Evolución: equipos con 4 jugadores

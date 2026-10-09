@@ -167,9 +167,8 @@
                 <button id="modeTwo" class="mode-btn selected" type="button">
                   <span class="mode-emoji" aria-hidden="true">👥</span><span>2 jugadores</span>
                 </button>
-                <button id="modeFour" class="mode-btn soon" type="button" disabled>
+                <button id="modeFour" class="mode-btn soon" type="button" data-locked="true">
                   <span class="mode-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span><span>4 jugadores</span>
-                  <small class="soon-tag">En tablet u ordenador</small>
                 </button>
               </div>
             </div>
@@ -691,6 +690,14 @@
           </div>
         </div>
       </section>
+      <dialog id="fourDialog" class="info-dialog" aria-labelledby="fourDialogTitle">
+        <div class="info-emoji" aria-hidden="true">👨‍👩‍👧‍👦</div>
+        <h2 id="fourDialogTitle" class="step-title">Solo disponible en ordenador o tablet</h2>
+        <p class="step-lead">Con 4 jugadores el tablero necesita una pantalla más grande.</p>
+        <form method="dialog">
+          <button class="primary" type="submit" autofocus>Entendido</button>
+        </form>
+      </dialog>
     </main>
     <footer class="credits">
       <span class="credits-text">Hecho por Julia y JoseLuis — Vilarequi — con ❤️</span>

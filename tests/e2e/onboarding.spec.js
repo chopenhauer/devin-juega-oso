@@ -194,10 +194,9 @@ test('the mode step has the OSO header, a ❓ rules button and no progress bar',
   await expect(mode.locator('.brand span')).toHaveText(['O', 'S', 'O']);
   await expect(mode.locator('.mode-btn')).toHaveText([/1 jugador/, /2 jugadores/, /4 jugadores/]);
   if (testInfo.project.name === 'mobile') {
-    await expect(page.locator('#modeFour')).toBeDisabled();
-    await expect(page.locator('#modeFour')).toContainText('En tablet u ordenador');
+    await expect(page.locator('#modeFour')).toHaveAttribute('data-locked', 'true');
   } else {
-    await expect(page.locator('#modeFour')).toBeEnabled();
+    await expect(page.locator('#modeFour')).not.toHaveAttribute('data-locked');
   }
   await expect(page.locator('[role="progressbar"]')).toHaveCount(0);
   await expect(page.locator('#stepNext')).toBeVisible();

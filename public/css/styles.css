@@ -305,14 +305,38 @@ body:has(#gameScreen:not(.hidden)) .consent {
 }
 .mode-btn.soon {
   opacity: 0.6;
-  cursor: not-allowed;
 }
-.soon-tag {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--accent, #ffb703);
+.info-dialog {
+  width: min(calc(100% - 36px), 380px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  padding: 26px 22px 22px;
+  background: linear-gradient(180deg, #2c1a6a, #1a0f48);
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+}
+.info-dialog[open] {
+  display: grid;
+  gap: 12px;
+  animation: dialogIn 0.35s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+.info-dialog::backdrop {
+  background: rgba(8, 4, 30, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.info-dialog .step-title,
+.info-dialog .step-lead {
+  margin: 0;
+}
+.info-emoji {
+  font-size: 44px;
+  line-height: 1;
+}
+.info-dialog .primary {
+  min-width: 160px;
+  margin-top: 6px;
 }
 .mode-btn.selected {
   background: linear-gradient(180deg, #fff, #e6e0ff);
@@ -528,8 +552,13 @@ body:has(#gameScreen:not(.hidden)) .consent {
   transform: translateY(-70%) rotate(45deg);
   pointer-events: none;
 }
+.setup-actions > div {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
 .setup-actions .small-label {
-  margin-bottom: 6px;
+  margin: 0;
 }
 select {
   min-height: 54px;
@@ -783,26 +812,32 @@ select option {
   color: color-mix(in srgb, var(--p2) 45%, #fff);
 }
 /* Selected letter: the same tile as on the board, ready to pick up */
+/* The relief sits inside the tile, so the selection ring wraps the whole tile with a small gap. */
 .letter.selected {
+  padding-bottom: 4px;
   background: var(--tile);
   color: var(--tile-ink);
   cursor: grab;
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  box-shadow:
+    inset 0 -4px 0 var(--tile-edge),
+    0 0 16px var(--ring-glow);
+}
+.letter.selected:focus-visible {
+  outline: 3px solid var(--accent);
 }
 .p1 .letter.selected {
-  box-shadow:
-    0 4px 0 var(--tile-edge),
-    0 0 0 2px var(--p1),
-    0 0 16px var(--p1glow);
+  --ring: var(--p1);
+  --ring-glow: var(--p1glow);
 }
 .p2 .letter.selected {
-  box-shadow:
-    0 4px 0 var(--tile-edge),
-    0 0 0 2px var(--p2),
-    0 0 16px var(--p2glow);
+  --ring: var(--p2);
+  --ring-glow: var(--p2glow);
 }
 .letter.selected:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 var(--tile-edge);
+  padding-bottom: 1px;
+  box-shadow: inset 0 -1px 0 var(--tile-edge);
 }
 .letter.dragging {
   opacity: 0.45;
@@ -1688,7 +1723,7 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
   }
   .letter-choice {
     padding: 4px;
-    gap: 4px;
+    gap: 6px;
     border-radius: var(--r-sm);
   }
   .letter {
@@ -2762,16 +2797,12 @@ body[data-motion='rise'] .theme-decor span {
   color: var(--tile-ink);
 }
 .p3 .letter.selected {
-  box-shadow:
-    0 4px 0 var(--tile-edge),
-    0 0 0 2px var(--p3),
-    0 0 16px var(--p3glow);
+  --ring: var(--p3);
+  --ring-glow: var(--p3glow);
 }
 .p4 .letter.selected {
-  box-shadow:
-    0 4px 0 var(--tile-edge),
-    0 0 0 2px var(--p4),
-    0 0 16px var(--p4glow);
+  --ring: var(--p4);
+  --ring-glow: var(--p4glow);
 }
 .cell.p3 {
   background: linear-gradient(180deg, color-mix(in srgb, var(--p3) 65%, #fff), var(--p3));
