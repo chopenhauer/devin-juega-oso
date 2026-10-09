@@ -55,10 +55,10 @@ temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 
 | #   | Idea                                                               | Valor      | Esfuerzo   | Fase     |
 | --- | ------------------------------------------------------------------ | ---------- | ---------- | -------- |
-| 1   | Política de privacidad                                             | Alto       | Bajo       | 1        |
-| 2   | Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos) | Alto       | Bajo       | 1        |
-| 3   | Feedback rápido 👍/👎 e «💡 Ideas» en el menú ☰                   | Alto       | Bajo       | 1        |
-| 4   | Reglas animadas (FigJam, segunda parte)                            | Alto       | Medio      | 2        |
+| 1   | Política de privacidad                                             | Alto       | Bajo       | 2        |
+| 2   | Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos) | Alto       | Bajo       | 2        |
+| 3   | Feedback rápido 👍/👎 e «💡 Ideas» en el menú ☰                   | Alto       | Bajo       | 2        |
+| 4   | Reglas animadas (FigJam, segunda parte)                            | Alto       | Medio      | 1        |
 | 5   | Compartir por WhatsApp y email, con tarjeta del enlace             | Alto       | Bajo       | 3        |
 | 6   | Tensión con poco tiempo (T4.3)                                     | Medio-alto | Bajo       | 4        |
 | 7   | Hall of fame local                                                 | Alto       | Medio      | 4        |
@@ -75,28 +75,28 @@ temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 | 18  | Reloj con la pestaña dormida                                       | Bajo       | Bajo       | Decidir  |
 | 19  | Regalos desbloqueables                                             | —          | Medio      | Sin plan |
 
-**Por qué este orden:** la telemetría necesita semanas de partidas antes de poder ajustar nada, así
-que conviene empezar a medir cuanto antes, y la política de privacidad debe estar antes de medir
-más. Las reglas animadas mejoran la primera partida de quien llega nuevo, justo antes de empezar a
-compartir. Mercado, equipos y ranking global, cuando el feedback diga que se quieren.
+**Por qué este orden:** primero las reglas animadas del FigJam, ya diseñadas (decisión de
+JoseLuis), que mejoran la primera partida de quien llega nuevo. Justo después, medir: la telemetría
+necesita semanas de partidas antes de poder ajustar nada y la política de privacidad debe estar
+antes de medir más. Mercado, equipos y ranking global, cuando el feedback diga que se quieren.
 
 ## Plan por fases
 
 Cada fase es una versión menor con su rama, preview y aprobación. Las decisiones abiertas se
 preguntan una a una al empezar cada fase.
 
-1. **2.3.0 · Escuchar y medir** (bajo esfuerzo)
+1. **2.3.0 · Aprender jugando** (FigJam, segunda parte)
+   - Paso 1 de las reglas: una animación arrastra una letra hasta el tablero.
+   - Paso 2: sigue y completa OSO, con ↔ horizontal, ↕ vertical y ⤡ diagonal.
+   - Paso del reloj: cuenta atrás de los últimos 5 s que se pone en rojo y acaba en 0:00.
+   - Todo quieto con «reducir movimiento». El estilo de la cuenta atrás se reutiliza en la fase 4.
+2. **2.4.0 · Escuchar y medir** (bajo esfuerzo)
    - Política de privacidad en una página propia, enlazada desde el pie y el aviso de cookies.
    - Evento `game_end` de GA con tablero, modo, cómo terminó y tiempos, sin datos personales;
      objetivo `TIMEOUT_TARGET = 0.5` en un solo sitio.
    - 👍/👎 al final de la partida (de vez en cuando) e «💡 Ideas» en el menú ☰.
    - A decidir: quién firma la política y adónde llega el «💡 Ideas» al principio (email o
      formulario).
-2. **2.4.0 · Aprender jugando** (FigJam, segunda parte)
-   - Paso 1 de las reglas: una animación arrastra una letra hasta el tablero.
-   - Paso 2: sigue y completa OSO, con ↔ horizontal, ↕ vertical y ⤡ diagonal.
-   - Paso del reloj: cuenta atrás de los últimos 5 s que se pone en rojo y acaba en 0:00.
-   - Todo quieto con «reducir movimiento». El estilo de la cuenta atrás se reutiliza en la fase 4.
 3. **2.5.0 · Boca a boca**
    - Compartir desde la pantalla final y desde el inicio: menú nativo del móvil y, si no hay,
      WhatsApp, email y «Copiar enlace».
