@@ -20,6 +20,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - T4.2 fase 1: escritorio e iPad con 1 y 2 jugadores. En horizontal, tablero grande en el centro y
   paneles a los lados (girados hacia cada jugador en _Enfrentados_); en iPad vertical, tablero más
   grande y paneles de una fila arriba y abajo.
+- Fichas que se arrastran: la letra elegida tiene el color de las fichas del tablero, la otra se ve
+  tenue, y un dedo animado indica que se puede arrastrar hasta el primer arrastre.
 
 ## Roadmap F4 (pendiente)
 

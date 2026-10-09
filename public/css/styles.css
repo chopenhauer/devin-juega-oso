@@ -660,37 +660,53 @@ select option {
   border: 1px solid var(--line);
 }
 .letter {
+  position: relative;
   flex: 1;
   min-height: 52px;
   border: 0;
   border-radius: var(--r-sm);
-  background: var(--tile);
-  color: var(--tile-ink);
   font-size: 30px;
   font-weight: 700;
-  box-shadow: 0 4px 0 var(--tile-edge);
+  touch-action: none;
   transition:
     transform 0.1s,
     box-shadow 0.1s,
-    background 0.15s;
+    background 0.15s,
+    color 0.15s;
 }
-.letter:active {
+/* Unselected letter: flat and muted, so it reads as "not the tile you will place" */
+.p1 .letter {
+  background: color-mix(in srgb, var(--p1) 22%, transparent);
+  color: color-mix(in srgb, var(--p1) 45%, #fff);
+}
+.p2 .letter {
+  background: color-mix(in srgb, var(--p2) 22%, transparent);
+  color: color-mix(in srgb, var(--p2) 45%, #fff);
+}
+/* Selected letter: the same tile as on the board, ready to pick up */
+.letter.selected {
+  background: var(--tile);
+  color: var(--tile-ink);
+  cursor: grab;
+}
+.p1 .letter.selected {
+  box-shadow:
+    0 4px 0 var(--tile-edge),
+    0 0 0 2px var(--p1),
+    0 0 16px var(--p1glow);
+}
+.p2 .letter.selected {
+  box-shadow:
+    0 4px 0 var(--tile-edge),
+    0 0 0 2px var(--p2),
+    0 0 16px var(--p2glow);
+}
+.letter.selected:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 var(--tile-edge);
 }
-.p1 .letter.selected {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--p1) 70%, #fff), var(--p1b));
-  color: #fff;
-  box-shadow:
-    0 4px 0 color-mix(in srgb, var(--p1b) 60%, #000),
-    0 0 18px var(--p1glow);
-}
-.p2 .letter.selected {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--p2) 70%, #fff), var(--p2b));
-  color: #fff;
-  box-shadow:
-    0 4px 0 color-mix(in srgb, var(--p2b) 60%, #000),
-    0 0 18px var(--p2glow);
+.letter.dragging {
+  opacity: 0.45;
 }
 .letter:disabled {
   opacity: 0.35;
@@ -1958,5 +1974,104 @@ body.sea-theme::before {
   }
   .board-shell {
     max-width: min(100%, calc(100dvh - 290px));
+  }
+}
+
+/* DRAG AND DROP: the tile that follows the finger, and the hint that it can be dragged */
+.drag-tile {
+  position: fixed;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--tile);
+  color: var(--tile-ink);
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  translate: -50% -70%;
+  rotate: -6deg;
+  scale: 1.08;
+  box-shadow:
+    0 4px 0 var(--tile-edge),
+    0 14px 26px rgba(0, 0, 0, 0.45);
+}
+.cell.drop-target {
+  outline: 4px solid var(--accent);
+  outline-offset: -4px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.drag-hint {
+  display: none;
+  position: absolute;
+  right: -6px;
+  bottom: -14px;
+  width: 36px;
+  height: 36px;
+  pointer-events: none;
+  animation: dragHint 1.8s ease-in-out infinite;
+}
+.drag-hint::before {
+  content: '👆';
+  position: absolute;
+  inset: 0;
+  font-size: 28px;
+  line-height: 36px;
+  text-align: center;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+.drag-hint::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 16px;
+  width: 11px;
+  height: 18px;
+  background: repeating-linear-gradient(90deg, #fff 0 2px, transparent 2px 4.5px);
+  border-radius: 2px;
+  opacity: 0;
+  animation: dragLines 1.8s ease-in-out infinite;
+}
+.game:not(.drag-known) .player-panel.active:not(.machine) .letter.selected:not(:disabled) .drag-hint {
+  display: block;
+}
+@keyframes dragHint {
+  0%,
+  20% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  75% {
+    transform: translate(8px, -22px);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(8px, -22px);
+    opacity: 0;
+  }
+}
+@keyframes dragLines {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  60%,
+  75% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drag-hint,
+  .drag-hint::after {
+    animation: none;
+  }
+  .drag-hint::after {
+    opacity: 0.7;
   }
 }

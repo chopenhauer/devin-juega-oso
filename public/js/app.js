@@ -167,25 +167,103 @@ const { timeFor } = Engine;
     if (e.key === 'Escape' && !q('helpModal').classList.contains('hidden')) closeHelp();
   });
 
-  document.querySelectorAll('.letter').forEach((b) =>
-    b.addEventListener('click', () => {
-      const p = +b.dataset.player;
-      if (
-        over ||
-        replaying ||
-        helpPaused ||
-        p !== current ||
-        machineThinking ||
-        (gameMode === 'solo' && p === 1)
-      )
-        return;
+  function chooseLetter(b) {
+    const p = +b.dataset.player;
+    if (
+      over ||
+      replaying ||
+      helpPaused ||
+      p !== current ||
+      machineThinking ||
+      (gameMode === 'solo' && p === 1)
+    )
+      return false;
+    if (selected[p] !== b.dataset.letter || swapMode !== null) {
       selected[p] = b.dataset.letter;
       swapMode = null;
       updateControls();
       render();
-      msg.textContent = `${avatars[p]} ${names[p]} jugará ${selected[p]}.`;
-    }),
-  );
+    }
+    msg.textContent = `${avatars[p]} ${names[p]} jugará ${selected[p]}.`;
+    return true;
+  }
+
+  const DRAG_KEY = 'oso.dragKnown.v1';
+  const DRAG_THRESHOLD = 6;
+  let drag = null;
+  let suppressClick = false;
+  try {
+    if (localStorage.getItem(DRAG_KEY)) game.classList.add('drag-known');
+  } catch {
+    /* storage unavailable: keep showing the hint */
+  }
+
+  const cellAt = (x, y) => {
+    const c = document.elementFromPoint(x, y)?.closest('.cell');
+    return c && boardEl.contains(c) && !c.classList.contains('filled') ? c : null;
+  };
+  function moveDrag(e) {
+    drag.ghost.style.left = `${e.clientX}px`;
+    drag.ghost.style.top = `${e.clientY}px`;
+    const c = cellAt(e.clientX, e.clientY);
+    if (c !== drag.target) {
+      drag.target?.classList.remove('drop-target');
+      c?.classList.add('drop-target');
+      drag.target = c;
+    }
+  }
+  function endDrag(drop) {
+    const { ghost, target, button } = drag;
+    drag = null;
+    button.classList.remove('dragging');
+    target?.classList.remove('drop-target');
+    ghost?.remove();
+    if (!ghost) return;
+    suppressClick = true;
+    if (!drop || !target) return;
+    game.classList.add('drag-known');
+    try {
+      localStorage.setItem(DRAG_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+    cellClick([...boardEl.children].indexOf(target));
+  }
+
+  document.querySelectorAll('.letter').forEach((b) => {
+    b.addEventListener('click', () => {
+      if (suppressClick) {
+        suppressClick = false;
+        return;
+      }
+      chooseLetter(b);
+    });
+    b.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0 || drag || !chooseLetter(b)) return;
+      suppressClick = false;
+      drag = { button: b, x: e.clientX, y: e.clientY, ghost: null, target: null };
+      b.setPointerCapture(e.pointerId);
+    });
+    b.addEventListener('pointermove', (e) => {
+      if (!drag || drag.button !== b) return;
+      if (!drag.ghost) {
+        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < DRAG_THRESHOLD) return;
+        const cell = boardEl.querySelector('.cell').getBoundingClientRect();
+        const ghost = document.createElement('div');
+        ghost.className = 'drag-tile';
+        ghost.textContent = b.dataset.letter;
+        ghost.setAttribute('aria-hidden', 'true');
+        ghost.style.width = ghost.style.height = `${cell.width}px`;
+        ghost.style.fontSize = `${cell.width * 0.56}px`;
+        document.body.appendChild(ghost);
+        drag.ghost = ghost;
+        b.classList.add('dragging');
+      }
+      moveDrag(e);
+    });
+    b.addEventListener('pointerup', () => drag?.button === b && endDrag(true));
+    b.addEventListener('pointercancel', () => drag?.button === b && endDrag(false));
+  });
 
   function fmt(v) {
     v = Math.max(0, Math.ceil(v));
