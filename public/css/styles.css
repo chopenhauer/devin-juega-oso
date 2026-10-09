@@ -2758,3 +2758,53 @@ body[data-theme='christmas'] .theme-decor::after {
   opacity: 0.45;
   filter: grayscale(0.7);
 }
+/* 4 players, same view on a computer: board on the left, the four players stacked on the right */
+@media (min-width: 1000px) and (min-aspect-ratio: 4/3) and (min-height: 600px) {
+  .game.four.same-view {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+    grid-template-rows: 1fr repeat(4, auto) 1fr;
+    grid-template-areas:
+      'board .'
+      'board p1'
+      'board p2'
+      'board p3'
+      'board p4'
+      'board .';
+    gap: 10px 24px;
+    padding-right: 24px;
+  }
+  .game.four.same-view :is(#side1, #side2, #side3, #side4) {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    justify-self: stretch;
+    width: auto;
+    margin-inline: 0;
+    transform: none;
+  }
+  .game.four.same-view #side1 {
+    grid-area: p1;
+  }
+  .game.four.same-view #side2 {
+    grid-area: p2;
+  }
+  .game.four.same-view #side3 {
+    grid-area: p3;
+  }
+  .game.four.same-view #side4 {
+    grid-area: p4;
+  }
+  .game.four.same-view :is(#side1, #side2, #side3, #side4) .controls-row {
+    grid-column: 1 / -1;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: stretch;
+    width: auto;
+  }
+  .game.four.same-view :is(#side1, #side2, #side3, #side4) .tools {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+  .game.four.same-view .board-shell {
+    max-width: min(100%, calc(100dvh - 130px));
+  }
+}

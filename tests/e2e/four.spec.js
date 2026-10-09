@@ -107,3 +107,26 @@ test('with four players, whoever runs out of time is out and the others carry on
   await expect(page.locator('#winnerOverlay')).toBeVisible();
   await expect(page.locator('#winnerSub')).toHaveText(/\d+ – \d+ – \d+ – \d+/);
 });
+
+test('on a computer, same view puts the board on the left and the four players stacked on the right', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name === 'mobile', '4 players need a tablet or a computer');
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#modeFour');
+  await page.click('#stepNext');
+  await page.click('#stepNext');
+  await page.click('#viewSame');
+  await page.click('#stepNext');
+  await page.click('#startGame');
+
+  const board = await page.locator('.board-shell').boundingBox();
+  const sides = [];
+  for (const n of [1, 2, 3, 4]) sides.push(await page.locator(`#side${n}`).boundingBox());
+  for (const [i, s] of sides.entries()) {
+    expect(s.x).toBeGreaterThan(board.x + board.width);
+    expect(s.y + s.height).toBeLessThanOrEqual(page.viewportSize().height);
+    if (i) expect(s.y).toBeGreaterThan(sides[i - 1].y + sides[i - 1].height - 1);
+  }
+});
