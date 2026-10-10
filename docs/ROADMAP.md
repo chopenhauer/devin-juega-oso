@@ -17,7 +17,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Analítica con Google Analytics 4 y Microsoft Clarity, con aviso de cookies Aceptar / Rechazar
   (Consent Mode v2; Clarity solo se carga tras aceptar y la publicidad queda siempre denegada).
 - Tema marino con olas suaves al activar el extra OSO→SOS.
-- Créditos en el pie de las pantallas de inicio: «Hecho por Julia y JoseLuis — Vilarequi — con ❤️».
+- Créditos en el pie de las pantallas de inicio: «made by Vilarequi with ❤️» (2.4.0; antes «Hecho por
+  Julia y JoseLuis — Vilarequi — con ❤️»).
 - T4.2 fase 1: escritorio e iPad con 1 y 2 jugadores. En horizontal, tablero grande en el centro y
   paneles a los lados (girados hacia cada jugador en _Enfrentados_); en iPad vertical, tablero más
   grande y paneles de una fila arriba y abajo.
@@ -46,6 +47,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   de «4 jugadores» en el móvil y anillo de selección de la ficha.
 - Reglas animadas del FigJam (2.3.0): arrastrar una letra, completar OSO con ↔ ↕ ⤡ y cuenta
   atrás de los últimos 5 s en rojo, quietas con «reducir movimiento».
+- Escuchar y medir (2.4.0): política de privacidad, eventos anónimos de partida (`game_start`,
+  `game_end`, `game_abandon`) con consentimiento, 👍/👎 en momentos elegidos y «💡 Ideas» por email.
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
@@ -55,27 +58,27 @@ Solo lo pendiente, por valor y esfuerzo (estimados por Devin). Se revisa con cad
 lleguen opiniones de los jugadores. Ya hechos de la priorización anterior: temas por fechas y de
 temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 
-| #   | Idea                                                               | Valor      | Esfuerzo   | Fase     |
-| --- | ------------------------------------------------------------------ | ---------- | ---------- | -------- |
-| 1   | Política de privacidad                                             | Alto       | Bajo       | 2        |
-| 2   | Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos) | Alto       | Bajo       | 2        |
-| 3   | Feedback rápido 👍/👎 e «💡 Ideas» en el menú ☰                   | Alto       | Bajo       | 2        |
-| 4   | ~~Reglas animadas (FigJam, segunda parte)~~ hecho en 2.3.0         | Alto       | Medio      | Hecho    |
-| 5   | Compartir por WhatsApp y email, con tarjeta del enlace             | Alto       | Bajo       | 3        |
-| 6   | Tensión con poco tiempo (T4.3)                                     | Medio-alto | Bajo       | 4        |
-| 7   | Hall of fame local                                                 | Alto       | Medio      | 4        |
-| 8   | Ajustar los tiempos con datos reales (pasos 2 y 3)                 | Alto       | Medio      | 5        |
-| 9   | Feedback con texto libre (función de Vercel)                       | Alto       | Medio      | 5        |
-| 10  | Equipos 2 contra 2                                                 | Medio      | Medio      | 6        |
-| 11  | Tablero con teclado y OSOs sin depender del color                  | Medio      | Medio      | Siempre  |
-| 12  | Escala tipográfica y colores semánticos (deuda de diseño)          | Medio      | Medio      | Siempre  |
-| 13  | Oso bailando al ganar (T4.5)                                       | Medio      | Medio-alto | Reserva  |
-| 14  | Máquina «Experto» (B06)                                            | Medio      | Medio      | Reserva  |
-| 15  | Modo Mercado / tiempo por ayudas (T4.6–T4.7)                       | Medio      | Alto       | Reserva  |
-| 16  | Hall of fame global                                                | Medio      | Alto       | Reserva  |
-| 17  | Vibración (T4.4)                                                   | Bajo       | Bajo       | Reserva  |
-| 18  | Reloj con la pestaña dormida                                       | Bajo       | Bajo       | Decidir  |
-| 19  | Regalos desbloqueables                                             | —          | Medio      | Sin plan |
+| #   | Idea                                                                                  | Valor      | Esfuerzo   | Fase     |
+| --- | ------------------------------------------------------------------------------------- | ---------- | ---------- | -------- |
+| 1   | ~~Política de privacidad~~ hecho en 2.4.0                                             | Alto       | Bajo       | Hecho    |
+| 2   | ~~Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos)~~ hecho en 2.4.0 | Alto       | Bajo       | Hecho    |
+| 3   | ~~Feedback rápido 👍/👎 e «💡 Ideas»~~ hecho en 2.4.0                                 | Alto       | Bajo       | Hecho    |
+| 4   | ~~Reglas animadas (FigJam, segunda parte)~~ hecho en 2.3.0                            | Alto       | Medio      | Hecho    |
+| 5   | Compartir por WhatsApp y email, con tarjeta del enlace                                | Alto       | Bajo       | 3        |
+| 6   | Tensión con poco tiempo (T4.3)                                                        | Medio-alto | Bajo       | 4        |
+| 7   | Hall of fame local                                                                    | Alto       | Medio      | 4        |
+| 8   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                    | Alto       | Medio      | 5        |
+| 9   | Feedback con texto libre (función de Vercel)                                          | Alto       | Medio      | 5        |
+| 10  | Equipos 2 contra 2                                                                    | Medio      | Medio      | 6        |
+| 11  | Tablero con teclado y OSOs sin depender del color                                     | Medio      | Medio      | Siempre  |
+| 12  | Escala tipográfica y colores semánticos (deuda de diseño)                             | Medio      | Medio      | Siempre  |
+| 13  | Oso bailando al ganar (T4.5)                                                          | Medio      | Medio-alto | Reserva  |
+| 14  | Máquina «Experto» (B06)                                                               | Medio      | Medio      | Reserva  |
+| 15  | Modo Mercado / tiempo por ayudas (T4.6–T4.7)                                          | Medio      | Alto       | Reserva  |
+| 16  | Hall of fame global                                                                   | Medio      | Alto       | Reserva  |
+| 17  | Vibración (T4.4)                                                                      | Bajo       | Bajo       | Reserva  |
+| 18  | Reloj con la pestaña dormida                                                          | Bajo       | Bajo       | Decidir  |
+| 19  | Regalos desbloqueables                                                                | —          | Medio      | Sin plan |
 
 **Por qué este orden:** primero las reglas animadas del FigJam, ya diseñadas (decisión de
 JoseLuis), que mejoran la primera partida de quien llega nuevo. Justo después, medir: la telemetría
@@ -92,13 +95,12 @@ preguntan una a una al empezar cada fase.
    - Paso 2: sigue y completa OSO, con ↔ horizontal, ↕ vertical y ⤡ diagonal.
    - Paso del reloj: cuenta atrás de los últimos 5 s que se pone en rojo y acaba en 0:00.
    - Todo quieto con «reducir movimiento». El estilo de la cuenta atrás se reutiliza en la fase 4.
-2. **2.4.0 · Escuchar y medir** (bajo esfuerzo)
+2. ~~**2.4.0 · Escuchar y medir**~~ hecho
    - Política de privacidad en una página propia, enlazada desde el pie y el aviso de cookies.
    - Evento `game_end` de GA con tablero, modo, cómo terminó y tiempos, sin datos personales;
      objetivo `TIMEOUT_TARGET = 0.5` en un solo sitio.
-   - 👍/👎 al final de la partida (de vez en cuando) e «💡 Ideas» en el menú ☰.
-   - A decidir: quién firma la política y adónde llega el «💡 Ideas» al principio (email o
-     formulario).
+   - 👍/👎 al final de la partida (en momentos elegidos) e «💡 Ideas» en el menú ☰.
+   - Decidido: firma «el equipo de juegaoso.com» con hola@juegaoso.com, e «💡 Ideas» por email.
 3. **2.5.0 · Boca a boca**
    - Compartir desde la pantalla final y desde el inicio: menú nativo del móvil y, si no hay,
      WhatsApp, email y «Copiar enlace».
@@ -271,6 +273,10 @@ compras, margen mínimo de tiempo y modo 1 jugador).
 
 ### Feedback e ideas de los jugadores
 
+**Hecho en 2.4.0:** 👍/👎 como evento de GA en momentos elegidos (primera partida, ganar a la
+máquina, cada 3 partidas seguidas; nunca tras ganar la máquina) e «💡 Ideas» por email a
+hola@juegaoso.com. Queda el texto libre con la función de Vercel (2.7.0).
+
 Que quien juega pueda mandarnos su opinión o ideas para que el juego evolucione. Antes de hacerlo
 hay que decidir dos cosas:
 
@@ -309,7 +315,7 @@ Ajustar el reloj de cada tablero con lo que pasa en partidas reales, no con una 
 - **Objetivo:** que el **50 %** de las partidas terminen porque a alguien se le acaba el tiempo.
   El 50 % es un parámetro (por ejemplo `TIMEOUT_TARGET = 0.5`) en un solo sitio, para poder
   cambiarlo sin tocar el resto.
-- **Telemetría (paso 1):** un evento de GA al acabar cada partida (`game_end`) con:
+- **Telemetría (paso 1, hecho en 2.4.0):** un evento de GA al acabar cada partida (`game_end`) con:
   - tablero, número de jugadores, contra la máquina o no, y dificultad;
   - cómo terminó: tablero lleno, sin tiempo o abandonada (`game_start` sin `game_end`);
   - tiempo disponible, tiempo usado y tiempo sobrante de cada jugador, número de jugadas y

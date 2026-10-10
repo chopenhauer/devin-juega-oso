@@ -25,9 +25,11 @@ public/               Sitio estático que publica Vercel (sin build)
   js/leaderboard.js   Marcador de la sesión (partidas seguidas entre los mismos jugadores)
   js/version.js       Versión que sale en el pie (la misma que package.json)
   js/consent.js       Aviso de cookies; ga.js y clarity.js cargan la analítica según el permiso
+  js/telemetry.js     Eventos anónimos de partida (con permiso), cuándo pedir 👍/👎 y email de ideas
+  privacidad.html     Política de privacidad (/privacidad)
   fonts/              Fredoka (subconjunto latino, woff2) + licencia OFL
   favicon.svg
-tests/unit/           Tests del motor, temas, marcador y versión (node:test)
+tests/unit/           Tests del motor, temas, marcador, telemetría y versión (node:test)
 tests/e2e/            Tests en navegador (Playwright, móvil y escritorio)
 scripts/serve.js      Servidor local con las mismas cabeceras que vercel.json
 old-references/       Versiones históricas del juego (no se publican)
@@ -40,13 +42,14 @@ old-references/       Versiones históricas del juego (no se publican)
 
 Lo que se guarda en el dispositivo (`localStorage`), sin datos fuera del navegador:
 
-| Clave            | Qué guarda                                            |
-| ---------------- | ----------------------------------------------------- |
-| `oso.prefs.v1`   | Últimas elecciones del inicio y si ya se vio la intro |
-| `oso.theme.v1`   | Tema elegido en el menú 🎨                            |
-| `oso.sound.v1`   | Sonido activado o silenciado                          |
-| `oso.session.v1` | Marcador de la sesión                                 |
-| `oso.consent.v1` | Respuesta al aviso de cookies                         |
+| Clave             | Qué guarda                                                               |
+| ----------------- | ------------------------------------------------------------------------ |
+| `oso.prefs.v1`    | Últimas elecciones del inicio y si ya se vio la intro                    |
+| `oso.theme.v1`    | Tema elegido en el menú 🎨                                               |
+| `oso.sound.v1`    | Sonido activado o silenciado                                             |
+| `oso.session.v1`  | Marcador de la sesión                                                    |
+| `oso.consent.v1`  | Respuesta al aviso de cookies                                            |
+| `oso.feedback.v1` | Partidas jugadas y si ya se contestó 👍/👎 (para no preguntar demasiado) |
 
 ## Desarrollo
 
@@ -85,7 +88,8 @@ cualquier rama. Dependabot propone actualizaciones mensuales de dependencias y a
   `*.googletagmanager.com`, `*.google-analytics.com`, `*.analytics.google.com`). La fuente se sirve
   desde el propio dominio. Un aviso de cookies (`public/js/consent.js`, `oso.consent.v1`) pide
   permiso: Clarity solo se carga al aceptar y GA usa Consent Mode v2 (analítica denegada hasta
-  aceptar, publicidad siempre denegada). Los tests e2e sustituyen Clarity y GA por respuestas vacías para no
+  aceptar, publicidad siempre denegada). Los eventos de partida (`public/js/telemetry.js`) solo se
+  envían con el permiso concedido y no llevan nombres, avatares ni texto escrito. Los tests e2e sustituyen Clarity y GA por respuestas vacías para no
   enviar datos.
 - El texto que escriben los jugadores (nombres) se pinta siempre con `textContent`, nunca como HTML.
 - `.vercelignore` solo sube `public/` y `vercel.json`; tests, configuración y versiones antiguas no se publican.

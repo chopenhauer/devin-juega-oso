@@ -17,6 +17,32 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.4.0] - 2026-10-10
+
+**Escuchar y medir** ([0a5cb1c](https://github.com/chopenhauer/devin-juega-oso/commit/0a5cb1c),
+[6f3e11b](https://github.com/chopenhauer/devin-juega-oso/commit/6f3e11b))
+
+- Política de privacidad en `/privacidad`, enlazada desde el aviso de cookies y el pie.
+- Eventos de GA `game_start`, `game_end` y `game_abandon`, solo si se aceptan las cookies: tablero,
+  modo, dificultad, cómo terminó (tiempo o tablero lleno), quién ganó (persona, máquina o empate),
+  tiempos y casillas ocupadas. Objetivo `TIMEOUT_TARGET = 0.5` en `public/js/telemetry.js`.
+- «¿Os está gustando OSO?» con 👍/👎 debajo de los botones del final, en segundo plano. Al
+  contestar, una ventana «¡Gracias!» con «💡 Cuéntanos más» (email) y «Cerrar».
+- «💡 Ideas y opiniones» en el menú ☰: abre un email a hola@juegaoso.com con el asunto puesto.
+- Pie en una línea: «made by Vilarequi with ❤️ · versión · Cookies · Privacidad».
+
+**Decisiones**
+
+- La política la firma «el equipo de juegaoso.com», sin nombre, con contacto hola@juegaoso.com
+  (reenvío de email de name.com hacia un correo real).
+- Las ideas llegan por email (`mailto:`): sin servidor ni datos guardados en la web. El texto
+  libre dentro del juego queda para la 2.7.0.
+- Los eventos no llevan nombres, avatares ni nada que se escriba.
+- Cuándo preguntar 👍/👎: en la primera partida del dispositivo, al ganar a la máquina y cada 3
+  partidas seguidas entre los mismos jugadores. Nunca justo cuando gana la máquina ni dos veces en
+  menos de 5 partidas (`FEEDBACK_COOLDOWN`, `FEEDBACK_STREAK`). Si contestan, no se vuelve a
+  preguntar hasta la siguiente versión menor. El evento `feedback` indica el momento.
+
 ## [2.3.1] - 2026-10-10
 
 **Botones de navegación más simples**

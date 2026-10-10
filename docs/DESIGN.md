@@ -32,6 +32,8 @@ de un tema.
 - **Extras** (`.power`, `.sos-power`): icono + contador; su nombre accesible es «Pista, quedan 1» o «… (ya usado)».
 - **Casillas** (`.cell`): botones con nombre «Fila 2, columna 3: O» o «… vacía».
 - **Diálogos**: la ayuda y la pantalla de victoria son `role="dialog"`; al ganar, el foco va a «Revancha». Los avisos cortos (`.info-dialog`) usan `<dialog>` nativo con `showModal()`, fuera de `.app` para que el fondo cubra toda la pantalla, y se cierran con su botón o con Escape.
+- **Opinión al final** (`.feedback-ask`): debajo de los botones de la pantalla final, pequeña y atenuada, porque no sale siempre y el sitio principal es para el marcador y las acciones. Al contestar se abre `#thanksDialog` (`.info-dialog`, fondo más oscuro) con «💡 Cuéntanos más» y «Cerrar»; al cerrar, el foco vuelve a «Revancha».
+- **Pie** (`.credits`): una sola línea, «made by Vilarequi with ❤️ · versión · Cookies · Privacidad».
 - **Celebraciones:** confeti al ganar y lluvia de huevos con el fondo oscurecido en el easter egg de temas; con «reducir movimiento» solo queda el mensaje.
 
 ## Reglas de accesibilidad
@@ -43,7 +45,7 @@ de un tema.
 - Nunca depender solo del color: cada jugador tiene también avatar, nombre y posición.
 - Todas las animaciones se paran con `prefers-reduced-motion: reduce`.
 - Todo sonido tiene su aviso visual y se puede silenciar (🔊 / 🔇), y el silencio se recuerda.
-- `tests/e2e/a11y.spec.js` pasa axe-core (WCAG 2.2 AA) en el inicio, el tablero y la partida; falla si hay errores graves.
+- `tests/e2e/a11y.spec.js` pasa axe-core (WCAG 2.2 AA) en el inicio, el tablero, la partida y la política de privacidad; falla si hay errores graves.
 
 ## Auditoría UX/UI (octubre 2026)
 
