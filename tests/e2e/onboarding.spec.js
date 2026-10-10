@@ -311,3 +311,43 @@ test('step buttons: plain and equal in the intro, yellow next in setup, round he
   expect(new Set(await widths('#stepBack', '#stepNext')).size).toBe(1);
   await expectRoundHelp();
 });
+
+test('on a phone, the name being typed moves above the keyboard', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile', 'phone only');
+  // Stand-in for the visual viewport, which the keyboard shrinks without resizing the page.
+  await page.addInitScript(() => {
+    const vv = new EventTarget();
+    Object.defineProperty(vv, 'height', { get: () => window.vvHeight ?? innerHeight });
+    Object.defineProperty(vv, 'offsetTop', { get: () => 0 });
+    Object.defineProperty(window, 'visualViewport', { get: () => vv });
+  });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#stepNext');
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'players');
+  const keyboard = () => page.evaluate(() => document.body.style.getPropertyValue('--keyboard'));
+  const openKeyboard = (height) =>
+    page.evaluate((h) => {
+      window.vvHeight = h;
+      window.visualViewport.dispatchEvent(new Event('resize'));
+    }, height);
+
+  for (const id of ['#nickname1', '#nickname2']) {
+    await page.focus(id);
+    await openKeyboard(400);
+    await expect.poll(keyboard).toBe('444px');
+    await expect
+      .poll(async () => {
+        const box = await page.locator(id).boundingBox();
+        return box.y >= 0 && box.y + box.height <= 400;
+      })
+      .toBe(true);
+  }
+
+  await openKeyboard(844);
+  await expect.poll(keyboard).toBe('0px');
+  await page.focus('#nickname1');
+  await page.locator('#nickname1').blur();
+  await expect.poll(keyboard).toBe('0px');
+});

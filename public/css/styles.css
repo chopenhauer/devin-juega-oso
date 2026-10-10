@@ -54,6 +54,8 @@ body {
   color: var(--ink);
   font-family: var(--font);
   overflow-x: hidden;
+  /* Room for the phone keyboard while typing a name (set in onboarding.js). */
+  padding-bottom: var(--keyboard, 0px);
   -webkit-tap-highlight-color: transparent;
 }
 body::before {

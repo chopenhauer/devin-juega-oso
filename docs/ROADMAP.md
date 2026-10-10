@@ -53,6 +53,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   `game_end`, `game_abandon`) con consentimiento, 👍/👎 en momentos elegidos y «💡 Ideas» por email.
 - Tema Año Nuevo Chino (2.5.0, idea de Julia): los 12 animales del zodiaco como avatares,
   farolillos y fondo rojo y dorado; se pone solo ese día (fecha lunar en una tabla).
+- Nombre visible con el teclado del móvil (2.5.1): al escribir el nombre, la pantalla sube y el
+  campo queda encima del teclado.
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 

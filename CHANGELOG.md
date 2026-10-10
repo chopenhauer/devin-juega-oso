@@ -17,6 +17,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.5.1] - 2026-10-10
+
+**Nombre visible con el teclado del móvil**
+
+- En el móvil, al escribir el nombre de un jugador la pantalla sube para que el campo quede encima
+  del teclado y se vea lo que escribes. Al cerrar el teclado vuelve a su sitio.
+
+**Decisiones**
+
+- El teclado tapa la pantalla sin redimensionarla, así que medimos cuánto tapa (`visualViewport`),
+  añadimos ese espacio debajo y centramos el campo en la parte visible. No usamos
+  `interactive-widget=resizes-content` porque encogería toda la página y cambiaría el diseño
+  (orientación y alturas) mientras escribes.
+
 ## [2.5.0] - 2026-10-10
 
 **Tema Año Nuevo Chino** (idea de Julia,

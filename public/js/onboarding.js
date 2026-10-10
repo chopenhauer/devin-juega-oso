@@ -187,6 +187,30 @@ $('newGame').addEventListener('click', () => show('mode'));
 $('changePlayers').addEventListener('click', () => show('players'));
 $('otherBoard').addEventListener('click', () => show('board'));
 window.addEventListener('resize', equalizeHeight);
+
+// On phones the keyboard covers the lower half without resizing the page, hiding the name being
+// typed. Add that much room below and centre the field in the part still visible.
+const KEYBOARD_MIN_PX = 100;
+function keepNameVisible() {
+  const vv = window.visualViewport;
+  if (!vv) return;
+  const covered = document.documentElement.clientHeight - vv.height;
+  const input = document.activeElement;
+  const typing = nameInputs.includes(input) && covered > KEYBOARD_MIN_PX;
+  document.body.style.setProperty('--keyboard', typing ? `${Math.round(covered)}px` : '0px');
+  if (!typing) return;
+  const r = input.getBoundingClientRect();
+  const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollBy({
+    top: r.top + r.height / 2 - vv.offsetTop - vv.height / 2,
+    behavior: smooth ? 'smooth' : 'auto',
+  });
+}
+window.visualViewport?.addEventListener('resize', keepNameVisible);
+nameInputs.forEach((input) => {
+  input.addEventListener('focus', keepNameVisible);
+  input.addEventListener('blur', (e) => nameInputs.includes(e.relatedTarget) || keepNameVisible());
+});
 document.fonts?.ready.then(equalizeHeight);
 
 setView(defaultView());
