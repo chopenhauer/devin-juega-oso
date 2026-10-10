@@ -127,6 +127,10 @@ function show(step, slideIndex = 0) {
   $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '←';
   $('stepBack').setAttribute('aria-label', step === 'mode' ? 'Cómo se juega' : 'Atrás');
   $('stepNext').classList.toggle('invisible', NO_NEXT.has(step));
+  // The intro only explains, so its arrows are plain; setup steps keep a yellow «next».
+  $('stepNext').classList.toggle('primary', step !== 'rules');
+  $('stepNext').classList.toggle('secondary', step === 'rules');
+  $('stepNext').textContent = step === 'mode' ? 'Siguiente →' : '→';
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
   equalizeHeight();

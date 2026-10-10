@@ -2034,15 +2034,22 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
   width: 100%;
   max-width: 440px;
 }
+/* ← → share one width around the round ❓; on the mode step the labelled pair fills its halves. */
 .wizard-nav .primary,
 .wizard-nav .secondary {
-  min-width: 76px;
+  width: 76px;
   min-height: 46px;
-  padding: 0 16px;
+  padding: 0 10px;
   font-size: 22px;
+  line-height: 1.1;
 }
-.setup[data-step='mode'] #stepBack {
-  font-size: 15px;
+.setup[data-step='mode'] .wizard-nav {
+  gap: 8px;
+}
+.setup[data-step='mode'] :is(#stepBack, #stepNext) {
+  width: 100%;
+  padding: 0 4px;
+  font-size: 14px;
 }
 .help-icon {
   justify-self: center;
