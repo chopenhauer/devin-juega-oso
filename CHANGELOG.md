@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [2.6.1] - 2026-10-10
 
-**Sistema de diseño**
+**Sistema de diseño** ([334ec7e](https://github.com/chopenhauer/devin-juega-oso/commit/334ec7e92da9fba7e0ef9bbfbb57068001402341))
 
 - Nuevo `public/css/tokens.css`, la única fuente de colores, letra, espacios, radios, sombras,
   animación y capas, en tres capas: primitivos, semánticos y componentes. Los nombres anteriores

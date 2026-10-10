@@ -58,6 +58,9 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Boca-oreja (2.6.0): compartir desde el inicio (📣), el menú ☰ y la pantalla final con el menú
   nativo del móvil o, si no hay, WhatsApp, email y «Copiar enlace»; tarjeta Open Graph del oso,
   evento `share` y enlaces con `utm_campaign=boca_oreja`. Sin nombres de jugadores.
+- Sistema de diseño (2.6.1): `public/css/tokens.css` en capas (primitivos, semánticos,
+  componentes); `styles.css` y los temas solo usan tokens; guía viva `/design` solo en local y
+  previews; `npm run tokens` exporta `docs/tokens.json` (W3C).
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
