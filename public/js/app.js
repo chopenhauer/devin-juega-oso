@@ -1291,7 +1291,7 @@ const { timeFor } = Engine;
     const turnKey = `${v.game}:${v.match.current}:${v.match.history.length}:${v.match.word}`;
     if (turnKey !== o.turnKey) {
       o.turnKey = turnKey;
-      o.turnStart = performance.now();
+      o.turnStart = performance.now() + v.match.holdMs;
       closeNudge(false);
     }
     const rivalSeat = v.seats[1 - o.seat];
@@ -1370,6 +1370,8 @@ const { timeFor } = Engine;
     game.classList.remove('hidden');
     game.classList.add('same-view');
     applyView(v);
+    online.goAt = 0;
+    if (!over && !v.match.history.length && v.match.holdMs > 0) countdown(v.match.holdMs);
     if (!over) {
       msg.textContent = remote(current)
         ? `Empieza ${avatars[current]} ${names[current]}.`
@@ -1379,6 +1381,32 @@ const { timeFor } = Engine;
     }
     timer = setInterval(tick, 100);
     schedulePoll();
+  }
+
+  // «3, 2, 1» on both screens: the server holds the first clock meanwhile.
+  function countdown(ms) {
+    const o = online,
+      box = q('countdown'),
+      num = q('countdownNum');
+    o.goAt = performance.now() + ms;
+    box.classList.remove('hidden');
+    const step = () => {
+      const left = Math.ceil((o.goAt - performance.now()) / 1000);
+      if (o !== online || left <= 0) return box.classList.add('hidden');
+      if (num.textContent !== String(left)) {
+        num.textContent = left;
+        num.animate(
+          [
+            { transform: 'scale(1.6)', opacity: 0 },
+            { transform: 'scale(1)', opacity: 1 },
+          ],
+          300,
+        );
+      }
+      setTimeout(step, 50);
+    };
+    num.textContent = '';
+    step();
   }
 
   // Clocks run locally between polls; the server has the last word on time-outs.
@@ -1452,7 +1480,7 @@ const { timeFor } = Engine;
   }
 
   function onlineCell(i) {
-    if (over || remote(current) || online.busy) return;
+    if (over || remote(current) || online.busy || performance.now() < online.goAt) return;
     if (swapMode === current) {
       if (!board[i]) msg.textContent = '🔄 Elige una casilla ocupada.';
       else onlineMove({ type: 'swap', index: i });
@@ -1500,11 +1528,14 @@ const { timeFor } = Engine;
     cards.forEach((card, i) => {
       const other = on && i !== me && seats[i];
       card.classList.toggle('remote', !!other);
+      card.querySelector('.avatars').inert = !!other;
       if (other) {
         card.querySelector('.online-seat-avatar').textContent = other.avatar;
         card.querySelector('.online-seat-name').textContent = other.name;
+        avatars[i] = other.avatar;
       }
     });
+    syncAvatars();
     const host = me === 0,
       ready = seats.length === 2;
     cards[1].classList.toggle('inviting', on && host && !ready);
@@ -1516,7 +1547,7 @@ const { timeFor } = Engine;
       q('onlineWhatsapp').href = whatsappHref(`¿Jugamos a OSO? 🐻 Entra en mi sala: ${url}`);
     }
     const rival = seats[1 - me]?.name;
-    q('seatStatus').textContent = !on
+    const seatNews = !on
       ? ''
       : host
         ? online
@@ -1530,7 +1561,7 @@ const { timeFor } = Engine;
     q('sizeSelect').disabled = on && !host;
     q('startGame').classList.toggle('hidden', on && !host);
     q('startGame').disabled = on && host && online?.status !== 'lobby';
-    q('lobbyStatus').textContent = !on
+    const boardNews = !on
       ? ''
       : !host
         ? `⏳ ${seats[0]?.name ?? 'Tu amigo'} está eligiendo el tablero…`
@@ -1539,8 +1570,18 @@ const { timeFor } = Engine;
           : online
             ? '⏳ Esperando a tu amigo…'
             : 'Vuelve atrás y abre la sala para invitar a tu amigo.';
+    toast(setupStep === 'players' ? seatNews : setupStep === 'board' ? boardNews : '');
   }
-  document.addEventListener('oso:step', renderLobby);
+  function toast(text) {
+    const el = q('onlineToast');
+    if (el.textContent !== text) el.textContent = text;
+    el.classList.toggle('hidden', !text);
+  }
+  let setupStep = null;
+  document.addEventListener('oso:step', (e) => {
+    setupStep = e.detail;
+    renderLobby();
+  });
 
   // Host: «Abrir sala» creates the room; the invite stays on the players step.
   async function hostRoom() {
@@ -1569,7 +1610,7 @@ const { timeFor } = Engine;
       const r = await Online.send({ action: 'join', code: invite.code, ...body });
       if (!r.ok) {
         track('online_join_fail', { reason: r.error });
-        if (r.error === 'avatar_taken') return void (q('seatStatus').textContent = onlineError(r.error));
+        if (r.error === 'avatar_taken') return toast(onlineError(r.error));
         leaveOnline();
         return onlineFail(r.error);
       }
@@ -1580,7 +1621,7 @@ const { timeFor } = Engine;
     } else if (!online) return hostRoom();
     else {
       const r = await Online.send({ action: 'profile', code: online.code, token: online.token, ...body });
-      if (r.error === 'avatar_taken') return void (q('seatStatus').textContent = onlineError(r.error));
+      if (r.error === 'avatar_taken') return toast(onlineError(r.error));
       if (r.ok && online) applyView(r);
     }
     renderLobby();
@@ -1608,7 +1649,7 @@ const { timeFor } = Engine;
     if (r.ok) return startOnlineGame(r);
     if (r.room) applyView(r.room);
     renderLobby();
-    if (r.error !== 'started' && r.error !== 'alone') q('lobbyStatus').textContent = onlineError(r.error);
+    if (r.error !== 'started' && r.error !== 'alone') toast(onlineError(r.error));
   }
 
   // Guest: the invite link opens the players step with the host's card.
@@ -1638,9 +1679,9 @@ const { timeFor } = Engine;
   q('onlineCopy').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(Online.inviteUrl(online.code));
-      q('seatStatus').textContent = '🔗 Enlace copiado. ⏳ Esperando a tu amigo…';
+      toast('🔗 Enlace copiado. ⏳ Esperando a tu amigo…');
     } catch {
-      q('seatStatus').textContent = Online.inviteUrl(online.code);
+      toast(Online.inviteUrl(online.code));
     }
   });
   q('onlineCancel').addEventListener('click', () => onlineDialog.close());

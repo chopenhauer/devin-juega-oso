@@ -29,24 +29,29 @@ async function createRoom(host, name = 'Ana') {
   await host.fill('#nickname1', name);
   await host.click('#openRoom');
   await expect(host.locator('#onlineCode')).toHaveText(/^[A-Z2-9]{5}$/);
-  await expect(host.locator('#seatStatus')).toContainText('Esperando a tu amigo');
+  await expect(host.locator('#onlineToast')).toContainText('Esperando a tu amigo');
   return host.locator('#onlineCode').textContent();
 }
 
 // The guest fills their card and goes to the board step; the host picks the board and starts.
 async function joinRoom(host, guest, code, name, hostName = 'Ana') {
+  await host.click('#stepNext');
+  await expect(host.locator('#startGame')).toBeDisabled();
   await guest.goto(`/?sala=${code}`);
-  await expect(guest.locator('#seatStatus')).toContainText(`${hostName} te invita`);
+  await expect(guest.locator('#onlineToast')).toContainText(`${hostName} te invita`);
   await expect(guest.locator('.pconfig.remote .online-seat-name')).toHaveText(hostName);
+  await expect(guest.locator('.pconfig.remote .avatar-btn.selected')).toHaveText('🐻');
   await guest.fill('#nickname2', name);
   await guest.click('#stepNext');
-  await expect(guest.locator('#lobbyStatus')).toContainText(`${hostName} está eligiendo el tablero`);
+  await expect(guest.locator('#onlineToast')).toContainText(`${hostName} está eligiendo el tablero`);
   await expect(guest.locator('#startGame')).toBeHidden();
-  await expect(host.locator('#seatStatus')).toContainText(`${name} ya está aquí`);
+  await expect(host.locator('#onlineToast')).toContainText(`${name} está listo`);
   await expect(host.locator('.second-player .online-seat-name')).toHaveText(name);
-  await host.click('#stepNext');
   await host.selectOption('#sizeSelect', '4');
   await host.click('#startGame');
+  await expect(guest.locator('#countdown')).toBeVisible();
+  await expect(host.locator('#countdown')).toBeHidden({ timeout: 8000 });
+  await expect(guest.locator('#countdown')).toBeHidden({ timeout: 8000 });
 }
 
 test('invite a friend, play turns remotely, resume after reload and win when the rival leaves', async ({

@@ -9,6 +9,8 @@ import * as Match from '../public/js/match.js';
 
 export const SIZES = [4, 5, 6, 7, 8];
 export const ROOM_TTL = 24 * 3600;
+// «3, 2, 1…» on both screens before the first clock starts.
+export const COUNTDOWN_MS = 3000;
 const STATS_TTL = 400 * 24 * 3600;
 const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const CODE_RE = new RegExp(`^[${CODE_CHARS}]{5}$`);
@@ -90,7 +92,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   function startGame(room, now, first) {
     room.status = 'playing';
     room.first = first;
-    room.match = Match.toJSON(Match.newMatch({ size: room.size, first, now }));
+    room.match = Match.toJSON(Match.newMatch({ size: room.size, first, now: now + COUNTDOWN_MS }));
     room.seats.forEach((s) => (s.rematch = false));
   }
 
@@ -196,6 +198,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     const apply = MOVES[body.move?.type];
     if (!apply) throw new HttpError(400, 'move');
     const m = Match.fromJSON(room.match);
+    if (!m.history.length && m.since > now) throw new HttpError(409, 'countdown', room);
     const result = apply(m, seat, body.move, now);
     room.match = Match.toJSON(m);
     finished(room, result.events, stats);

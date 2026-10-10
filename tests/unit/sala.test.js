@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createHandler, ROOM_TTL } from '../../api/_sala.js';
+import { COUNTDOWN_MS, createHandler, ROOM_TTL } from '../../api/_sala.js';
 import { memoryStore } from '../../api/_store.js';
 import { timeFor } from '../../public/js/engine.js';
 
@@ -29,8 +29,37 @@ async function startedRoom(s, size = 4) {
   const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   const started = await s.call({ action: 'start', code: host.code, token: host.token, size });
+  s.clock.t += COUNTDOWN_MS;
   return { host, guest: { ...guest, rev: started.rev }, code: host.code };
 }
+
+test('the game starts after a 3-2-1 countdown: no clock and no moves meanwhile', async () => {
+  const s = setup();
+  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
+  await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
+  const started = await s.call({ action: 'start', code: host.code, token: host.token, size: 4 });
+  assert.equal(started.match.holdMs, COUNTDOWN_MS);
+  s.clock.t += 1000;
+  const early = await s.call({
+    action: 'move',
+    code: host.code,
+    token: host.token,
+    rev: started.rev,
+    move: { type: 'place', index: 0, letter: 'O' },
+  });
+  assert.equal(early.http, 409);
+  assert.equal(early.error, 'countdown');
+  assert.deepEqual(early.room.match.clocks, [timeFor(4), timeFor(4)]);
+  s.clock.t += COUNTDOWN_MS;
+  const go = await s.call({
+    action: 'move',
+    code: host.code,
+    token: host.token,
+    rev: started.rev,
+    move: { type: 'place', index: 0, letter: 'O' },
+  });
+  assert.equal(go.http, 200);
+});
 
 test('create gives a 5-character code and a secret seat; join opens the lobby, the host starts', async () => {
   const s = setup();

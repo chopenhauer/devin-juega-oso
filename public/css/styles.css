@@ -3399,13 +3399,16 @@ body:has(#gameScreen:not(.hidden)) .online-toggle {
   display: none;
 }
 .online-seat,
-.online-invite,
-.online-status {
+.online-invite {
   display: none;
 }
-.online-setup .pconfig.remote > :not(.small-label, .online-seat, .online-status),
-.online-setup .second-player.inviting > :not(.small-label, .online-invite, .online-status) {
+.online-setup .pconfig.remote > :not(.small-label, .online-seat, .avatars),
+.online-setup .second-player.inviting > :not(.small-label, .online-invite) {
   display: none;
+}
+/* The rival's card shows their pick; it can't be changed from here. */
+.online-setup .pconfig.remote .avatars {
+  pointer-events: none;
 }
 .online-setup .pconfig.remote .online-seat,
 .online-setup .second-player.inviting .online-invite {
@@ -3413,10 +3416,60 @@ body:has(#gameScreen:not(.hidden)) .online-toggle {
   justify-items: center;
   gap: var(--space-2);
 }
-.online-setup .online-status {
-  display: block;
+/* Lobby news («Esperando a tu amigo…») as a toast between the toolbar and the card. */
+.online-toast {
+  position: fixed;
+  top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+  left: 50%;
+  z-index: var(--z-toolbar);
+  width: max-content;
+  max-width: calc(100% - 32px);
   margin: 0;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--noche-950-a97);
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
   text-align: center;
+  box-shadow: 0 8px 24px var(--noche-950-a97);
+  transform: translateX(-50%);
+  animation: toastIn 0.25s ease;
+}
+.online-toast.hidden,
+body:has(#gameScreen:not(.hidden)) .online-toast {
+  display: none;
+}
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+}
+.start-countdown {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  place-items: center;
+  background: var(--noche-950-a97);
+  animation: fadeIn 0.2s ease;
+}
+.start-countdown.hidden {
+  display: none;
+}
+.start-countdown span {
+  color: var(--accent);
+  font-size: var(--fs-hero-xl);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+}
+.primary:disabled {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+  box-shadow: none;
+  cursor: not-allowed;
 }
 .online-seat-name,
 .online-invite-lead {

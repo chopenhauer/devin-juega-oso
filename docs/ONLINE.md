@@ -45,7 +45,11 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   jugar!» (el invitado ve «… está eligiendo el tablero…»). Estados de la sala en el servidor:
   `waiting` (anfitrión solo) → `lobby` (los dos; `profile` cambia nombre/avatar) → `start` del
   anfitrión → `playing` ⇄ `over`. Si el invitado sale del lobby, la sala vuelve a `waiting`; si sale
-  el anfitrión, se cierra. El botón 🌐 arriba a la izquierda presenta el modo.
+  el anfitrión, se cierra. El botón 🌐 arriba a la izquierda presenta el modo. Ronda 2 de feedback: los
+  avisos del lobby salen en un toast arriba; la tarjeta del rival enseña su avatar en la rejilla (solo
+  lectura); «¡A jugar!» se ve desactivado hasta que el amigo entra; al empezar (y en cada revancha)
+  hay una cuenta atrás 3-2-1 en los dos móviles: el servidor arranca el primer reloj `COUNTDOWN_MS`
+  (3 s) más tarde y rechaza jugadas antes (`countdown`).
 - **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El
   token va en `localStorage` (`oso.online.v1`) para poder volver tras recargar o perder la conexión.
 - **Árbitro:** el cliente envía intenciones (`place`, `swap`, `sos`, `power`, `leave`) con la

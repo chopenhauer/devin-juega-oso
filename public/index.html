@@ -57,6 +57,7 @@
       🔊
     </button>
     <button id="onlineToggle" class="online-toggle" type="button" aria-label="Jugar en línea">🌐</button>
+    <p id="onlineToast" class="online-toast hidden" role="status" aria-live="polite"></p>
     <button id="shareToggle" class="share-toggle" type="button" aria-label="Invitar a jugar">📣</button>
     <div id="themeMenu" class="theme-menu hidden" role="group" aria-label="Tema"></div>
     <div id="eggParty" class="egg-party" role="status" aria-live="polite"></div>
@@ -269,6 +270,10 @@
 
                 <div class="pconfig second-player">
                   <div class="small-label">Jugador 2</div>
+                  <div class="online-seat" data-seat="1">
+                    <div class="preview online-seat-avatar"></div>
+                    <p class="online-seat-name"></p>
+                  </div>
                   <div id="preview2" class="preview">🐼</div>
                   <input
                     id="nickname2"
@@ -292,13 +297,9 @@
                     <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
                     ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
                   </div>
-                  <div class="online-seat" data-seat="1">
-                    <div class="preview online-seat-avatar"></div>
-                    <p class="online-seat-name"></p>
-                  </div>
                   <div id="onlineInvite" class="online-invite">
                     <div class="preview" aria-hidden="true">🌐</div>
-                    <p class="online-invite-lead">Invita a un amigo. Jugará desde su móvil.</p>
+                    <p class="online-invite-lead">Invita a un amigo</p>
                     <button id="openRoom" class="primary" type="button">Abrir sala</button>
                     <div id="roomShare" class="online-share hidden">
                       <p class="online-code-label">Código de la sala</p>
@@ -314,7 +315,6 @@
                       <button id="onlineCopy" class="secondary" type="button">🔗 Copiar enlace</button>
                     </div>
                   </div>
-                  <p id="seatStatus" class="share-status online-status" role="status" aria-live="polite"></p>
                   <div id="difficultyWrap" class="difficulty-wrap">
                     <div class="difficulty-choice" role="group" aria-label="Dificultad de la máquina">
                       <button id="difficultyEasy" class="difficulty-btn selected" type="button">
@@ -419,7 +419,6 @@
                 </div>
                 <button id="startGame" class="primary">¡A jugar!</button>
               </div>
-              <p id="lobbyStatus" class="share-status online-status" role="status" aria-live="polite"></p>
               <p id="setupSummary" class="setup-summary visually-hidden" aria-live="polite"></p>
             </div>
           </div>
@@ -438,6 +437,9 @@
           </nav>
         </div>
 
+        <div id="countdown" class="start-countdown hidden" aria-live="assertive">
+          <span id="countdownNum"></span>
+        </div>
         <div id="gameScreen" class="game hidden">
           <div id="side2" class="player-panel p2 top">
             <div class="identity">
