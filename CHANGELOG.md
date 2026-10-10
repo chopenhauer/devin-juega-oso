@@ -17,6 +17,22 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.5.0] - 2026-10-10
+
+**Tema Año Nuevo Chino** (idea de Julia)
+
+- Tema nuevo 🏮 «Año Nuevo Chino», 24 en total: los 12 animales del zodiaco chino como avatares
+  (🐀 🐂 🐅 🐇 🐉 🐍 🐎 🐐 🐒 🐓 🐕 🐖), farolillos, sobres rojos, dragón y fuegos artificiales
+  subiendo, fondo rojo y dorado y confeti a juego.
+- Sale en el menú 🎨 desde un mes antes hasta un mes después y se pone solo el día de Año Nuevo
+  Chino.
+
+**Decisiones**
+
+- La fecha es lunar y cambia cada año, así que va en una tabla (2025–2035) en `public/js/themes.js`;
+  cuando se acabe, el tema sigue en «Ver otros» y solo hay que añadir los años nuevos.
+- Si coincide con Carnaval (17 de febrero de 2026), ese día gana el Año Nuevo Chino.
+
 ## [2.4.0] - 2026-10-10
 
 **Escuchar y medir** ([0a5cb1c](https://github.com/chopenhauer/devin-juega-oso/commit/0a5cb1c),

@@ -58,6 +58,33 @@ export const THEMES = {
     board: ['#4a1238', '#24081c'],
     motion: 'rise',
   },
+  // Idea de Julia. Before Carnaval so it wins when both share a day (17 feb 2026).
+  chinesenewyear: {
+    label: 'Año Nuevo Chino',
+    icon: '🏮',
+    // Lunar date: no simple formula, so a table. Add years as they come.
+    when: {
+      lunar: {
+        2025: [1, 29],
+        2026: [2, 17],
+        2027: [2, 6],
+        2028: [1, 26],
+        2029: [2, 13],
+        2030: [2, 3],
+        2031: [1, 23],
+        2032: [2, 11],
+        2033: [1, 31],
+        2034: [2, 19],
+        2035: [2, 8],
+      },
+    },
+    avatars: ['🐀', '🐂', '🐅', '🐇', '🐉', '🐍', '🐎', '🐐', '🐒', '🐓', '🐕', '🐖'],
+    decor: ['🏮', '🧧', '🎆', '🐉', '🥟', '🏮'],
+    confetti: ['#e63946', '#ffd23f', '#ff9f1c', '#ffffff', '#c8102e'],
+    bg: ['#c8102e', '#d4a017', '#1a0305', '#3d0710', '#2e1a05'],
+    board: ['#40101a', '#1f070c'],
+    motion: 'rise',
+  },
   carnival: {
     label: 'Carnaval',
     icon: '🎭',
@@ -286,7 +313,11 @@ export function easterSunday(y) {
 function span(when, y) {
   if (when.from) return [utc(y, ...when.from), utc(y, ...when.to)];
   let start;
-  if (when.easter !== undefined) start = easterSunday(y) + when.easter * DAY;
+  if (when.lunar) {
+    const day = when.lunar[y];
+    if (!day) return null;
+    start = utc(y, ...day);
+  } else if (when.easter !== undefined) start = easterSunday(y) + when.easter * DAY;
   else if (when.nth) {
     const first = new Date(utc(y, when.month, 1)).getUTCDay();
     start = utc(y, when.month, 1 + ((when.weekday - first + 7) % 7) + 7 * (when.nth - 1));
@@ -295,7 +326,7 @@ function span(when, y) {
 }
 const spans = (when, t) => {
   const y = new Date(t).getUTCFullYear();
-  return [y - 1, y, y + 1].map((year) => span(when, year));
+  return [y - 1, y, y + 1].map((year) => span(when, year)).filter(Boolean);
 };
 // Days from t to the theme's dates (0 while they last).
 const distance = (when, t) =>

@@ -34,6 +34,16 @@ test('movable dates: Easter and Thanksgiving', () => {
   assert.equal(festivalOn(new Date(2027, 10, 25)), 'thanksgiving');
 });
 
+test('Chinese New Year follows the lunar table and wins over Carnival on its day', () => {
+  assert.equal(festivalOn(new Date(2026, 1, 17)), 'chinesenewyear');
+  assert.equal(festivalOn(new Date(2026, 1, 16)), 'carnival');
+  assert.equal(festivalOn(new Date(2027, 1, 6)), 'chinesenewyear');
+  assert.equal(festivalOn(new Date(2028, 0, 26)), 'chinesenewyear');
+  assert.ok(themeMenuFor(new Date(2026, 1, 1)).menu.includes('chinesenewyear'));
+  const later = themeMenuFor(new Date(2040, 1, 1));
+  assert.ok(!later.menu.includes('chinesenewyear'));
+});
+
 test('a festival switches on only on its day; seasons and places never do', () => {
   assert.equal(festivalOn(new Date(2026, 6, 7)), 'sanfermin');
   assert.equal(festivalOn(new Date(2026, 6, 8)), null);

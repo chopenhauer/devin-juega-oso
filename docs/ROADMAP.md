@@ -51,6 +51,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   en la configuración, «Siguiente →» en el paso de modo y ❓ siempre redondo.
 - Escuchar y medir (2.4.0): política de privacidad, eventos anónimos de partida (`game_start`,
   `game_end`, `game_abandon`) con consentimiento, 👍/👎 en momentos elegidos y «💡 Ideas» por email.
+- Tema Año Nuevo Chino (2.5.0, idea de Julia): los 12 animales del zodiaco como avatares,
+  farolillos y fondo rojo y dorado; se pone solo ese día (fecha lunar en una tabla).
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
@@ -229,6 +231,7 @@ recuerda en el dispositivo (`oso.theme.v1`). Código: `public/js/themes.js`.
 | Espacio                | Todo el año                        | 🚀 👽 🪐 🛸 👩‍🚀 🌙; estrellas fugaces y planetas.                                           |
 | Dinosaurios            | Todo el año                        | 🦖 🦕 🌋 🥚 🌿 🦴; volcán y selva prehistórica.                                            |
 | Piratas                | Todo el año                        | 🏴‍☠️ 🦜 💰 🗺️ ⚓ 🦈; mapa del tesoro (ojo: no mezclar con el tema marino del SOS).           |
+| Año Nuevo Chino        | Fecha lunar (ene – feb)            | 🐀 🐂 🐅 🐇 🐉 🐍 🐎 🐐 🐒 🐓 🐕 🐖; farolillos y dragón (2.5.0, idea de Julia).           |
 | Cumpleaños             | Sin fecha: se elige a mano         | 🎂 🎈 🎁 🥳; tarta, globos y confeti; para el cumple de cualquiera, sin guardar fechas.    |
 
 #### Menú de temas por fechas (idea de los niños)

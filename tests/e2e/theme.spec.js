@@ -143,8 +143,8 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   expect(await backdrop()).not.toBe('rgba(0, 0, 0, 0)');
   expect(await page.evaluate(() => window.__fanfare)).toBe(1);
   await expect(page.locator('#themeMenu')).not.toContainText('temas disponibles');
-  await expect(page.locator('#themeMenu .theme-option')).toHaveCount(23);
-  await expect(page.locator('#themeMenu .theme-option:visible')).toHaveCount(23);
+  await expect(page.locator('#themeMenu .theme-option')).toHaveCount(24);
+  await expect(page.locator('#themeMenu .theme-option:visible')).toHaveCount(24);
   expect(await page.locator('#themeMenu .theme-group').count()).toBe(2);
   expect((await page.locator('#themeMenu').boundingBox()).width).toBe(width);
   await expect(party).toBeEmpty({ timeout: 6000 });
