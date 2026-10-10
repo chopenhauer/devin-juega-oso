@@ -14,10 +14,39 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## Próximamente
 
-- **3.0.0 · Jugar en línea 1 contra 1** (en marcha): invitar a un amigo con un enlace o un código
-  y jugar cada uno desde su móvil. Decisión y plan en [`docs/ONLINE.md`](docs/ONLINE.md).
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
+
+## [3.0.0] - 2026-10-10
+
+**Jugar en línea 1 contra 1**
+
+- Botón 🌐 arriba a la izquierda que presenta el modo, con «Invitar a un amigo».
+- «2 jugadores» pregunta «¿Dónde está tu rival?»: 🛋️ Juntos (mismo dispositivo) o 🌐 En línea.
+- En línea, la tarjeta del jugador 2 sirve para invitar: «Abrir sala», «Código: XXXXX» en una
+  línea y WhatsApp y Copiar enlace alineados con las filas de avatares. El amigo abre el enlace y ve
+  la misma pantalla con la tarjeta de quien invita (solo lectura) y la suya para rellenar.
+- Los dos pasan al tablero, pero solo quien invita elige el tamaño y pulsa «¡A jugar!». El botón
+  está desactivado hasta que el amigo está listo. Después, cuenta atrás 3-2-1 en los dos
+  dispositivos.
+- Los avisos de la sala («Esperando a tu amigo…», «… te invita», «… está listo», «… está eligiendo
+  el tablero…», errores) salen en un aviso arriba de la pantalla.
+- El servidor hace de árbitro: valida cada jugada, lleva los relojes (no corren durante la cuenta
+  atrás) y gestiona abandono y revancha. Recargar la página recupera la partida.
+- «¿Sigues ahí?» a los 20 s sin jugar para quien tiene el turno, y un mensaje de ánimo para quien
+  espera.
+- Telemetría para evaluar la decisión: eventos `online_create`, `online_join`, `online_join_fail`,
+  `online_quality` y `online_nudge` (con consentimiento) y contadores anónimos por mes en el
+  servidor.
+
+**Decisiones**
+
+- Opción A: funciones de Vercel + Upstash Redis + polling. Las alternativas, los umbrales para
+  revisarla y el flujo están en [`docs/ONLINE.md`](docs/ONLINE.md).
+- Cerrar la pestaña no cuenta como abandono (no se distingue de recargar): quien no vuelve pierde
+  por tiempo. Salir desde el menú sí es abandono, y entonces no hay revancha.
+- Flujo de la sala rediseñado con el feedback de JoseLuis (capturas y FigJam «Ronda 2»).
+- La política de privacidad explica qué se envía en las partidas en línea.
 
 ## [2.6.1] - 2026-10-10
 

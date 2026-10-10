@@ -6,7 +6,7 @@ empezar por [«Cómo sabremos si funciona»](#cómo-sabremos-si-funciona).
 
 - **Fecha:** 2026-10-09
 - **Decidido por:** JoseLuis (con Julia), a partir del análisis comparativo de cinco opciones.
-- **Estado:** aceptada, en ejecución.
+- **Estado:** aceptada y publicada en la 3.0.0 (10-oct-2026).
 
 ## Decisión
 

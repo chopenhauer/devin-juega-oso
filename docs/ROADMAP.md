@@ -61,6 +61,10 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Sistema de diseño (2.6.1): `public/css/tokens.css` en capas (primitivos, semánticos,
   componentes); `styles.css` y los temas solo usan tokens; guía viva `/design` solo en local y
   previews; `npm run tokens` exporta `docs/tokens.json` (W3C).
+- Jugar en línea 1 contra 1 (3.0.0): 🌐 arriba a la izquierda, «2 jugadores → Juntos / En
+  línea», la tarjeta del jugador 2 invita (código, WhatsApp, Copiar), solo quien invita elige
+  tablero, cuenta atrás 3-2-1, «¿Sigues ahí?», servidor árbitro (Vercel + Upstash Redis) y
+  telemetría para revisar la decisión ([`ONLINE.md`](ONLINE.md)).
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
@@ -126,8 +130,8 @@ preguntan una a una al empezar cada fase.
    - Informe en GA4 y script que propone el tiempo de cada tablero; pasar de la fórmula a una
      tabla de tiempos.
    - Feedback con texto libre por una función de Vercel, con protección contra spam.
-6. **3.0.0 · Jugar en línea 1 contra 1** (en marcha): invitar a un amigo con un enlace o un código.
-   Decisión, telemetría y plan en [`ONLINE.md`](ONLINE.md).
+6. ~~**3.0.0 · Jugar en línea 1 contra 1**~~ hecho: invitar a un amigo con un enlace o un código.
+   Decisión, telemetría y umbrales para revisarla en [`ONLINE.md`](ONLINE.md).
 7. **4.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
 
 **Siempre, en paralelo:** accesibilidad (tablero con teclado, OSOs sin depender del color), deuda de
