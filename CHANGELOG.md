@@ -19,7 +19,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [2.3.1] - 2026-10-10
 
-**Botones de navegación más simples**
+**Botones de navegación más simples** ([ad80892](https://github.com/chopenhauer/devin-juega-oso/commit/ad80892),
+[78cc6e7](https://github.com/chopenhauer/devin-juega-oso/commit/78cc6e7))
 
 - En «Cómo se juega» los botones (← ❓ →) son simples, con el mismo aspecto y sin amarillo; ← y →
   tienen el mismo tamaño y ❓ sigue siendo redondo.

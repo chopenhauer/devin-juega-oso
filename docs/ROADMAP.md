@@ -46,6 +46,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   de «4 jugadores» en el móvil y anillo de selección de la ficha.
 - Reglas animadas del FigJam (2.3.0): arrastrar una letra, completar OSO con ↔ ↕ ⤡ y cuenta
   atrás de los últimos 5 s en rojo, quietas con «reducir movimiento».
+- Botones de navegación más simples (2.3.1): ← ❓ → sin amarillo en «Cómo se juega», → amarillo
+  en la configuración, «Siguiente →» en el paso de modo y ❓ siempre redondo.
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
