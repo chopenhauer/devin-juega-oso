@@ -3,6 +3,13 @@
 // stays denied (cookieless pings only) until the visitor accepts in the
 // consent banner (consent.js); ads are always denied.
 (function (w, d, id) {
+  // Only production reports analytics; Vercel previews do not (local tests stub the network).
+  if (
+    !/^(juegaoso\.com|www\.juegaoso\.com|devin-juega-oso\.vercel\.app|localhost|127\.0\.0\.1)$/.test(
+      w.location.hostname,
+    )
+  )
+    return;
   let granted = false;
   try {
     granted = localStorage.getItem('oso.consent.v1') === 'granted';

@@ -17,6 +17,18 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.0.1] - 2026-10-11
+
+**Analítica solo en producción**
+
+- Google Analytics y Microsoft Clarity se cargan solo en juegaoso.com y devin-juega-oso.vercel.app.
+  Las previews de Vercel ya no envían datos, así que las pruebas no se mezclan con las partidas de
+  verdad en los paneles de GA4 y Looker Studio.
+- Decisión: para evaluar la opción A del juego en línea mandan los contadores del servidor
+  (`/api/sala?stats=1`), que cuentan todas las partidas y separan producción de preview. GA solo
+  ve a quien acepta cookies (cada dispositivo decide), así que se queda corto con los invitados; lo
+  usamos para la calidad de conexión.
+
 ## [3.0.0] - 2026-10-10
 
 **Jugar en línea 1 contra 1** ([cc103c1](https://github.com/chopenhauer/devin-juega-oso/commit/cc103c1fafcf5e07a6fd82057d8875dad5cc5fb7))

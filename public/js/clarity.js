@@ -2,6 +2,13 @@
 // file so the CSP does not need to allow inline scripts. Only loaded once the
 // visitor accepts analytics cookies in the consent banner (consent.js).
 (function (w, d, id) {
+  // Only production reports analytics; Vercel previews do not (local tests stub the network).
+  if (
+    !/^(juegaoso\.com|www\.juegaoso\.com|devin-juega-oso\.vercel\.app|localhost|127\.0\.0\.1)$/.test(
+      w.location.hostname,
+    )
+  )
+    return;
   let loaded = false;
   function load() {
     if (loaded) return;
