@@ -26,7 +26,7 @@ de un tema.
 - **Botón secundario** (`.secondary`): cristal; acciones de volver o alternativas.
 - **Selectores** (`.mode-btn`, `.difficulty-btn`, `.view-btn`, `.avatar-btn`, `.letter`): botones con `aria-pressed`; la clase `.selected` y `aria-pressed` se cambian juntos. En `.mode-btn` el emoji va arriba y el texto debajo.
 - **Opción no disponible:** si un botón tiene que explicar por qué no se puede usar (4 jugadores en el móvil), no lleva `disabled`: se marca con `data-locked` y `.soon` (atenuado) y al pulsarlo abre un diálogo con el motivo.
-- **Navegación de los pasos:** siempre 3 huecos repartidos por igual (← ❓ →); si un paso no tiene →, el hueco se mantiene con `.invisible` para que ❓ siga en el centro.
+- **Navegación de los pasos:** siempre 3 huecos repartidos por igual (← ❓ →) con botones del mismo ancho (76 px); si un paso no tiene →, el hueco se mantiene con `.invisible` para que ❓ siga en el centro. En «Cómo se juega» los tres son simples (→ sin amarillo); en la configuración → es `.primary`; en el paso de modo «👀 Cómo se juega» y «Siguiente →» ocupan cada uno su mitad, con textos de longitud parecida (en móviles ≤400 px ❓ se estrecha a 46 px para que quepan en una línea).
 - **Desplegable** (`.select-wrap`): flecha propia con margen respecto al borde y la etiqueta separada 18 px, para que el foco no la toque.
 - **Ficha O/S elegida** (`.letter.selected`): el relieve va dentro de la ficha (`inset`) y el anillo del jugador por fuera con `outline-offset`, para que no se mezclen.
 - **Extras** (`.power`, `.sos-power`): icono + contador; su nombre accesible es «Pista, quedan 1» o «… (ya usado)».

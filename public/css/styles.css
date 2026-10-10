@@ -2018,7 +2018,7 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
 }
 .wizard-nav {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) 76px minmax(0, 1fr);
   justify-items: center;
   align-items: center;
   gap: 12px;
@@ -2026,22 +2026,37 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
   width: 100%;
   max-width: 440px;
 }
+/* ← ❓ → share one size; on the mode step the two labelled buttons fill their halves. */
 .wizard-nav .primary,
 .wizard-nav .secondary {
-  min-width: 76px;
+  width: 76px;
   min-height: 46px;
-  padding: 0 16px;
+  padding: 0 10px;
   font-size: 22px;
+  line-height: 1.1;
 }
-.setup[data-step='mode'] #stepBack {
-  font-size: 15px;
+.setup[data-step='mode'] .wizard-nav {
+  gap: 8px;
+}
+@media (max-width: 400px) {
+  .setup[data-step='mode'] .wizard-nav {
+    grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr);
+  }
+  .setup[data-step='mode'] #helpToggle {
+    width: 46px;
+  }
+}
+.setup[data-step='mode'] :is(#stepBack, #stepNext) {
+  width: 100%;
+  padding: 0 4px;
+  font-size: 14px;
 }
 .help-icon {
   justify-self: center;
-  width: 46px;
+  width: 76px;
   height: 46px;
   border: 1px solid var(--line);
-  border-radius: 50%;
+  border-radius: var(--r-pill);
   background: var(--glass);
   font-size: 22px;
   line-height: 1;

@@ -17,6 +17,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.3.1] - 2026-10-10
+
+**Botones de navegación más simples**
+
+- En «Cómo se juega» los tres botones (← ❓ →) son iguales: mismo tamaño y aspecto, sin amarillo.
+- En la configuración de la partida ← ❓ → tienen el mismo ancho y → sigue siendo amarillo.
+- En el paso de modo, el botón principal pasa a «Siguiente →», con un ancho parecido al de
+  «👀 Cómo se juega».
+
+**Decisiones**
+
+- El amarillo queda para las acciones que hacen avanzar hacia la partida; la explicación de las
+  reglas solo usa botones simples.
+
 ## [2.3.0] - 2026-10-09
 
 **Reglas animadas del FigJam** ([c38dbc0](https://github.com/chopenhauer/devin-juega-oso/commit/c38dbc0))
