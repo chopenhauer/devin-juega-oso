@@ -14,7 +14,9 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## Próximamente
 
-- **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
+- **3.0.0 · Jugar en línea 1 contra 1** (en marcha): invitar a un amigo con un enlace o un código
+  y jugar cada uno desde su móvil. Decisión y plan en [`docs/ONLINE.md`](docs/ONLINE.md).
+- **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
 ## [2.6.1] - 2026-10-10

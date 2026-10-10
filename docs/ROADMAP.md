@@ -126,7 +126,9 @@ preguntan una a una al empezar cada fase.
    - Informe en GA4 y script que propone el tiempo de cada tablero; pasar de la fórmula a una
      tabla de tiempos.
    - Feedback con texto libre por una función de Vercel, con protección contra spam.
-6. **3.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
+6. **3.0.0 · Jugar en línea 1 contra 1** (en marcha): invitar a un amigo con un enlace o un código.
+   Decisión, telemetría y plan en [`ONLINE.md`](ONLINE.md).
+7. **4.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
 
 **Siempre, en paralelo:** accesibilidad (tablero con teclado, OSOs sin depender del color), deuda de
 diseño (unificar los tamaños de letra fuera de escala, ver [`DESIGN.md`](DESIGN.md)) y afinar los temas
@@ -176,7 +178,7 @@ Reglas decididas con JoseLuis:
 
 #### Evolución: equipos con 4 jugadores
 
-Paso posterior al modo 4 jugadores (sería la versión 3.0.0). Al preparar una partida de cuatro se
+Paso posterior al modo 4 jugadores (sería la versión 4.0.0). Al preparar una partida de cuatro se
 elige cómo competir:
 
 - **Cada uno por su cuenta:** todos contra todos, como en el modo 4 jugadores.
