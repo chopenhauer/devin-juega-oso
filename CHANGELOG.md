@@ -19,7 +19,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [2.5.0] - 2026-10-10
 
-**Tema Año Nuevo Chino** (idea de Julia)
+**Tema Año Nuevo Chino** (idea de Julia,
+[7ef8aa8](https://github.com/chopenhauer/devin-juega-oso/commit/7ef8aa8))
 
 - Tema nuevo 🏮 «Año Nuevo Chino», 24 en total: los 12 animales del zodiaco chino como avatares
   (🐀 🐂 🐅 🐇 🐉 🐍 🐎 🐐 🐒 🐓 🐕 🐖), farolillos, sobres rojos, dragón y fuegos artificiales
