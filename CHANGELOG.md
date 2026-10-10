@@ -21,8 +21,9 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 **Botones de navegación más simples**
 
-- En «Cómo se juega» los tres botones (← ❓ →) son iguales: mismo tamaño y aspecto, sin amarillo.
-- En la configuración de la partida ← ❓ → tienen el mismo ancho y → sigue siendo amarillo.
+- En «Cómo se juega» los botones (← ❓ →) son simples, con el mismo aspecto y sin amarillo; ← y →
+  tienen el mismo tamaño y ❓ sigue siendo redondo.
+- En la configuración de la partida ← y → tienen el mismo ancho y → sigue siendo amarillo.
 - En el paso de modo, el botón principal pasa a «Siguiente →», con un ancho parecido al de
   «👀 Cómo se juega».
 

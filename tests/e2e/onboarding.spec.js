@@ -282,14 +282,20 @@ test('rule cards animate the move, restart when shown and stay still with reduce
   await expect(card(0).locator('.demo-ghost')).toHaveCSS('opacity', '0');
 });
 
-test('step buttons: plain and equal in the intro, yellow next in setup', async ({ page }) => {
+test('step buttons: plain and equal in the intro, yellow next in setup, round help', async ({ page }) => {
   const widths = async (...ids) =>
     Promise.all(ids.map(async (id) => Math.round((await page.locator(id).boundingBox()).width)));
+  const expectRoundHelp = async () => {
+    const box = await page.locator('#helpToggle').boundingBox();
+    expect(Math.round(box.width)).toBe(Math.round(box.height));
+    await expect(page.locator('#helpToggle')).toHaveCSS('border-radius', '50%');
+  };
   await page.goto('/');
   await page.click('#introStart');
   await expect(page.locator('#stepNext')).toHaveClass(/secondary/);
   await expect(page.locator('#stepNext')).not.toHaveClass(/primary/);
-  expect(new Set(await widths('#stepBack', '#helpToggle', '#stepNext')).size).toBe(1);
+  expect(new Set(await widths('#stepBack', '#stepNext')).size).toBe(1);
+  await expectRoundHelp();
 
   for (let i = 0; i < 4; i++) await page.click('#stepNext');
   expect(await step(page)).toBe('mode');
@@ -302,5 +308,6 @@ test('step buttons: plain and equal in the intro, yellow next in setup', async (
   expect(await step(page)).toBe('players');
   await expect(page.locator('#stepNext')).toHaveText('→');
   await expect(page.locator('#stepNext')).toHaveClass(/primary/);
-  expect(new Set(await widths('#stepBack', '#helpToggle', '#stepNext')).size).toBe(1);
+  expect(new Set(await widths('#stepBack', '#stepNext')).size).toBe(1);
+  await expectRoundHelp();
 });
