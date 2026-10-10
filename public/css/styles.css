@@ -139,6 +139,17 @@ body:has(#setupScreen:not(.hidden)) .app {
 body:has(#gameScreen:not(.hidden)) .credits {
   display: none;
 }
+.credits-links {
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .credits-links {
+    display: block;
+  }
+  .credits-sep {
+    display: none;
+  }
+}
 .cookie-settings {
   min-height: 24px;
   padding: 0 4px;
