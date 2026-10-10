@@ -112,7 +112,7 @@ test('the game menu invites someone to play', async ({ page }) => {
   await expect(page.locator('#sidebar')).not.toHaveClass(/open/);
   await expect(dialog(page)).toBeVisible();
   await expect(page.locator('#shareMessage')).toHaveText(/^Juega conmigo a OSO/);
-  await page.click('.share-close');
+  await dialog(page).locator('.share-close').click();
   await expect(dialog(page)).toBeHidden();
 });
 

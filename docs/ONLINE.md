@@ -50,7 +50,13 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   se para lo que dura la animación, igual que en local. En línea, la ayuda ❓ no para el reloj.
 - **Desconexión:** no hay una regla aparte. Si se va quien tiene el turno, su reloj sigue corriendo
   y pierde por tiempo; si vuelve antes, sigue jugando con la partida reconstruida. Salir de la
-  partida a propósito (o cerrar la pestaña) cuenta como abandono y gana el rival.
+  partida a propósito cuenta como abandono y gana el rival. Cerrar la pestaña no: el navegador no
+  distingue cerrar de recargar, y recargar tiene que recuperar la partida. Si no vuelve, pierde por
+  tiempo.
+- **¿Sigues ahí?** (idea de JoseLuis): tras 20 s sin jugar, quien tiene el turno ve «¿Sigues ahí?»
+  con un botón «¡Sigo aquí!» (avisa al rival: «sigue ahí, está pensando») y quien espera recibe un
+  mensaje de ánimo según el marcador o el reloj del rival. El reloj no se para. Evento
+  `online_nudge` (`role`, `answered`, `answer_ms`) para ajustar los 20 s.
 - **Revancha:** en la misma sala, alternando quién empieza.
 - **Privacidad:** sin cuentas. Solo se guardan apodo (máx. 16 caracteres), avatar y jugadas, y la
   sala se borra sola a las 24 h. Límite de salas por IP para evitar abusos (la IP no se guarda).

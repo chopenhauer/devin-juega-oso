@@ -192,7 +192,12 @@ test('the mode step has the OSO header, a ❓ rules button and no progress bar',
   await page.click('#introSkip');
   const mode = page.locator('.step[data-step="mode"]');
   await expect(mode.locator('.brand span')).toHaveText(['O', 'S', 'O']);
-  await expect(mode.locator('.mode-btn')).toHaveText([/1 jugador/, /2 jugadores/, /4 jugadores/]);
+  await expect(mode.locator('.mode-btn')).toHaveText([
+    /1 jugador/,
+    /2 jugadores/,
+    /4 jugadores/,
+    /A distancia/,
+  ]);
   if (testInfo.project.name === 'mobile') {
     await expect(page.locator('#modeFour')).toHaveAttribute('data-locked', 'true');
   } else {
@@ -236,7 +241,7 @@ test('wizard nav is ← ? → in every step and the board step keeps ¡A jugar! 
   const help = await page.locator('#helpToggle').boundingBox();
   expect(Math.abs(help.x + help.width / 2 - (nav.x + nav.width / 2))).toBeLessThan(2);
   for (let i = 0; i < 4; i++) await page.click('#stepNext');
-  await expect(page.locator('.mode-btn .mode-emoji')).toHaveCount(3);
+  await expect(page.locator('.mode-btn .mode-emoji')).toHaveCount(4);
   for (let i = 0; i < 3; i++) await page.click('#stepNext');
   expect(await step(page)).toBe('board');
   await expect(page.locator('.step-lead:visible')).toHaveText(

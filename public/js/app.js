@@ -6,6 +6,7 @@ import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
 import { shareText, shareUrl, whatsappHref, emailHref } from './share.js';
+import * as Online from './online.js';
 const { timeFor } = Engine;
 (() => {
   const { BONUS } = Match;
@@ -62,6 +63,8 @@ const { timeFor } = Engine;
 
   // The match (match.js) owns the game state; these locals mirror it for the UI.
   let m = null;
+  // Online 1 vs 1: { code, token, seat, rev, game, seats, quality, busy, offline } or null.
+  let online = null;
   function sync() {
     ({ board, current, scores, times, scored, history, extras, over, word: targetWord, sosUsed } = m);
   }
@@ -70,6 +73,8 @@ const { timeFor } = Engine;
   let avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
   avatars = [...avatars, ...avatarChoices.filter((a) => !avatars.includes(a)).slice(0, 2)];
   const playerCount = () => (gameMode === 'four' ? 4 : 2);
+  // Online, the other seat is played from another device.
+  const remote = (p) => !!online && p !== online.seat;
   const rivalsOf = (p) => [...Array(playerCount()).keys()].filter((o) => o !== p);
   // Later players give way when their avatar is already taken by an earlier one.
   function dedupeAvatars() {
@@ -351,6 +356,7 @@ const { timeFor } = Engine;
     press(q('modeTwo'), mode === 'two');
     press(q('modeSolo'), mode === 'solo');
     press(q('modeFour'), mode === 'four');
+    press(q('modeOnline'), mode === 'online');
     const sizeSelect = q('sizeSelect');
     [...sizeSelect.options].forEach((o) => (o.disabled = mode === 'four' && +o.value < 6));
     if (mode === 'four' && +sizeSelect.value < 6) sizeSelect.value = '6';
@@ -380,6 +386,7 @@ const { timeFor } = Engine;
   }
   q('modeTwo').addEventListener('click', () => setGameMode('two'));
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
+  q('modeOnline').addEventListener('click', () => setGameMode('online'));
   q('modeFour').addEventListener('click', () => {
     if (roomForFour.matches) setGameMode('four');
     else q('fourDialog').showModal();
@@ -570,7 +577,7 @@ const { timeFor } = Engine;
 
     document.querySelectorAll('.letter').forEach((b) => {
       const p = +b.dataset.player;
-      const machineSide = gameMode === 'solo' && p === 1;
+      const machineSide = (gameMode === 'solo' && p === 1) || remote(p);
       const canUse = p === current && !over && !replaying && !machineSide && !machineThinking;
       b.classList.toggle('selected', b.dataset.letter === selected[p]);
       b.setAttribute('aria-pressed', String(b.dataset.letter === selected[p]));
@@ -578,7 +585,7 @@ const { timeFor } = Engine;
     });
 
     scores.forEach((_, i) => {
-      const machineSide = gameMode === 'solo' && i === 1;
+      const machineSide = (gameMode === 'solo' && i === 1) || remote(i);
       const isTurn = i === current && !over && !replaying && !machineThinking;
       const humanCanAct = isTurn && !machineSide;
 
@@ -619,6 +626,7 @@ const { timeFor } = Engine;
       .forEach((e) => (e.textContent = targetWord === 'SOS' ? 'puntos SOS' : 'puntos OSO'));
     game.classList.toggle('solo', gameMode === 'solo');
     game.classList.toggle('four', gameMode === 'four');
+    game.classList.toggle('online', !!online);
 
     turnBarTop.textContent = over
       ? 'Partida terminada'
@@ -628,7 +636,9 @@ const { timeFor } = Engine;
           ? '🛟 Recalculando SOS…'
           : machineThinking
             ? '🤖 La máquina está pensando…'
-            : `${avatars[current]} Turno de ${names[current]} · ${targetWord}`;
+            : remote(current)
+              ? `${avatars[current]} Esperando a ${names[current]} · ${targetWord}`
+              : `${avatars[current]} Turno de ${names[current]} · ${targetWord}`;
   }
 
   function stopGame() {
@@ -654,7 +664,8 @@ const { timeFor } = Engine;
     playing = false;
     track('game_abandon', { ...modeParams(), cells_filled: filledCells(), cells_total: size * size });
   }
-  addEventListener('pagehide', abandon);
+  // Online a reload resumes the game, so leaving the page is not an abandon.
+  addEventListener('pagehide', () => online || abandon());
 
   function reset() {
     abandon();
@@ -685,6 +696,7 @@ const { timeFor } = Engine;
   // Returns true if that player ran out of time (the game is then finished).
   function settle() {
     if (over) return true;
+    if (online) return false;
     if (replaying || helpPaused) return false;
     const events = Match.settle(m, performance.now());
     sync();
@@ -711,6 +723,7 @@ const { timeFor } = Engine;
     play('timeout');
   }
   function tick() {
+    if (online) return onlineTick();
     settle();
   }
   function render() {
@@ -761,6 +774,7 @@ const { timeFor } = Engine;
   }
   function cellClick(i, byMachine = false) {
     if (drag) endDrag(false);
+    if (online) return onlineCell(i);
     if (over || replaying || helpPaused) return;
     const machineTurn = gameMode === 'solo' && current === 1;
     if (machineTurn !== byMachine || (machineThinking && !byMachine)) return;
@@ -825,14 +839,18 @@ const { timeFor } = Engine;
   }
 
   hintBtns.forEach((b, p) =>
-    b.addEventListener('click', () => {
+    b.addEventListener('click', async () => {
       if (b.disabled || p !== current || !extras[p].hint || over || replaying || settle()) return;
 
       const h = bestHint();
       if (!h) return;
 
-      Match.usePower(m, p, 'hint', performance.now());
-      sync();
+      if (online) {
+        if (!(await onlineMove({ type: 'power', power: 'hint' }))) return;
+      } else {
+        Match.usePower(m, p, 'hint', performance.now());
+        sync();
+      }
       play('hint');
       updateControls();
       selected[p] = h.letter;
@@ -846,14 +864,18 @@ const { timeFor } = Engine;
   );
 
   lastBtns.forEach((b, p) =>
-    b.addEventListener('click', () => {
+    b.addEventListener('click', async () => {
       if (b.disabled || p !== current || !extras[p].last || over || replaying || settle()) return;
 
       const move = [...history].reverse().find((x) => x.player !== p);
       if (!move) return;
 
-      Match.usePower(m, p, 'last', performance.now());
-      sync();
+      if (online) {
+        if (!(await onlineMove({ type: 'power', power: 'last' }))) return;
+      } else {
+        Match.usePower(m, p, 'last', performance.now());
+        sync();
+      }
       play('last');
       updateControls();
       lastCell = move.index;
@@ -986,6 +1008,7 @@ const { timeFor } = Engine;
   sosBtns.forEach((btn, p) =>
     btn.addEventListener('click', () => {
       if (btn.disabled || sosUsed || over || replaying || p !== current) return;
+      if (online) return void onlineMove({ type: 'sos' });
       activateSOS(p);
     }),
   );
@@ -1014,9 +1037,14 @@ const { timeFor } = Engine;
         filled: filledCells(),
       }),
     );
+    if (online)
+      track('online_quality', { board_size: `${size}x${size}`, ...Online.qualityParams(online.quality) });
     clearInterval(timer);
     updateControls();
     q('winnerOverlay').classList.remove('hidden');
+    q('rematch').disabled = false;
+    q('otherBoard').classList.toggle('hidden', !!online);
+    q('changePlayers').textContent = online ? 'Salir' : 'Cambiar jugadores';
     q('rematch').focus({ preventScroll: true });
 
     const result = scores.join(' – ');
@@ -1038,7 +1066,8 @@ const { timeFor } = Engine;
         reason === 'tiempo' ? `${timeout} · ${result}` : `Resultado final: ${scores.join(' – ')}`;
       confetti();
     }
-    play(w === null ? 'draw' : gameMode === 'solo' && w === 1 ? 'lose' : 'win');
+    if (reason === 'abandono') q('winnerSub').textContent = `${names[1 - w]} ha salido de la partida`;
+    play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     lastResult = { mode: gameMode, winner: w, scores: [...scores] };
     const st = recordSession(w);
     showSession(st);
@@ -1175,7 +1204,417 @@ const { timeFor } = Engine;
     }
   }
 
+  // ---- Online 1 vs 1 (docs/ONLINE.md): the server referees; this mirrors its state. ----
+  const onlineDialog = q('onlineDialog');
+  let pollTimeout = null;
+  const ONLINE_ERRORS = {
+    no_room: 'Esta sala ya no existe. Pide a tu amigo un enlace nuevo.',
+    code: 'Ese código no es válido.',
+    full: 'Esta sala ya está completa.',
+    avatar_taken: 'Ese avatar ya lo tiene tu amigo. Elige otro.',
+    rate: 'Demasiados intentos. Espera unos minutos.',
+    network: 'No hay conexión. Revisa internet y vuelve a probar.',
+  };
+  const onlineError = (e) => ONLINE_ERRORS[e] ?? 'Algo ha fallado. Vuelve a probar.';
+  const setOnlineStatus = (text) => (q('onlineStatus').textContent = text);
+
+  function connect(r, seat) {
+    online = {
+      code: r.code,
+      token: r.token,
+      seat,
+      rev: r.rev,
+      game: 0,
+      seats: r.seats,
+      quality: Online.newQuality(),
+      busy: false,
+      offline: false,
+    };
+    Online.saveSeat({ code: r.code, token: r.token, seat });
+    if (Online.codeFromUrl()) window.history.replaceState(null, '', location.pathname);
+  }
+
+  function schedulePoll(delay = Online.POLL_MS) {
+    clearTimeout(pollTimeout);
+    if (online) pollTimeout = setTimeout(pollOnce, delay);
+  }
+  async function pollOnce() {
+    const o = online;
+    if (!o) return;
+    const v = await Online.fetchRoom(o.code, o.rev, o.quality);
+    if (o !== online) return;
+    if (v.ok) {
+      if (o.offline) {
+        o.offline = false;
+        o.quality.reconnects++;
+        msg.textContent = '📡 Conectado de nuevo.';
+      }
+      if (!v.same) applyView(v);
+    } else if (v.http === 404) {
+      return roomGone();
+    } else if (!o.offline) {
+      o.offline = true;
+      msg.textContent = '📡 Sin conexión, reintentando…';
+    }
+    // Poll faster while waiting for the rival; on our own turn only clocks and leaving can change.
+    schedulePoll(over || remote(current) || onlineDialog.open ? Online.POLL_MS : Online.POLL_MS * 2);
+  }
+  function roomGone() {
+    clearTimeout(pollTimeout);
+    Online.clearSeat();
+    online = null;
+    if (onlineDialog.open) setOnlineStatus(onlineError('no_room'));
+    else if (!game.classList.contains('hidden')) msg.textContent = '⌛ La sala ha caducado.';
+  }
+
+  // Shows the server state: board, scores, clocks, names and the end of the game.
+  function applyView(v) {
+    const o = online;
+    o.rev = v.rev;
+    o.seats = v.seats;
+    if (!v.match) return;
+    if (v.game !== o.game || game.classList.contains('hidden')) return startOnlineGame(v);
+    const wasOver = over,
+      oldBoard = board,
+      oldKeys = new Set(scored.keys()),
+      oldWord = targetWord;
+    const turnKey = `${v.game}:${v.match.current}:${v.match.history.length}:${v.match.word}`;
+    if (turnKey !== o.turnKey) {
+      o.turnKey = turnKey;
+      o.turnStart = performance.now();
+      closeNudge(false);
+    }
+    const rivalSeat = v.seats[1 - o.seat];
+    if (rivalSeat?.here > (o.rivalHere ?? 0) && o.rivalHere !== undefined && !v.match.over)
+      msg.textContent = `🤔 ${rivalSeat.name} sigue ahí, está pensando.`;
+    o.rivalHere = rivalSeat?.here ?? 0;
+    m = Match.fromJSON(v.match);
+    m.times = v.match.clocks;
+    m.since = performance.now() + v.match.holdMs;
+    sync();
+    v.seats.forEach((s, i) => {
+      names[i] = s.name;
+      avatars[i] = s.avatar;
+      namesEl[i].textContent = s.name;
+      avatarsEl[i].textContent = s.avatar;
+    });
+    if (targetWord !== oldWord) {
+      play('sos');
+      setSeaTheme(true);
+      msg.textContent = `🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores.join(' – ')}.`;
+    } else if (oldBoard.length === board.length) {
+      const changed = board.findIndex((x, i) => x !== oldBoard[i]);
+      const made = [...scored.keys()].filter((k) => !oldKeys.has(k));
+      if (changed >= 0) {
+        justPlaced = changed;
+        made.forEach((k) => k.split('-').forEach((n) => justScored.add(+n)));
+        play(made.length ? 'score' : 'place');
+        hintCell = null;
+        lastCell = null;
+        swapMode = null;
+        msg.textContent = made.length
+          ? `¡${avatars[current]} ${names[current]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`
+          : remote(current)
+            ? `Turno de ${avatars[current]} ${names[current]}`
+            : `${avatars[current]} ¡Te toca, ${names[current]}!`;
+      }
+    }
+    scoresEl.forEach((e, k) => (e.textContent = scores[k] ?? 0));
+    render();
+    updateTimers();
+    updateControls();
+    if (over && !wasOver) finish(m.winner, m.reason, m.timedOut);
+    if (over) showRematchState(v);
+  }
+
+  function showRematchState(v) {
+    const mine = v.seats[online.seat],
+      theirs = v.seats[1 - online.seat];
+    const rival = theirs?.name ?? 'tu amigo';
+    q('rematch').disabled = !!mine?.rematch || !!theirs?.left;
+    if (theirs?.left) q('winnerSub').textContent = `${rival} ha salido de la sala`;
+    else if (mine?.rematch) q('winnerSub').textContent = `Esperando a que ${rival} acepte la revancha…`;
+    else if (theirs?.rematch) q('winnerSub').textContent = `${rival} quiere la revancha`;
+  }
+
+  function startOnlineGame(v) {
+    stopGame();
+    if (onlineDialog.open) onlineDialog.close();
+    gameMode = 'online';
+    online.game = v.game;
+    size = v.size;
+    board = [];
+    scored = new Map();
+    targetWord = 'OSO';
+    selected = ['O', 'O'];
+    lowWarned = new Set();
+    hintCell = null;
+    lastCell = null;
+    swapMode = null;
+    [...hintBtns, ...lastBtns, ...swapBtns, ...sosBtns].forEach((btn) => btn.classList.remove('used'));
+    setSeaTheme(false);
+    q('winnerOverlay').classList.add('hidden');
+    q('machineBadge').classList.add('hidden');
+    avatarsEl[1].classList.remove('robot');
+    q('restartMatch').classList.add('hidden');
+    setup.classList.add('hidden');
+    game.classList.remove('hidden');
+    game.classList.add('same-view');
+    applyView(v);
+    if (!over) {
+      msg.textContent = remote(current)
+        ? `Empieza ${avatars[current]} ${names[current]}.`
+        : `${avatars[current]} ¡Empiezas tú, ${names[current]}!`;
+      playing = true;
+      track('game_start', modeParams());
+    }
+    timer = setInterval(tick, 100);
+    schedulePoll();
+  }
+
+  // Clocks run locally between polls; the server has the last word on time-outs.
+  function onlineTick() {
+    if (over) return closeNudge(false);
+    times = Match.clocks(m, performance.now());
+    updateTimers();
+    if (times[current] <= 0) schedulePoll(0);
+    if (online.nudgedKey !== online.turnKey && performance.now() - online.turnStart > Online.NUDGE_MS) {
+      online.nudgedKey = online.turnKey;
+      if (remote(current)) {
+        const me = online.seat;
+        msg.textContent = Online.cheer({
+          mine: scores[me],
+          theirs: scores[1 - me],
+          free: board.filter((x) => !x).length,
+          rivalName: names[current],
+          rivalTime: times[current],
+        });
+        track('online_nudge', { role: 'waiting' });
+      } else {
+        nudgeShownAt = performance.now();
+        q('nudgeDialog').showModal();
+      }
+    }
+  }
+
+  // «¿Sigues ahí?»: answering lets the rival know; the clock never stops.
+  let nudgeShownAt = null;
+  function closeNudge(answered) {
+    if (nudgeShownAt === null) return;
+    track('online_nudge', {
+      role: 'mover',
+      answered,
+      answer_ms: answered ? Math.round(performance.now() - nudgeShownAt) : 0,
+    });
+    nudgeShownAt = null;
+    if (q('nudgeDialog').open) q('nudgeDialog').close();
+  }
+  q('nudgeHere').addEventListener('click', () => {
+    closeNudge(true);
+    const o = online;
+    if (o)
+      Online.send({ action: 'ping', code: o.code, token: o.token }).then(
+        (r) => r.ok && o === online && !o.busy && applyView(r),
+      );
+  });
+  q('nudgeDialog').addEventListener('cancel', (e) => {
+    e.preventDefault();
+    q('nudgeHere').click();
+  });
+
+  async function onlineMove(move, retry = true) {
+    const o = online;
+    if (!o || o.busy || over || remote(current)) return false;
+    o.busy = true;
+    const r = await Online.send(
+      { action: 'move', code: o.code, token: o.token, rev: o.rev, move },
+      o.quality,
+    );
+    o.busy = false;
+    if (o !== online) return false;
+    if (r.ok) applyView(r);
+    else if (r.room) {
+      applyView(r.room);
+      // A «¡Sigo aquí!» or rematch flag moved the revision on; the turn is still ours.
+      if (r.error === 'stale' && retry && !over && !remote(current)) return onlineMove(move, false);
+    } else if (r.http === 404) roomGone();
+    else msg.textContent = '📡 No se ha podido enviar. Vuelve a probar.';
+    return r.ok;
+  }
+
+  function onlineCell(i) {
+    if (over || remote(current) || online.busy) return;
+    if (swapMode === current) {
+      if (!board[i]) msg.textContent = '🔄 Elige una casilla ocupada.';
+      else onlineMove({ type: 'swap', index: i });
+      return;
+    }
+    if (!board[i]) onlineMove({ type: 'place', index: i, letter: selected[current] });
+  }
+
+  async function onlineRematch() {
+    q('rematch').disabled = true;
+    const r = await Online.send({ action: 'rematch', code: online.code, token: online.token });
+    if (r.ok || r.room) applyView(r.ok ? r : r.room);
+    else q('rematch').disabled = false;
+  }
+
+  function leaveOnline() {
+    if (!online) return;
+    closeNudge(false);
+    const { code, token } = online;
+    Online.send({ action: 'leave', code, token });
+    clearTimeout(pollTimeout);
+    Online.clearSeat();
+    online = null;
+    q('restartMatch').classList.remove('hidden');
+    q('otherBoard').classList.remove('hidden');
+    game.classList.remove('online');
+  }
+
+  // Host: create the room and wait in the invite dialog until the friend joins.
+  async function hostRoom() {
+    const btn = q('startGame');
+    btn.disabled = true;
+    const r = await Online.send({
+      action: 'create',
+      name: namesIn[0].value.trim() || 'Jugador 1',
+      avatar: avatars[0],
+      size: +q('sizeSelect').value,
+    });
+    btn.disabled = false;
+    if (!r.ok) {
+      openOnlineDialog('error');
+      setOnlineStatus(onlineError(r.error));
+      return;
+    }
+    connect(r, 0);
+    track('online_create', { board_size: `${r.size}x${r.size}` });
+    openOnlineDialog('host');
+    schedulePoll();
+  }
+
+  function openOnlineDialog(kind, room = null) {
+    const host = kind === 'host';
+    q('onlineHost').classList.toggle('hidden', !host);
+    q('onlineJoin').classList.toggle('hidden', kind !== 'join');
+    q('onlineEmoji').textContent = kind === 'join' ? room.seats[0].avatar : '🌐';
+    setOnlineStatus(host ? '⏳ Esperando a tu amigo…' : '');
+    if (host) {
+      const url = Online.inviteUrl(online.code);
+      q('onlineTitle').textContent = 'Invita a un amigo';
+      q('onlineLead').textContent = 'Pásale el enlace o el código. La partida empieza cuando entre.';
+      q('onlineCode').textContent = online.code;
+      q('onlineWhatsapp').href = whatsappHref(`¿Jugamos a OSO? 🐻 Entra en mi sala: ${url}`);
+    } else if (kind === 'join') {
+      q('onlineTitle').textContent = `${room.seats[0].name} te invita a jugar`;
+      q('onlineLead').textContent = `Tablero ${room.size}×${room.size}. Elige tu nombre y tu avatar.`;
+      renderJoinAvatars(room.seats[0].avatar);
+    } else {
+      q('onlineTitle').textContent = 'No se puede jugar a distancia';
+      q('onlineLead').textContent = '';
+    }
+    if (!onlineDialog.open) onlineDialog.showModal();
+  }
+
+  function renderJoinAvatars(taken) {
+    const box = q('onlineAvatars');
+    box.innerHTML = '';
+    const choices = avatarChoices.filter((a) => a !== taken);
+    choices.forEach((a, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'avatar-btn';
+      b.dataset.avatar = a;
+      b.textContent = a;
+      b.setAttribute('aria-label', `Avatar ${a}`);
+      press(b, i === 0);
+      b.addEventListener('click', () =>
+        box.querySelectorAll('.avatar-btn').forEach((x) => press(x, x === b)),
+      );
+      box.appendChild(b);
+    });
+  }
+
+  // Guest: the invite link opens the join form.
+  async function offerJoin(code) {
+    const room = await Online.fetchRoom(code);
+    const error = !room.ok ? room.error : room.status !== 'waiting' ? 'full' : null;
+    if (error) {
+      track('online_join_fail', { reason: error });
+      openOnlineDialog('error');
+      setOnlineStatus(onlineError(error));
+      window.history.replaceState(null, '', location.pathname);
+      return;
+    }
+    q('onlineName').value = namesIn[0].value.trim() || '';
+    openOnlineDialog('join', room);
+    q('onlineJoin').dataset.code = code;
+  }
+
+  q('onlineJoin').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = q('onlineJoinBtn');
+    btn.disabled = true;
+    const r = await Online.send({
+      action: 'join',
+      code: q('onlineJoin').dataset.code,
+      name: q('onlineName').value.trim() || 'Jugador 2',
+      avatar: q('onlineAvatars').querySelector('[aria-pressed="true"]')?.dataset.avatar,
+    });
+    btn.disabled = false;
+    if (!r.ok) {
+      track('online_join_fail', { reason: r.error });
+      setOnlineStatus(onlineError(r.error));
+      if (r.error === 'avatar_taken' && r.room) renderJoinAvatars(r.room.seats[0].avatar);
+      return;
+    }
+    connect(r, 1);
+    track('online_join', { board_size: `${r.size}x${r.size}` });
+    startOnlineGame(r);
+  });
+
+  q('onlineCopy').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(Online.inviteUrl(online.code));
+      setOnlineStatus('🔗 Enlace copiado. ⏳ Esperando a tu amigo…');
+    } catch {
+      setOnlineStatus(Online.inviteUrl(online.code));
+    }
+  });
+  q('onlineCancel').addEventListener('click', () => {
+    leaveOnline();
+    onlineDialog.close();
+    if (Online.codeFromUrl()) window.history.replaceState(null, '', location.pathname);
+  });
+  onlineDialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    q('onlineCancel').click();
+  });
+
+  // A saved seat resumes the game after a reload or a lost connection; an invite link joins.
+  async function bootOnline() {
+    const code = Online.codeFromUrl();
+    const saved = Online.loadSeat();
+    if (saved && (!code || code === saved.code)) {
+      const v = await Online.fetchRoom(saved.code);
+      if (v.ok && v.status !== 'closed' && !(v.status === 'over' && v.seats[saved.seat]?.left)) {
+        connect({ ...saved, ...v, token: saved.token }, saved.seat);
+        online.quality.reconnects++;
+        if (v.status === 'waiting') {
+          openOnlineDialog('host');
+          schedulePoll();
+        } else startOnlineGame(v);
+        return;
+      }
+      Online.clearSeat();
+    }
+    if (code) offerJoin(code);
+  }
+  bootOnline();
+
   q('startGame').addEventListener('click', () => {
+    if (gameMode === 'online') return void hostRoom();
     names = namesIn.map((input, i) => input.value.trim() || `Jugador ${i + 1}`);
     if (gameMode === 'solo') names[1] = 'Máquina';
 
@@ -1241,6 +1680,7 @@ const { timeFor } = Engine;
 
   q('newGame').addEventListener('click', () => {
     abandon();
+    leaveOnline();
     stopGame();
     over = true;
     closeMenu(false);
@@ -1249,10 +1689,11 @@ const { timeFor } = Engine;
     setSeaTheme(false);
   });
 
-  q('rematch').addEventListener('click', reset);
+  q('rematch').addEventListener('click', () => (online ? onlineRematch() : reset()));
 
   function backToSetup() {
     abandon();
+    leaveOnline();
     stopGame();
     q('winnerOverlay').classList.add('hidden');
     game.classList.add('hidden');

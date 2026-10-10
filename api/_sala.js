@@ -43,8 +43,18 @@ export function publicView(room, now) {
     code: room.code,
     rev: room.rev,
     status: room.status,
+    size: room.size,
+    // Lets the client measure how long a change took to reach it (sync latency).
+    now,
+    updated: room.updated,
     game: room.game,
-    seats: room.seats.map(({ name, avatar, rematch }) => ({ name, avatar, rematch: !!rematch })),
+    seats: room.seats.map(({ name, avatar, rematch, left, here }) => ({
+      left: !!left,
+      here: here ?? 0,
+      name,
+      avatar,
+      rematch: !!rematch,
+    })),
     match: m && {
       ...room.match,
       since: undefined,
@@ -64,6 +74,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
 
   async function save(room, expected) {
     room.rev = expected + 1;
+    room.updated = clock();
     if (!(await store.cas(`sala:${room.code}`, expected, room, ROOM_TTL))) throw new HttpError(409, 'stale');
     return room;
   }
@@ -164,6 +175,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     const room = await load(body.code);
     const seat = seatOf(room, body.token);
     if (room.status !== 'over') throw new HttpError(409, 'not_over', room);
+    if (room.seats.some((s) => s.left)) throw new HttpError(409, 'left', room);
     const expected = room.rev;
     room.seats[seat].rematch = true;
     if (room.seats.every((s) => s.rematch)) {
@@ -181,7 +193,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     const expected = room.rev;
     if (room.status === 'waiting') room.status = 'closed';
     else if (room.status !== 'playing') room.seats[seat].left = true;
-    else if (!settle(room, now, stats)) {
+    else if (((room.seats[seat].left = true), !settle(room, now, stats))) {
       const m = Match.fromJSON(room.match);
       finished(room, Match.leave(m, seat).events, stats);
       room.match = Match.toJSON(m);
@@ -191,7 +203,18 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     return { seat, room };
   }
 
-  const ACTIONS = { create, join, move, rematch, leave };
+  // «¡Sigo aquí!»: the player on turn answers the idle nudge; the rival sees it.
+  async function ping(body, now, stats) {
+    const room = await load(body.code);
+    const seat = seatOf(room, body.token);
+    const expected = room.rev;
+    room.seats[seat].here = now;
+    await save(room, expected);
+    stats.pings = 1;
+    return { seat, room };
+  }
+
+  const ACTIONS = { create, join, move, rematch, leave, ping };
 
   return async function handle(request) {
     const started = clock();

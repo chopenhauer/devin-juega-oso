@@ -123,13 +123,25 @@ test('SOS and swap go through the referee; SOS holds the clock for the replay', 
   assert.equal((await mv(host, c.rev, { type: 'fly' })).error, 'move');
 });
 
-test('leaving gives the game to the rival; both must ask for a rematch, who starts alternates', async () => {
+test('leaving gives the game to the rival and closes the room for rematches', async () => {
   const s = setup();
   const { host, guest, code } = await startedRoom(s);
   const left = await s.call({ action: 'leave', code, token: guest.token });
   assert.equal(left.status, 'over');
   assert.equal(left.match.winner, 0);
   assert.equal(left.match.reason, 'abandono');
+  assert.deepEqual(
+    left.seats.map((x) => x.left),
+    [false, true],
+  );
+  assert.equal((await s.call({ action: 'rematch', code, token: host.token })).error, 'left');
+});
+
+test('after a game ends both must ask for a rematch and who starts alternates', async () => {
+  const s = setup();
+  const { host, guest, code } = await startedRoom(s);
+  s.clock.t += timeFor(4) * 1000 + 1;
+  assert.equal((await s.get(`code=${code}`)).match.reason, 'tiempo');
   const r1 = await s.call({ action: 'rematch', code, token: host.token });
   assert.equal(r1.status, 'over');
   assert.deepEqual(
@@ -180,4 +192,15 @@ test('anonymous counters track rooms, games, endings and errors', async () => {
   assert.equal(counters.abandoned, 1);
   assert.equal(counters.e4xx, 2);
   assert.ok(counters.timed >= 6);
+});
+
+test('«¡Sigo aquí!» pings are visible to the rival and need a valid seat', async () => {
+  const s = setup();
+  const { host, guest, code } = await startedRoom(s);
+  s.clock.t += 21_000;
+  const p = await s.call({ action: 'ping', code, token: host.token });
+  assert.equal(p.seats[0].here, s.clock.t);
+  assert.equal(p.seats[1].here, 0);
+  assert.equal((await s.get(`code=${code}&rev=${guest.rev}`)).seats[0].here, s.clock.t);
+  assert.equal((await s.call({ action: 'ping', code, token: 'nope' })).http, 403);
 });

@@ -212,6 +212,9 @@
                 <button id="modeFour" class="mode-btn soon" type="button" data-locked="true">
                   <span class="mode-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span><span>4 jugadores</span>
                 </button>
+                <button id="modeOnline" class="mode-btn" type="button">
+                  <span class="mode-emoji" aria-hidden="true">🌐</span><span>A distancia</span>
+                </button>
               </div>
             </div>
             <div class="step inactive" data-step="players">
@@ -244,7 +247,7 @@
                   </div>
                 </div>
 
-                <div class="pconfig">
+                <div class="pconfig second-player">
                   <div class="small-label">Jugador 2</div>
                   <div id="preview2" class="preview">🐼</div>
                   <input
@@ -771,6 +774,40 @@
         <form method="dialog">
           <button id="thanksClose" class="secondary" type="submit">Cerrar</button>
         </form>
+      </dialog>
+      <dialog id="nudgeDialog" class="info-dialog" aria-labelledby="nudgeTitle">
+        <div class="info-emoji" aria-hidden="true">👀</div>
+        <h2 id="nudgeTitle" class="step-title">¿Sigues ahí?</h2>
+        <p class="step-lead">Tu amigo espera tu jugada. Tu reloj sigue corriendo.</p>
+        <button id="nudgeHere" class="primary" type="button" autofocus>¡Sigo aquí!</button>
+      </dialog>
+      <dialog id="onlineDialog" class="info-dialog online-dialog" aria-labelledby="onlineTitle">
+        <div id="onlineEmoji" class="info-emoji" aria-hidden="true">🌐</div>
+        <h2 id="onlineTitle" class="step-title">Invita a un amigo</h2>
+        <p id="onlineLead" class="step-lead"></p>
+        <div id="onlineHost" class="online-host">
+          <p class="online-code-label">Código de la sala</p>
+          <p id="onlineCode" class="online-code"></p>
+          <div class="share-actions">
+            <a
+              id="onlineWhatsapp"
+              class="primary info-link"
+              href="https://wa.me/"
+              target="_blank"
+              rel="noopener"
+              >💬 WhatsApp</a
+            >
+            <button id="onlineCopy" class="secondary" type="button">🔗 Copiar enlace</button>
+          </div>
+        </div>
+        <form id="onlineJoin" class="online-join hidden">
+          <label class="small-label" for="onlineName">Tu nombre</label>
+          <input id="onlineName" type="text" maxlength="16" autocomplete="off" placeholder="Jugador 2" />
+          <div id="onlineAvatars" class="online-avatars" role="group" aria-label="Tu avatar"></div>
+          <button id="onlineJoinBtn" class="primary" type="submit">¡A jugar!</button>
+        </form>
+        <p id="onlineStatus" class="share-status" role="status" aria-live="polite"></p>
+        <button id="onlineCancel" class="secondary share-close" type="button">Cancelar</button>
       </dialog>
       <dialog id="shareDialog" class="info-dialog share-dialog" aria-labelledby="shareTitle">
         <div class="info-emoji" aria-hidden="true">📣</div>

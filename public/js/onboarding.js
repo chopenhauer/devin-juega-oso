@@ -15,9 +15,12 @@ const nameInputs = [1, 2, 3, 4].map((n) => $(`nickname${n}`));
 const isSolo = () => $('modeSolo').classList.contains('selected');
 const fourLocked = () => $('modeFour').hasAttribute('data-locked');
 const isFour = () => $('modeFour').classList.contains('selected');
+const isOnline = () => $('modeOnline').classList.contains('selected');
+const modeNow = () => (isSolo() ? 'solo' : isFour() ? 'four' : isOnline() ? 'online' : 'two');
 const setSetupMode = (mode) => {
   setup.classList.toggle('solo-setup', mode === 'solo');
   setup.classList.toggle('four-setup', mode === 'four');
+  setup.classList.toggle('online-setup', mode === 'online');
 };
 const viewButtons = [$('viewFacing'), $('viewSame')];
 const VIEWS = viewButtons.map((b) => b.dataset.view);
@@ -25,7 +28,7 @@ const VIEWS = viewButtons.map((b) => b.dataset.view);
 const defaultView = () => (matchMedia('(min-width: 1024px) and (pointer: fine)').matches ? 'same' : 'facing');
 const currentView = () => viewButtons.find((b) => b.getAttribute('aria-pressed') === 'true').dataset.view;
 // The orientation step only applies to two players.
-const isVisible = (step) => step !== 'view' || !isSolo();
+const isVisible = (step) => step !== 'view' || (!isSolo() && !isOnline());
 let slide = 0;
 
 function loadPrefs() {
@@ -57,6 +60,7 @@ function applyPrefs(prefs) {
   });
   if (prefs.mode === 'solo') $('modeSolo').click();
   else if (prefs.mode === 'four' && !fourLocked()) $('modeFour').click();
+  else if (prefs.mode === 'online') $('modeOnline').click();
   if (prefs.difficulty === 'hard') $('difficultyHard').click();
   if (VIEWS.includes(prefs.view)) setView(prefs.view);
   const size = $('sizeSelect');
@@ -66,12 +70,12 @@ function applyPrefs(prefs) {
 
 function currentPrefs() {
   const solo = isSolo();
-  const count = solo ? 1 : isFour() ? 4 : 2;
+  const count = solo || isOnline() ? 1 : isFour() ? 4 : 2;
   const selectedAvatar = (player) =>
     setup.querySelector(`.avatars[data-player="${player}"] .avatar-btn.selected`)?.dataset.avatar;
   return {
     seenIntro: true,
-    mode: solo ? 'solo' : isFour() ? 'four' : 'two',
+    mode: modeNow(),
     difficulty: $('difficultyHard').classList.contains('selected') ? 'hard' : 'easy',
     avatars: Array.from({ length: count }, (_, i) => selectedAvatar(i)),
     names: nameInputs.slice(0, count).map((i) => i.value.trim()),
@@ -82,9 +86,11 @@ function currentPrefs() {
 
 function summary() {
   const name = (i) => nameInputs[i].value.trim() || nameInputs[i].placeholder;
-  const versus = isSolo()
-    ? `${name(0)} contra la máquina (${$('difficultyHard').classList.contains('selected') ? 'difícil' : 'fácil'})`
-    : `${isFour() ? `${[0, 1, 2].map(name).join(', ')} y ${name(3)}` : `${name(0)} contra ${name(1)}`} (${currentView() === 'same' ? 'misma vista' : 'enfrentados'})`;
+  const versus = isOnline()
+    ? `${name(0)} invita a un amigo a distancia`
+    : isSolo()
+      ? `${name(0)} contra la máquina (${$('difficultyHard').classList.contains('selected') ? 'difícil' : 'fácil'})`
+      : `${isFour() ? `${[0, 1, 2].map(name).join(', ')} y ${name(3)}` : `${name(0)} contra ${name(1)}`} (${currentView() === 'same' ? 'misma vista' : 'enfrentados'})`;
   return `${versus} · tablero ${$('sizeSelect').selectedOptions[0].textContent}`;
 }
 
@@ -92,7 +98,7 @@ function summary() {
 // step. Measured in both modes.
 function equalizeHeight() {
   if (!setup.offsetParent) return;
-  const mode = isSolo() ? 'solo' : isFour() ? 'four' : 'two';
+  const mode = modeNow();
   stepsEl.style.minHeight = '';
   const modes = fourLocked() ? ['two', 'solo'] : ['two', 'solo', 'four'];
   const height = Math.max(
@@ -122,7 +128,7 @@ function setSlide(index) {
 function show(step, slideIndex = 0) {
   steps.forEach((s) => s.classList.toggle('inactive', s.dataset.step !== step));
   setup.dataset.step = step;
-  setSetupMode(isSolo() ? 'solo' : isFour() ? 'four' : 'two');
+  setSetupMode(modeNow());
   $('stepBack').classList.toggle('invisible', step === 'welcome');
   $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '←';
   $('stepBack').setAttribute('aria-label', step === 'mode' ? 'Cómo se juega' : 'Atrás');
@@ -133,6 +139,7 @@ function show(step, slideIndex = 0) {
   $('stepNext').textContent = step === 'mode' ? 'Siguiente →' : '→';
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
+  $('startGame').textContent = isOnline() ? 'Crear sala 🌐' : '¡A jugar!';
   equalizeHeight();
 }
 
@@ -172,6 +179,7 @@ $('introStart').addEventListener('click', () => show('rules'));
 $('introSkip').addEventListener('click', () => show('mode'));
 $('modeTwo').addEventListener('click', () => setSetupMode('two'));
 $('modeSolo').addEventListener('click', () => setSetupMode('solo'));
+$('modeOnline').addEventListener('click', () => setSetupMode('online'));
 $('modeFour').addEventListener('click', () => {
   if (fourLocked()) return;
   setSetupMode('four');
