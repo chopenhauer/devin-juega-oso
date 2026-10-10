@@ -575,6 +575,9 @@
             <button id="restartMatch">🔄 Reiniciar tablero</button>
             <button id="newGame">🆕 Nueva partida</button>
             <button id="soundMenu" type="button">🔊 Sonido: activado</button>
+            <a id="ideasMenu" class="sidebar-link" href="mailto:hola@juegaoso.com?subject=Ideas%20para%20OSO"
+              >💡 Ideas y opiniones</a
+            >
           </div>
         </div>
 
@@ -700,6 +703,21 @@
               </table>
               <p id="sessionMeta" class="session-meta"></p>
             </section>
+            <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
+              <h2 id="feedbackTitle" class="feedback-title">¿Os está gustando OSO?</h2>
+              <div id="feedbackActions" class="feedback-actions">
+                <button id="feedbackUp" type="button" class="feedback-btn" aria-label="Sí, nos gusta">
+                  👍
+                </button>
+                <button id="feedbackDown" type="button" class="feedback-btn" aria-label="No mucho">👎</button>
+              </div>
+              <p id="feedbackThanks" class="feedback-thanks hidden">
+                ¡Gracias!
+                <a id="feedbackMore" href="mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO"
+                  >💡 Cuéntanos más</a
+                >
+              </p>
+            </section>
             <div class="winner-actions">
               <button id="rematch" class="primary rematch" aria-label="Revancha, mismo tablero">
                 Revancha<span class="btn-sub">mismo tablero</span>
@@ -722,12 +740,13 @@
     <footer class="credits">
       <span class="credits-text">Hecho por Julia y JoseLuis — Vilarequi — con ❤️</span>
       · <span id="appVersion" class="credits-version"></span> ·
-      <button id="cookieSettings" type="button" class="cookie-settings">Cookies</button>
+      <button id="cookieSettings" type="button" class="cookie-settings">Cookies</button> ·
+      <a id="privacyLink" href="/privacidad" class="cookie-settings">Privacidad</a>
     </footer>
     <section id="consentBanner" class="consent hidden" aria-labelledby="consentText">
       <p id="consentText" class="consent-text">
         🍪 Usamos cookies de analítica (Google Analytics y Microsoft Clarity) para saber cómo se juega y
-        mejorar OSO. No hay publicidad.
+        mejorar OSO. No hay publicidad. <a href="/privacidad">Política de privacidad</a>.
       </p>
       <div class="consent-actions">
         <button id="consentDeny" type="button" class="consent-btn">Rechazar</button>

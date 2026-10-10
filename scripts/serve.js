@@ -29,9 +29,15 @@ createServer(async (req, res) => {
     return;
   }
   try {
-    const body = await readFile(file);
+    // Same as Vercel's cleanUrls: /privacidad serves privacidad.html.
+    const body = await readFile(file).catch((e) => {
+      if (extname(file)) throw e;
+      return readFile(`${file}.html`);
+    });
     for (const { key, value } of headersFor(path)) res.setHeader(key, value);
-    res.writeHead(200, { 'Content-Type': types[extname(file)] ?? 'application/octet-stream' }).end(body);
+    res
+      .writeHead(200, { 'Content-Type': types[extname(file) || '.html'] ?? 'application/octet-stream' })
+      .end(body);
   } catch {
     res.writeHead(404).end('Not found');
   }

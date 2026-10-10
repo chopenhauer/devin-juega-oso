@@ -42,3 +42,9 @@ test('game board and winner dialog are accessible', async ({ page }) => {
   await expect(page.locator('#hint1')).toHaveAttribute('aria-label', /^Pista/);
   await expectNoSeriousViolations(page);
 });
+
+test('the privacy policy has no serious accessibility violations', async ({ page }) => {
+  await page.goto('/privacidad');
+  await expect(page.locator('h1')).toHaveText('Política de privacidad');
+  await expectNoSeriousViolations(page);
+});

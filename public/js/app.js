@@ -3,6 +3,7 @@ import { sessionKey, recordGame, standings } from './leaderboard.js';
 import { THEMES, themeOf, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
+import { track, gameParams, gameEndParams, shouldAskFeedback } from './telemetry.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
@@ -55,7 +56,8 @@ const { timeFor } = Engine;
     sosUsed = false,
     replaying = false,
     gameId = 0,
-    helpPaused = false;
+    helpPaused = false,
+    playing = false;
 
   const avatarGrids = [...document.querySelectorAll('.avatars')];
   let avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
@@ -636,7 +638,18 @@ const { timeFor } = Engine;
     document.body.classList.toggle('sea-theme', on);
   }
 
+  const filledCells = () => board.filter(Boolean).length;
+  const modeParams = () => gameParams({ size, mode: gameMode, difficulty });
+  // A game left before it ends (new game, other board, closing the page).
+  function abandon() {
+    if (!playing) return;
+    playing = false;
+    track('game_abandon', { ...modeParams(), cells_filled: filledCells(), cells_total: size * size });
+  }
+  addEventListener('pagehide', abandon);
+
   function reset() {
+    abandon();
     if (drag) endDrag(false);
     stopGame();
     board = Array(size * size).fill('');
@@ -667,6 +680,8 @@ const { timeFor } = Engine;
     msg.textContent = `${avatars[0]} ${names[0]} empieza.`;
     lastTick = performance.now();
     timer = setInterval(tick, 100);
+    playing = true;
+    track('game_start', modeParams());
   }
   // Charges the active player for the time elapsed since the last settlement.
   // Returns true if that player ran out of time (the game is then finished).
@@ -696,7 +711,7 @@ const { timeFor } = Engine;
   // 4 players: the player keeps their points, the others carry on until only one has time left.
   function knockOut(p) {
     if (times.filter((t) => t > 0).length <= 1) {
-      endByScore();
+      endByScore(true);
       return;
     }
     if (drag) endDrag(false);
@@ -1016,12 +1031,29 @@ const { timeFor } = Engine;
   }
   const joinNames = (list) =>
     list.length < 2 ? list.join('') : `${list.slice(0, -1).join(', ')} y ${list.at(-1)}`;
-  function endByScore() {
+  // `timedOut`: with 4 players, the game ends when only one has time left.
+  function endByScore(timedOut = false) {
     const top = [leaders()].flat();
-    finish(top.length === scores.length ? null : leaders(), 'puntos');
+    finish(top.length === scores.length ? null : leaders(), 'puntos', timedOut);
   }
-  function finish(w, reason) {
+  function finish(w, reason, timedOut = reason === 'tiempo') {
     over = true;
+    playing = false;
+    track(
+      'game_end',
+      gameEndParams({
+        size,
+        mode: gameMode,
+        difficulty,
+        reason: timedOut ? 'tiempo' : reason,
+        winner: w,
+        scores,
+        available: timeFor(size),
+        times,
+        filled: filledCells(),
+      }),
+    );
+    showFeedback(shouldAskFeedback());
     clearInterval(timer);
     updateControls();
     q('winnerOverlay').classList.remove('hidden');
@@ -1048,6 +1080,23 @@ const { timeFor } = Engine;
     }
     play(w === null ? 'draw' : gameMode === 'solo' && w === 1 ? 'lose' : 'win');
     showSession(recordSession(w));
+  }
+
+  function showFeedback(ask) {
+    q('feedbackAsk').classList.toggle('hidden', !ask);
+    q('feedbackActions').classList.remove('hidden');
+    q('feedbackThanks').classList.add('hidden');
+  }
+  for (const [id, rating] of [
+    ['feedbackUp', 'up'],
+    ['feedbackDown', 'down'],
+  ]) {
+    q(id).addEventListener('click', () => {
+      track('feedback', { ...modeParams(), rating });
+      q('feedbackActions').classList.add('hidden');
+      q('feedbackThanks').classList.remove('hidden');
+      q('feedbackMore').focus({ preventScroll: true });
+    });
   }
 
   const SESSION_KEY = 'oso.session.v1';
@@ -1167,7 +1216,7 @@ const { timeFor } = Engine;
     if (!sidebar.classList.contains('open')) return;
     if (e.key === 'Escape') closeMenu();
     if (e.key !== 'Tab') return;
-    const items = [...sidebar.querySelectorAll('button')];
+    const items = [...sidebar.querySelectorAll('button, a[href]')];
     const i = items.indexOf(document.activeElement);
     const next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i + 1) % items.length;
     e.preventDefault();
@@ -1180,6 +1229,7 @@ const { timeFor } = Engine;
   });
 
   q('newGame').addEventListener('click', () => {
+    abandon();
     stopGame();
     over = true;
     closeMenu(false);
@@ -1191,6 +1241,7 @@ const { timeFor } = Engine;
   q('rematch').addEventListener('click', reset);
 
   function backToSetup() {
+    abandon();
     stopGame();
     q('winnerOverlay').classList.add('hidden');
     game.classList.add('hidden');

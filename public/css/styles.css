@@ -1156,7 +1156,8 @@ select option {
   font-size: 17px;
   font-weight: 700;
 }
-.sidebar button {
+.sidebar button,
+.sidebar-link {
   width: 100%;
   min-height: 44px;
   margin-top: 8px;
@@ -1166,6 +1167,13 @@ select option {
   color: #fff;
   font-size: 14px;
   font-weight: 600;
+}
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  text-decoration: none;
 }
 
 /* WINNER */
@@ -3292,4 +3300,73 @@ body[data-motion='rise'] .theme-decor span {
   .game.four.same-view .board-shell {
     max-width: min(100%, calc(100dvh - 130px));
   }
+}
+
+/* QUICK FEEDBACK (end of game, once per device) */
+.feedback-ask {
+  margin: 14px auto 0;
+}
+.feedback-title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 600;
+}
+.feedback-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.feedback-btn {
+  min-width: 56px;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 24px;
+  cursor: pointer;
+}
+.feedback-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+.feedback-thanks {
+  margin: 0;
+  font-size: 15px;
+}
+.feedback-thanks a,
+.consent-text a {
+  color: inherit;
+  font-weight: 700;
+}
+
+/* PRIVACY PAGE */
+body.legal-page {
+  display: block;
+}
+.legal {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+  line-height: 1.6;
+}
+.legal h1 {
+  margin: 0 0 4px;
+  font-size: 30px;
+}
+.legal h2 {
+  margin: 28px 0 6px;
+  font-size: 19px;
+}
+.legal a {
+  color: inherit;
+  font-weight: 700;
+}
+.legal-back {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+.legal-meta {
+  margin: 0;
+  opacity: 0.75;
 }
