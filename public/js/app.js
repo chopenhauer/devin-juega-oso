@@ -3,7 +3,7 @@ import { sessionKey, recordGame, standings } from './leaderboard.js';
 import { THEMES, themeOf, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
-import { track, gameParams, gameEndParams, shouldAskFeedback } from './telemetry.js';
+import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
@@ -1053,7 +1053,6 @@ const { timeFor } = Engine;
         filled: filledCells(),
       }),
     );
-    showFeedback(shouldAskFeedback());
     clearInterval(timer);
     updateControls();
     q('winnerOverlay').classList.remove('hidden');
@@ -1079,25 +1078,28 @@ const { timeFor } = Engine;
       confetti();
     }
     play(w === null ? 'draw' : gameMode === 'solo' && w === 1 ? 'lose' : 'win');
-    showSession(recordSession(w));
+    const st = recordSession(w);
+    showSession(st);
+    showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games }));
   }
 
-  function showFeedback(ask) {
-    q('feedbackAsk').classList.toggle('hidden', !ask);
-    q('feedbackActions').classList.remove('hidden');
-    q('feedbackThanks').classList.add('hidden');
+  let feedbackMomentNow = null;
+  function showFeedback(moment) {
+    feedbackMomentNow = moment;
+    q('feedbackAsk').classList.toggle('hidden', !moment);
   }
   for (const [id, rating] of [
     ['feedbackUp', 'up'],
     ['feedbackDown', 'down'],
   ]) {
     q(id).addEventListener('click', () => {
-      track('feedback', { ...modeParams(), rating });
-      q('feedbackActions').classList.add('hidden');
-      q('feedbackThanks').classList.remove('hidden');
-      q('feedbackMore').focus({ preventScroll: true });
+      track('feedback', { ...modeParams(), rating, moment: feedbackMomentNow });
+      answerFeedback();
+      q('feedbackAsk').classList.add('hidden');
+      q('thanksDialog').showModal();
     });
   }
+  q('thanksDialog').addEventListener('close', () => q('rematch').focus({ preventScroll: true }));
 
   const SESSION_KEY = 'oso.session.v1';
   function recordSession(winner) {

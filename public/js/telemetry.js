@@ -9,8 +9,9 @@ export const TIMEOUT_TARGET = 0.5;
 
 const CONSENT_KEY = 'oso.consent.v1';
 const FEEDBACK_KEY = 'oso.feedback.v1';
-// Ask for a 👍/👎 from the third finished game on, once per device.
-export const FEEDBACK_AFTER_GAMES = 3;
+// When to ask «¿Os está gustando OSO?» (see feedbackMoment).
+export const FEEDBACK_COOLDOWN = 5;
+export const FEEDBACK_STREAK = 3;
 
 export const IDEAS_EMAIL = 'hola@juegaoso.com';
 export const ideasHref = (subject = 'Ideas para OSO') =>
@@ -62,24 +63,48 @@ export function gameEndParams({ size, mode, difficulty, reason, winner, scores, 
   return params;
 }
 
-function readFeedback() {
-  try {
-    return { games: 0, asked: false, ...JSON.parse(localStorage.getItem(FEEDBACK_KEY)) };
-  } catch {
-    return { games: 0, asked: false };
-  }
+const minor = (version) => version.split('.').slice(0, 2).join('.');
+
+// Picks a good moment for the 👍/👎 question, or null. `state.games` already
+// counts the game that just finished; `sessionGames` counts the games in a row
+// between the same players. Never right after the machine wins, never twice
+// within FEEDBACK_COOLDOWN games, and once answered not again until the next
+// minor version.
+export function feedbackMoment({ state, version, mode, winner, sessionGames }) {
+  if (state.answered && minor(state.answered) === minor(version)) return null;
+  if (mode === 'solo' && winner === 1) return null;
+  if (state.lastAsk && state.games - state.lastAsk < FEEDBACK_COOLDOWN) return null;
+  if (state.games === 1) return 'first_game';
+  if (mode === 'solo' && winner === 0) return 'beat_machine';
+  if (sessionGames > 0 && sessionGames % FEEDBACK_STREAK === 0) return 'streak';
+  return null;
 }
 
-// Counts a finished game and says whether to show the 👍/👎 question now.
-export function shouldAskFeedback() {
-  const state = readFeedback();
-  state.games += 1;
-  const ask = !state.asked && state.games >= FEEDBACK_AFTER_GAMES;
-  if (ask) state.asked = true;
+function readFeedback() {
+  try {
+    return { games: 0, lastAsk: 0, answered: null, ...JSON.parse(localStorage.getItem(FEEDBACK_KEY)) };
+  } catch {
+    return { games: 0, lastAsk: 0, answered: null };
+  }
+}
+function saveFeedback(state) {
   try {
     localStorage.setItem(FEEDBACK_KEY, JSON.stringify(state));
+    return true;
   } catch {
     return false;
   }
-  return ask;
+}
+
+// Counts a finished game and returns the moment to ask for feedback, if any.
+export function nextFeedback({ mode, winner, sessionGames }) {
+  const state = readFeedback();
+  state.games += 1;
+  const moment = feedbackMoment({ state, version: VERSION, mode, winner, sessionGames });
+  if (moment) state.lastAsk = state.games;
+  return saveFeedback(state) ? moment : null;
+}
+
+export function answerFeedback() {
+  saveFeedback({ ...readFeedback(), answered: VERSION });
 }

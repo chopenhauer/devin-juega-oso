@@ -176,7 +176,7 @@ test('two players choose the orientation; solo skips that step', async ({ page }
 test('credits show on the setup screens and hide during the game', async ({ page }) => {
   await page.goto('/');
   const credits = page.locator('.credits-text');
-  await expect(credits).toHaveText('Hecho por Julia y JoseLuis — Vilarequi — con ❤️');
+  await expect(credits).toHaveText('made by Vilarequi with ❤️');
   await expect(credits).toBeVisible();
   await page.click('#introSkip');
   await expect(credits).toBeVisible();

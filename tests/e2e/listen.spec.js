@@ -95,32 +95,54 @@ test('with analytics rejected, no game events are sent', async ({ page }) => {
   expect(await events(page)).toEqual([]);
 });
 
-test('the 👍/👎 question appears once, from the third game', async ({ page }) => {
+test('the 👍/👎 question shows after the first game, below the actions, and thanks in a modal', async ({
+  page,
+}) => {
   await consent(page, 'granted');
   await start(page);
-  for (let game = 1; game <= 4; game++) {
-    if (game > 1) await page.click('#rematch');
+  await finishGame(page);
+  const ask = page.locator('#feedbackAsk');
+  await expect(ask).toBeVisible();
+  await expect(page.locator('#rematch')).toBeFocused();
+  const [askTop, actionsBottom] = await page.evaluate(() => [
+    document.querySelector('#feedbackAsk').getBoundingClientRect().top,
+    document.querySelector('.winner-actions').getBoundingClientRect().bottom,
+  ]);
+  expect(askTop).toBeGreaterThanOrEqual(actionsBottom);
+
+  await page.click('#feedbackUp');
+  const dialog = page.locator('#thanksDialog');
+  await expect(dialog).toBeVisible();
+  await expect(ask).toBeHidden();
+  await expect(page.locator('#thanksTitle')).toHaveText('¡Gracias!');
+  await expect(page.locator('#feedbackMore')).toHaveAttribute(
+    'href',
+    'mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO',
+  );
+  const feedback = (await events(page)).filter(([name]) => name === 'feedback');
+  expect(feedback).toHaveLength(1);
+  expect(feedback[0][1]).toMatchObject({ rating: 'up', moment: 'first_game', board_size: '5x5' });
+  await page.click('#thanksClose');
+  await expect(dialog).toBeHidden();
+  await expect(page.locator('#rematch')).toBeFocused();
+
+  for (let game = 2; game <= 4; game++) {
+    await page.click('#rematch');
     await finishGame(page);
-    await expect(page.locator('#feedbackAsk')).toBeVisible({ visible: game === 3 });
-    if (game === 3) {
-      await expect(page.locator('#rematch')).toBeFocused();
-      await page.click('#feedbackUp');
-      await expect(page.locator('#feedbackActions')).toBeHidden();
-      await expect(page.locator('#feedbackMore')).toBeFocused();
-      await expect(page.locator('#feedbackMore')).toHaveAttribute(
-        'href',
-        'mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO',
-      );
-      const feedback = (await events(page)).filter(([name]) => name === 'feedback');
-      expect(feedback).toHaveLength(1);
-      expect(feedback[0][1]).toMatchObject({ rating: 'up', board_size: '5x5' });
-    }
+    await expect(ask, 'answered: not again in this version').toBeHidden();
   }
-  await page.reload();
-  expect(JSON.parse(await page.evaluate(() => localStorage.getItem('oso.feedback.v1')))).toEqual({
-    games: 4,
-    asked: true,
-  });
+});
+
+test('the thanks modal closes with Esc', async ({ page }) => {
+  await consent(page, 'denied');
+  await start(page);
+  await finishGame(page);
+  await page.click('#feedbackDown');
+  await expect(page.locator('#thanksDialog')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#thanksDialog')).toBeHidden();
+  await expect(page.locator('#rematch')).toBeFocused();
+  expect(await events(page)).toEqual([]);
 });
 
 test('«💡 Ideas» in the ☰ menu opens an email with the subject ready', async ({ page }) => {

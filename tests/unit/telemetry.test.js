@@ -1,6 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { gameEndParams, gameParams, ideasHref, TIMEOUT_TARGET } from '../../public/js/telemetry.js';
+import {
+  feedbackMoment,
+  gameEndParams,
+  gameParams,
+  ideasHref,
+  TIMEOUT_TARGET,
+} from '../../public/js/telemetry.js';
 
 test('game_end describes the game without personal data', () => {
   const params = gameEndParams({
@@ -56,4 +62,25 @@ test('game params cover 4 players, draws and time bonuses', () => {
 test('ideas open an email with the subject filled in and the target is configurable', () => {
   assert.equal(ideasHref(), 'mailto:hola@juegaoso.com?subject=Ideas%20para%20OSO');
   assert.equal(TIMEOUT_TARGET, 0.5);
+});
+
+test('the 👍/👎 question picks good moments and does not nag', () => {
+  const ask = (state, context = {}) =>
+    feedbackMoment({
+      state: { lastAsk: 0, answered: null, ...state },
+      version: '2.4.0',
+      mode: 'two',
+      winner: 0,
+      sessionGames: 1,
+      ...context,
+    });
+  assert.equal(ask({ games: 1 }), 'first_game');
+  assert.equal(ask({ games: 2 }), null);
+  assert.equal(ask({ games: 4 }, { sessionGames: 3 }), 'streak');
+  assert.equal(ask({ games: 4 }, { mode: 'solo', winner: 0 }), 'beat_machine');
+  assert.equal(ask({ games: 1 }, { mode: 'solo', winner: 1 }), null, 'not right after the machine wins');
+  assert.equal(ask({ games: 5, lastAsk: 1 }, { sessionGames: 3 }), null, 'cooldown');
+  assert.equal(ask({ games: 6, lastAsk: 1 }, { sessionGames: 6 }), 'streak');
+  assert.equal(ask({ games: 9, answered: '2.4.0' }, { sessionGames: 3 }), null, 'answered in this version');
+  assert.equal(ask({ games: 9, answered: '2.3.1' }, { sessionGames: 3 }), 'streak', 'new minor version');
 });

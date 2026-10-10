@@ -703,21 +703,6 @@
               </table>
               <p id="sessionMeta" class="session-meta"></p>
             </section>
-            <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
-              <h2 id="feedbackTitle" class="feedback-title">¿Os está gustando OSO?</h2>
-              <div id="feedbackActions" class="feedback-actions">
-                <button id="feedbackUp" type="button" class="feedback-btn" aria-label="Sí, nos gusta">
-                  👍
-                </button>
-                <button id="feedbackDown" type="button" class="feedback-btn" aria-label="No mucho">👎</button>
-              </div>
-              <p id="feedbackThanks" class="feedback-thanks hidden">
-                ¡Gracias!
-                <a id="feedbackMore" href="mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO"
-                  >💡 Cuéntanos más</a
-                >
-              </p>
-            </section>
             <div class="winner-actions">
               <button id="rematch" class="primary rematch" aria-label="Revancha, mismo tablero">
                 Revancha<span class="btn-sub">mismo tablero</span>
@@ -725,6 +710,15 @@
               <button id="otherBoard" class="secondary">Otro tablero</button>
               <button id="changePlayers" class="secondary">Cambiar jugadores</button>
             </div>
+            <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
+              <h2 id="feedbackTitle" class="feedback-title">¿Os está gustando OSO?</h2>
+              <div class="feedback-actions">
+                <button id="feedbackUp" type="button" class="feedback-btn" aria-label="Sí, nos gusta">
+                  👍
+                </button>
+                <button id="feedbackDown" type="button" class="feedback-btn" aria-label="No mucho">👎</button>
+              </div>
+            </section>
           </div>
         </div>
       </section>
@@ -736,15 +730,28 @@
           <button class="primary" type="submit" autofocus>Entendido</button>
         </form>
       </dialog>
+      <dialog id="thanksDialog" class="info-dialog thanks-dialog" aria-labelledby="thanksTitle">
+        <div class="info-emoji" aria-hidden="true">💛</div>
+        <h2 id="thanksTitle" class="step-title">¡Gracias!</h2>
+        <p class="step-lead">
+          Tu opinión nos ayuda a mejorar OSO. ¿Nos cuentas qué cambiarías o qué te gustaría jugar?
+        </p>
+        <a
+          id="feedbackMore"
+          class="primary info-link"
+          href="mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO"
+          >💡 Cuéntanos más</a
+        >
+        <form method="dialog">
+          <button id="thanksClose" class="secondary" type="submit">Cerrar</button>
+        </form>
+      </dialog>
     </main>
     <footer class="credits">
-      <span class="credits-text">Hecho por Julia y JoseLuis — Vilarequi — con ❤️</span>
-      · <span id="appVersion" class="credits-version"></span
-      ><span class="credits-links"
-        ><span class="credits-sep"> · </span
-        ><button id="cookieSettings" type="button" class="cookie-settings">Cookies</button> ·
-        <a id="privacyLink" href="/privacidad" class="cookie-settings">Privacidad</a></span
-      >
+      <span class="credits-text">made by Vilarequi with ❤️</span>
+      · <span id="appVersion" class="credits-version"></span> ·
+      <button id="cookieSettings" type="button" class="cookie-settings">Cookies</button> ·
+      <a id="privacyLink" href="/privacidad" class="cookie-settings">Privacidad</a>
     </footer>
     <section id="consentBanner" class="consent hidden" aria-labelledby="consentText">
       <p id="consentText" class="consent-text">

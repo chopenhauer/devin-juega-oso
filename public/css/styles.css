@@ -139,17 +139,6 @@ body:has(#setupScreen:not(.hidden)) .app {
 body:has(#gameScreen:not(.hidden)) .credits {
   display: none;
 }
-.credits-links {
-  white-space: nowrap;
-}
-@media (max-width: 480px) {
-  .credits-links {
-    display: block;
-  }
-  .credits-sep {
-    display: none;
-  }
-}
 .cookie-settings {
   min-height: 24px;
   padding: 0 4px;
@@ -3313,37 +3302,54 @@ body[data-motion='rise'] .theme-decor span {
   }
 }
 
-/* QUICK FEEDBACK (end of game, once per device) */
+/* QUICK FEEDBACK (end of game, only at chosen moments; secondary to the actions) */
 .feedback-ask {
-  margin: 14px auto 0;
+  margin: 22px auto 0;
+  opacity: 0.85;
 }
 .feedback-title {
-  margin: 0 0 8px;
-  font-size: 16px;
+  margin: 0 0 6px;
+  font-size: 13px;
   font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
 }
 .feedback-actions {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
 }
 .feedback-btn {
-  min-width: 56px;
-  min-height: 48px;
+  min-width: 48px;
+  min-height: 44px;
   border: 1px solid var(--line);
   border-radius: var(--r-sm);
-  background: rgba(255, 255, 255, 0.1);
-  font-size: 24px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 20px;
   cursor: pointer;
 }
 .feedback-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.16);
 }
-.feedback-thanks {
+.thanks-dialog::backdrop {
+  background: rgba(8, 4, 30, 0.88);
+}
+.info-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  min-height: 48px;
+  padding: 0 22px;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.thanks-dialog form {
   margin: 0;
-  font-size: 15px;
 }
-.feedback-thanks a,
+.thanks-dialog .secondary {
+  min-width: 160px;
+  min-height: 44px;
+}
 .consent-text a {
   color: inherit;
   font-weight: 700;
