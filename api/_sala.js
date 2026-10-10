@@ -1,7 +1,8 @@
 // Referee for online 1 vs 1 games (docs/ONLINE.md). One endpoint, /api/sala:
 //   GET  ?code=K7QD2&rev=3   room state (just {rev, same} if unchanged), settles the clock
 //   GET  ?stats=1            this month's anonymous counters
-//   POST {action: create | join | move | rematch | leave, ...}
+//   POST {action: create | join | profile | start | move | rematch | leave | ping, ...}
+// A room goes waiting (host alone) → lobby (both in, host picks the board) → playing ⇄ over.
 // The client only sends intentions; turns, clocks, scores and winners are decided here.
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import * as Match from '../public/js/match.js';
@@ -115,7 +116,6 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   async function create(body, now, stats, ip) {
     if ((await store.hit(`rl:${hash(ip).slice(0, 16)}`, RATE.window)) > RATE.limit)
       throw new HttpError(429, 'rate');
-    const size = SIZES.includes(body.size) ? body.size : 5;
     const token = randomBytes(16).toString('base64url');
     const seat = {
       hash: hash(token),
@@ -123,7 +123,15 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
       avatar: cleanAvatar(body.avatar, '🐻'),
     };
     for (let tries = 0; tries < 5; tries++) {
-      const room = { code: newCode(), rev: 0, status: 'waiting', game: 1, size, seats: [seat], created: now };
+      const room = {
+        code: newCode(),
+        rev: 0,
+        status: 'waiting',
+        game: 1,
+        size: null,
+        seats: [seat],
+        created: now,
+      };
       try {
         await save(room, 0);
         stats.created = 1;
@@ -143,10 +151,40 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     const token = randomBytes(16).toString('base64url');
     const expected = room.rev;
     room.seats.push({ hash: hash(token), name: cleanName(body.name, 'Jugador 2'), avatar });
+    room.status = 'lobby';
+    await save(room, expected);
+    stats.joined = 1;
+    return { seat: 1, token, room };
+  }
+
+  // Before the game both can still change their name and avatar.
+  async function profile(body) {
+    const room = await load(body.code);
+    const seat = seatOf(room, body.token);
+    if (room.status !== 'waiting' && room.status !== 'lobby') throw new HttpError(409, 'started', room);
+    const s = room.seats[seat];
+    const avatar = cleanAvatar(body.avatar, s.avatar);
+    if (room.seats.some((x, i) => i !== seat && x.avatar === avatar))
+      throw new HttpError(409, 'avatar_taken', room);
+    const expected = room.rev;
+    Object.assign(s, { name: cleanName(body.name, s.name), avatar });
+    await save(room, expected);
+    return { seat, room };
+  }
+
+  // The host picks the board and starts once the friend is in.
+  async function start(body, now, stats) {
+    const room = await load(body.code);
+    const seat = seatOf(room, body.token);
+    if (seat !== 0) throw new HttpError(403, 'host');
+    if (room.status !== 'lobby')
+      throw new HttpError(409, room.status === 'waiting' ? 'alone' : 'started', room);
+    const expected = room.rev;
+    room.size = SIZES.includes(body.size) ? body.size : 5;
     startGame(room, now, 0);
     await save(room, expected);
-    Object.assign(stats, { joined: 1, started: 1 });
-    return { seat: 1, token, room };
+    stats.started = 1;
+    return { seat, room };
   }
 
   async function move(body, now, stats) {
@@ -191,8 +229,11 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     const room = await load(body.code);
     const seat = seatOf(room, body.token);
     const expected = room.rev;
-    if (room.status === 'waiting') room.status = 'closed';
-    else if (room.status !== 'playing') room.seats[seat].left = true;
+    if (room.status === 'waiting' || (room.status === 'lobby' && seat === 0)) room.status = 'closed';
+    else if (room.status === 'lobby') {
+      room.seats.pop();
+      room.status = 'waiting';
+    } else if (room.status !== 'playing') room.seats[seat].left = true;
     else if (((room.seats[seat].left = true), !settle(room, now, stats))) {
       const m = Match.fromJSON(room.match);
       finished(room, Match.leave(m, seat).events, stats);
@@ -214,7 +255,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     return { seat, room };
   }
 
-  const ACTIONS = { create, join, move, rematch, leave, ping };
+  const ACTIONS = { create, join, profile, start, move, rematch, leave, ping };
 
   return async function handle(request) {
     const started = clock();

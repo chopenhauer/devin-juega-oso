@@ -26,14 +26,14 @@ test('setup screens have no serious accessibility violations', async ({ page }) 
   await expectNoSeriousViolations(page);
   await page.click('#introSkip');
   await expectNoSeriousViolations(page);
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await expectNoSeriousViolations(page);
 });
 
 test('game board and winner dialog are accessible', async ({ page }) => {
   await page.goto('/');
   await page.click('#introSkip');
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await page.click('#startGame');
   const cell = page.locator('.cell').first();
   await expect(cell).toHaveAttribute('aria-label', 'Fila 1, columna 1: vacía');

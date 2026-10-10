@@ -26,14 +26,15 @@ function setup() {
 }
 
 async function startedRoom(s, size = 4) {
-  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻', size });
+  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
-  return { host, guest, code: host.code };
+  const started = await s.call({ action: 'start', code: host.code, token: host.token, size });
+  return { host, guest: { ...guest, rev: started.rev }, code: host.code };
 }
 
-test('create gives a 5-character code and a secret seat; join starts the game', async () => {
+test('create gives a 5-character code and a secret seat; join opens the lobby, the host starts', async () => {
   const s = setup();
-  const host = await s.call({ action: 'create', name: '  Ana  ', avatar: '🐻', size: 6 });
+  const host = await s.call({ action: 'create', name: '  Ana  ', avatar: '🐻' });
   assert.equal(host.http, 200);
   assert.match(host.code, /^[A-HJKMNP-Z2-9]{5}$/);
   assert.equal(host.seat, 0);
@@ -45,9 +46,16 @@ test('create gives a 5-character code and a secret seat; join starts the game', 
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   assert.equal(guest.seat, 1);
   assert.equal(guest.http, 200);
-  assert.equal(guest.match.size, 6);
-  assert.deepEqual(guest.match.clocks, [timeFor(6), timeFor(6)]);
+  assert.equal(guest.status, 'lobby');
+  assert.equal(guest.match, undefined);
   assert.equal((await s.call({ action: 'join', code: host.code, avatar: '🐸' })).error, 'full');
+  const start = (who) => s.call({ action: 'start', code: host.code, token: who.token, size: 6 });
+  assert.equal((await start(guest)).error, 'host');
+  const started = await start(host);
+  assert.equal(started.status, 'playing');
+  assert.equal(started.match.size, 6);
+  assert.deepEqual(started.match.clocks, [timeFor(6), timeFor(6)]);
+  assert.equal((await start(host)).error, 'started');
 });
 
 test('names and avatars are cleaned; a taken avatar is refused', async () => {
@@ -203,4 +211,33 @@ test('«¡Sigo aquí!» pings are visible to the rival and need a valid seat', a
   assert.equal(p.seats[1].here, 0);
   assert.equal((await s.get(`code=${code}&rev=${guest.rev}`)).seats[0].here, s.clock.t);
   assert.equal((await s.call({ action: 'ping', code, token: 'nope' })).http, 403);
+});
+
+test('in the lobby both can change name and avatar; a guest who leaves frees the seat', async () => {
+  const s = setup();
+  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
+  assert.equal((await s.call({ action: 'start', code: host.code, token: host.token })).error, 'alone');
+  const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
+  const p = await s.call({
+    action: 'profile',
+    code: host.code,
+    token: guest.token,
+    name: 'Bea',
+    avatar: '🦊',
+  });
+  assert.deepEqual(
+    p.seats.map((x) => [x.name, x.avatar]),
+    [
+      ['Ana', '🐻'],
+      ['Bea', '🦊'],
+    ],
+  );
+  const taken = await s.call({ action: 'profile', code: host.code, token: host.token, avatar: '🦊' });
+  assert.equal(taken.error, 'avatar_taken');
+  const left = await s.call({ action: 'leave', code: host.code, token: guest.token });
+  assert.equal(left.status, 'waiting');
+  assert.equal(left.seats.length, 1);
+  const again = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
+  assert.equal(again.status, 'lobby');
+  assert.equal((await s.call({ action: 'leave', code: host.code, token: host.token })).status, 'closed');
 });

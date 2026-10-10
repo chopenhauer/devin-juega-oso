@@ -37,8 +37,15 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
 ## Cómo funciona
 
 - **Sala:** quien invita crea una sala con un código de 5 caracteres sin letras confusas (p. ej.
-  `K7QD2`) y un enlace `juegaoso.com/?sala=K7QD2` que se comparte con `share.js`. El amigo abre el
-  enlace, elige nombre y avatar, y empieza la partida.
+  `K7QD2`) y un enlace `juegaoso.com/?sala=K7QD2` que se comparte por WhatsApp o copiando. Flujo
+  (feedback de JoseLuis, 10-oct): «2 jugadores» → «¿Dónde está tu rival?» (🛋️ Juntos / 🌐 En
+  línea) → en «¿Quién juega?» la tarjeta del jugador 2 es la invitación («Abrir sala», código,
+  WhatsApp, Copiar). El amigo abre el enlace y ve la misma pantalla con la tarjeta del anfitrión
+  (solo lectura) y la suya. Los dos pasan al tablero; solo el anfitrión elige tamaño y pulsa «¡A
+  jugar!» (el invitado ve «… está eligiendo el tablero…»). Estados de la sala en el servidor:
+  `waiting` (anfitrión solo) → `lobby` (los dos; `profile` cambia nombre/avatar) → `start` del
+  anfitrión → `playing` ⇄ `over`. Si el invitado sale del lobby, la sala vuelve a `waiting`; si sale
+  el anfitrión, se cierra. El botón 🌐 arriba a la izquierda presenta el modo.
 - **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El
   token va en `localStorage` (`oso.online.v1`) para poder volver tras recargar o perder la conexión.
 - **Árbitro:** el cliente envía intenciones (`place`, `swap`, `sos`, `power`, `leave`) con la
@@ -98,13 +105,13 @@ llegue antes. Los parámetros nuevos de GA4 hay que registrarlos como definicion
 Todo en la rama `devin/juego-en-linea`, con preview y aprobación antes de publicar la **3.0.0**
 (cambia cómo se juega; los equipos 2 contra 2 pasan a ser la 4.0.0).
 
-| Fase | Qué                                                                                                                | Sale cuando                                           |
-| ---- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
-| 1    | `public/js/match.js`: estado, jugadas, relojes y fin de partida como funciones puras; `app.js` solo pinta y envía. | Todos los tests actuales pasan sin cambios visibles.  |
-| 2    | `api/sala.js` + Upstash: crear, unirse, consultar y jugar, validado con `match.js`; límites, TTL y contadores.     | Tests unitarios del servidor; funciona en la preview. |
-| 3    | Invitar y unirse: modo «🌐 A distancia», pantalla de espera con código y botón de compartir, enlace `?sala=`.      | Capturas en móvil y escritorio; a11y en verde.        |
-| 4    | Relojes del servidor, reconexión, abandono, revancha y telemetría `online_*`.                                      | e2e con dos navegadores jugando entre sí.             |
-| 5    | Prueba real con dos móviles en redes distintas (wifi y 4G), publicar y registrar los parámetros en GA4.            | JoseLuis dice «publica».                              |
+| Fase | Qué                                                                                                                 | Sale cuando                                           |
+| ---- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| 1    | `public/js/match.js`: estado, jugadas, relojes y fin de partida como funciones puras; `app.js` solo pinta y envía.  | Todos los tests actuales pasan sin cambios visibles.  |
+| 2    | `api/sala.js` + Upstash: crear, unirse, consultar y jugar, validado con `match.js`; límites, TTL y contadores.      | Tests unitarios del servidor; funciona en la preview. |
+| 3    | Invitar y unirse: «2 jugadores» → «En línea», tarjeta del jugador 2 como invitación, lobby y tablero del anfitrión. | Capturas en móvil y escritorio; a11y en verde.        |
+| 4    | Relojes del servidor, reconexión, abandono, revancha y telemetría `online_*`.                                       | e2e con dos navegadores jugando entre sí.             |
+| 5    | Prueba real con dos móviles en redes distintas (wifi y 4G), publicar y registrar los parámetros en GA4.             | JoseLuis dice «publica».                              |
 
 ## Decisiones tomadas por defecto (se pueden cambiar)
 

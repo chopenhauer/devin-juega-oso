@@ -242,10 +242,10 @@ body:has(#gameScreen:not(.hidden)) .consent {
 }
 .mode-choice {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-1-5);
   width: 100%;
-  max-width: 520px;
+  max-width: 440px;
   margin: 0 auto;
   padding: 5px;
   border-radius: var(--r-md);
@@ -1499,7 +1499,7 @@ body.sea-theme::before {
 }
 /* The modal lives inside .app's stacking context, so hide the fixed chrome above it. */
 body:has(#helpModal:not(.hidden))
-  :is(.theme-toggle, .sound-toggle, .share-toggle, .theme-menu, .credits, .consent) {
+  :is(.theme-toggle, .sound-toggle, .share-toggle, .online-toggle, .theme-menu, .credits, .consent) {
   display: none;
 }
 .help-dialog {
@@ -3381,46 +3381,76 @@ body.legal-page {
   min-height: 44px;
 }
 
-/* Online 1 vs 1: room code, invite and join dialog. */
-@media (max-width: 400px) {
-  .mode-choice {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+/* Online 1 vs 1: the rival's card is the invite, then shows who joined. */
+.online-toggle {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  z-index: var(--z-toolbar);
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--blanco-a12);
+  font-size: var(--fs-2xl);
+  line-height: 1;
 }
-.online-host,
-.online-join {
+body:has(#gameScreen:not(.hidden)) .online-toggle {
+  display: none;
+}
+.online-seat,
+.online-invite,
+.online-status {
+  display: none;
+}
+.online-setup .pconfig.remote > :not(.small-label, .online-seat, .online-status),
+.online-setup .second-player.inviting > :not(.small-label, .online-invite, .online-status) {
+  display: none;
+}
+.online-setup .pconfig.remote .online-seat,
+.online-setup .second-player.inviting .online-invite {
   display: grid;
-  gap: var(--space-2-5);
-  margin-bottom: var(--space-2-5);
+  justify-items: center;
+  gap: var(--space-2);
+}
+.online-setup .online-status {
+  display: block;
+  margin: 0;
+  text-align: center;
+}
+.online-seat-name,
+.online-invite-lead {
+  margin: 0;
+  font-weight: var(--fw-bold);
+  text-align: center;
+}
+.online-share {
+  display: grid;
+  gap: var(--space-2);
+  width: 100%;
+}
+.online-share.hidden {
+  display: none;
 }
 .online-code-label {
   margin: 0;
   font-size: var(--fs-sm);
+  text-align: center;
 }
 .online-code {
   margin: 0;
-  font-size: var(--fs-3xl);
+  font-size: var(--fs-2xl);
   font-weight: var(--fw-bold);
   letter-spacing: 0.2em;
   color: var(--accent);
+  text-align: center;
   user-select: all;
 }
-.online-join input {
+.online-invite .primary,
+.online-invite .secondary {
+  width: 100%;
   min-height: 44px;
-  padding: 0 var(--space-2-5);
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: var(--negro-a25);
-  color: inherit;
-  font: inherit;
-}
-.online-avatars {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-1-5);
-}
-/* Online: each player sets up only themselves; the friend joins from the invite. */
-.online-setup .second-player {
-  display: none;
+  padding-inline: var(--space-2);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
 }

@@ -1,7 +1,7 @@
 // Step-by-step setup screen. The intro (welcome + rules carousel) is shown only
 // on the first visit; later visits start at "mode" with the last choices restored.
 const STORAGE_KEY = 'oso.prefs.v1';
-const STEPS = ['welcome', 'rules', 'mode', 'players', 'view', 'board'];
+const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
 const NO_NEXT = new Set(['welcome', 'board']);
 const SWIPE_PX = 40;
 
@@ -15,7 +15,7 @@ const nameInputs = [1, 2, 3, 4].map((n) => $(`nickname${n}`));
 const isSolo = () => $('modeSolo').classList.contains('selected');
 const fourLocked = () => $('modeFour').hasAttribute('data-locked');
 const isFour = () => $('modeFour').classList.contains('selected');
-const isOnline = () => $('modeOnline').classList.contains('selected');
+const isOnline = () => !isSolo() && !isFour() && $('whereOnline').getAttribute('aria-pressed') === 'true';
 const modeNow = () => (isSolo() ? 'solo' : isFour() ? 'four' : isOnline() ? 'online' : 'two');
 const setSetupMode = (mode) => {
   setup.classList.toggle('solo-setup', mode === 'solo');
@@ -27,8 +27,9 @@ const VIEWS = viewButtons.map((b) => b.dataset.view);
 // Facing (player 2's panel upside down) suits a phone or tablet flat on the table.
 const defaultView = () => (matchMedia('(min-width: 1024px) and (pointer: fine)').matches ? 'same' : 'facing');
 const currentView = () => viewButtons.find((b) => b.getAttribute('aria-pressed') === 'true').dataset.view;
-// The orientation step only applies to two players.
-const isVisible = (step) => step !== 'view' || (!isSolo() && !isOnline());
+// «Where» only asks two players; the orientation step is for one shared screen.
+const isVisible = (step) =>
+  step === 'where' ? !isSolo() && !isFour() : step !== 'view' || (!isSolo() && !isOnline());
 let slide = 0;
 
 function loadPrefs() {
@@ -60,7 +61,7 @@ function applyPrefs(prefs) {
   });
   if (prefs.mode === 'solo') $('modeSolo').click();
   else if (prefs.mode === 'four' && !fourLocked()) $('modeFour').click();
-  else if (prefs.mode === 'online') $('modeOnline').click();
+  else if (prefs.mode === 'online') $('whereOnline').click();
   if (prefs.difficulty === 'hard') $('difficultyHard').click();
   if (VIEWS.includes(prefs.view)) setView(prefs.view);
   const size = $('sizeSelect');
@@ -87,7 +88,7 @@ function currentPrefs() {
 function summary() {
   const name = (i) => nameInputs[i].value.trim() || nameInputs[i].placeholder;
   const versus = isOnline()
-    ? `${name(0)} invita a un amigo a distancia`
+    ? 'Partida en línea'
     : isSolo()
       ? `${name(0)} contra la máquina (${$('difficultyHard').classList.contains('selected') ? 'difícil' : 'fácil'})`
       : `${isFour() ? `${[0, 1, 2].map(name).join(', ')} y ${name(3)}` : `${name(0)} contra ${name(1)}`} (${currentView() === 'same' ? 'misma vista' : 'enfrentados'})`;
@@ -100,7 +101,7 @@ function equalizeHeight() {
   if (!setup.offsetParent) return;
   const mode = modeNow();
   stepsEl.style.minHeight = '';
-  const modes = fourLocked() ? ['two', 'solo'] : ['two', 'solo', 'four'];
+  const modes = fourLocked() ? ['two', 'solo', 'online'] : ['two', 'solo', 'four', 'online'];
   const height = Math.max(
     ...modes.map((m) => {
       setSetupMode(m);
@@ -139,8 +140,8 @@ function show(step, slideIndex = 0) {
   $('stepNext').textContent = step === 'mode' ? 'Siguiente →' : '→';
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
-  $('startGame').textContent = isOnline() ? 'Crear sala 🌐' : '¡A jugar!';
   equalizeHeight();
+  document.dispatchEvent(new CustomEvent('oso:step', { detail: step }));
 }
 
 function neighbour(step, dir) {
@@ -149,13 +150,21 @@ function neighbour(step, dir) {
   return STEPS[Math.max(0, Math.min(STEPS.length - 1, i))];
 }
 
+// Online, the players step talks to the server first (app.js) and moves on by itself.
+const onlineStep = (name) =>
+  setup.dataset.step === 'players' &&
+  isOnline() &&
+  !document.dispatchEvent(new CustomEvent(name, { cancelable: true }));
+
 function next() {
+  if (onlineStep('oso:online-next')) return;
   const step = setup.dataset.step;
   if (step === 'rules' && slide < slides.length - 1) setSlide(slide + 1);
   else show(neighbour(step, 1));
 }
 
 function back() {
+  if (onlineStep('oso:online-back')) return;
   const step = setup.dataset.step;
   if (step === 'rules' && slide > 0) setSlide(slide - 1);
   else if (step === 'mode') show('rules');
@@ -179,7 +188,10 @@ $('introStart').addEventListener('click', () => show('rules'));
 $('introSkip').addEventListener('click', () => show('mode'));
 $('modeTwo').addEventListener('click', () => setSetupMode('two'));
 $('modeSolo').addEventListener('click', () => setSetupMode('solo'));
-$('modeOnline').addEventListener('click', () => setSetupMode('online'));
+['whereTogether', 'whereOnline'].forEach((id) =>
+  $(id).addEventListener('click', () => setSetupMode(modeNow())),
+);
+document.addEventListener('oso:show', (e) => show(e.detail));
 $('modeFour').addEventListener('click', () => {
   if (fourLocked()) return;
   setSetupMode('four');

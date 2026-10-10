@@ -98,6 +98,7 @@ test('players cannot pick the same avatar, also after restoring a swap', async (
   await page.goto('/');
   await page.click('#introSkip');
   await page.click('#stepNext');
+  await page.click('#stepNext');
   await expect(avatar(page, 1, '🐻')).toBeDisabled();
   await expect(avatar(page, 0, '🐼')).toBeDisabled();
 
@@ -124,6 +125,7 @@ test('back from the game menu returns to the mode step', async ({ page }) => {
   await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#stepNext');
+  await page.click('#stepNext');
   await page.click('#startGame');
   await page.click('#menu1');
   await page.click('#newGame');
@@ -137,6 +139,7 @@ test('two players choose the orientation; solo skips that step', async ({ page }
   await page.goto('/');
   await page.click('#introSkip');
   const heights = [await panelHeight(page)];
+  await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#stepNext');
   expect(await step(page)).toBe('view');
@@ -155,6 +158,7 @@ test('two players choose the orientation; solo skips that step', async ({ page }
 
   await page.reload();
   await expect(page.locator('#viewSame')).toHaveAttribute('aria-pressed', 'true');
+  await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#viewFacing');
@@ -180,7 +184,7 @@ test('credits show on the setup screens and hide during the game', async ({ page
   await expect(credits).toBeVisible();
   await page.click('#introSkip');
   await expect(credits).toBeVisible();
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await page.click('#startGame');
   await expect(credits).toBeHidden();
 });
@@ -192,12 +196,7 @@ test('the mode step has the OSO header, a ❓ rules button and no progress bar',
   await page.click('#introSkip');
   const mode = page.locator('.step[data-step="mode"]');
   await expect(mode.locator('.brand span')).toHaveText(['O', 'S', 'O']);
-  await expect(mode.locator('.mode-btn')).toHaveText([
-    /1 jugador/,
-    /2 jugadores/,
-    /4 jugadores/,
-    /A distancia/,
-  ]);
+  await expect(mode.locator('.mode-btn')).toHaveText([/1 jugador/, /2 jugadores/, /4 jugadores/]);
   if (testInfo.project.name === 'mobile') {
     await expect(page.locator('#modeFour')).toHaveAttribute('data-locked', 'true');
   } else {
@@ -241,8 +240,8 @@ test('wizard nav is ← ? → in every step and the board step keeps ¡A jugar! 
   const help = await page.locator('#helpToggle').boundingBox();
   expect(Math.abs(help.x + help.width / 2 - (nav.x + nav.width / 2))).toBeLessThan(2);
   for (let i = 0; i < 4; i++) await page.click('#stepNext');
-  await expect(page.locator('.mode-btn .mode-emoji')).toHaveCount(4);
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  await expect(page.locator('.mode-btn .mode-emoji')).toHaveCount(3);
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   expect(await step(page)).toBe('board');
   await expect(page.locator('.step-lead:visible')).toHaveText(
     'Cuanto más grande, más tiempo y más puntos OSO posibles.',
@@ -310,6 +309,8 @@ test('step buttons: plain and equal in the intro, yellow next in setup, round he
   expect(Math.abs(back - next)).toBeLessThanOrEqual(1);
 
   await page.click('#stepNext');
+  expect(await step(page)).toBe('where');
+  await page.click('#stepNext');
   expect(await step(page)).toBe('players');
   await expect(page.locator('#stepNext')).toHaveText('→');
   await expect(page.locator('#stepNext')).toHaveClass(/primary/);
@@ -329,6 +330,7 @@ test('on a phone, the name being typed moves above the keyboard', async ({ page 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
   await page.click('#introSkip');
+  await page.click('#stepNext');
   await page.click('#stepNext');
   await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'players');
   const keyboard = () => page.evaluate(() => document.body.style.getPropertyValue('--keyboard'));

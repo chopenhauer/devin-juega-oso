@@ -42,7 +42,7 @@ async function finishGame(page) {
 test('the session leaderboard adds up games between the same players', async ({ page }) => {
   await page.goto('/');
   await page.click('#introSkip');
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await page.click('#startGame');
 
   await play(page, [
@@ -77,6 +77,7 @@ test('the session leaderboard adds up games between the same players', async ({ 
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.session.v1')).games.length);
   expect(saved).toBe(3);
 
+  await page.click('#stepNext');
   await page.click('#stepNext');
   await page.fill('#nickname1', 'Julia');
   await page.click('#stepNext');

@@ -277,6 +277,7 @@ const { timeFor } = Engine;
     themeToggle.classList.toggle('hidden', !show);
     soundToggle.classList.toggle('hidden', !show);
     shareToggle.classList.toggle('hidden', !show);
+    q('onlineToggle').classList.toggle('hidden', !show);
   };
   new MutationObserver(syncThemeToggle).observe(setup, {
     attributes: true,
@@ -353,10 +354,12 @@ const { timeFor } = Engine;
 
   function setGameMode(mode) {
     gameMode = mode;
-    press(q('modeTwo'), mode === 'two');
+    press(q('modeTwo'), mode === 'two' || mode === 'online');
+    q('whereOnline').setAttribute('aria-pressed', String(mode === 'online'));
+    q('whereTogether').setAttribute('aria-pressed', String(mode !== 'online'));
+    if (mode !== 'online' && (online || invite) && game.classList.contains('hidden')) leaveOnline();
     press(q('modeSolo'), mode === 'solo');
     press(q('modeFour'), mode === 'four');
-    press(q('modeOnline'), mode === 'online');
     const sizeSelect = q('sizeSelect');
     [...sizeSelect.options].forEach((o) => (o.disabled = mode === 'four' && +o.value < 6));
     if (mode === 'four' && +sizeSelect.value < 6) sizeSelect.value = '6';
@@ -384,9 +387,11 @@ const { timeFor } = Engine;
     }
     syncAvatars();
   }
-  q('modeTwo').addEventListener('click', () => setGameMode('two'));
+  const whereOnline = () => q('whereOnline').getAttribute('aria-pressed') === 'true';
+  q('modeTwo').addEventListener('click', () => setGameMode(whereOnline() ? 'online' : 'two'));
+  q('whereTogether').addEventListener('click', () => setGameMode('two'));
+  q('whereOnline').addEventListener('click', () => setGameMode('online'));
   q('modeSolo').addEventListener('click', () => setGameMode('solo'));
-  q('modeOnline').addEventListener('click', () => setGameMode('online'));
   q('modeFour').addEventListener('click', () => {
     if (roomForFour.matches) setGameMode('four');
     else q('fourDialog').showModal();
@@ -1257,14 +1262,17 @@ const { timeFor } = Engine;
       msg.textContent = '📡 Sin conexión, reintentando…';
     }
     // Poll faster while waiting for the rival; on our own turn only clocks and leaving can change.
-    schedulePoll(over || remote(current) || onlineDialog.open ? Online.POLL_MS : Online.POLL_MS * 2);
+    const waiting = over || remote(current) || !setup.classList.contains('hidden');
+    schedulePoll(waiting ? Online.POLL_MS : Online.POLL_MS * 2);
   }
   function roomGone() {
     clearTimeout(pollTimeout);
     Online.clearSeat();
     online = null;
-    if (onlineDialog.open) setOnlineStatus(onlineError('no_room'));
-    else if (!game.classList.contains('hidden')) msg.textContent = '⌛ La sala ha caducado.';
+    if (game.classList.contains('hidden')) {
+      renderLobby();
+      onlineFail('no_room');
+    } else msg.textContent = '⌛ La sala ha caducado.';
   }
 
   // Shows the server state: board, scores, clocks, names and the end of the game.
@@ -1272,7 +1280,9 @@ const { timeFor } = Engine;
     const o = online;
     o.rev = v.rev;
     o.seats = v.seats;
-    if (!v.match) return;
+    o.status = v.status;
+    if (v.status === 'closed') return roomGone();
+    if (!v.match) return renderLobby();
     if (v.game !== o.game || game.classList.contains('hidden')) return startOnlineGame(v);
     const wasOver = over,
       oldBoard = board,
@@ -1339,7 +1349,6 @@ const { timeFor } = Engine;
 
   function startOnlineGame(v) {
     stopGame();
-    if (onlineDialog.open) onlineDialog.close();
     gameMode = 'online';
     online.game = v.game;
     size = v.size;
@@ -1460,7 +1469,8 @@ const { timeFor } = Engine;
   }
 
   function leaveOnline() {
-    if (!online) return;
+    invite = null;
+    if (!online) return renderLobby();
     closeNudge(false);
     const { code, token } = online;
     Online.send({ action: 'leave', code, token });
@@ -1470,129 +1480,179 @@ const { timeFor } = Engine;
     q('restartMatch').classList.remove('hidden');
     q('otherBoard').classList.remove('hidden');
     game.classList.remove('online');
+    renderLobby();
   }
 
-  // Host: create the room and wait in the invite dialog until the friend joins.
+  const showStep = (step) => document.dispatchEvent(new CustomEvent('oso:show', { detail: step }));
+  function onlineFail(error) {
+    setOnlineStatus(onlineError(error));
+    if (!onlineDialog.open) onlineDialog.showModal();
+  }
+  // A guest who opened an invite link but hasn't joined yet: { code, room }.
+  let invite = null;
+
+  // Online, the players step is the room: the rival's card is the invite, then shows who joined.
+  function renderLobby() {
+    const on = gameMode === 'online';
+    const seats = online?.seats ?? invite?.room.seats ?? [];
+    const me = online ? online.seat : invite ? 1 : 0;
+    const cards = [0, 1].map((i) => namesIn[i].closest('.pconfig'));
+    cards.forEach((card, i) => {
+      const other = on && i !== me && seats[i];
+      card.classList.toggle('remote', !!other);
+      if (other) {
+        card.querySelector('.online-seat-avatar').textContent = other.avatar;
+        card.querySelector('.online-seat-name').textContent = other.name;
+      }
+    });
+    const host = me === 0,
+      ready = seats.length === 2;
+    cards[1].classList.toggle('inviting', on && host && !ready);
+    q('openRoom').classList.toggle('hidden', !!online);
+    q('roomShare').classList.toggle('hidden', !online);
+    if (online) {
+      q('onlineCode').textContent = online.code;
+      const url = Online.inviteUrl(online.code);
+      q('onlineWhatsapp').href = whatsappHref(`¿Jugamos a OSO? 🐻 Entra en mi sala: ${url}`);
+    }
+    const rival = seats[1 - me]?.name;
+    q('seatStatus').textContent = !on
+      ? ''
+      : host
+        ? online
+          ? ready
+            ? `✅ ¡${rival} ya está aquí!`
+            : '⏳ Esperando a tu amigo…'
+          : ''
+        : online
+          ? '✅ ¡Ya estás dentro!'
+          : `${seats[0]?.name ?? 'Tu amigo'} te invita. Pon tu nombre y pulsa →`;
+    q('sizeSelect').disabled = on && !host;
+    q('startGame').classList.toggle('hidden', on && !host);
+    q('startGame').disabled = on && host && online?.status !== 'lobby';
+    q('lobbyStatus').textContent = !on
+      ? ''
+      : !host
+        ? `⏳ ${seats[0]?.name ?? 'Tu amigo'} está eligiendo el tablero…`
+        : ready
+          ? `✅ ${rival} está listo. ¡Elige el tablero!`
+          : online
+            ? '⏳ Esperando a tu amigo…'
+            : 'Vuelve atrás y abre la sala para invitar a tu amigo.';
+  }
+  document.addEventListener('oso:step', renderLobby);
+
+  // Host: «Abrir sala» creates the room; the invite stays on the players step.
   async function hostRoom() {
-    const btn = q('startGame');
+    const btn = q('openRoom');
     btn.disabled = true;
     const r = await Online.send({
       action: 'create',
       name: namesIn[0].value.trim() || 'Jugador 1',
       avatar: avatars[0],
-      size: +q('sizeSelect').value,
     });
     btn.disabled = false;
-    if (!r.ok) {
-      openOnlineDialog('error');
-      setOnlineStatus(onlineError(r.error));
-      return;
-    }
+    if (!r.ok) return onlineFail(r.error);
     connect(r, 0);
-    track('online_create', { board_size: `${r.size}x${r.size}` });
-    openOnlineDialog('host');
+    track('online_create');
+    renderLobby();
     schedulePoll();
   }
+  q('openRoom').addEventListener('click', hostRoom);
 
-  function openOnlineDialog(kind, room = null) {
-    const host = kind === 'host';
-    q('onlineHost').classList.toggle('hidden', !host);
-    q('onlineJoin').classList.toggle('hidden', kind !== 'join');
-    q('onlineEmoji').textContent = kind === 'join' ? room.seats[0].avatar : '🌐';
-    setOnlineStatus(host ? '⏳ Esperando a tu amigo…' : '');
-    if (host) {
-      const url = Online.inviteUrl(online.code);
-      q('onlineTitle').textContent = 'Invita a un amigo';
-      q('onlineLead').textContent = 'Pásale el enlace o el código. La partida empieza cuando entre.';
-      q('onlineCode').textContent = online.code;
-      q('onlineWhatsapp').href = whatsappHref(`¿Jugamos a OSO? 🐻 Entra en mi sala: ${url}`);
-    } else if (kind === 'join') {
-      q('onlineTitle').textContent = `${room.seats[0].name} te invita a jugar`;
-      q('onlineLead').textContent = `Tablero ${room.size}×${room.size}. Elige tu nombre y tu avatar.`;
-      renderJoinAvatars(room.seats[0].avatar);
-    } else {
-      q('onlineTitle').textContent = 'No se puede jugar a distancia';
-      q('onlineLead').textContent = '';
+  // → on the players step: the guest joins, the host opens the room or updates their card.
+  document.addEventListener('oso:online-next', async (e) => {
+    e.preventDefault();
+    const me = online ? online.seat : invite ? 1 : 0;
+    const body = { name: namesIn[me].value.trim() || `Jugador ${me + 1}`, avatar: avatars[me] };
+    if (invite) {
+      const r = await Online.send({ action: 'join', code: invite.code, ...body });
+      if (!r.ok) {
+        track('online_join_fail', { reason: r.error });
+        if (r.error === 'avatar_taken') return void (q('seatStatus').textContent = onlineError(r.error));
+        leaveOnline();
+        return onlineFail(r.error);
+      }
+      invite = null;
+      connect(r, 1);
+      track('online_join');
+      schedulePoll();
+    } else if (!online) return hostRoom();
+    else {
+      const r = await Online.send({ action: 'profile', code: online.code, token: online.token, ...body });
+      if (r.error === 'avatar_taken') return void (q('seatStatus').textContent = onlineError(r.error));
+      if (r.ok && online) applyView(r);
     }
-    if (!onlineDialog.open) onlineDialog.showModal();
-  }
+    renderLobby();
+    showStep('board');
+  });
+  // ← on the players step: a guest leaves the invite; the host keeps the room open.
+  document.addEventListener('oso:online-back', (e) => {
+    if (!invite && online?.seat !== 1) return;
+    e.preventDefault();
+    leaveOnline();
+    setGameMode('two');
+    showStep('mode');
+  });
 
-  function renderJoinAvatars(taken) {
-    const box = q('onlineAvatars');
-    box.innerHTML = '';
-    const choices = avatarChoices.filter((a) => a !== taken);
-    choices.forEach((a, i) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'avatar-btn';
-      b.dataset.avatar = a;
-      b.textContent = a;
-      b.setAttribute('aria-label', `Avatar ${a}`);
-      press(b, i === 0);
-      b.addEventListener('click', () =>
-        box.querySelectorAll('.avatar-btn').forEach((x) => press(x, x === b)),
-      );
-      box.appendChild(b);
+  // Host: «¡A jugar!» with the chosen board, once the friend is in.
+  async function startOnline() {
+    const btn = q('startGame');
+    btn.disabled = true;
+    const r = await Online.send({
+      action: 'start',
+      code: online.code,
+      token: online.token,
+      size: +q('sizeSelect').value,
     });
+    if (r.ok) return startOnlineGame(r);
+    if (r.room) applyView(r.room);
+    renderLobby();
+    if (r.error !== 'started' && r.error !== 'alone') q('lobbyStatus').textContent = onlineError(r.error);
   }
 
-  // Guest: the invite link opens the join form.
+  // Guest: the invite link opens the players step with the host's card.
   async function offerJoin(code) {
+    window.history.replaceState(null, '', location.pathname);
     const room = await Online.fetchRoom(code);
     const error = !room.ok ? room.error : room.status !== 'waiting' ? 'full' : null;
     if (error) {
       track('online_join_fail', { reason: error });
-      openOnlineDialog('error');
-      setOnlineStatus(onlineError(error));
-      window.history.replaceState(null, '', location.pathname);
-      return;
+      return onlineFail(error);
     }
-    q('onlineName').value = namesIn[0].value.trim() || '';
-    openOnlineDialog('join', room);
-    q('onlineJoin').dataset.code = code;
+    setGameMode('online');
+    invite = { code, room };
+    seatAsGuest(room);
+    if (!namesIn[1].value.trim()) namesIn[1].value = namesIn[0].value.trim();
+    renderLobby();
+    showStep('players');
   }
-
-  q('onlineJoin').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = q('onlineJoinBtn');
-    btn.disabled = true;
-    const r = await Online.send({
-      action: 'join',
-      code: q('onlineJoin').dataset.code,
-      name: q('onlineName').value.trim() || 'Jugador 2',
-      avatar: q('onlineAvatars').querySelector('[aria-pressed="true"]')?.dataset.avatar,
-    });
-    btn.disabled = false;
-    if (!r.ok) {
-      track('online_join_fail', { reason: r.error });
-      setOnlineStatus(onlineError(r.error));
-      if (r.error === 'avatar_taken' && r.room) renderJoinAvatars(r.room.seats[0].avatar);
-      return;
-    }
-    connect(r, 1);
-    track('online_join', { board_size: `${r.size}x${r.size}` });
-    startOnlineGame(r);
-  });
+  // The guest's own card is the second one; the host's avatar is taken.
+  function seatAsGuest(room) {
+    avatars[0] = room.seats[0].avatar;
+    if (avatars[1] === avatars[0]) avatars[1] = firstFreeAvatar(avatars[0]);
+    previews[1].textContent = avatars[1];
+    syncAvatars();
+  }
 
   q('onlineCopy').addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(Online.inviteUrl(online.code));
-      setOnlineStatus('🔗 Enlace copiado. ⏳ Esperando a tu amigo…');
+      q('seatStatus').textContent = '🔗 Enlace copiado. ⏳ Esperando a tu amigo…';
     } catch {
-      setOnlineStatus(Online.inviteUrl(online.code));
+      q('seatStatus').textContent = Online.inviteUrl(online.code);
     }
   });
-  q('onlineCancel').addEventListener('click', () => {
-    leaveOnline();
-    onlineDialog.close();
-    if (Online.codeFromUrl()) window.history.replaceState(null, '', location.pathname);
-  });
-  onlineDialog.addEventListener('cancel', (e) => {
-    e.preventDefault();
-    q('onlineCancel').click();
+  q('onlineCancel').addEventListener('click', () => onlineDialog.close());
+  q('onlineToggle').addEventListener('click', () => q('onlineIntro').showModal());
+  q('onlineIntroClose').addEventListener('click', () => q('onlineIntro').close());
+  q('onlineIntroGo').addEventListener('click', () => {
+    q('onlineIntro').close();
+    setGameMode('online');
+    showStep('players');
   });
 
-  // A saved seat resumes the game after a reload or a lost connection; an invite link joins.
+  // A saved seat resumes the room or the game after a reload; an invite link joins.
   async function bootOnline() {
     const code = Online.codeFromUrl();
     const saved = Online.loadSeat();
@@ -1600,11 +1660,16 @@ const { timeFor } = Engine;
       const v = await Online.fetchRoom(saved.code);
       if (v.ok && v.status !== 'closed' && !(v.status === 'over' && v.seats[saved.seat]?.left)) {
         connect({ ...saved, ...v, token: saved.token }, saved.seat);
+        online.status = v.status;
         online.quality.reconnects++;
-        if (v.status === 'waiting') {
-          openOnlineDialog('host');
+        if (v.match) startOnlineGame(v);
+        else {
+          setGameMode('online');
+          if (saved.seat === 1) seatAsGuest(v);
+          renderLobby();
+          showStep(v.status === 'lobby' ? 'board' : 'players');
           schedulePoll();
-        } else startOnlineGame(v);
+        }
         return;
       }
       Online.clearSeat();
@@ -1614,7 +1679,7 @@ const { timeFor } = Engine;
   bootOnline();
 
   q('startGame').addEventListener('click', () => {
-    if (gameMode === 'online') return void hostRoom();
+    if (gameMode === 'online') return void startOnline();
     names = namesIn.map((input, i) => input.value.trim() || `Jugador ${i + 1}`);
     if (gameMode === 'solo') names[1] = 'Máquina';
 

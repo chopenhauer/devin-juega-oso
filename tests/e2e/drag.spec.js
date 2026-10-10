@@ -31,6 +31,7 @@ async function startTwoPlayers(page) {
   await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#stepNext');
+  await page.click('#stepNext');
   await page.click('#startGame');
   await expect(page.locator('#gameScreen')).toBeVisible();
 }

@@ -84,6 +84,7 @@ test('the banner is not shown during the game', async ({ page }) => {
   await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#stepNext');
+  await page.click('#stepNext');
   await page.click('#startGame');
   await expect(page.locator('#gameScreen')).toBeVisible();
   await expect(page.locator('#consentBanner')).toBeHidden();

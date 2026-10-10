@@ -51,7 +51,7 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
   await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'mode');
   await expect(toggle).toBeVisible();
   await page.click('#stepNext');
-  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'players');
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'where');
   await expect(toggle).toBeHidden();
   await page.click('#stepBack');
   await expect(toggle).toBeVisible();
@@ -76,6 +76,7 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
   await page.click('#stepNext');
   await expect(selected(page, 0)).toHaveText('⛄');
   await expect(selected(page, 1)).toHaveText('🎅');
+  await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#stepNext');
   await page.click('#startGame');

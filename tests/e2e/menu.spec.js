@@ -36,6 +36,7 @@ async function startGame(page, { solo = false, view = 'facing' } = {}) {
   await page.click('#stepNext');
   await page.click('#stepNext');
   if (!solo) {
+    await page.click('#stepNext');
     await page.click(view === 'same' ? '#viewSame' : '#viewFacing');
     await page.click('#stepNext');
   }

@@ -43,7 +43,7 @@ async function finishGame(page) {
 async function startTwoPlayers(page) {
   await page.goto('/');
   await page.click('#introSkip');
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await page.click('#startGame');
 }
 
@@ -83,7 +83,7 @@ test('the mute button on the intro and in the ☰ menu silences every sound and 
   await expect(toggle).toHaveAttribute('aria-pressed', 'true');
 
   await page.click('#introSkip');
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await expect(toggle).toBeHidden();
   await page.click('#startGame');
   await play(page, [[0, 'O']]);

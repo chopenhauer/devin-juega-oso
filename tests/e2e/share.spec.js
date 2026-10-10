@@ -26,7 +26,7 @@ const dialog = (page) => page.locator('#shareDialog');
 async function start(page) {
   await page.goto('/');
   await page.click('#introSkip');
-  for (let i = 0; i < 3; i++) await page.click('#stepNext');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await page.click('#startGame');
 }
 

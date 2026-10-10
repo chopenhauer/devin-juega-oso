@@ -10,6 +10,7 @@ async function startGame(page, { solo = false } = {}) {
   await page.click('#stepNext');
   await page.click('#stepNext');
   if (!solo) await page.click('#stepNext');
+  if (!solo) await page.click('#stepNext');
   await page.click('#startGame');
 }
 

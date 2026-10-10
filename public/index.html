@@ -56,6 +56,7 @@
     >
       🔊
     </button>
+    <button id="onlineToggle" class="online-toggle" type="button" aria-label="Jugar en línea">🌐</button>
     <button id="shareToggle" class="share-toggle" type="button" aria-label="Invitar a jugar">📣</button>
     <div id="themeMenu" class="theme-menu hidden" role="group" aria-label="Tema"></div>
     <div id="eggParty" class="egg-party" role="status" aria-live="polite"></div>
@@ -212,8 +213,23 @@
                 <button id="modeFour" class="mode-btn soon" type="button" data-locked="true">
                   <span class="mode-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span><span>4 jugadores</span>
                 </button>
-                <button id="modeOnline" class="mode-btn" type="button">
-                  <span class="mode-emoji" aria-hidden="true">🌐</span><span>A distancia</span>
+              </div>
+            </div>
+            <div class="step inactive" data-step="where">
+              <h2 class="step-title">¿Dónde está tu rival?</h2>
+              <div class="view-choice" role="group" aria-label="Dónde está tu rival">
+                <button id="whereTogether" class="view-btn" type="button" aria-pressed="true">
+                  <span class="view-icon" aria-hidden="true">🛋️</span>
+                  <span class="view-text"
+                    ><strong>Juntos</strong><span>En este mismo móvil, tablet u ordenador.</span></span
+                  >
+                </button>
+                <button id="whereOnline" class="view-btn" type="button" aria-pressed="false">
+                  <span class="view-icon" aria-hidden="true">🌐</span>
+                  <span class="view-text"
+                    ><strong>En línea</strong
+                    ><span>Cada uno desde su móvil: le invitas con un enlace por WhatsApp.</span></span
+                  >
                 </button>
               </div>
             </div>
@@ -222,6 +238,10 @@
               <div class="players-setup">
                 <div class="pconfig">
                   <div class="small-label">Jugador 1</div>
+                  <div class="online-seat" data-seat="0">
+                    <div class="preview online-seat-avatar"></div>
+                    <p class="online-seat-name"></p>
+                  </div>
                   <div id="preview1" class="preview">🐻</div>
                   <input
                     id="nickname1"
@@ -272,6 +292,29 @@
                     <button type="button" class="avatar-btn" data-avatar="🐧">🐧</button
                     ><button type="button" class="avatar-btn" data-avatar="🦄">🦄</button>
                   </div>
+                  <div class="online-seat" data-seat="1">
+                    <div class="preview online-seat-avatar"></div>
+                    <p class="online-seat-name"></p>
+                  </div>
+                  <div id="onlineInvite" class="online-invite">
+                    <div class="preview" aria-hidden="true">🌐</div>
+                    <p class="online-invite-lead">Invita a un amigo. Jugará desde su móvil.</p>
+                    <button id="openRoom" class="primary" type="button">Abrir sala</button>
+                    <div id="roomShare" class="online-share hidden">
+                      <p class="online-code-label">Código de la sala</p>
+                      <p id="onlineCode" class="online-code"></p>
+                      <a
+                        id="onlineWhatsapp"
+                        class="primary info-link"
+                        href="https://wa.me/"
+                        target="_blank"
+                        rel="noopener"
+                        >💬 WhatsApp</a
+                      >
+                      <button id="onlineCopy" class="secondary" type="button">🔗 Copiar enlace</button>
+                    </div>
+                  </div>
+                  <p id="seatStatus" class="share-status online-status" role="status" aria-live="polite"></p>
                   <div id="difficultyWrap" class="difficulty-wrap">
                     <div class="difficulty-choice" role="group" aria-label="Dificultad de la máquina">
                       <button id="difficultyEasy" class="difficulty-btn selected" type="button">
@@ -376,6 +419,7 @@
                 </div>
                 <button id="startGame" class="primary">¡A jugar!</button>
               </div>
+              <p id="lobbyStatus" class="share-status online-status" role="status" aria-live="polite"></p>
               <p id="setupSummary" class="setup-summary visually-hidden" aria-live="polite"></p>
             </div>
           </div>
@@ -781,33 +825,20 @@
         <p class="step-lead">Tu amigo espera tu jugada. Tu reloj sigue corriendo.</p>
         <button id="nudgeHere" class="primary" type="button" autofocus>¡Sigo aquí!</button>
       </dialog>
-      <dialog id="onlineDialog" class="info-dialog online-dialog" aria-labelledby="onlineTitle">
-        <div id="onlineEmoji" class="info-emoji" aria-hidden="true">🌐</div>
-        <h2 id="onlineTitle" class="step-title">Invita a un amigo</h2>
-        <p id="onlineLead" class="step-lead"></p>
-        <div id="onlineHost" class="online-host">
-          <p class="online-code-label">Código de la sala</p>
-          <p id="onlineCode" class="online-code"></p>
-          <div class="share-actions">
-            <a
-              id="onlineWhatsapp"
-              class="primary info-link"
-              href="https://wa.me/"
-              target="_blank"
-              rel="noopener"
-              >💬 WhatsApp</a
-            >
-            <button id="onlineCopy" class="secondary" type="button">🔗 Copiar enlace</button>
-          </div>
-        </div>
-        <form id="onlineJoin" class="online-join hidden">
-          <label class="small-label" for="onlineName">Tu nombre</label>
-          <input id="onlineName" type="text" maxlength="16" autocomplete="off" placeholder="Jugador 2" />
-          <div id="onlineAvatars" class="online-avatars" role="group" aria-label="Tu avatar"></div>
-          <button id="onlineJoinBtn" class="primary" type="submit">¡A jugar!</button>
-        </form>
-        <p id="onlineStatus" class="share-status" role="status" aria-live="polite"></p>
-        <button id="onlineCancel" class="secondary share-close" type="button">Cancelar</button>
+      <dialog id="onlineDialog" class="info-dialog" aria-labelledby="onlineTitle">
+        <div class="info-emoji" aria-hidden="true">🌐</div>
+        <h2 id="onlineTitle" class="step-title">No se puede jugar en línea</h2>
+        <p id="onlineStatus" class="step-lead" role="status" aria-live="polite"></p>
+        <button id="onlineCancel" class="secondary share-close" type="button">Vale</button>
+      </dialog>
+      <dialog id="onlineIntro" class="info-dialog" aria-labelledby="onlineIntroTitle">
+        <div class="info-emoji" aria-hidden="true">🌐</div>
+        <h2 id="onlineIntroTitle" class="step-title">¡Nuevo! Juega en línea</h2>
+        <p class="step-lead">
+          Invita a un amigo con un enlace y jugad cada uno desde su móvil, aunque estéis lejos.
+        </p>
+        <button id="onlineIntroGo" class="primary" type="button">Invitar a un amigo</button>
+        <button id="onlineIntroClose" class="secondary share-close" type="button">Ahora no</button>
       </dialog>
       <dialog id="shareDialog" class="info-dialog share-dialog" aria-labelledby="shareTitle">
         <div class="info-emoji" aria-hidden="true">📣</div>

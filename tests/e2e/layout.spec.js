@@ -28,6 +28,7 @@ async function startGame(page, mode) {
   } else {
     await page.click('#stepNext');
     await page.click('#stepNext');
+    await page.click('#stepNext');
     await page.click(mode === 'same' ? '#viewSame' : '#viewFacing');
     await page.click('#stepNext');
   }

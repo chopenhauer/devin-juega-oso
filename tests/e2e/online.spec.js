@@ -21,17 +21,32 @@ const cell = (page, i) => page.locator('#board .cell').nth(i);
 async function createRoom(host, name = 'Ana') {
   await host.goto('/');
   await host.click('#introSkip');
-  await host.click('#modeOnline');
+  await host.click('#modeTwo');
   await host.click('#stepNext');
-  await expect(host.locator('.second-player')).toBeHidden();
+  await host.click('#whereOnline');
+  await host.click('#stepNext');
+  await expect(host.locator('#onlineInvite')).toBeVisible();
   await host.fill('#nickname1', name);
+  await host.click('#openRoom');
+  await expect(host.locator('#onlineCode')).toHaveText(/^[A-Z2-9]{5}$/);
+  await expect(host.locator('#seatStatus')).toContainText('Esperando a tu amigo');
+  return host.locator('#onlineCode').textContent();
+}
+
+// The guest fills their card and goes to the board step; the host picks the board and starts.
+async function joinRoom(host, guest, code, name, hostName = 'Ana') {
+  await guest.goto(`/?sala=${code}`);
+  await expect(guest.locator('#seatStatus')).toContainText(`${hostName} te invita`);
+  await expect(guest.locator('.pconfig.remote .online-seat-name')).toHaveText(hostName);
+  await guest.fill('#nickname2', name);
+  await guest.click('#stepNext');
+  await expect(guest.locator('#lobbyStatus')).toContainText(`${hostName} está eligiendo el tablero`);
+  await expect(guest.locator('#startGame')).toBeHidden();
+  await expect(host.locator('#seatStatus')).toContainText(`${name} ya está aquí`);
+  await expect(host.locator('.second-player .online-seat-name')).toHaveText(name);
   await host.click('#stepNext');
-  await expect(host.locator('#startGame')).toHaveText('Crear sala 🌐');
   await host.selectOption('#sizeSelect', '4');
   await host.click('#startGame');
-  await expect(host.locator('#onlineDialog')).toBeVisible();
-  await expect(host.locator('#onlineCode')).toHaveText(/^[A-Z2-9]{5}$/);
-  return host.locator('#onlineCode').textContent();
 }
 
 test('invite a friend, play turns remotely, resume after reload and win when the rival leaves', async ({
@@ -41,11 +56,7 @@ test('invite a friend, play turns remotely, resume after reload and win when the
   const host = await player(browser, errors);
   const guest = await player(browser, errors);
   const code = await createRoom(host);
-
-  await guest.goto(`/?sala=${code}`);
-  await expect(guest.locator('#onlineTitle')).toHaveText('Ana te invita a jugar');
-  await guest.fill('#onlineName', 'Bea');
-  await guest.click('#onlineJoinBtn');
+  await joinRoom(host, guest, code, 'Bea');
   await expect(guest.locator('#gameScreen')).toBeVisible();
   await expect(guest).toHaveURL(/\/$/);
   await expect(host.locator('#onlineDialog')).toBeHidden();
@@ -85,8 +96,7 @@ test('rematch starts a new game when both accept', async ({ browser }) => {
   const host = await player(browser, errors);
   const guest = await player(browser, errors);
   const code = await createRoom(host);
-  await guest.goto(`/?sala=${code}`);
-  await guest.click('#onlineJoinBtn');
+  await joinRoom(host, guest, code, 'Bea');
   await expect(host.locator('#gameScreen')).toBeVisible();
 
   // Fill the 4×4 board alternately until it ends.
@@ -131,9 +141,7 @@ test('after 20 s without a move the player on turn is asked «¿Sigues ahí?» a
   await host.clock.install();
   await guest.clock.install();
   const code = await createRoom(host);
-  await guest.goto(`/?sala=${code}`);
-  await guest.fill('#onlineName', 'Bea');
-  await guest.click('#onlineJoinBtn');
+  await joinRoom(host, guest, code, 'Bea');
   await expect(host.locator('#gameScreen')).toBeVisible();
   await expect(guest.locator('#turnBarTop')).toContainText('Esperando a Ana');
 
