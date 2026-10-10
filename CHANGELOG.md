@@ -19,11 +19,28 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.0.1] - 2026-10-11
 
-**Analítica solo en producción**
+**Analítica solo en producción y paneles para seguir el juego en línea**
 
 - Google Analytics y Microsoft Clarity se cargan solo en juegaoso.com y devin-juega-oso.vercel.app.
   Las previews de Vercel ya no envían datos, así que las pruebas no se mezclan con las partidas de
   verdad en los paneles de GA4 y Looker Studio.
+- GA4: registramos como definiciones personalizadas los parámetros de los eventos en línea. Las
+  dimensiones son `role`, `answered` y `reason`. Las métricas en milisegundos son
+  `move_rtt_p50_ms`, `move_rtt_p95_ms`, `sync_p50_ms`, `sync_p95_ms` y `answer_ms`, y las demás
+  son `polls`, `poll_errors`, `reconnects` y `conflicts`. La descripción de `mode` ya incluye
+  `online`. GA solo los cuenta desde que se registran (10-oct-2026).
+- Paneles en GA4: «OSO · Panel» (uso, tiempos, juego y máquina) y «OSO · Feedback» (👍/👎).
+- Informe en Looker Studio con cuatro páginas: «¿Va bien la opción A?» (con los umbrales de
+  [`docs/ONLINE.md`](docs/ONLINE.md)), «Calidad de conexión», «¿Sigues ahí?» y «Juego en general».
+  Llega por email cada lunes a las 08:00 (hora de Madrid).
+- JoseLuis los montó con un agente en el navegador, a partir de prompts preparados en el proyecto.
+  Después los revisamos con capturas. Los enlaces de los paneles no están en este repo porque es
+  público.
+- Al revisarlos, GA contaba 3 salas creadas y nada más, y el servidor 2 salas, 1 unión y 1 partida
+  empezada y terminada. Hay tres causas. El consentimiento es por dispositivo, así que si el
+  invitado no acepta cookies, GA no lo ve. GA también recibía las previews (arreglado en esta
+  versión). Y «últimos 28 días» no incluye el día de hoy. La serie semanal sale plana porque todos
+  los datos caen en la semana 41: no es un fallo.
 - Decisión: para evaluar la opción A del juego en línea mandan los contadores del servidor
   (`/api/sala?stats=1`), que cuentan todas las partidas y separan producción de preview. GA solo
   ve a quien acepta cookies (cada dispositivo decide), así que se queda corto con los invitados; lo
