@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.0.0] - 2026-10-10
 
-**Jugar en línea 1 contra 1**
+**Jugar en línea 1 contra 1** ([cc103c1](https://github.com/chopenhauer/devin-juega-oso/commit/cc103c1fafcf5e07a6fd82057d8875dad5cc5fb7))
 
 - Botón 🌐 arriba a la izquierda que presenta el modo, con «Invitar a un amigo».
 - «2 jugadores» pregunta «¿Dónde está tu rival?»: 🛋️ Juntos (mismo dispositivo) o 🌐 En línea.
