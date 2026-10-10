@@ -1,4 +1,6 @@
-# Only the static site (public/) and vercel.json are uploaded to Vercel.
+# Only the static site (public/), the functions (api/) and their config are uploaded to Vercel.
 /*
 !/public
 !/vercel.json
+!/api
+!/package.json

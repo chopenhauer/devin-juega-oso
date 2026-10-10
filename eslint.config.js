@@ -9,7 +9,7 @@ export default [
     languageOptions: { sourceType: 'module', globals: globals.browser },
   },
   {
-    files: ['scripts/**/*.js', 'tests/**/*.js', '*.config.js'],
+    files: ['api/**/*.js', 'scripts/**/*.js', 'tests/**/*.js', '*.config.js'],
     languageOptions: { sourceType: 'module', globals: globals.node },
   },
   {
