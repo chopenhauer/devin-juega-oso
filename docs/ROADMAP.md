@@ -55,6 +55,9 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   farolillos y fondo rojo y dorado; se pone solo ese día (fecha lunar en una tabla).
 - Nombre visible con el teclado del móvil (2.5.1): al escribir el nombre, la pantalla sube y el
   campo queda encima del teclado.
+- Boca-oreja (2.6.0): compartir desde el inicio (📣), el menú ☰ y la pantalla final con el menú
+  nativo del móvil o, si no hay, WhatsApp, email y «Copiar enlace»; tarjeta Open Graph del oso,
+  evento `share` y enlaces con `utm_campaign=boca_oreja`. Sin nombres de jugadores.
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
 
@@ -70,7 +73,7 @@ temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 | 2   | ~~Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos)~~ hecho en 2.4.0 | Alto       | Bajo       | Hecho    |
 | 3   | ~~Feedback rápido 👍/👎 e «💡 Ideas»~~ hecho en 2.4.0                                 | Alto       | Bajo       | Hecho    |
 | 4   | ~~Reglas animadas (FigJam, segunda parte)~~ hecho en 2.3.0                            | Alto       | Medio      | Hecho    |
-| 5   | Compartir por WhatsApp y email, con tarjeta del enlace                                | Alto       | Bajo       | 3        |
+| 5   | ~~Compartir por WhatsApp y email, con tarjeta del enlace~~ hecho en 2.6.0             | Alto       | Bajo       | Hecho    |
 | 6   | Tensión con poco tiempo (T4.3)                                                        | Medio-alto | Bajo       | 4        |
 | 7   | Hall of fame local                                                                    | Alto       | Medio      | 4        |
 | 8   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                    | Alto       | Medio      | 5        |
@@ -107,15 +110,16 @@ preguntan una a una al empezar cada fase.
      objetivo `TIMEOUT_TARGET = 0.5` en un solo sitio.
    - 👍/👎 al final de la partida (en momentos elegidos) e «💡 Ideas» en el menú ☰.
    - Decidido: firma «el equipo de juegaoso.com» con hola@juegaoso.com, e «💡 Ideas» por email.
-3. **2.5.0 · Boca a boca**
-   - Compartir desde la pantalla final y desde el inicio: menú nativo del móvil y, si no hay,
+3. ~~**2.6.0 · Boca-oreja**~~ hecho (la 2.5.0 fue el tema Año Nuevo Chino)
+   - Compartir desde la pantalla final, el inicio y el menú ☰: menú nativo del móvil y, si no hay,
      WhatsApp, email y «Copiar enlace».
    - Título, descripción e imagen Open Graph para que WhatsApp muestre la tarjeta del oso.
    - Evento `share` y enlaces con `utm_source` para medirlo.
-4. **2.6.0 · Más emoción**
+   - Decidido: los textos no llevan los nombres de los jugadores (pueden ser niños).
+4. **2.7.0 · Más emoción**
    - Tensión con poco tiempo (T4.3): con 20 s o menos el fondo se tiñe poco a poco.
    - Hall of fame local: récords y rachas en el dispositivo, «¡Nuevo récord!» al acabar.
-5. **2.7.0 · Ajustar con datos** (cuando haya unas 100 partidas por tablero)
+5. **2.8.0 · Ajustar con datos** (cuando haya unas 100 partidas por tablero)
    - Informe en GA4 y script que propone el tiempo de cada tablero; pasar de la fórmula a una
      tabla de tiempos.
    - Feedback con texto libre por una función de Vercel, con protección contra spam.
@@ -282,7 +286,7 @@ compras, margen mínimo de tiempo y modo 1 jugador).
 
 **Hecho en 2.4.0:** 👍/👎 como evento de GA en momentos elegidos (primera partida, ganar a la
 máquina, cada 3 partidas seguidas; nunca tras ganar la máquina) e «💡 Ideas» por email a
-hola@juegaoso.com. Queda el texto libre con la función de Vercel (2.7.0).
+hola@juegaoso.com. Queda el texto libre con la función de Vercel (2.8.0).
 
 Que quien juega pueda mandarnos su opinión o ideas para que el juego evolucione. Antes de hacerlo
 hay que decidir dos cosas:
@@ -355,7 +359,12 @@ empieza encendido y a volumen suave:
   dispositivo y silencia todo, también la fanfarria del easter egg.
 - **Ideas:** ajustar volumen o quitar el «tic» si en casa resulta pesado.
 
-### Compartir y boca a boca (viralidad)
+### Compartir y boca-oreja (viralidad)
+
+**Hecho en 2.6.0** (Boca-oreja): 📣 en el inicio, «📣 Invitar a jugar» en el menú ☰ y «📣 Compartir
+resultado» en la pantalla final; tarjeta Open Graph (`public/og.png`, se regenera con
+`npm run og`), evento `share` con `channel` y `place`, y `utm_campaign=boca_oreja`. Sin nombres.
+Queda lo de «Más adelante».
 
 Que corra la voz: que quien juega lo comparta fácilmente con familia y amigos.
 

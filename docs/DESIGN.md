@@ -33,6 +33,7 @@ de un tema.
 - **Casillas** (`.cell`): botones con nombre «Fila 2, columna 3: O» o «… vacía».
 - **Diálogos**: la ayuda y la pantalla de victoria son `role="dialog"`; al ganar, el foco va a «Revancha». Los avisos cortos (`.info-dialog`) usan `<dialog>` nativo con `showModal()`, fuera de `.app` para que el fondo cubra toda la pantalla, y se cierran con su botón o con Escape.
 - **Opinión al final** (`.feedback-ask`): debajo de los botones de la pantalla final, pequeña y atenuada, porque no sale siempre y el sitio principal es para el marcador y las acciones. Al contestar se abre `#thanksDialog` (`.info-dialog`, fondo más oscuro) con «💡 Cuéntanos más» y «Cerrar»; al cerrar, el foco vuelve a «Revancha».
+- **Compartir** (`#shareToggle`, `#shareMenu`, `#shareResult`): 📣 redondo junto a 🔊 y 🎨 en el inicio (se oculta en la partida), «📣 Invitar a jugar» en el menú ☰ y «📣 Compartir resultado» a todo el ancho bajo las acciones finales. Abre el menú nativo (`navigator.share`); si no hay, `#shareDialog` (`.info-dialog`) con el texto, WhatsApp (principal), Email, «Copiar enlace», un estado `role="status"` y «Cerrar». Los textos nunca llevan nombres.
 - **Pie** (`.credits`): una sola línea, «made by Vilarequi with ❤️ · versión · Cookies · Privacidad».
 - **Celebraciones:** confeti al ganar y lluvia de huevos con el fondo oscurecido en el easter egg de temas; con «reducir movimiento» solo queda el mensaje.
 

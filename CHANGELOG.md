@@ -17,6 +17,30 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.6.0] - 2026-10-10
+
+**Boca-oreja** ([1773776](https://github.com/chopenhauer/devin-juega-oso/commit/17737766fe2ee4557108339ed961151f4b8c81b2))
+
+- Compartir OSO desde tres sitios: 📣 en la pantalla de inicio (junto a 🔊 y 🎨), «📣 Invitar a
+  jugar» en el menú ☰ y «📣 Compartir resultado» en la pantalla final.
+- En el móvil se abre el menú de compartir del teléfono. Si el dispositivo no lo tiene, sale una
+  ventana con 💬 WhatsApp, ✉️ Email y 🔗 «Copiar enlace», que se cierra con «Cerrar» o Esc.
+- Desde la pantalla final se comparte el resultado («¡He ganado a la máquina 7 a 5 en OSO 🐻! ¿Te
+  atreves?», con versiones para derrota, empate, 2 y 4 jugadores); desde el inicio y el menú, una
+  invitación a jugar.
+- Tarjeta del enlace (Open Graph): título, descripción e imagen 1200×630 del oso con O-S-O, para
+  que WhatsApp y otras apps muestren una vista previa. Se regenera con `npm run og`.
+- Evento `share` de GA con el canal (`native`, `whatsapp`, `email`, `copy`) y el sitio (`start`,
+  `menu`, `end`), solo con las cookies aceptadas. Los enlaces llevan `utm_source` y
+  `utm_campaign=boca_oreja`.
+
+**Decisiones**
+
+- Se llama «Boca-oreja» (idea de JoseLuis) y es la 2.6.0, porque la 2.5.0 fue el tema Año Nuevo
+  Chino; las fases siguientes del roadmap suben un número.
+- Los textos no llevan los nombres de los jugadores, porque pueden ser niños.
+- Sin SDKs ni botones de redes sociales: solo enlaces normales, por la CSP y la privacidad.
+
 ## [2.5.1] - 2026-10-10
 
 **Nombre visible con el teclado del móvil**

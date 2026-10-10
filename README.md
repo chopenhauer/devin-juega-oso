@@ -25,13 +25,16 @@ public/               Sitio estático que publica Vercel (sin build)
   js/leaderboard.js   Marcador de la sesión (partidas seguidas entre los mismos jugadores)
   js/version.js       Versión que sale en el pie (la misma que package.json)
   js/consent.js       Aviso de cookies; ga.js y clarity.js cargan la analítica según el permiso
+  js/share.js         Textos y enlaces para compartir (WhatsApp, email, UTM), sin SDKs
   js/telemetry.js     Eventos anónimos de partida (con permiso), cuándo pedir 👍/👎 y email de ideas
   privacidad.html     Política de privacidad (/privacidad)
   fonts/              Fredoka (subconjunto latino, woff2) + licencia OFL
   favicon.svg
+  og.png              Tarjeta del enlace (Open Graph, 1200×630)
 tests/unit/           Tests del motor, temas, marcador, telemetría y versión (node:test)
 tests/e2e/            Tests en navegador (Playwright, móvil y escritorio)
 scripts/serve.js      Servidor local con las mismas cabeceras que vercel.json
+scripts/og-image.js   Genera public/og.png desde scripts/og-card.html (npm run og)
 old-references/       Versiones históricas del juego (no se publican)
 ```
 
