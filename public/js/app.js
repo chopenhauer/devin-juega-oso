@@ -1,4 +1,5 @@
 import * as Engine from './engine.js';
+import * as Match from './match.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
 import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
@@ -7,7 +8,7 @@ import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from '
 import { shareText, shareUrl, whatsappHref, emailHref } from './share.js';
 const { timeFor } = Engine;
 (() => {
-  const BONUS = 10;
+  const { BONUS } = Match;
   const MACHINE_DELAY = 650;
   const q = (id) => document.getElementById(id);
   q('appVersion').textContent = `v${VERSION}`;
@@ -46,7 +47,6 @@ const { timeFor } = Engine;
     history = [],
     extras = [],
     timer = null,
-    lastTick = 0,
     over = false,
     hintCell = null,
     lastCell = null,
@@ -59,6 +59,12 @@ const { timeFor } = Engine;
     gameId = 0,
     helpPaused = false,
     playing = false;
+
+  // The match (match.js) owns the game state; these locals mirror it for the UI.
+  let m = null;
+  function sync() {
+    ({ board, current, scores, times, scored, history, extras, over, word: targetWord, sosUsed } = m);
+  }
 
   const avatarGrids = [...document.querySelectorAll('.avatars')];
   let avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
@@ -405,6 +411,7 @@ const { timeFor } = Engine;
     if (game.classList.contains('hidden') || over || replaying || helpPaused) return;
     if (settle()) return;
     helpPaused = true;
+    Match.pause(m, performance.now());
     clearInterval(timer);
     clearTimeout(machineTimeout);
     machineThinking = false;
@@ -414,7 +421,7 @@ const { timeFor } = Engine;
     q('helpModal').classList.add('hidden');
     if (!helpPaused) return;
     helpPaused = false;
-    lastTick = performance.now();
+    Match.resume(m, performance.now());
     timer = setInterval(tick, 100);
     updateControls();
     maybeMachineTurn();
@@ -653,18 +660,9 @@ const { timeFor } = Engine;
     abandon();
     if (drag) endDrag(false);
     stopGame();
-    board = Array(size * size).fill('');
-    current = 0;
-    const n = playerCount();
-    scores = Array(n).fill(0);
-    times = Array(n).fill(timeFor(size));
-    selected = Array(n).fill('O');
-    scored = new Map();
-    history = [];
-    extras = Array.from({ length: n }, () => ({ hint: 1, last: 1, swap: 1 }));
-    over = false;
-    targetWord = 'OSO';
-    sosUsed = false;
+    m = Match.newMatch({ size, players: playerCount(), now: performance.now() });
+    sync();
+    selected = Array(m.players).fill('O');
     replaying = false;
     lowWarned = new Set();
     [...hintBtns, ...lastBtns, ...swapBtns, ...sosBtns].forEach((btn) => btn.classList.remove('used'));
@@ -679,7 +677,6 @@ const { timeFor } = Engine;
     updateTimers();
     updateControls();
     msg.textContent = `${avatars[0]} ${names[0]} empieza.`;
-    lastTick = performance.now();
     timer = setInterval(tick, 100);
     playing = true;
     track('game_start', modeParams());
@@ -689,37 +686,25 @@ const { timeFor } = Engine;
   function settle() {
     if (over) return true;
     if (replaying || helpPaused) return false;
-    const now = performance.now();
-    times[current] = Math.max(0, times[current] - (now - lastTick) / 1000);
-    lastTick = now;
+    const events = Match.settle(m, performance.now());
+    sync();
     updateTimers();
-    if (times[current] <= 0) {
-      if (gameMode === 'four') knockOut(current);
-      else finish(1 - current, 'tiempo');
-      return true;
-    }
-    return false;
+    handleEnd(events);
+    events.filter((e) => e.type === 'out').forEach((e) => knockOut(e.player));
+    return events.length > 0;
   }
-  // Next player with time left (with 4 players, whoever runs out of time is out).
-  function nextPlayer(from) {
-    const n = scores.length;
-    for (let k = 1; k <= n; k++) {
-      const p = (from + k) % n;
-      if (times[p] > 0) return p;
-    }
-    return from;
+  function handleEnd(events) {
+    const end = events.find((e) => e.type === 'end');
+    if (end) finish(end.winner, end.reason, end.timedOut);
+    return !!end;
   }
   // 4 players: the player keeps their points, the others carry on until only one has time left.
   function knockOut(p) {
-    if (times.filter((t) => t > 0).length <= 1) {
-      endByScore(true);
-      return;
-    }
+    if (over) return;
     if (drag) endDrag(false);
     swapMode = null;
     hintCell = null;
     lastCell = null;
-    current = nextPlayer(p);
     render();
     updateControls();
     msg.textContent = `⏱️ ${names[p]} se queda sin tiempo. Turno de ${avatars[current]} ${names[current]}`;
@@ -789,41 +774,35 @@ const { timeFor } = Engine;
       }
 
       const p = current;
-      extras[p].swap = 0;
+      const r = Match.swap(m, p, i, performance.now());
+      sync();
+      if (!r.ok) return handleEnd(r.events);
       play('place');
-      updateControls();
-      board[i] = board[i] === 'O' ? 'S' : 'O';
       justPlaced = i;
-      history.push({ player: p, index: i, letter: board[i], power: 'swap' });
       swapMode = null;
-      rebuildScores();
+      scoresEl.forEach((e, k) => (e.textContent = scores[k]));
       hintCell = null;
       lastCell = null;
       msg.textContent = `🔄 ${names[p]} cambia la letra a ${board[i]}.`;
-      current = nextPlayer(current);
       render();
       updateControls();
 
-      if (board.every(Boolean)) endByScore();
-      else maybeMachineTurn();
+      if (!handleEnd(r.events)) maybeMachineTurn();
       return;
     }
 
     if (board[i]) return;
 
     const p = current;
-    board[i] = selected[p];
-    history.push({ player: p, index: i, letter: selected[p] });
-
-    const made = findNew(i);
-    made.forEach((k) => scored.set(k, p));
+    const r = Match.place(m, p, i, selected[p], performance.now());
+    sync();
+    if (!r.ok) return handleEnd(r.events);
+    const { made } = r.events[0];
     justPlaced = i;
     made.forEach((k) => k.split('-').forEach((n) => justScored.add(+n)));
 
     play(made.length ? 'score' : 'place');
     if (made.length) {
-      scores[p] += made.length;
-      times[p] += BONUS * made.length;
       scoresEl[p].textContent = scores[p];
       scoresEl[p].classList.remove('bump');
       void scoresEl[p].offsetWidth;
@@ -831,7 +810,6 @@ const { timeFor } = Engine;
       updateTimers();
       msg.textContent = `¡${avatars[p]} ${names[p]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`;
     } else {
-      current = nextPlayer(current);
       msg.textContent = `Turno de ${avatars[current]} ${names[current]}`;
     }
 
@@ -840,18 +818,7 @@ const { timeFor } = Engine;
     render();
     updateControls();
 
-    if (board.every(Boolean)) {
-      endByScore();
-    } else {
-      maybeMachineTurn();
-    }
-  }
-  function findNew(idx, word = targetWord) {
-    return Engine.findNew(board, size, scored, idx, word);
-  }
-  function rebuildScores(author = current) {
-    ({ scored, scores } = Engine.rebuildScores(board, size, targetWord, scored, author, scores.length));
-    scoresEl.forEach((e, i) => (e.textContent = scores[i]));
+    if (!handleEnd(r.events)) maybeMachineTurn();
   }
   function bestHint() {
     return Engine.bestHint(board, size, scored, targetWord, selected[current]);
@@ -864,7 +831,8 @@ const { timeFor } = Engine;
       const h = bestHint();
       if (!h) return;
 
-      extras[p].hint = 0;
+      Match.usePower(m, p, 'hint', performance.now());
+      sync();
       play('hint');
       updateControls();
       selected[p] = h.letter;
@@ -881,18 +849,19 @@ const { timeFor } = Engine;
     b.addEventListener('click', () => {
       if (b.disabled || p !== current || !extras[p].last || over || replaying || settle()) return;
 
-      const m = [...history].reverse().find((x) => x.player !== p);
-      if (!m) return;
+      const move = [...history].reverse().find((x) => x.player !== p);
+      if (!move) return;
 
-      extras[p].last = 0;
+      Match.usePower(m, p, 'last', performance.now());
+      sync();
       play('last');
       updateControls();
-      lastCell = m.index;
+      lastCell = move.index;
       hintCell = null;
       swapMode = null;
       render();
       updateControls();
-      msg.textContent = `👁️ Última jugada rival: ${m.letter}.`;
+      msg.textContent = `👁️ Última jugada rival: ${move.letter}.`;
     }),
   );
 
@@ -957,6 +926,7 @@ const { timeFor } = Engine;
     const id = gameId;
 
     // Global, one-time power-up: consume it for both players immediately.
+    const { replay: savedHistory } = Match.sos(m, player, performance.now()).events[0];
     sosUsed = true;
     replaying = true;
     play('sos');
@@ -971,9 +941,6 @@ const { timeFor } = Engine;
     swapMode = null;
     hintCell = null;
     lastCell = null;
-
-    const savedHistory = history.map((m) => ({ ...m }));
-    const savedTimes = [...times];
 
     setSeaTheme(true);
     q('modeFlash').classList.remove('hidden');
@@ -1004,14 +971,14 @@ const { timeFor } = Engine;
       if (id !== gameId) return;
     }
 
-    times = savedTimes;
+    sync();
     updateTimers();
     replaying = false;
     render();
     updateControls();
     msg.textContent = `🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores.join(' – ')}.`;
 
-    lastTick = performance.now();
+    Match.resume(m, performance.now());
     timer = setInterval(tick, 100);
     if (gameMode === 'solo' && current === 1) maybeMachineTurn();
   }
@@ -1023,19 +990,12 @@ const { timeFor } = Engine;
     }),
   );
 
-  // Players with the top score; `out` (who ran out of time) can't win.
-  function leaders(out = null) {
-    const ids = scores.map((_, i) => i).filter((i) => i !== out);
-    const top = Math.max(...ids.map((i) => scores[i]));
-    const best = ids.filter((i) => scores[i] === top);
-    return best.length === 1 ? best[0] : best;
-  }
   const joinNames = (list) =>
     list.length < 2 ? list.join('') : `${list.slice(0, -1).join(', ')} y ${list.at(-1)}`;
-  // `timedOut`: with 4 players, the game ends when only one has time left.
-  function endByScore(timedOut = false) {
-    const top = [leaders()].flat();
-    finish(top.length === scores.length ? null : leaders(), 'puntos', timedOut);
+  function endByScore() {
+    const e = Match.endByScore(m);
+    sync();
+    finish(e.winner, e.reason, e.timedOut);
   }
   function finish(w, reason, timedOut = reason === 'tiempo') {
     over = true;
