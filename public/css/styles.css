@@ -1233,6 +1233,9 @@ select option {
 .winner-actions .secondary {
   padding: 0 12px;
 }
+.winner-actions .share-result {
+  grid-column: 1 / -1;
+}
 .btn-sub {
   display: block;
   font-size: 12px;
@@ -1526,7 +1529,8 @@ body.sea-theme::before {
   backdrop-filter: blur(6px);
 }
 /* The modal lives inside .app's stacking context, so hide the fixed chrome above it. */
-body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu, .credits, .consent) {
+body:has(#helpModal:not(.hidden))
+  :is(.theme-toggle, .sound-toggle, .share-toggle, .theme-menu, .credits, .consent) {
   display: none;
 }
 .help-dialog {
@@ -2754,6 +2758,19 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
   font-size: 20px;
   line-height: 1;
 }
+.share-toggle {
+  position: fixed;
+  top: max(12px, env(safe-area-inset-top));
+  right: calc(max(12px, env(safe-area-inset-right)) + 108px);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 20px;
+  line-height: 1;
+}
 .theme-menu {
   position: fixed;
   top: calc(max(12px, env(safe-area-inset-top)) + 54px);
@@ -2847,6 +2864,7 @@ body:has(#helpModal:not(.hidden)) :is(.theme-toggle, .sound-toggle, .theme-menu,
 }
 body:has(#gameScreen:not(.hidden)) .theme-toggle,
 body:has(#gameScreen:not(.hidden)) .sound-toggle,
+body:has(#gameScreen:not(.hidden)) .share-toggle,
 body:has(#gameScreen:not(.hidden)) .theme-menu {
   display: none;
 }
@@ -3395,4 +3413,44 @@ body.legal-page {
 .legal-meta {
   margin: 0;
   opacity: 0.75;
+}
+
+/* SHARE (word of mouth) */
+.share-message {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.4;
+}
+.share-actions {
+  display: grid;
+  gap: 10px;
+}
+.share-actions > * {
+  min-height: 48px;
+}
+.share-actions .info-link {
+  justify-self: stretch;
+}
+.info-dialog .share-actions .primary {
+  min-width: 0;
+  margin-top: 0;
+}
+.share-status {
+  min-height: 1.3em;
+  margin: 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.share-dialog form {
+  margin: 0;
+}
+.share-close {
+  min-width: 160px;
+  min-height: 44px;
 }

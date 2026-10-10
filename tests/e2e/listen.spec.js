@@ -158,7 +158,7 @@ test('«💡 Ideas» in the ☰ menu opens an email with the subject ready', asy
     document.querySelector('#ideasMenu').getBoundingClientRect().width,
   ]);
   expect(linkWidth).toBeCloseTo(menuWidth, 0);
-  await page.locator('#soundMenu').focus();
+  await page.locator('#shareMenu').focus();
   await page.keyboard.press('Tab');
   await expect(ideas).toBeFocused();
 });

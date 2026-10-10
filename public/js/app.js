@@ -4,6 +4,7 @@ import { THEMES, themeOf, mapAvatars, festivalOn, themeMenuFor, isoDay } from '.
 import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
+import { shareText, shareUrl, whatsappHref, emailHref } from './share.js';
 const { timeFor } = Engine;
 (() => {
   const BONUS = 10;
@@ -244,7 +245,8 @@ const { timeFor } = Engine;
     /* ignore */
   }
   const soundToggle = q('soundToggle'),
-    soundMenu = q('soundMenu');
+    soundMenu = q('soundMenu'),
+    shareToggle = q('shareToggle');
   function syncSound() {
     const m = isMuted();
     soundToggle.textContent = m ? '🔇' : '🔊';
@@ -265,6 +267,7 @@ const { timeFor } = Engine;
     if (!show) toggleThemeMenu(false);
     themeToggle.classList.toggle('hidden', !show);
     soundToggle.classList.toggle('hidden', !show);
+    shareToggle.classList.toggle('hidden', !show);
   };
   new MutationObserver(syncThemeToggle).observe(setup, {
     attributes: true,
@@ -1078,6 +1081,7 @@ const { timeFor } = Engine;
       confetti();
     }
     play(w === null ? 'draw' : gameMode === 'solo' && w === 1 ? 'lose' : 'win');
+    lastResult = { mode: gameMode, winner: w, scores: [...scores] };
     const st = recordSession(w);
     showSession(st);
     showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games }));
@@ -1100,6 +1104,48 @@ const { timeFor } = Engine;
     });
   }
   q('thanksDialog').addEventListener('close', () => q('rematch').focus({ preventScroll: true }));
+
+  // Word of mouth: the phone's own share sheet when there is one, otherwise WhatsApp, email or copy.
+  let lastResult = null,
+    sharePlace = null;
+  async function share(place) {
+    const text = shareText(place === 'end' ? lastResult : null);
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'OSO · el juego de Julia', text, url: shareUrl('native') });
+        track('share', { channel: 'native', place });
+        return;
+      } catch (e) {
+        if (e.name === 'AbortError') return;
+      }
+    }
+    sharePlace = place;
+    q('shareMessage').textContent = text;
+    q('shareWhatsapp').href = whatsappHref(text);
+    q('shareEmail').href = emailHref(text);
+    q('shareStatus').textContent = '';
+    q('shareDialog').showModal();
+  }
+  q('shareWhatsapp').addEventListener('click', () =>
+    track('share', { channel: 'whatsapp', place: sharePlace }),
+  );
+  q('shareEmail').addEventListener('click', () => track('share', { channel: 'email', place: sharePlace }));
+  q('shareCopy').addEventListener('click', async () => {
+    const url = shareUrl('copy');
+    try {
+      await navigator.clipboard.writeText(url);
+      q('shareStatus').textContent = '✅ ¡Enlace copiado!';
+      track('share', { channel: 'copy', place: sharePlace });
+    } catch {
+      q('shareStatus').textContent = `Copia este enlace: ${url}`;
+    }
+  });
+  shareToggle.addEventListener('click', () => share('start'));
+  q('shareResult').addEventListener('click', () => share('end'));
+  q('shareMenu').addEventListener('click', () => {
+    closeMenu();
+    share('menu');
+  });
 
   const SESSION_KEY = 'oso.session.v1';
   function recordSession(winner) {

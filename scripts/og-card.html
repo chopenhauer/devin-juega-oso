@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>OSO · tarjeta para compartir</title>
+    <style>
+      @font-face {
+        font-family: 'Fredoka';
+        src: url('../public/fonts/fredoka-latin.woff2') format('woff2');
+        font-weight: 300 700;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1200px;
+        height: 630px;
+      }
+      body {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        align-items: center;
+        padding: 0 70px;
+        box-sizing: border-box;
+        background:
+          radial-gradient(circle at 20% 15%, #4b1c7a 0, transparent 55%),
+          radial-gradient(circle at 85% 90%, #2b1366 0, transparent 60%), #120c38;
+        color: #fff;
+        font-family: 'Fredoka', sans-serif;
+      }
+      .bear {
+        font-size: 300px;
+        line-height: 1;
+        text-align: center;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.45));
+      }
+      .brand {
+        display: flex;
+        gap: 22px;
+      }
+      .brand span {
+        width: 150px;
+        height: 162px;
+        display: grid;
+        place-items: center;
+        border-radius: 34px;
+        font-size: 118px;
+        font-weight: 700;
+        text-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+        box-shadow:
+          inset 0 -10px 0 rgba(0, 0, 0, 0.18),
+          0 18px 36px rgba(0, 0, 0, 0.35);
+      }
+      .brand span:nth-child(1) {
+        background: linear-gradient(180deg, #6fd0ff, #1d7cf2);
+        rotate: -7deg;
+      }
+      .brand span:nth-child(2) {
+        background: linear-gradient(180deg, #ffe066, #ff9f1c);
+        color: #5a2a00;
+        text-shadow: none;
+      }
+      .brand span:nth-child(3) {
+        background: linear-gradient(180deg, #ff9cbc, #e0336b);
+        rotate: 7deg;
+      }
+      .tagline {
+        margin: 34px 0 0;
+        font-size: 46px;
+        font-weight: 600;
+        color: #b8b0e8;
+      }
+      .url {
+        display: inline-block;
+        margin-top: 30px;
+        padding: 12px 30px;
+        border-radius: 999px;
+        background: #ffd23f;
+        color: #2b1366;
+        font-size: 40px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bear">🐻</div>
+    <div>
+      <div class="brand"><span>O</span><span>S</span><span>O</span></div>
+      <p class="tagline">Conecta · forma · gana</p>
+      <div class="url">juegaoso.com</div>
+    </div>
+  </body>
+</html>

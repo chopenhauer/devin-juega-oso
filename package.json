@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "test": "node --test 'tests/unit/*.test.js'",
     "test:e2e": "playwright test",
-    "check": "npm run lint && npm test && npm run test:e2e"
+    "check": "npm run lint && npm test && npm run test:e2e",
+    "og": "node scripts/og-image.js"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
