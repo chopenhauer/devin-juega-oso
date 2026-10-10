@@ -20,6 +20,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 ## [2.5.1] - 2026-10-10
 
 **Nombre visible con el teclado del móvil**
+([e7e5f11](https://github.com/chopenhauer/devin-juega-oso/commit/e7e5f11))
 
 - En el móvil, al escribir el nombre de un jugador la pantalla sube para que el campo quede encima
   del teclado y se vea lo que escribes. Al cerrar el teclado vuelve a su sitio.
