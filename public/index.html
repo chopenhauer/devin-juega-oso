@@ -299,11 +299,14 @@
                   </div>
                   <div id="onlineInvite" class="online-invite">
                     <div class="preview" aria-hidden="true">🌐</div>
-                    <p class="online-invite-lead">Invita a un amigo</p>
+                    <div class="online-invite-head">
+                      <p class="online-invite-lead">Invita a un amigo</p>
+                      <p id="roomCodeLine" class="online-code-line hidden">
+                        Código: <span id="onlineCode" class="online-code"></span>
+                      </p>
+                    </div>
                     <button id="openRoom" class="primary" type="button">Abrir sala</button>
                     <div id="roomShare" class="online-share hidden">
-                      <p class="online-code-label">Código de la sala</p>
-                      <p id="onlineCode" class="online-code"></p>
                       <a
                         id="onlineWhatsapp"
                         class="primary info-link"

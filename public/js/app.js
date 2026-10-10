@@ -1541,6 +1541,7 @@ const { timeFor } = Engine;
     cards[1].classList.toggle('inviting', on && host && !ready);
     q('openRoom').classList.toggle('hidden', !!online);
     q('roomShare').classList.toggle('hidden', !online);
+    q('roomCodeLine').classList.toggle('hidden', !online);
     if (online) {
       q('onlineCode').textContent = online.code;
       const url = Online.inviteUrl(online.code);

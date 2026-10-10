@@ -3477,33 +3477,62 @@ body:has(#gameScreen:not(.hidden)) .online-toast {
   font-weight: var(--fw-bold);
   text-align: center;
 }
+/* The invite card mirrors player 1's: the head sits where the name field is and each button
+   lines up with a row of avatars (same columns and gap as .avatars). */
+.online-setup .second-player.inviting .online-invite {
+  --avatar-cols: 6;
+  --avatar-gap: 5px;
+  --avatar-row: calc((100cqw - (var(--avatar-cols) - 1) * var(--avatar-gap)) / var(--avatar-cols));
+  container-type: inline-size;
+  gap: 0;
+}
+.online-invite-head {
+  display: grid;
+  align-content: center;
+  min-height: 46px;
+  line-height: 1.15;
+}
+@media (max-width: 600px) {
+  .online-setup .second-player.inviting .online-invite {
+    --avatar-cols: 4;
+  }
+}
+.online-code-line {
+  margin: 0;
+  font-size: var(--fs-sm);
+  text-align: center;
+  white-space: nowrap;
+}
+.online-code-line.hidden {
+  display: none;
+}
+.online-code {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  user-select: all;
+}
 .online-share {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--avatar-gap);
   width: 100%;
 }
 .online-share.hidden {
   display: none;
 }
-.online-code-label {
-  margin: 0;
-  font-size: var(--fs-sm);
-  text-align: center;
-}
-.online-code {
-  margin: 0;
-  font-size: var(--fs-2xl);
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.2em;
-  color: var(--accent);
-  text-align: center;
-  user-select: all;
+.online-invite > .primary,
+.online-share {
+  margin-top: var(--space-2-5);
 }
 .online-invite .primary,
 .online-invite .secondary {
+  display: grid;
+  place-items: center;
   width: 100%;
-  min-height: 44px;
-  padding-inline: var(--space-2);
+  height: var(--avatar-row);
+  min-height: 0;
+  padding: 0 var(--space-2);
   font-size: var(--fs-sm);
   white-space: nowrap;
 }
