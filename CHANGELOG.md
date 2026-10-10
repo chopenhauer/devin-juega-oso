@@ -17,6 +17,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **3.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [2.6.1] - 2026-10-10
+
+**Sistema de diseño**
+
+- Nuevo `public/css/tokens.css`, la única fuente de colores, letra, espacios, radios, sombras,
+  animación y capas, en tres capas: primitivos, semánticos y componentes. Los nombres anteriores
+  (`--accent`, `--p1`…) siguen como alias.
+- `styles.css` ya solo usa tokens. El juego se ve igual: comparamos 61 capturas de antes y después
+  (móvil y escritorio, temas incluidos).
+- Los temas solo cambian tokens semánticos; los de `themes.js` pueden cambiar cualquier token. El
+  confeti del tema clásico sale de los tokens.
+- Guía viva en `/design`, solo en local y en las previews (decisión de JoseLuis: no se publica).
+- `npm run tokens` exporta `docs/tokens.json` (formato W3C) para llevarlos a Figma.
+- Preparado para alto contraste, densidad compacta y marcas de jugador sin depender del color.
+- Tests que fallan si vuelven valores sueltos, si se usa un token que no existe o si `tokens.json`
+  se queda viejo.
+
 ## [2.6.0] - 2026-10-10
 
 **Boca-oreja** ([1773776](https://github.com/chopenhauer/devin-juega-oso/commit/17737766fe2ee4557108339ed961151f4b8c81b2))

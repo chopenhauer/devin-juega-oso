@@ -1,0 +1,392 @@
+/*
+ * Sistema de diseño de OSO: la única fuente de colores, tipografía, espacios,
+ * radios, sombras, animación y capas. Ver docs/DESIGN.md.
+ *
+ * Capas: primitivos (:root) → semánticos → componentes. Los componentes de
+ * styles.css solo usan tokens; los temas solo cambian tokens semánticos.
+ * Semánticos y componentes se declaran también en `body` para que un tema
+ * (body[data-theme], o themes.js con estilos en línea) los recalcule.
+ */
+
+/* 1 · Primitivos: valores en bruto. Familia-tono (50 claro … 950 oscuro), -aNN = opacidad. */
+:root {
+  --azul-900: #0a1f3d;
+  --azul-900-a30: rgba(10, 40, 90, 0.3);
+  --azul-950: #06152c;
+  --blanco: #fff;
+  --blanco-a04: rgba(255, 255, 255, 0.04);
+  --blanco-a06: rgba(255, 255, 255, 0.06);
+  --blanco-a07: rgba(255, 255, 255, 0.07);
+  --blanco-a08: rgba(255, 255, 255, 0.08);
+  --blanco-a09: rgba(255, 255, 255, 0.09);
+  --blanco-a10: rgba(255, 255, 255, 0.1);
+  --blanco-a11: rgba(255, 255, 255, 0.11);
+  --blanco-a12: rgba(255, 255, 255, 0.12);
+  --blanco-a13: rgba(255, 255, 255, 0.13);
+  --blanco-a14: rgba(255, 255, 255, 0.14);
+  --blanco-a16: rgba(255, 255, 255, 0.16);
+  --blanco-a18: rgba(255, 255, 255, 0.18);
+  --blanco-a20: rgba(255, 255, 255, 0.2);
+  --blanco-a22: rgba(255, 255, 255, 0.22);
+  --blanco-a30: rgba(255, 255, 255, 0.3);
+  --blanco-a35: rgba(255, 255, 255, 0.35);
+  --blanco-a38: rgba(255, 255, 255, 0.38);
+  --blanco-a40: rgba(255, 255, 255, 0.4);
+  --blanco-a50: rgba(255, 255, 255, 0.5);
+  --blanco-a55: rgba(255, 255, 255, 0.55);
+  --blanco-a70: rgba(255, 255, 255, 0.7);
+  --blanco-a75: rgba(255, 255, 255, 0.75);
+  --blanco-a80: rgba(255, 255, 255, 0.8);
+  --blanco-a85: rgba(255, 255, 255, 0.85);
+  --blanco-a92: rgba(255, 255, 255, 0.92);
+  --cielo-200: #c4d8f0;
+  --cielo-200-2: #a6e0ff;
+  --cielo-400: #6fd0ff;
+  --cielo-400-a80: rgba(92, 200, 255, 0.8);
+  --cielo-400-2: #5cc8ff;
+  --cielo-500: #2a9be0;
+  --cielo-500-a55: rgba(56, 182, 255, 0.55);
+  --cielo-500-2: #38b6ff;
+  --cielo-500-3: #1d7cf2;
+  --cielo-700: #1f5fa8;
+  --cielo-700-a32: rgba(20, 150, 180, 0.32);
+  --cielo-700-a96: rgba(10, 125, 155, 0.96);
+  --cielo-700-2: #1b7fa6;
+  --cielo-700-3: #1b6fa8;
+  --cielo-800: #123e66;
+  --cielo-800-2: #123a6b;
+  --cielo-800-3: #0c4d6e;
+  --cielo-800-4: #0b4f72;
+  --cielo-800-5: #0d5f8f;
+  --cielo-900: #0c2a52;
+  --cielo-900-2: #061f3d;
+  --cielo-900-3: #0a3560;
+  --cielo-900-4: #05263f;
+  --cielo-950-a98: rgba(4, 30, 60, 0.98);
+  --crema-50: #fff7e8;
+  --crema-100: #fff6e5;
+  --gris-900: #222222;
+  --lila-100: #e6ccff;
+  --lila-300: #d9bce6;
+  --lila-300-a55: rgba(192, 132, 252, 0.55);
+  --lila-300-2: #c084fc;
+  --lila-500: #9333ea;
+  --lila-700: #6d1f8f;
+  --lila-800: #4b1c7a;
+  --lila-900: #26093a;
+  --lila-900-2: #2e1240;
+  --lila-950: #160822;
+  --mar-200: #bfeff7;
+  --mar-500: #2de2e6;
+  --mar-500-a55: rgba(45, 226, 230, 0.55);
+  --mar-700: #0a9fb5;
+  --mar-800: #0d6b73;
+  --menta-200: #b9f5cf;
+  --menta-300: #7dffb2;
+  --menta-300-a60: rgba(125, 255, 178, 0.6);
+  --menta-500: #4ade80;
+  --menta-500-a55: rgba(74, 222, 128, 0.55);
+  --menta-700: #16a34a;
+  --menta-800: #17704a;
+  --naranja-300: #d9c4a0;
+  --naranja-300-2: #dcc29a;
+  --naranja-400: #ff8a5c;
+  --naranja-400-a55: rgba(255, 138, 92, 0.55);
+  --naranja-500: #ff9f1c;
+  --naranja-500-a35: rgba(255, 159, 28, 0.35);
+  --naranja-500-a45: rgba(255, 159, 28, 0.45);
+  --naranja-500-2: #e0552a;
+  --naranja-600: #ff6a00;
+  --naranja-700: #a8410c;
+  --naranja-700-2: #b8640a;
+  --naranja-900: #5a2a00;
+  --naranja-900-2: #4a2300;
+  --naranja-950: #3a1206;
+  --negro: #000;
+  --negro-a18: rgba(0, 0, 0, 0.18);
+  --negro-a20: rgba(0, 0, 0, 0.2);
+  --negro-a22: rgba(0, 0, 0, 0.22);
+  --negro-a25: rgba(0, 0, 0, 0.25);
+  --negro-a28: rgba(0, 0, 0, 0.28);
+  --negro-a30: rgba(0, 0, 0, 0.3);
+  --negro-a35: rgba(0, 0, 0, 0.35);
+  --negro-a40: rgba(0, 0, 0, 0.4);
+  --negro-a45: rgba(0, 0, 0, 0.45);
+  --negro-a50: rgba(0, 0, 0, 0.5);
+  --negro-a55: rgba(0, 0, 0, 0.55);
+  --noche-100: #e6e0ff;
+  --noche-100-2: #ddd8ff;
+  --noche-200: #cfc8f5;
+  --noche-300: #b8b0e8;
+  --noche-300-a50: rgba(180, 120, 255, 0.5);
+  --noche-300-2: #b388ff;
+  --noche-600: #6a2fb0;
+  --noche-600-a94: rgba(90, 45, 170, 0.94);
+  --noche-700: #5b3592;
+  --noche-800: #2c1a6a;
+  --noche-800-2: #2b1366;
+  --noche-800-3: #2a1d6e;
+  --noche-800-4: #3b2a6b;
+  --noche-900: #1a0f48;
+  --noche-900-a92: rgba(30, 18, 80, 0.92);
+  --noche-900-a96: rgba(30, 18, 80, 0.96);
+  --noche-900-a97: rgba(30, 18, 80, 0.97);
+  --noche-900-2: #120c38;
+  --noche-900-3: #160e42;
+  --noche-950: #0f0619;
+  --noche-950-a50: rgba(10, 6, 30, 0.5);
+  --noche-950-a55: rgba(5, 2, 30, 0.55);
+  --noche-950-a62: rgba(8, 4, 28, 0.62);
+  --noche-950-a72: rgba(8, 4, 30, 0.72);
+  --noche-950-a88: rgba(8, 4, 30, 0.88);
+  --noche-950-a97: rgba(12, 8, 40, 0.97);
+  --rojo-300: #ff7a8e;
+  --rojo-400: #ff5252;
+  --rojo-400-a20: rgba(255, 82, 82, 0.2);
+  --rojo-400-a55: rgba(255, 90, 120, 0.55);
+  --rojo-500: #ff3b3b;
+  --rojo-500-a25: rgba(255, 59, 92, 0.25);
+  --rojo-500-a80: rgba(255, 40, 40, 0.8);
+  --rosa-200: #ffb8cc;
+  --rosa-300: #ff9cbc;
+  --rosa-400: #ff5d8f;
+  --rosa-400-a55: rgba(255, 93, 143, 0.55);
+  --rosa-500: #e0336b;
+  --sol-400: #ffe066;
+  --sol-400-a18: rgba(255, 210, 63, 0.18);
+  --sol-400-a35: rgba(255, 210, 63, 0.35);
+  --sol-400-a40: rgba(255, 210, 63, 0.4);
+  --sol-400-a80: rgba(255, 210, 63, 0.8);
+  --sol-400-2: #ffd23f;
+
+  /* Tipografía */
+  --font-family: 'Fredoka', 'Baloo 2', ui-rounded, 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --fs-3xs: 10px;
+  --fs-2xs: 12px;
+  --fs-xs: 13px;
+  --fs-sm: 14px;
+  --fs-md: 15px;
+  --fs-base: 16px;
+  --fs-lg: 17px;
+  --fs-xl: 18px;
+  --fs-2xl: 20px;
+  --fs-3xl: 22px;
+  --fs-4xl: 24px;
+  --fs-5xl: 28px;
+  --fs-6xl: 30px;
+  --fs-7xl: 34px;
+  --fs-display-xs: 40px;
+  --fs-display-sm: 46px;
+  --fs-display-md: 54px;
+  --fs-display-lg: 60px;
+  --fs-hero: 80px;
+  --fs-hero-xl: 100px;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Espacios (base 4 px) */
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+  --space-4-5: 18px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 28px;
+  --space-8: 32px;
+
+  /* Radios */
+  --r-4xs: 2px;
+  --r-3xs: 3px;
+  --r-xs: 10px;
+  --r-sm: 14px;
+  --r-md: 18px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Animación */
+  --dur-fast: 0.15s;
+  --dur-quick: 0.2s;
+  --dur-base: 0.35s;
+  --ease-soft: cubic-bezier(0.3, 1.3, 0.5, 1);
+  --ease-pop: cubic-bezier(0.3, 1.4, 0.5, 1);
+  --ease-bounce: cubic-bezier(0.3, 1.6, 0.5, 1);
+  --ease-spring: cubic-bezier(0.3, 1.8, 0.5, 1);
+
+  /* Capas */
+  --z-toolbar: 10;
+  --z-popover: 11;
+  --z-scrim: 12;
+  --z-drawer: 13;
+  --z-flash: 18;
+  --z-overlay: 20;
+  --z-party: 40;
+  --z-drag: 50;
+  --z-modal: 100;
+}
+
+/* 2 · Semánticos: qué significa cada color. Es lo que cambian los temas. */
+:root,
+body {
+  --color-bg-1: var(--noche-900-2);
+  --color-bg-2: var(--noche-800-2);
+  --color-bg-3: var(--lila-800);
+  --color-bg-glow-1: var(--noche-600);
+  --color-bg-glow-2: var(--cielo-800-5);
+  --color-board-1: var(--noche-800-3);
+  --color-board-2: var(--noche-900-3);
+  --color-surface: var(--blanco-a07);
+  --color-surface-strong: var(--blanco-a13);
+  --color-line: var(--blanco-a16);
+  --color-text: var(--blanco);
+  --color-text-muted: var(--noche-300);
+  --color-on-light: var(--noche-800-2);
+  --color-accent: var(--sol-400-2);
+  --color-accent-2: var(--naranja-500);
+  --color-accent-light: var(--sol-400);
+  --color-on-accent: var(--naranja-900-2);
+  --color-accent-edge: var(--naranja-700-2);
+  --color-success: var(--menta-300);
+  --color-danger: var(--rojo-400);
+  --color-tile: var(--crema-50);
+  --color-tile-edge: var(--naranja-300-2);
+  --color-tile-ink: var(--noche-800-4);
+  --color-tile-relief: var(--naranja-300);
+  --color-p1: var(--cielo-500-2);
+  --color-p1-strong: var(--cielo-500-3);
+  --color-p1-glow: var(--cielo-500-a55);
+  --color-p2: var(--rosa-400);
+  --color-p2-strong: var(--rosa-500);
+  --color-p2-glow: var(--rosa-400-a55);
+  --color-p3: var(--menta-500);
+  --color-p3-strong: var(--menta-700);
+  --color-p3-glow: var(--menta-500-a55);
+  --color-p4: var(--lila-300-2);
+  --color-p4-strong: var(--lila-500);
+  --color-p4-glow: var(--lila-300-a55);
+}
+
+/* 3 · Componentes: decisiones de cada pieza, construidas con semánticos. */
+:root,
+body {
+  /* Escena y tablero */
+  --bg-scene:
+    radial-gradient(1100px 700px at 10% -10%, var(--color-bg-glow-1) 0, transparent 60%),
+    radial-gradient(900px 600px at 110% 110%, var(--color-bg-glow-2) 0, transparent 55%),
+    linear-gradient(160deg, var(--color-bg-1), var(--color-bg-2) 55%, var(--color-bg-3));
+  --board-shell-bg: linear-gradient(180deg, var(--color-board-1), var(--color-board-2));
+
+  /* Tamaños propios de componentes (fuera de la escala, a unificar) */
+  --fs-legal-heading: 19px;
+  --fs-extra: 21px;
+  --fs-letter-sm: 23px;
+  --fs-letter-md: 26px;
+  --fs-title-xl: 42px;
+  --fs-emoji-xl: 44px;
+
+  /* Botón principal */
+  --btn-primary-bg: linear-gradient(180deg, var(--color-accent-light), var(--color-accent-2));
+  --btn-primary-ink: var(--color-on-accent);
+  --btn-primary-edge: var(--color-accent-edge);
+
+  /* Relieves, sombras y brillos */
+  --relief-tile: 0 5px 0 var(--color-tile-relief);
+  --relief-blue: 0 5px 0 var(--cielo-700-3);
+  --shadow-hairline: inset 0 0 0 1px var(--color-line);
+  --shadow-lg: 0 16px 40px var(--negro-a50);
+  --shadow-xl: 0 30px 90px var(--negro-a55);
+  --glow-accent: 0 0 18px var(--sol-400-a35);
+
+  /* Confeti por defecto (los temas de themes.js pueden traer el suyo) */
+  --confetti:
+    var(--color-p1), var(--color-p2), var(--color-accent), var(--color-success), var(--noche-300-2),
+    var(--color-accent-2);
+
+  /* Reservado: marcas de jugador para no depender solo del color */
+  --p1-mark: '●';
+  --p2-mark: '▲';
+  --p3-mark: '■';
+  --p4-mark: '◆';
+}
+
+/* Alias de los nombres anteriores (compatibilidad). */
+:root,
+body {
+  --bg1: var(--color-bg-1);
+  --bg2: var(--color-bg-2);
+  --bg3: var(--color-bg-3);
+  --glass: var(--color-surface);
+  --glass2: var(--color-surface-strong);
+  --line: var(--color-line);
+  --ink: var(--color-text);
+  --muted: var(--color-text-muted);
+  --accent: var(--color-accent);
+  --accent2: var(--color-accent-2);
+  --p1: var(--color-p1);
+  --p1b: var(--color-p1-strong);
+  --p1glow: var(--color-p1-glow);
+  --p2: var(--color-p2);
+  --p2b: var(--color-p2-strong);
+  --p2glow: var(--color-p2-glow);
+  --p3: var(--color-p3);
+  --p3b: var(--color-p3-strong);
+  --p3glow: var(--color-p3-glow);
+  --p4: var(--color-p4);
+  --p4b: var(--color-p4-strong);
+  --p4glow: var(--color-p4-glow);
+  --tile: var(--color-tile);
+  --tile-edge: var(--color-tile-edge);
+  --tile-ink: var(--color-tile-ink);
+  --font: var(--font-family);
+}
+
+/* Temas definidos en CSS. Los de themes.js aplican sus tokens desde app.js. */
+body[data-theme='halloween'] {
+  --color-accent: var(--naranja-500);
+  --color-accent-2: var(--naranja-600);
+  --color-text-muted: var(--lila-300);
+  --color-bg-glow-1: var(--lila-700);
+  --color-bg-glow-2: var(--naranja-700);
+  --color-bg-1: var(--noche-950);
+  --color-bg-2: var(--lila-900);
+  --color-bg-3: var(--naranja-950);
+  --color-board-1: var(--lila-900-2);
+  --color-board-2: var(--lila-950);
+}
+body[data-theme='christmas'] {
+  --color-text-muted: var(--cielo-200);
+  --color-bg-glow-1: var(--cielo-700);
+  --color-bg-glow-2: var(--menta-800);
+  --color-bg-1: var(--azul-950);
+  --color-bg-2: var(--cielo-900);
+  --color-bg-3: var(--cielo-800);
+  --color-board-1: var(--cielo-800-2);
+  --color-board-2: var(--azul-900);
+}
+
+/* Alto contraste (preferencia del sistema). */
+@media (prefers-contrast: more) {
+  :root,
+  body {
+    --color-surface: var(--blanco-a12);
+    --color-surface-strong: var(--blanco-a20);
+    --color-line: var(--blanco-a50);
+    --color-text-muted: var(--noche-100);
+  }
+}
+
+/* Densidad compacta (reservado: <html data-density="compact">). */
+[data-density='compact'] {
+  --space-2: 6px;
+  --space-2-5: 8px;
+  --space-3: 10px;
+  --space-3-5: 12px;
+  --space-4: 14px;
+  --space-5: 16px;
+  --space-6: 20px;
+}

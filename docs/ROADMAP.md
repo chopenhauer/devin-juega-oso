@@ -80,7 +80,7 @@ temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 | 9   | Feedback con texto libre (función de Vercel)                                          | Alto       | Medio      | 5        |
 | 10  | Equipos 2 contra 2                                                                    | Medio      | Medio      | 6        |
 | 11  | Tablero con teclado y OSOs sin depender del color                                     | Medio      | Medio      | Siempre  |
-| 12  | Escala tipográfica y colores semánticos (deuda de diseño)                             | Medio      | Medio      | Siempre  |
+| 12  | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)     | Bajo       | Bajo       | Siempre  |
 | 13  | Oso bailando al ganar (T4.5)                                                          | Medio      | Medio-alto | Reserva  |
 | 14  | Máquina «Experto» (B06)                                                               | Medio      | Medio      | Reserva  |
 | 15  | Modo Mercado / tiempo por ayudas (T4.6–T4.7)                                          | Medio      | Alto       | Reserva  |
@@ -126,7 +126,7 @@ preguntan una a una al empezar cada fase.
 6. **3.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
 
 **Siempre, en paralelo:** accesibilidad (tablero con teclado, OSOs sin depender del color), deuda de
-diseño (escala tipográfica y colores semánticos, ver [`DESIGN.md`](DESIGN.md)) y afinar los temas
+diseño (unificar los tamaños de letra fuera de escala, ver [`DESIGN.md`](DESIGN.md)) y afinar los temas
 cuando se acerque cada fecha.
 
 **En reserva:** oso bailando, máquina «Experto», Modo Mercado, hall of fame global, vibración y

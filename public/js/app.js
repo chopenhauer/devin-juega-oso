@@ -1,6 +1,6 @@
 import * as Engine from './engine.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
-import { THEMES, themeOf, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
+import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
@@ -129,15 +129,13 @@ const { timeFor } = Engine;
   let allThemes = false;
   let lowWarned = new Set();
   const themeTaps = [];
-  const SKIN_VARS = ['g1', 'g2', 'd1', 'd2', 'd3', 'b1', 'b2'];
+  let skinTokens = [];
   function paintSkin(t) {
-    const colours = t.bg ? [...t.bg, ...t.board] : [];
+    const tokens = themeTokens(t);
+    skinTokens.forEach((k) => document.body.style.removeProperty(k));
+    skinTokens = Object.keys(tokens);
+    skinTokens.forEach((k) => document.body.style.setProperty(k, tokens[k]));
     document.body.classList.toggle('skin', !!t.bg);
-    SKIN_VARS.forEach((k, i) =>
-      colours.length
-        ? document.body.style.setProperty(`--sk-${k}`, colours[i])
-        : document.body.style.removeProperty(`--sk-${k}`),
-    );
     if (t.motion) document.body.dataset.motion = t.motion;
     else delete document.body.dataset.motion;
   }
@@ -1201,7 +1199,12 @@ const { timeFor } = Engine;
   function confetti() {
     const h = q('confetti');
     h.innerHTML = '';
-    const cs = themeOf(theme).confetti;
+    const cs =
+      themeOf(theme).confetti ??
+      getComputedStyle(document.body)
+        .getPropertyValue('--confetti')
+        .split(',')
+        .map((c) => c.trim());
 
     for (let i = 0; i < 90; i++) {
       const x = document.createElement('i');

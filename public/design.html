@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Sistema de diseño · OSO</title>
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/design.css" />
+    <script type="module" src="/js/design.js"></script>
+  </head>
+  <body class="ds">
+    <header class="ds-head">
+      <h1>Sistema de diseño de OSO</h1>
+      <p>
+        Guía viva: todo se lee de <code>public/css/tokens.css</code>. Si cambia un token, cambian el juego y
+        esta página. Solo en local y en las previews.
+      </p>
+      <label class="ds-theme"
+        >Tema
+        <select id="dsTheme"></select
+      ></label>
+    </header>
+    <main>
+      <section>
+        <h2>Componentes</h2>
+        <div class="ds-row">
+          <button class="primary" type="button">¡A jugar!</button>
+          <button class="secondary" type="button">Saltar e ir a jugar</button>
+          <button class="secondary" type="button" disabled>Bloqueado</button>
+        </div>
+        <div class="ds-row">
+          <span class="ds-tile">O</span><span class="ds-tile">S</span><span class="ds-tile">O</span>
+          <span class="ds-player ds-p1">Jugador 1</span><span class="ds-player ds-p2">Jugador 2</span>
+          <span class="ds-player ds-p3">Jugador 3</span><span class="ds-player ds-p4">Jugador 4</span>
+        </div>
+      </section>
+      <div id="dsTokens"></div>
+    </main>
+  </body>
+</html>

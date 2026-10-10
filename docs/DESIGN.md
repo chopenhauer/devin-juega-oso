@@ -1,24 +1,73 @@
 # Sistema de diseño y accesibilidad
 
-Guía viva del aspecto de OSO. Todo el estilo está en `public/css/styles.css`.
+Guía del aspecto de OSO. **Todo valor de diseño vive en `public/css/tokens.css`**; `styles.css`
+solo usa tokens. Si cambias un token, cambian el juego, la guía viva y `docs/tokens.json`.
 
-## Tokens (`:root`)
+## Sistema de diseño (desde la 2.6.1)
 
-| Grupo       | Tokens                                                                           | Uso                                                      |
-| ----------- | -------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| Fondo       | `--bg1` `--bg2` `--bg3`                                                          | Degradado nocturno de la app                             |
-| Superficies | `--glass` `--glass2` `--line`                                                    | Paneles y tarjetas de cristal                            |
-| Texto       | `--ink` `--muted`                                                                | Texto principal y secundario                             |
-| Acción      | `--accent` `--accent2`                                                           | Botón principal y foco                                   |
-| Jugadores   | `--p1*` (azul) · `--p2*` (rosa) · `--p3*` (verde) · `--p4*` (lila)               | Paneles, letras y OSOs de cada jugador                   |
-| Selección   | `--ring` `--ring-glow`                                                           | Anillo de la ficha O/S elegida, con el color del jugador |
-| Fichas      | `--tile` `--tile-edge` `--tile-ink`                                              | Letras del tablero                                       |
-| Radios      | `--r-xs` 10 · `--r-sm` 14 · `--r-md` 18 · `--r-lg` 22 · `--r-xl` 28 · `--r-pill` | Esquinas: usa siempre un token, nunca un valor suelto    |
-| Tipografía  | `--font` (Fredoka autoalojada)                                                   | Toda la interfaz                                         |
-| Disposición | `--side-w` `--avatar-cols`                                                       | Ancho de las tarjetas laterales y columnas de avatares   |
+### Capas de tokens
 
-Cada tema cambia estos tokens con `body[data-theme='…']`; los componentes no llevan colores propios
-de un tema.
+| Capa        | Dónde                    | Qué contiene                                                                                                    | Ejemplos                                                             |
+| ----------- | ------------------------ | --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Primitivos  | `:root` (bloque 1)       | Paleta en bruto (familia-tono 50…950, `-aNN` = opacidad), tamaños de letra, espacios, radios, animación y capas | `--sol-400` `--fs-2xl` `--space-3` `--r-md` `--ease-pop` `--z-modal` |
+| Semánticos  | `:root, body` (bloque 2) | Qué significa cada color. **Es lo único que cambian los temas.** Solo apuntan a primitivos                      | `--color-accent` `--color-text-muted` `--color-p1` `--color-board-1` |
+| Componentes | `:root, body` (bloque 3) | Decisiones de cada pieza, hechas con semánticos                                                                 | `--btn-primary-bg` `--board-shell-bg` `--relief-tile` `--shadow-lg`  |
+| Alias       | `:root, body` (bloque 4) | Nombres anteriores, para no romper nada                                                                         | `--accent` → `--color-accent`, `--p1b` → `--color-p1-strong`         |
+
+Semánticos, componentes y alias se declaran también en `body`: así, si un tema cambia un semántico
+en `body`, todo lo que depende de él se recalcula solo.
+
+**Escalas:** letra `--fs-3xs` (10) … `--fs-hero-xl` (100); peso `--fw-semibold` `--fw-bold`;
+espacios de 4 en 4 px (`--space-1` = 4 px, `--space-2-5` = 10 px…); radios `--r-4xs` … `--r-pill`;
+duraciones `--dur-fast` `--dur-quick` `--dur-base`; curvas `--ease-soft` `--ease-pop`
+`--ease-bounce` `--ease-spring`; capas `--z-toolbar` (10) … `--z-modal` (100). Los tamaños que no
+encajan en la escala (letras del tablero, título de victoria…) son tokens de componente
+(`--fs-letter-md`, `--fs-title-xl`…) para unificarlos más adelante sin buscar por el CSS.
+
+### Temas
+
+- Un tema **solo cambia tokens semánticos**. Halloween y Navidad lo hacen en `tokens.css` con
+  `body[data-theme='…']`; el resto, en `public/js/themes.js`:
+  - `bg` y `board` son atajos para `--color-bg-glow-1/2`, `--color-bg-1/2/3` y `--color-board-1/2`;
+  - `tokens: { '--color-accent': '#…' }` cambia cualquier otro token;
+  - `confetti` es opcional; si no lo trae, se usa `--confetti`.
+- `app.js` aplica esos tokens en `body` (`themeTokens()` en `themes.js`).
+
+### Reglas (las comprueba `tests/unit/design-system.test.js`)
+
+1. Fuera de `tokens.css` no hay colores, tamaños o pesos de letra, capas (z-index ≥ 10) ni curvas
+   sueltas. En JS solo hay colores en los datos de `themes.js`.
+2. Todo token que se usa existe.
+3. Los semánticos solo apuntan a primitivos.
+4. Los temas solo tocan tokens que existen.
+5. `docs/tokens.json` está al día (`npm run tokens`).
+
+Un test en navegador cambia tokens con el juego abierto y comprueba que los botones y el tablero
+cambian al momento.
+
+### Guía viva `/design`
+
+`public/design.html` lee los tokens de `tokens.css` en el navegador y muestra colores, tipografía,
+espacios, radios, sombras, componentes y jugadores, con un selector de tema. Se ve en local
+(`npm start` → http://localhost:4173/design) y en las previews de Vercel. **No se publica en
+producción:** el `buildCommand` de `vercel.json` la borra salvo si `VERCEL_ENV` es `preview`.
+
+### Exportar a Figma
+
+`npm run tokens` genera `docs/tokens.json` en el formato estándar de W3C (Design Tokens), con las
+capas, los alias como referencias (`{primitive.sol-400}`) y los temas de CSS.
+
+### Preparado para el futuro
+
+- **Alto contraste:** con `prefers-contrast: more`, superficies y líneas más marcadas y texto
+  secundario más claro.
+- **Densidad compacta:** `<html data-density="compact">` reduce los espacios (reservado).
+- **Sin depender del color:** `--p1-mark` … `--p4-mark` (● ▲ ■ ◆) reservados para marcar jugadores.
+- **Componentes nuevos:** crea primero sus tokens de componente con semánticos; nunca valores sueltos.
+
+### Disposición
+
+`--side-w` y `--avatar-cols` siguen en `styles.css`: dependen del tamaño de la pantalla, no del tema.
 
 ## Componentes
 

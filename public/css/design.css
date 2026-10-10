@@ -1,0 +1,98 @@
+/* Only for the /design guide (local and previews). Uses tokens only. */
+body.ds {
+  display: block;
+  padding: var(--space-6);
+  overflow-x: hidden;
+}
+.ds h1 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-7xl);
+}
+.ds h2 {
+  margin: var(--space-8) 0 var(--space-3);
+  font-size: var(--fs-4xl);
+}
+.ds h3 {
+  margin: var(--space-5) 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--fs-base);
+}
+.ds-head p {
+  max-width: 60ch;
+  color: var(--color-text-muted);
+}
+.ds-theme select {
+  margin-left: var(--space-2);
+  font: inherit;
+}
+.ds-row,
+.ds-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+.ds-row .primary,
+.ds-row .secondary {
+  width: auto;
+}
+.ds-item {
+  width: 150px;
+  padding: var(--space-2);
+  border-radius: var(--r-sm);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-hairline);
+  font-size: var(--fs-2xs);
+  overflow-wrap: anywhere;
+}
+.ds-item code {
+  display: block;
+  color: var(--color-text-muted);
+}
+.ds-sample {
+  height: 56px;
+  margin-bottom: var(--space-2);
+  border-radius: var(--r-xs);
+}
+.ds-text {
+  white-space: nowrap;
+  overflow: hidden;
+}
+.ds-bar {
+  height: var(--space-3);
+  background: var(--color-accent);
+}
+.ds-tile {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-sm);
+  background: var(--color-tile);
+  box-shadow: var(--relief-tile);
+  color: var(--color-tile-ink);
+  font-size: var(--fs-letter-md);
+  font-weight: var(--fw-bold);
+}
+.ds-player {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--r-pill);
+  font-weight: var(--fw-semibold);
+}
+.ds-p1 {
+  background: linear-gradient(180deg, var(--color-p1), var(--color-p1-strong));
+  box-shadow: 0 0 16px var(--color-p1-glow);
+}
+.ds-p2 {
+  background: linear-gradient(180deg, var(--color-p2), var(--color-p2-strong));
+  box-shadow: 0 0 16px var(--color-p2-glow);
+}
+.ds-p3 {
+  background: linear-gradient(180deg, var(--color-p3), var(--color-p3-strong));
+  box-shadow: 0 0 16px var(--color-p3-glow);
+}
+.ds-p4 {
+  background: linear-gradient(180deg, var(--color-p4), var(--color-p4-strong));
+  box-shadow: 0 0 16px var(--color-p4-glow);
+}

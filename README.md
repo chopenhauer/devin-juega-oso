@@ -16,7 +16,9 @@ por JoseLuis y Julia.
 ```
 public/               Sitio estático que publica Vercel (sin build)
   index.html          Marcado
-  css/styles.css      Estilos
+  css/tokens.css      Sistema de diseño: la única fuente de colores, letra, espacios, sombras…
+  css/styles.css      Estilos de los componentes (solo usan tokens)
+  design.html         Guía viva del sistema de diseño (/design, solo local y previews)
   js/engine.js        Reglas puras para N jugadores: OSO/SOS, recálculo, pistas, IA, replay SOS
   js/app.js           Interfaz: estado de la partida, reloj, eventos y render (usa engine.js)
   js/onboarding.js    Inicio por pasos (bienvenida, reglas, modo, jugadores, vista, tablero)
@@ -34,6 +36,7 @@ public/               Sitio estático que publica Vercel (sin build)
 tests/unit/           Tests del motor, temas, marcador, telemetría y versión (node:test)
 tests/e2e/            Tests en navegador (Playwright, móvil y escritorio)
 scripts/serve.js      Servidor local con las mismas cabeceras que vercel.json
+scripts/tokens.js     Exporta tokens.css a docs/tokens.json, formato W3C (npm run tokens)
 scripts/og-image.js   Genera public/og.png desde scripts/og-card.html (npm run og)
 old-references/       Versiones históricas del juego (no se publican)
 ```
@@ -66,6 +69,7 @@ npm test               # tests del motor
 npx playwright install chromium
 npm run test:e2e       # tests en navegador
 npm run check          # todo lo anterior
+npm run tokens         # exporta los tokens a docs/tokens.json (tras cambiar tokens.css)
 ```
 
 GitHub Actions (job `check`) ejecuta lint, tests del motor y tests en navegador en cada push, en

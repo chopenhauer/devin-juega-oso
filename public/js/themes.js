@@ -7,7 +7,6 @@ export const THEMES = {
     icon: '🐻',
     avatars: ['🐻', '🐼', '🐻‍❄️', '🧸', '🦊', '🐯', '🦁', '🐸', '🐵', '🐨', '🐧', '🦄'],
     decor: [],
-    confetti: ['#38b6ff', '#ff5d8f', '#ffd23f', '#7dffb2', '#b388ff', '#ff9f1c'],
   },
   halloween: {
     label: 'Halloween',
@@ -269,6 +268,22 @@ export const THEMES = {
 
 export const THEME_IDS = Object.keys(THEMES);
 export const themeOf = (id) => THEMES[id] ?? THEMES.classic;
+
+// A theme only changes design tokens (public/css/tokens.css): `bg` and `board`
+// are shorthands for the scene and board colours; `tokens` can set any other.
+const SCENE_TOKENS = [
+  '--color-bg-glow-1',
+  '--color-bg-glow-2',
+  '--color-bg-1',
+  '--color-bg-2',
+  '--color-bg-3',
+  '--color-board-1',
+  '--color-board-2',
+];
+export function themeTokens(t) {
+  const colours = t.bg ? [...t.bg, ...t.board] : [];
+  return { ...Object.fromEntries(colours.map((c, i) => [SCENE_TOKENS[i], c])), ...t.tokens };
+}
 
 // Carries each player's avatar to the same slot of the new theme. Non-theme
 // avatars (the machine's 🤖) are kept; clashes fall back to the first free one.
