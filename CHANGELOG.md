@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.0.1] - 2026-10-11
 
-**Analítica solo en producción y paneles para seguir el juego en línea**
+**Analítica solo en producción y paneles para seguir el juego en línea** ([e43b69a](https://github.com/chopenhauer/devin-juega-oso/commit/e43b69ac85905609d4fabca886998a7457cd79a2))
 
 - Google Analytics y Microsoft Clarity se cargan solo en juegaoso.com y devin-juega-oso.vercel.app.
   Las previews de Vercel ya no envían datos, así que las pruebas no se mezclan con las partidas de
