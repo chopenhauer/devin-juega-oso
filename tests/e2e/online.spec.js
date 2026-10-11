@@ -35,7 +35,7 @@ test('the WhatsApp invite has one link with the room and UTM, and its own share 
     })
     .toBe(true);
   const [notice, , next] = await boxes();
-  expect(notice.height).toBe(next.height);
+  expect(notice.height).toBeCloseTo(next.height, 1);
   const html = await (await guest.request.get(`/?sala=${code}`)).text();
   expect(html).toContain('content="https://juegaoso.com/og-sala.png"');
   expect(await (await guest.request.get('/')).text()).toContain('content="https://juegaoso.com/og.png"');

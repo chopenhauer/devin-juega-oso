@@ -6,6 +6,7 @@ import { extname, join, normalize, resolve } from 'node:path';
 import { createHandler } from '../api/_sala.js';
 import { memoryStore } from '../api/_store.js';
 import { writeInvitePage } from './invite-page.js';
+import middleware, { config as middlewareConfig } from '../middleware.js';
 
 const root = resolve('public');
 const port = Number(process.env.PORT) || 4173;
@@ -40,16 +41,17 @@ async function api(req, res) {
   res.writeHead(response.status, Object.fromEntries(response.headers)).end(await response.text());
 }
 
-// Same rewrites as Vercel (only exact sources with `has` query keys are used).
-const rewrite = (url) =>
-  config.rewrites?.find(
-    ({ source, has = [] }) => source === url.pathname && has.every(({ key }) => url.searchParams.has(key)),
-  )?.destination ?? url.pathname;
+// Same as Vercel: middleware.js may rewrite the paths in its matcher.
+function route(url) {
+  if (url.pathname !== middlewareConfig.matcher) return url.pathname;
+  const to = middleware(new Request(url))?.headers.get('x-middleware-rewrite');
+  return to ? new URL(to).pathname : url.pathname;
+}
 
 createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
   if (url.pathname === '/api/sala') return api(req, res);
-  const path = decodeURIComponent(rewrite(url));
+  const path = decodeURIComponent(route(url));
   const file = normalize(join(root, path === '/' ? 'index.html' : path));
   if (!file.startsWith(root)) {
     res.writeHead(403).end();

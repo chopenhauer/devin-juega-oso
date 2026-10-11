@@ -5,18 +5,6 @@
   "installCommand": "",
   "outputDirectory": "public",
   "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "query",
-          "key": "sala"
-        }
-      ],
-      "destination": "/sala"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

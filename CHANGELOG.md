@@ -29,8 +29,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   partidas en línea del «compartir» de boca-oreja. Al entrar se quita el código de la dirección,
   pero la UTM se queda para que GA la vea.
 - Los enlaces de sala tienen su propia tarjeta en WhatsApp: «Te reto a una partida de OSO 🐻» con la
-  imagen `og-sala.png` («¡Te reto a una partida!» · «🌐 Juega en línea»). Vercel sirve
-  `sala.html`, que es la misma página con otras etiquetas Open Graph y se genera al publicar.
+  imagen `og-sala.png` («¡Te reto a una partida!» · «🌐 Juega en línea»). Un middleware de
+  Vercel (`middleware.js`) sirve `sala.html`, que es la misma página con otras etiquetas Open Graph y se genera al publicar.
 - Más espacio entre el selector de tablero y «¡A jugar!».
 - El aviso del juego en línea («Esperando a tu rival…») se ve más: queda centrado entre el borde de
   arriba de la pantalla y la tarjeta, tiene la misma altura que los botones ← → y lleva letra más

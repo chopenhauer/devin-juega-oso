@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { INVITE_META, invitePage } from '../../scripts/invite-page.js';
+import middleware, { config as middlewareConfig } from '../../middleware.js';
 
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 
@@ -16,11 +17,20 @@ test('the invite page is the game page with its own share card', () => {
   assert.ok(existsSync(new URL('../../public/og-sala.png', import.meta.url)));
 });
 
-test('Vercel serves the invite page for links with a room code and builds it first', () => {
+test('the middleware serves the invite page for links with a room code', () => {
+  assert.equal(middlewareConfig.matcher, '/');
+  const res = middleware(new Request('https://juegaoso.com/?sala=K7QD2&utm_source=whatsapp'));
+  assert.equal(
+    res.headers.get('x-middleware-rewrite'),
+    'https://juegaoso.com/sala?sala=K7QD2&utm_source=whatsapp',
+  );
+  assert.equal(middleware(new Request('https://juegaoso.com/?utm_source=whatsapp')), undefined);
+});
+
+test('Vercel builds the invite page and uploads the middleware', () => {
   const config = JSON.parse(read('vercel.json'));
-  assert.deepEqual(config.rewrites, [
-    { source: '/', has: [{ type: 'query', key: 'sala' }], destination: '/sala' },
-  ]);
+  assert.equal(config.rewrites, undefined);
   assert.match(config.buildCommand, /^node scripts\/invite-page\.js && /);
   assert.match(read('.vercelignore'), /^!\/scripts\/invite-page\.js$/m);
+  assert.match(read('.vercelignore'), /^!\/middleware\.js$/m);
 });
