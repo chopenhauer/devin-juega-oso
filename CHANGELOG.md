@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.5.0] - 2026-10-11
 
-**En línea, más acompañado: la invitación y los avisos del rival**
+**En línea, más acompañado: la invitación y los avisos del rival ([0946baf](https://github.com/chopenhauer/devin-juega-oso/commit/0946baf70330b44cf32d59ee947777c32c488828))**
 
 Las dos primeras prioridades del ROADMAP revisado tras la 3.4.0. En octubre se abrieron 5 salas en
 producción y solo en 2 entró alguien: se perdían antes de entrar.
