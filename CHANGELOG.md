@@ -47,7 +47,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 **Difusión (fuera del juego)**
 
 - JoseLuis añade juegaoso.com a los «Enlaces externos» del artículo
-  [Oso (juego)](https://es.wikipedia.org/wiki/Oso_(juego)) de Wikipedia en español
+  [Oso (juego)](<https://es.wikipedia.org/wiki/Oso_(juego)>) de Wikipedia en español
   ([edición del 11-oct](https://es.wikipedia.org/w/index.php?diff=175771474)). En el resumen de la
   edición declara el conflicto de intereses, porque somos los autores; el juego sigue las reglas de
   ese mismo artículo. Las normas de Wikipedia desaconsejan enlazar webs propias, así que puede que

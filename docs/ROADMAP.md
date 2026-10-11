@@ -378,7 +378,7 @@ Queda lo de «Más adelante».
 **Acciones realizadas:**
 
 - 2026-10-11 · Enlace a juegaoso.com en «Enlaces externos» del artículo
-  [Oso (juego)](https://es.wikipedia.org/wiki/Oso_(juego)) de Wikipedia en español, con el conflicto
+  [Oso (juego)](<https://es.wikipedia.org/wiki/Oso_(juego)>) de Wikipedia en español, con el conflicto
   de intereses declarado en el resumen de la edición (ver CHANGELOG 3.1.0). Si lo retiran, se
   propone en la página de discusión en vez de volver a añadirlo.
 
