@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.1.0] - 2026-10-11
 
-**Invitaciones en línea más claras**
+**Invitaciones en línea más claras** ([a5c9bbd](https://github.com/chopenhauer/devin-juega-oso/commit/a5c9bbdaf0669ecf9c33fdde209844630c79d13b))
 
 - Los textos del juego en línea usan palabras que valen para cualquiera: «Esperando a tu rival…»,
   «Invita a tu rival», «… ya está aquí. ¡Elige el tablero!», «Tu rival espera tu jugada», «Invita a
