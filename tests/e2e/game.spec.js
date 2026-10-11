@@ -148,7 +148,7 @@ test('B05: tienda secreta: tres toques en un 💡 gastado lo venden por segundos
   await startGame(page);
   await page.click('#hint1');
   await expect(page.locator('#hint1 .count')).toHaveText('0');
-  for (let i = 0; i < 3; i++) await page.click('#hint1');
+  await page.locator('#hint1').click({ clickCount: 3 });
   await expect(page.locator('#shopDialog')).toBeVisible();
   await expect(page.locator('#shopText')).toContainText('otra 💡 pista por 10 segundos');
   const before = await clockSeconds(page, '#timer1');
@@ -166,7 +166,7 @@ test('B06: tienda secreta: un 🛟 comprado devuelve la partida a OSO para todo 
   await startGame(page);
   await page.click('#sos1');
   await expect(page.locator('#message')).toContainText('Ahora se puntúa SOS', { timeout: 6000 });
-  for (let i = 0; i < 3; i++) await page.click('#sos1');
+  await page.locator('#sos1').click({ clickCount: 3 });
   await expect(page.locator('#shopText')).toContainText('otro 🛟 SOS por 30 segundos');
   await expect(page.locator('#shopNote')).toContainText('puntuar OSO');
   await page.click('#shopBuy');
@@ -182,7 +182,7 @@ test('B06: tienda secreta: un 🛟 comprado devuelve la partida a OSO para todo 
 test('B07: tienda secreta: «Ahora no» no compra nada y el extra sigue gastado', async ({ page }) => {
   await startGame(page);
   await page.click('#hint1');
-  for (let i = 0; i < 3; i++) await page.click('#hint1');
+  await page.locator('#hint1').click({ clickCount: 3 });
   await page.click('#shopDialog button.secondary');
   await expect(page.locator('#shopDialog')).toBeHidden();
   await expect(page.locator('#hint1 .count')).toHaveText('0');
