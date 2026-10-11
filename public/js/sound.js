@@ -1,7 +1,9 @@
 // Short game sounds generated with Web Audio: no audio files and nothing extra in the CSP.
 // Muting is remembered on the device.
+import { GAME } from './config.js';
+
 const KEY = 'oso.sound.v1';
-const VOLUME = 0.16;
+const VOLUME = GAME.sound.volume;
 
 // Each note is [frequency in Hz, start in s, duration in s].
 const SOUNDS = {

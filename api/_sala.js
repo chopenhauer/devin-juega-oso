@@ -7,21 +7,23 @@
 // The client only sends intentions; turns, clocks, scores and winners are decided here.
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import * as Match from '../public/js/match.js';
+import { GAME, BOARD_SIZES } from '../public/js/config.js';
 
-export const SIZES = [4, 5, 6, 7, 8];
-export const ROOM_TTL = 24 * 3600;
-// A room that hasn't started a game after 30 min closes, so nobody waits for ever and Redis
+// Every number below comes from the game parameters (public/js/config.js).
+export const SIZES = BOARD_SIZES;
+export const ROOM_TTL = GAME.online.roomHours * 3600;
+// A room that hasn't started a game in time closes, so nobody waits for ever and Redis
 // drops forgotten rooms sooner.
-export const OPEN_MS = 30 * 60 * 1000;
+export const OPEN_MS = GAME.online.closeAfterMinutes * 60 * 1000;
 const OPEN = ['waiting', 'lobby'];
 const OPEN_TTL = OPEN_MS / 1000 + 3600;
-const CLOSED_TTL = 3600;
+const CLOSED_TTL = GAME.online.closedRoomHours * 3600;
 // «3, 2, 1…» on both screens before the first clock starts.
-export const COUNTDOWN_MS = 3000;
+export const COUNTDOWN_MS = GAME.online.countdownSeconds * 1000;
 const STATS_TTL = 400 * 24 * 3600;
 const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const CODE_RE = new RegExp(`^[${CODE_CHARS}]{5}$`);
-const RATE = { limit: 20, window: 600 };
+const RATE = { limit: GAME.online.roomsPerConnection, window: GAME.online.roomsWindowMinutes * 60 };
 const MOVES = {
   place: (m, p, x, now) => Match.place(m, p, x.index, x.letter, now),
   swap: (m, p, x, now) => Match.swap(m, p, x.index, now),
@@ -203,7 +205,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     if (room.status !== 'lobby')
       throw new HttpError(409, room.status === 'waiting' ? 'alone' : 'started', room);
     const expected = room.rev;
-    room.size = SIZES.includes(body.size) ? body.size : 5;
+    room.size = SIZES.includes(body.size) ? body.size : GAME.board.defaultSize;
     startGame(room, now, 0);
     await save(room, expected);
     stats.started = 1;

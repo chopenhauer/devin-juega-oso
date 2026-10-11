@@ -1,7 +1,7 @@
 {
   "name": "devin-juega-oso",
   "private": true,
-  "version": "3.3.0",
+  "version": "3.3.1",
   "license": "MIT",
   "description": "OSO, el juego de Julia: juego web estático de O y S.",
   "type": "module",
@@ -16,7 +16,8 @@
     "test:e2e": "playwright test",
     "check": "npm run lint && npm test && npm run test:e2e",
     "og": "node scripts/og-image.js",
-    "tokens": "node scripts/tokens.js"
+    "tokens": "node scripts/tokens.js",
+    "config": "node scripts/config-doc.js"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

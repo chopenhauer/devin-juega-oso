@@ -10,6 +10,8 @@ por JoseLuis y Julia.
 - Versiones, mejoras y decisiones: [`CHANGELOG.md`](CHANGELOG.md). La versión del pie sale de
   `public/js/version.js`.
 - Sistema de diseño y accesibilidad: [`docs/DESIGN.md`](docs/DESIGN.md).
+- Parámetros del juego (tiempos, extras, salas, secretos…): [`docs/CONFIG.md`](docs/CONFIG.md), generado desde
+  [`public/js/config.js`](public/js/config.js).
 
 ## Estructura
 
@@ -37,6 +39,7 @@ tests/unit/           Tests del motor, temas, marcador, telemetría y versión (
 tests/e2e/            Tests en navegador (Playwright, móvil y escritorio)
 scripts/serve.js      Servidor local con las mismas cabeceras que vercel.json
 scripts/tokens.js     Exporta tokens.css a docs/tokens.json, formato W3C (npm run tokens)
+scripts/config-doc.js Genera docs/CONFIG.md desde public/js/config.js (npm run config)
 scripts/og-image.js   Genera public/og.png desde scripts/og-card.html (npm run og)
 old-references/       Versiones históricas del juego (no se publican)
 ```
@@ -70,6 +73,7 @@ npx playwright install chromium
 npm run test:e2e       # tests en navegador
 npm run check          # todo lo anterior
 npm run tokens         # exporta los tokens a docs/tokens.json (tras cambiar tokens.css)
+npm run config         # regenera docs/CONFIG.md (tras cambiar public/js/config.js)
 ```
 
 GitHub Actions (job `check`) ejecuta lint, tests del motor y tests en navegador en cada push, en

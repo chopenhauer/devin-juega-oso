@@ -2,16 +2,17 @@
 // device after the visitor accepts analytics in the cookie banner, and never
 // carry names, avatars or anything typed by the players.
 import { VERSION } from './version.js';
+import { GAME } from './config.js';
 
 // Share of games that should end because someone runs out of time; the target
 // used later to tune the clock of each board (see docs/ROADMAP.md).
-export const TIMEOUT_TARGET = 0.5;
+export const TIMEOUT_TARGET = GAME.telemetry.timeoutTarget;
 
 const CONSENT_KEY = 'oso.consent.v1';
 const FEEDBACK_KEY = 'oso.feedback.v1';
 // When to ask «¿Os está gustando OSO?» (see feedbackMoment).
-export const FEEDBACK_COOLDOWN = 5;
-export const FEEDBACK_STREAK = 3;
+export const FEEDBACK_COOLDOWN = GAME.feedback.cooldown;
+export const FEEDBACK_STREAK = GAME.feedback.streak;
 
 export const IDEAS_EMAIL = 'hola@juegaoso.com';
 export const ideasHref = (subject = 'Ideas para OSO') =>

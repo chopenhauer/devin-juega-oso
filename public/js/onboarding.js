@@ -1,9 +1,11 @@
 // Step-by-step setup screen. The intro (welcome + rules carousel) is shown only
 // on the first visit; later visits start at "mode" with the last choices restored.
+import { GAME } from './config.js';
+
 const STORAGE_KEY = 'oso.prefs.v1';
 const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
 const NO_NEXT = new Set(['welcome', 'board']);
-const SWIPE_PX = 40;
+const SWIPE_PX = GAME.screen.swipePx;
 
 const $ = (id) => document.getElementById(id);
 const setup = $('setupScreen');
@@ -210,7 +212,7 @@ window.addEventListener('resize', equalizeHeight);
 
 // On phones the keyboard covers the lower half without resizing the page, hiding the name being
 // typed. Add that much room below and centre the field in the part still visible.
-const KEYBOARD_MIN_PX = 100;
+const KEYBOARD_MIN_PX = GAME.screen.keyboardMinPx;
 function keepNameVisible() {
   const vv = window.visualViewport;
   if (!vv) return;

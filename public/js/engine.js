@@ -1,6 +1,8 @@
 // Pure game rules: no DOM, no globals. A board is a flat array of '', 'O' or 'S'
 // with size*size cells; a sequence key is "a-b-c" (three cell indices).
 
+import { GAME } from './config.js';
+
 export const LETTERS = ['O', 'S'];
 const DIRECTIONS = [
   [0, 1],
@@ -9,7 +11,8 @@ const DIRECTIONS = [
   [1, -1],
 ];
 
-export const timeFor = (n) => Math.ceil((30 + n * n * 3) / 30) * 30;
+// Seconds on each player's clock for an n×n board (GAME.board.seconds).
+export const timeFor = (n) => GAME.board.seconds[n];
 
 const emptyCells = (board) => board.flatMap((v, i) => (v ? [] : [i]));
 
@@ -88,7 +91,7 @@ function potential(board, size, scored, letter, index, word) {
   return gainIfPlaced(board, size, scored, index, letter, word) * 100 + centrality;
 }
 
-// Easy: takes a scoring move 70% of the time, otherwise a random good-looking one.
+// Easy: often takes a scoring move (GAME.machine.easyScoreChance), otherwise a random good-looking one.
 // Hard: always takes the best scoring move, otherwise the most central cell.
 export function chooseMachineMove(board, size, scored, word, difficulty, random = Math.random) {
   const empties = emptyCells(board);
@@ -103,7 +106,7 @@ export function chooseMachineMove(board, size, scored, word, difficulty, random 
   }
 
   if (difficulty === 'easy') {
-    if (scoring.length && random() < 0.7) {
+    if (scoring.length && random() < GAME.machine.easyScoreChance) {
       scoring.sort((a, b) => b.gain - a.gain);
       const { index, letter } = scoring[0];
       return { index, letter };
@@ -116,7 +119,7 @@ export function chooseMachineMove(board, size, scored, word, difficulty, random 
       })),
     );
     candidates.sort((a, b) => b.score - a.score);
-    const pool = candidates.slice(0, Math.min(6, candidates.length));
+    const pool = candidates.slice(0, Math.min(GAME.machine.easyPool, candidates.length));
     const { index, letter } = pool[Math.floor(random() * pool.length)];
     return { index, letter };
   }

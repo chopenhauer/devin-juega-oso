@@ -1,6 +1,8 @@
 // Visual themes (skins). They only change avatars, icons, colours and background;
 // the rules never change. Every theme offers the same number of avatars so a
 // player keeps the same slot when switching.
+import { GAME } from './config.js';
+
 export const THEMES = {
   classic: {
     label: 'Clásico',
@@ -300,9 +302,9 @@ export function mapAvatars(avatars, from, to) {
 // DATES: festivals show in the 🎨 menu from a month before to a month after their day and switch on
 // by themselves on the day; seasons show while they last; the rest live under «Ver otros».
 const DAY = 86400000;
-const NEAR_DAYS = 31;
-export const MENU_MAX = 5;
-export const LIST_MAX = 10;
+const NEAR_DAYS = GAME.themes.festivalDays;
+export const MENU_MAX = GAME.themes.menuMax;
+export const LIST_MAX = GAME.themes.listMax;
 const utc = (y, m, d) => Date.UTC(y, m - 1, d);
 const dayOf = (date) => utc(date.getFullYear(), date.getMonth() + 1, date.getDate());
 export const isoDay = (date) => new Date(dayOf(date)).toISOString().slice(0, 10);

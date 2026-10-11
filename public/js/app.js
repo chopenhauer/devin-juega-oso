@@ -8,12 +8,21 @@ import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from '
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
 import { shareText, shareUrl, whatsappHref, emailHref } from './share.js';
 import * as Online from './online.js';
+import { GAME, BOARD_SIZES, configValue } from './config.js';
 const { timeFor } = Engine;
 (() => {
   const { BONUS } = Match;
-  const MACHINE_DELAY = 650;
+  const MACHINE_DELAY = GAME.machine.delayMs;
   const q = (id) => document.getElementById(id);
   q('appVersion').textContent = `v${VERSION}`;
+  // Texts and options that depend on the game parameters (config.js).
+  document.querySelectorAll('[data-config]').forEach((e) => (e.textContent = configValue(e.dataset.config)));
+  const clockText = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  q('sizeSelect').replaceChildren(
+    ...BOARD_SIZES.map(
+      (n) => new Option(`${n} × ${n} · ${clockText(timeFor(n))}`, n, false, n === GAME.board.defaultSize),
+    ),
+  );
 
   const setup = q('setupScreen'),
     game = q('gameScreen'),
@@ -35,11 +44,11 @@ const { timeFor } = Engine;
 
   let avatars = ['🐻', '🐼'],
     names = ['Jugador 1', 'Jugador 2', 'Jugador 3', 'Jugador 4'],
-    size = 5,
+    size = GAME.board.defaultSize,
     board = [],
     current = 0,
     scores = [0, 0],
-    times = [120, 120],
+    times = Array(2).fill(timeFor(GAME.board.defaultSize)),
     gameMode = 'two',
     difficulty = 'easy';
   let justPlaced = null,
@@ -327,7 +336,7 @@ const { timeFor } = Engine;
     attributeFilter: ['data-step'],
   });
   syncThemeToggle();
-  // Easter egg: more than 5 taps on 🎨 in a row (less than 0.7 s apart) shows every theme until a reload.
+  // Easter egg: GAME.themes.eggTaps quick taps on 🎨 in a row shows every theme until a reload.
   // Quick repeated taps keep the menu as it is instead of opening and closing it.
   const eggParty = q('eggParty');
   let eggTimer;
@@ -345,15 +354,19 @@ const { timeFor } = Engine;
     msg.textContent = '🥚 ¡Tienes más temas disponibles!';
     eggParty.replaceChildren(...drops, msg);
     clearTimeout(eggTimer);
-    eggTimer = setTimeout(() => eggParty.replaceChildren(), 3600);
+    eggTimer = setTimeout(() => eggParty.replaceChildren(), GAME.themes.eggPartyMs);
     play('egg');
   }
   themeToggle.addEventListener('click', (e) => {
     const now = e.timeStamp;
-    const repeat = themeTaps.length > 0 && now - themeTaps[themeTaps.length - 1] < 700;
+    const repeat = themeTaps.length > 0 && now - themeTaps[themeTaps.length - 1] < GAME.themes.eggTapGapMs;
     if (!repeat) themeTaps.length = 0;
     themeTaps.push(now);
-    if (!allThemes && themeTaps.length > 5 && now - themeTaps[0] < 3000) {
+    if (
+      !allThemes &&
+      themeTaps.length >= GAME.themes.eggTaps &&
+      now - themeTaps[0] < GAME.themes.eggWindowMs
+    ) {
       allThemes = true;
       themeTaps.length = 0;
       toggleThemeMenu(true);
@@ -405,8 +418,11 @@ const { timeFor } = Engine;
     press(q('modeSolo'), mode === 'solo');
     press(q('modeFour'), mode === 'four');
     const sizeSelect = q('sizeSelect');
-    [...sizeSelect.options].forEach((o) => (o.disabled = mode === 'four' && +o.value < 6));
-    if (mode === 'four' && +sizeSelect.value < 6) sizeSelect.value = '6';
+    [...sizeSelect.options].forEach(
+      (o) => (o.disabled = mode === 'four' && +o.value < GAME.board.fourPlayersMinSize),
+    );
+    if (mode === 'four' && +sizeSelect.value < GAME.board.fourPlayersMinSize)
+      sizeSelect.value = String(GAME.board.fourPlayersMinSize);
     if (mode === 'four') dedupeAvatars();
     const p2Config = namesIn[1].closest('.pconfig');
     const p2Avatars = p2Config.querySelector('.avatars');
@@ -441,7 +457,9 @@ const { timeFor } = Engine;
     else q('fourDialog').showModal();
   });
   // 4 players need a tablet or a computer: on phones the option stays disabled.
-  const roomForFour = matchMedia('(min-width: 700px) and (min-height: 600px)');
+  const roomForFour = matchMedia(
+    `(min-width: ${GAME.screen.fourMinWidth}px) and (min-height: ${GAME.screen.fourMinHeight}px)`,
+  );
   function syncFourAvailability() {
     const ok = roomForFour.matches;
     if (ok) q('modeFour').removeAttribute('data-locked');
@@ -607,8 +625,8 @@ const { timeFor } = Engine;
   function updateTimers() {
     timers.forEach((e, i) => {
       e.textContent = fmt(times[i]);
-      e.classList.toggle('low', times[i] <= 20 && !over);
-      if (times[i] <= 20 && times[i] > 0 && !over && !replaying && !lowWarned.has(i)) {
+      e.classList.toggle('low', times[i] <= GAME.clock.lowSeconds && !over);
+      if (times[i] <= GAME.clock.lowSeconds && times[i] > 0 && !over && !replaying && !lowWarned.has(i)) {
         lowWarned.add(i);
         play('low');
       }
@@ -1016,7 +1034,7 @@ const { timeFor } = Engine;
     setSeaTheme(true);
     q('modeFlash').classList.remove('hidden');
     updateControls();
-    await sleep(900);
+    await sleep(GAME.sos.flashMs);
     if (id !== gameId) return;
     q('modeFlash').classList.add('hidden');
 
@@ -1027,7 +1045,7 @@ const { timeFor } = Engine;
     scoresEl.forEach((e) => (e.textContent = '0'));
     render();
     msg.textContent = '🛟 Reproduciendo la partida con criterio SOS…';
-    await sleep(220);
+    await sleep(GAME.sos.pauseMs);
     if (id !== gameId) return;
 
     for (const move of savedHistory) {
@@ -1038,7 +1056,7 @@ const { timeFor } = Engine;
       const cell = boardEl.children[move.index];
       if (cell) cell.classList.add('replay-mark');
       msg.textContent = `${avatars[move.player]} ${names[move.player]} → ${board[move.index] || move.letter}`;
-      await sleep(260);
+      await sleep(GAME.sos.moveMs);
       if (id !== gameId) return;
     }
 
@@ -1271,8 +1289,7 @@ const { timeFor } = Engine;
   let pollTimeout = null;
   const ONLINE_ERRORS = {
     no_room: 'Esta sala ya no existe. Pide un enlace nuevo a quien te invitó.',
-    expired:
-      'Esta sala se cerró porque la partida no empezó en 30 min. Pide un enlace nuevo a quien te invitó.',
+    expired: `Esta sala se cerró porque la partida no empezó en ${GAME.online.closeAfterMinutes} min. Pide un enlace nuevo a quien te invitó.`,
     code: 'Ese código no es válido.',
     full: 'Esta sala ya está completa.',
     avatar_taken: 'Ese avatar ya lo tiene tu rival. Elige otro.',
@@ -1335,7 +1352,7 @@ const { timeFor } = Engine;
       onlineFail('no_room');
     } else msg.textContent = '⌛ La sala ha caducado.';
   }
-  // No game started within 30 min (api/_sala.js OPEN_MS): the host opens another room right
+  // No game started in time (GAME.online.closeAfterMinutes): the host opens another room right
   // there; the guest goes back to the start and needs a new link.
   let closedNews = null;
   function roomExpired(seat) {
@@ -1343,8 +1360,14 @@ const { timeFor } = Engine;
     track('online_expired', { role: host ? 'host' : 'guest' });
     invite = null;
     closedNews = host
-      ? { step: 'players', text: '⌛ Sala cerrada: no empezó en 30 min. Abre otra.' }
-      : { step: 'mode', text: '⌛ Sala cerrada: no empezó en 30 min. Pide otro enlace.' };
+      ? {
+          step: 'players',
+          text: `⌛ Sala cerrada: no empezó en ${GAME.online.closeAfterMinutes} min. Abre otra.`,
+        }
+      : {
+          step: 'mode',
+          text: `⌛ Sala cerrada: no empezó en ${GAME.online.closeAfterMinutes} min. Pide otro enlace.`,
+        };
     setGameMode(host ? 'online' : 'two');
     renderLobby();
     showStep(closedNews.step);

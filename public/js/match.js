@@ -2,12 +2,13 @@
 // online referee (api/sala.js). Each function changes the match in place and
 // returns what happened so the caller can animate it. Times are milliseconds
 // from any clock: performance.now() locally, Date.now() on the server.
+import { GAME } from './config.js';
 import { LETTERS, findNew, rebuildScores, replayHistory, timeFor } from './engine.js';
 
-export const BONUS = 10;
+export const BONUS = GAME.clock.bonusSeconds;
 export const POWERS = ['hint', 'last'];
 // How long the 🛟 SOS replay animation lasts; the clock does not run meanwhile.
-export const sosReplayMs = (moves) => 1120 + 260 * moves;
+export const sosReplayMs = (moves) => GAME.sos.flashMs + GAME.sos.pauseMs + GAME.sos.moveMs * moves;
 
 export function newMatch({ size, players = 2, first = 0, now = 0 }) {
   return {
@@ -19,7 +20,7 @@ export function newMatch({ size, players = 2, first = 0, now = 0 }) {
     times: Array(players).fill(timeFor(size)),
     current: first,
     history: [],
-    extras: Array.from({ length: players }, () => ({ hint: 1, last: 1, swap: 1 })),
+    extras: Array.from({ length: players }, () => ({ ...GAME.extras })),
     word: 'OSO',
     sosUsed: false,
     over: false,
@@ -133,14 +134,14 @@ export function place(m, p, index, letter, now) {
   return after(m, [{ type: 'place', player: p, index, letter, made }]);
 }
 
-// 🔄 Turns an O into an S (or back) once per game; the turn always passes.
+// 🔄 Turns an O into an S (or back) GAME.extras.swap times per game; the turn always passes.
 export function swap(m, p, index, now) {
   if (!validIndex(m, index)) return fail('index');
   if (!m.board[index]) return fail('empty');
   if (!m.extras[p]?.swap) return fail('used');
   const error = begin(m, p, now);
   if (error) return error;
-  m.extras[p].swap = 0;
+  m.extras[p].swap--;
   m.board[index] = m.board[index] === 'O' ? 'S' : 'O';
   m.history.push({ player: p, index, letter: m.board[index], power: 'swap' });
   ({ scored: m.scored, scores: m.scores } = rebuildScores(m.board, m.size, m.word, m.scored, p, m.players));
@@ -156,7 +157,7 @@ export function usePower(m, p, power, now) {
   if (power === 'last' && !m.history.some((x) => x.player !== p)) return fail('no_move');
   const error = begin(m, p, now);
   if (error) return error;
-  m.extras[p][power] = 0;
+  m.extras[p][power]--;
   m.version++;
   return { ok: true, events: [{ type: 'power', player: p, power }] };
 }

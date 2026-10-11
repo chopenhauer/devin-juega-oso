@@ -140,8 +140,8 @@
                       <span>↔ horizontal</span><span>↕ vertical</span><span>⤡ diagonal</span>
                     </div>
                     <p class="step-lead">
-                      En horizontal, vertical o diagonal. Si consigues un OSO, ganas 10 segundos y vuelves a
-                      jugar.
+                      En horizontal, vertical o diagonal. Si consigues un OSO, ganas
+                      <span data-config="clock.bonusSeconds">10</span> segundos y vuelves a jugar.
                     </p>
                   </div>
                   <div
@@ -414,15 +414,7 @@
               <div class="setup-actions">
                 <div>
                   <label class="small-label" for="sizeSelect">Tablero</label>
-                  <span class="select-wrap"
-                    ><select id="sizeSelect">
-                      <option value="4">4 × 4 · 1:30</option>
-                      <option value="5" selected>5 × 5 · 2:00</option>
-                      <option value="6">6 × 6 · 2:30</option>
-                      <option value="7">7 × 7 · 3:00</option>
-                      <option value="8">8 × 8 · 4:00</option>
-                    </select></span
-                  >
+                  <span class="select-wrap"><select id="sizeSelect"></select></span>
                 </div>
                 <button id="startGame" class="primary">¡A jugar!</button>
               </div>
@@ -689,7 +681,12 @@
                 </div>
                 <div class="help-step">
                   <span class="num">3</span>
-                  <div><b>Si formas OSO, vuelves a jugar</b> y recibes +10 segundos.</div>
+                  <div>
+                    <b>Si formas OSO, vuelves a jugar</b> y recibes +<span data-config="clock.bonusSeconds"
+                      >10</span
+                    >
+                    segundos.
+                  </div>
                 </div>
                 <div class="help-step">
                   <span class="num">4</span>

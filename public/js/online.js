@@ -1,9 +1,11 @@
 // Online 1 vs 1 client: talks to /api/sala and measures how well option A works
 // (docs/ONLINE.md). The server decides everything; this only sends intentions.
+import { GAME } from './config.js';
+
 const KEY = 'oso.online.v1';
 const ENDPOINT = '/api/sala';
 const CODE_RE = /^[ABCDEFGHJKMNPQRSTUVWXYZ2-9]{5}$/;
-export const POLL_MS = 1000;
+export const POLL_MS = GAME.online.pollMs;
 
 export function saveSeat(seat) {
   try {
@@ -109,9 +111,10 @@ export async function fetchRoom(code, rev = 0, quality = null) {
 
 // After this long without a move, the player on turn is asked «¿Sigues ahí?» and the
 // one waiting gets a word of encouragement about the game.
-export const NUDGE_MS = 20000;
+export const NUDGE_MS = GAME.online.nudgeSeconds * 1000;
 export function cheer({ mine, theirs, free, rivalName, rivalTime }) {
-  if (rivalTime <= 20) return `⏳ El reloj de ${rivalName} corre: le quedan ${Math.ceil(rivalTime)} s.`;
+  if (rivalTime <= GAME.clock.lowSeconds)
+    return `⏳ El reloj de ${rivalName} corre: le quedan ${Math.ceil(rivalTime)} s.`;
   if (mine > theirs) return `💪 Vas ${mine}–${theirs}. ¡Aguanta!`;
   if (mine < theirs) return `🔥 Aún quedan ${free} casillas. ¡Hay remontada!`;
   return mine ? `🤝 Empate a ${mine}. ¡La próxima es tuya!` : '🤞 Todo por decidir. ¡Tú puedes!';

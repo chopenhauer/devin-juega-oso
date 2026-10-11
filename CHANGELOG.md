@@ -17,6 +17,24 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.3.1] - 2026-10-11
+
+**Todos los parámetros del juego en un solo fichero**
+
+Idea de JoseLuis: como director del juego, tener a mano todo lo que se puede ajustar.
+
+- Nuevo [`public/js/config.js`](public/js/config.js): tiempos de cada tablero, segundos extra por
+  OSO, usos de los extras, máquina, salas en línea (cierre a los 30 min, cuenta atrás, «¿Sigues
+  ahí?»), secretos, easter egg del 🎨, encuesta, sonido… Cada valor viene explicado.
+- Lo usan a la vez el juego y el servidor de salas, y también los textos que mencionan un valor: las
+  reglas (+10 segundos), el selector de tableros (que se genera desde la tabla de tiempos), los avisos
+  de sala cerrada y el secreto del 🎨 («seis veces»).
+- Decidido: el tiempo de cada tablero pasa de una fórmula a una tabla (mismos valores: 1:30, 2:00,
+  2:30, 3:00 y 4:00), que se entiende y se ajusta mejor.
+- [`docs/CONFIG.md`](docs/CONFIG.md) es la tabla del director con cada parámetro, su valor y qué hace.
+  Se genera con `npm run config` y un test avisa si se queda vieja o si un valor no tiene sentido.
+- El juego no cambia: mismos valores que en la 3.3.0.
+
 ## [3.3.0] - 2026-10-11
 
 **Secretos: un premio por volver a jugar ([9c975dd](https://github.com/chopenhauer/devin-juega-oso/commit/9c975dd4adf3618b7307f66e1b587b2310b20bc2))**

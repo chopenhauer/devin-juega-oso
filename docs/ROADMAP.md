@@ -128,8 +128,8 @@ preguntan una a una al empezar cada fase.
    - Tensión con poco tiempo (T4.3): con 20 s o menos el fondo se tiñe poco a poco.
    - Hall of fame local: récords y rachas en el dispositivo, «¡Nuevo récord!» al acabar.
 5. **2.8.0 · Ajustar con datos** (cuando haya unas 100 partidas por tablero)
-   - Informe en GA4 y script que propone el tiempo de cada tablero; pasar de la fórmula a una
-     tabla de tiempos.
+   - Informe en GA4 y script que propone el tiempo de cada tablero. La tabla de tiempos ya está en
+     [`config.js`](../public/js/config.js) desde la 3.3.1 (ver [`CONFIG.md`](CONFIG.md)).
    - Feedback con texto libre por una función de Vercel, con protección contra spam.
 6. ~~**3.0.0 · Jugar en línea 1 contra 1**~~ hecho: invitar a un amigo con un enlace o un código.
    Decisión, telemetría y umbrales para revisarla en [`ONLINE.md`](ONLINE.md).

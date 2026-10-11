@@ -2,14 +2,19 @@
 // Every GAMES_PER_SECRET finished games (any mode, any result) one more is due, at most one a day.
 // They are told in the order of SECRETS, so new ones go at the end. `how` says how to trigger it,
 // never what happens; `hint` is the short reminder shown later under «Ya sabías…».
+import { GAME } from './config.js';
+
+const WORDS = ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
+const times = (n) => `${WORDS[n] ?? n} ${n === 1 ? 'vez' : 'veces'}`;
+
 export const SECRETS = [
   {
     id: 'temas',
     hint: 'El 🎨 del inicio esconde algo',
-    how: 'En el inicio, pulsa el 🎨 seis veces seguidas, muy rápido… y mira qué pasa.',
+    how: `En el inicio, pulsa el 🎨 ${times(GAME.themes.eggTaps)} seguidas, muy rápido… y mira qué pasa.`,
   },
 ];
-export const GAMES_PER_SECRET = 2;
+export const GAMES_PER_SECRET = GAME.secrets.gamesPerSecret;
 
 const KEY = 'oso.secretos.v1';
 // Games finished before secrets existed, counted by the feedback question.
