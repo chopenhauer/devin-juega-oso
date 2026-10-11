@@ -36,6 +36,9 @@ tiempo en todos los tableros.
   por tiempo (2 de 31 en 28 días) y el objetivo es el 50 %. Lo revisaremos con `game_end`.
 - El umbral de la tensión es el mismo `clock.lowSeconds` (20 s) del aviso del reloj, para que todo
   empiece a la vez.
+- El fondo sigue el reloj de quien tiene el turno: si pasa a alguien con más tiempo, se apaga.
+- En escritorio se nota menos (el panel tapa casi todo el fondo). Queda como posible mejora teñir
+  también el borde del panel.
 
 ## [3.5.0] - 2026-10-11
 
@@ -81,6 +84,17 @@ Idea de JoseLuis: un segundo easter egg con los extras, que también estrena «Y
 - Es el 2.º secreto de la lista: se cuenta como los demás (cada 2 partidas, uno al día) y mide
   `secret_found` con `secret: tienda`; cada compra manda `extra_bought` con `extra`.
 - Precios y número de toques en `config.js` (apartado «Tienda secreta», ver `docs/CONFIG.md`).
+
+**Decisiones**
+
+- En dos tiempos (JoseLuis): comprar solo recarga el extra; se usa cuando quieras con otro toque,
+  también el 🔄.
+- Los 3 toques solo abren la tienda en un extra ya gastado y en tu turno; 👁️ «Última jugada» no se
+  vende.
+- Después de pagar tiene que quedarte tiempo: con el precio o menos, la tienda lo explica y no
+  enseña «Comprar».
+- El reloj sigue corriendo con la tienda abierta: pensar también cuesta tiempo.
+- Los extras gastados siguen atenuados, para que la tienda siga siendo un secreto.
 
 ## [3.3.1] - 2026-10-11
 

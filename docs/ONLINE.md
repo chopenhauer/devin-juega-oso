@@ -48,8 +48,8 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   el anfitrión, se cierra. Si en 30 min (`OPEN_MS`) no empieza ninguna partida, la sala se cierra como
   `expired` (idea de JoseLuis, 11-oct): el anfitrión ve «⌛ Sala cerrada…» en el toast y «Abrir sala»
   otra vez en la misma pantalla, y el invitado vuelve al inicio con el aviso. El botón 🌐 arriba a la izquierda presenta el modo. Ronda 2 de feedback: los
-  avisos del lobby salen en un toast arriba; la tarjeta del rival enseña su avatar en la rejilla (solo
-  lectura); «¡A jugar!» se ve desactivado hasta que el rival entra; al empezar (y en cada revancha)
+  avisos del lobby salen en un toast arriba; la tarjeta del rival enseña su avatar (solo
+  lectura; desde la 3.5.0 sin la rejilla, y las tarjetas dicen «Tú», «Te invita» o «Tu rival»); «¡A jugar!» se ve desactivado hasta que el rival entra; al empezar (y en cada revancha)
   hay una cuenta atrás 3-2-1 en los dos móviles: el servidor arranca el primer reloj `COUNTDOWN_MS`
   (3 s) más tarde y rechaza jugadas antes (`countdown`).
 - **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El
@@ -70,6 +70,11 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   con un botón «¡Sigo aquí!» (avisa al rival: «sigue ahí, está pensando») y quien espera recibe un
   mensaje de ánimo según el marcador o el reloj del rival. El reloj no se para. Evento
   `online_nudge` (`role`, `answered`, `answer_ms`) para ajustar los 20 s.
+- **Cuando llega el rival** (3.5.0): quien abrió la sala oye `join`, el título de la pestaña pasa a
+  «✅ … ya está aquí · OSO» y la pantalla pasa sola a elegir el tablero.
+- **Avisos del rival** (3.5.0): cada consulta compara el estado nuevo con el anterior y avisa de lo
+  que ha hecho el otro: 💡 pista, 👁️ última jugada, 🔄 cambio de letra, 🛟 SOS y 🛒 compras de la
+  tienda secreta (decidido: así el rival descubre el secreto, boca-oreja).
 - **Revancha:** en la misma sala, alternando quién empieza.
 - **Privacidad:** sin cuentas. Solo se guardan apodo (máx. 16 caracteres), avatar y jugadas, y la
   sala se borra sola: a la hora y media si no llega a empezar y a las 24 h si hubo partida. Límite de salas por IP para evitar abusos (la IP no se guarda).

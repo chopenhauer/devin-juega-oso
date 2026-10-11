@@ -118,8 +118,9 @@ que cubre el Modo Mercado en su versión sencilla.
 
 **Por qué este orden:** la 3.5.0 ya aclara la invitación, avisa al anfitrión cuando llega el rival
 y cuenta en el servidor cada paso del embudo. Con eso, y las reacciones con emoji (1), la partida en
-línea se siente acompañada. El secreto n.º 3 (2) es la mejor tarea para Julia. Los tiempos y la
-revisión del modo en línea esperan a tener datos suficientes.
+línea se siente acompañada. El secreto n.º 3 (2) es la mejor tarea para Julia. Los tiempos ya
+bajaron 30 s en la 3.6.0; el ajuste fino de cada tablero y la revisión del modo en línea esperan a
+tener datos suficientes.
 
 ## Plan por fases
 
@@ -154,7 +155,7 @@ preguntan una a una al empezar cada fase.
    - Informe en GA4 y script que propone el tiempo de cada tablero. La tabla de tiempos ya está en
      [`config.js`](../public/js/config.js) desde la 3.3.1 (ver [`CONFIG.md`](CONFIG.md)).
    - Feedback con texto libre por una función de Vercel, con protección contra spam.
-7. ~~**3.0.0 · Jugar en línea 1 contra 1**~~ hecho: invitar a un amigo con un enlace o un código.
+7. ~~**3.0.0 · Jugar en línea 1 contra 1**~~ hecho: invitar a tu rival con un enlace o un código.
    Decisión, telemetría y umbrales para revisarla en [`ONLINE.md`](ONLINE.md).
 8. **4.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
 
@@ -167,15 +168,15 @@ reloj con la pestaña dormida. Los regalos desbloqueables siguen como idea sin p
 
 ## Roadmap F4 (pendiente)
 
-| Tarea | Idea                            | Esfuerzo   | Notas                                                                                                                        |
-| ----- | ------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| T4.2  | Diseño por dispositivo          | Medio      | Hecho: fase 1 (1 y 2 jugadores) y fase 2 (4 jugadores en tablet y ordenador, versión 2.0.0).                                 |
-| T4.3  | Tensión con poco tiempo         | Bajo       | Con ≤ 20 s el fondo se tiñe poco a poco. Nunca solo color, ≤ 3 parpadeos/s, contraste AA, estático con «reducir movimiento». |
-| T4.4  | Vibración                       | Bajo       | Al colocar, puntuar, poco tiempo y ganar. Solo Android (iOS no soporta la Vibration API). Con ajuste para desactivarla.      |
-| T4.5  | Oso bailando al ganar           | Medio-alto | Necesita arte nuevo (SVG animado o Lottie, no GIF). Fotograma fijo con «reducir movimiento».                                 |
-| T4.6  | Modo Mercado: reglas            | Alto       | Comprar extras con tiempo del reloj (≈ 15 % pista, 10 % jugada rival, 30 % cambio O↔S). Modo opcional; la máquina no compra. |
-| T4.7  | Modo Mercado: interfaz          | Medio      | Precio en cada extra, estado «comprable» y confirmación para no comprar sin querer.                                          |
-| T4.8  | Prueba completa de cierre de F4 | Medio      | E2E de todo lo anterior.                                                                                                     |
+| Tarea | Idea                            | Esfuerzo   | Notas                                                                                                                          |
+| ----- | ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| T4.2  | Diseño por dispositivo          | Medio      | Hecho: fase 1 (1 y 2 jugadores) y fase 2 (4 jugadores en tablet y ordenador, versión 2.0.0).                                   |
+| T4.3  | Tensión con poco tiempo         | Bajo       | Hecho en 3.6.0: con ≤ 20 s el fondo se tiñe poco a poco y late 2 veces/s, con reloj y pitido; quieto con «reducir movimiento». |
+| T4.4  | Vibración                       | Bajo       | Al colocar, puntuar, poco tiempo y ganar. Solo Android (iOS no soporta la Vibration API). Con ajuste para desactivarla.        |
+| T4.5  | Oso bailando al ganar           | Medio-alto | Necesita arte nuevo (SVG animado o Lottie, no GIF). Fotograma fijo con «reducir movimiento».                                   |
+| T4.6  | Modo Mercado: reglas            | Alto       | Comprar extras con tiempo del reloj (≈ 15 % pista, 10 % jugada rival, 30 % cambio O↔S). Modo opcional; la máquina no compra.   |
+| T4.7  | Modo Mercado: interfaz          | Medio      | Precio en cada extra, estado «comprable» y confirmación para no comprar sin querer.                                            |
+| T4.8  | Prueba completa de cierre de F4 | Medio      | E2E de todo lo anterior.                                                                                                       |
 
 **T4.6 y T4.7, hechos en versión sencilla en 3.4.0 (tienda secreta):** precios fijos en segundos
 (💡 10 s, 🔄 10 s, 🛟 30 s), sin límite mientras quede tiempo, en todos los modos; la máquina no
@@ -377,8 +378,9 @@ Ajustar el reloj de cada tablero con lo que pasa en partidas reales, no con una 
   - un script en el repo (`scripts/`) que lea los datos (exportación o GA4 Data API) y proponga
     el tiempo de cada tablero para cumplir el objetivo. Con un objetivo del 50 %, la propuesta es
     aproximadamente la mediana del tiempo que necesita el jugador más lento para acabar.
-- **Ajuste (paso 3):** pasar de la fórmula a una tabla de tiempos por tablero (y por modo, si
-  hace falta). Solo se ajusta un tablero cuando tiene suficientes partidas (por ejemplo 100), y
+- **Ajuste (paso 3):** ~~pasar de la fórmula a una tabla~~ hecho en 3.3.1 (`board.seconds`). En la
+  3.6.0 JoseLuis decidió quitar ya 30 s a todos sin esperar a los datos, para que la tensión con poco
+  tiempo se vea. A partir de aquí, ajustar por tablero (y por modo, si hace falta). Solo se ajusta un tablero cuando tiene suficientes partidas (por ejemplo 100), y
   cada ajuste se publica como corrección con su entrada en el changelog.
 - **Decisiones abiertas:** si el objetivo es el mismo para todos los tableros y modos (1, 2 y 4
   jugadores); si cuentan las partidas contra la máquina; y cada cuánto se revisa.
