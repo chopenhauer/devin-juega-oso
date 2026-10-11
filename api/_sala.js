@@ -3,12 +3,19 @@
 //   GET  ?stats=1            this month's anonymous counters
 //   POST {action: create | join | profile | start | move | rematch | leave | ping, ...}
 // A room goes waiting (host alone) → lobby (both in, host picks the board) → playing ⇄ over.
+// If no game starts within OPEN_MS it closes as `expired`.
 // The client only sends intentions; turns, clocks, scores and winners are decided here.
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import * as Match from '../public/js/match.js';
 
 export const SIZES = [4, 5, 6, 7, 8];
 export const ROOM_TTL = 24 * 3600;
+// A room that hasn't started a game after 30 min closes, so nobody waits for ever and Redis
+// drops forgotten rooms sooner.
+export const OPEN_MS = 30 * 60 * 1000;
+const OPEN = ['waiting', 'lobby'];
+const OPEN_TTL = OPEN_MS / 1000 + 3600;
+const CLOSED_TTL = 3600;
 // «3, 2, 1…» on both screens before the first clock starts.
 export const COUNTDOWN_MS = 3000;
 const STATS_TTL = 400 * 24 * 3600;
@@ -46,6 +53,7 @@ export function publicView(room, now) {
     code: room.code,
     rev: room.rev,
     status: room.status,
+    closed: room.closed,
     size: room.size,
     // Lets the client measure how long a change took to reach it (sync latency).
     now,
@@ -68,17 +76,30 @@ export function publicView(room, now) {
 }
 
 export function createHandler(store, { now: clock = Date.now } = {}) {
-  async function load(code) {
+  // Whoever asks first after OPEN_MS closes the room; polls still see it, actions get `expired`.
+  async function load(code, now, stats, read = false) {
     if (!CODE_RE.test(code ?? '')) throw new HttpError(400, 'code');
-    const room = await store.get(`sala:${code}`);
+    let room = await store.get(`sala:${code}`);
     if (!room) throw new HttpError(404, 'no_room');
+    if (OPEN.includes(room.status) && now - room.created >= OPEN_MS) {
+      Object.assign(room, { status: 'closed', closed: 'expired' });
+      room = await save(room, room.rev).then(
+        (saved) => ((stats.expired = 1), saved),
+        (e) => {
+          if (e.code !== 'stale') throw e;
+          return load(code, now, stats, read);
+        },
+      );
+    }
+    if (room.closed === 'expired' && !read) throw new HttpError(410, 'expired', room);
     return room;
   }
 
   async function save(room, expected) {
     room.rev = expected + 1;
     room.updated = clock();
-    if (!(await store.cas(`sala:${room.code}`, expected, room, ROOM_TTL))) throw new HttpError(409, 'stale');
+    const ttl = OPEN.includes(room.status) ? OPEN_TTL : room.status === 'closed' ? CLOSED_TTL : ROOM_TTL;
+    if (!(await store.cas(`sala:${room.code}`, expected, room, ttl))) throw new HttpError(409, 'stale');
     return room;
   }
 
@@ -146,7 +167,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   }
 
   async function join(body, now, stats) {
-    const room = await load(body.code);
+    const room = await load(body.code, now, stats);
     if (room.status !== 'waiting') throw new HttpError(409, 'full');
     const avatar = cleanAvatar(body.avatar, '🐼');
     if (avatar === room.seats[0].avatar) throw new HttpError(409, 'avatar_taken', room);
@@ -160,8 +181,8 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   }
 
   // Before the game both can still change their name and avatar.
-  async function profile(body) {
-    const room = await load(body.code);
+  async function profile(body, now, stats) {
+    const room = await load(body.code, now, stats);
     const seat = seatOf(room, body.token);
     if (room.status !== 'waiting' && room.status !== 'lobby') throw new HttpError(409, 'started', room);
     const s = room.seats[seat];
@@ -176,7 +197,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
 
   // The host picks the board and starts once the friend is in.
   async function start(body, now, stats) {
-    const room = await load(body.code);
+    const room = await load(body.code, now, stats);
     const seat = seatOf(room, body.token);
     if (seat !== 0) throw new HttpError(403, 'host');
     if (room.status !== 'lobby')
@@ -190,7 +211,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   }
 
   async function move(body, now, stats) {
-    const room = await load(body.code);
+    const room = await load(body.code, now, stats);
     const seat = seatOf(room, body.token);
     const expected = room.rev;
     if (body.rev !== expected) throw new HttpError(409, 'stale', room);
@@ -213,7 +234,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   }
 
   async function rematch(body, now, stats) {
-    const room = await load(body.code);
+    const room = await load(body.code, now, stats);
     const seat = seatOf(room, body.token);
     if (room.status !== 'over') throw new HttpError(409, 'not_over', room);
     if (room.seats.some((s) => s.left)) throw new HttpError(409, 'left', room);
@@ -229,7 +250,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
   }
 
   async function leave(body, now, stats) {
-    const room = await load(body.code);
+    const room = await load(body.code, now, stats);
     const seat = seatOf(room, body.token);
     const expected = room.rev;
     if (room.status === 'waiting' || (room.status === 'lobby' && seat === 0)) room.status = 'closed';
@@ -249,7 +270,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
 
   // «¡Sigo aquí!»: the player on turn answers the idle nudge; the rival sees it.
   async function ping(body, now, stats) {
-    const room = await load(body.code);
+    const room = await load(body.code, now, stats);
     const seat = seatOf(room, body.token);
     const expected = room.rev;
     room.seats[seat].here = now;
@@ -273,7 +294,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
         if (url.searchParams.get('stats')) {
           body = { month: month(now).slice(6), counters: await store.counters(month(now)) };
         } else {
-          let room = await load(url.searchParams.get('code'));
+          let room = await load(url.searchParams.get('code'), now, stats, true);
           if (settle(room, now, stats)) {
             const expected = room.rev;
             room = await save(room, expected).catch(() => load(room.code));

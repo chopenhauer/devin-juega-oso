@@ -156,6 +156,47 @@ test('rematch starts a new game when both accept', async ({ browser }) => {
   expect(errors).toEqual([]);
 });
 
+// The server closes the room after 30 min without a game; the next poll answers «closed».
+const expireRoom = (page) =>
+  page.route(/\/api\/sala\?code=/, async (route) => {
+    const response = await route.fetch();
+    const body = await response.json();
+    await route.fulfill({
+      response,
+      json: { ...body, same: undefined, rev: body.rev + 1, status: 'closed', closed: 'expired' },
+    });
+  });
+
+test('a room with no game after 30 min closes; the host opens another, the guest is told', async ({
+  browser,
+}) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  const code = await createRoom(host);
+  await guest.goto(`/?sala=${code}`);
+  await guest.fill('#nickname2', 'Leo');
+  await guest.click('#stepNext');
+  await expect(guest.locator('#onlineToast')).toContainText('está eligiendo el tablero');
+
+  await expireRoom(guest);
+  await expect(guest.locator('#onlineToast')).toHaveText(
+    '⌛ Sala cerrada: no empezó en 30 min. Pide otro enlace.',
+  );
+  await expect(guest.locator('#modeTwo')).toBeVisible();
+  await expect(guest.locator('#shareToggle')).toBeHidden();
+  await expireRoom(host);
+  await expect(host.locator('#onlineToast')).toHaveText('⌛ Sala cerrada: no empezó en 30 min. Abre otra.');
+  await expect(host.locator('#openRoom')).toBeVisible();
+  await expect(host.locator('#roomShare')).toBeHidden();
+  await host.unroute(/\/api\/sala\?code=/);
+
+  await host.click('#openRoom');
+  await expect(host.locator('#onlineCode')).toHaveText(/^[A-Z2-9]{5}$/);
+  await expect(host.locator('#onlineCode')).not.toHaveText(code);
+  await expect(host.locator('#onlineToast')).toContainText('Esperando a tu rival');
+  expect(errors).toEqual([]);
+});
+
 test('an unknown room shows a clear message', async ({ browser }) => {
   const errors = [];
   const guest = await player(browser, errors);

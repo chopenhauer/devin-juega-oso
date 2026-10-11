@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { COUNTDOWN_MS, createHandler, ROOM_TTL } from '../../api/_sala.js';
+import { COUNTDOWN_MS, createHandler, OPEN_MS, ROOM_TTL } from '../../api/_sala.js';
 import { memoryStore } from '../../api/_store.js';
 import { timeFor } from '../../public/js/engine.js';
 
@@ -269,4 +269,35 @@ test('in the lobby both can change name and avatar; a guest who leaves frees the
   const again = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   assert.equal(again.status, 'lobby');
   assert.equal((await s.call({ action: 'leave', code: host.code, token: host.token })).status, 'closed');
+});
+
+test('a room with no game after 30 min closes: polls see why, actions get «expired»', async () => {
+  const s = setup();
+  const host = await s.call({ action: 'create', name: 'Ana' });
+  s.clock.t += OPEN_MS - 1;
+  assert.equal((await s.get(`code=${host.code}`)).status, 'waiting');
+  const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
+  assert.equal(guest.status, 'lobby');
+  s.clock.t += 1;
+  const view = await s.get(`code=${host.code}&rev=${guest.rev}`);
+  assert.equal(view.status, 'closed');
+  assert.equal(view.closed, 'expired');
+  const start = await s.call({ action: 'start', code: host.code, token: host.token, size: 4 });
+  assert.equal(start.http, 410);
+  assert.equal(start.error, 'expired');
+  assert.equal(start.room.status, 'closed');
+  const late = await s.call({ action: 'join', code: host.code, name: 'Eva', avatar: '🦊' });
+  assert.equal(late.error, 'expired');
+  assert.equal((await s.get(`code=${host.code}`)).closed, 'expired');
+  assert.equal((await s.get('stats=1')).counters.expired, 1);
+});
+
+test('a game started within 30 min is not closed later', async () => {
+  const s = setup();
+  const { host, code } = await startedRoom(s);
+  s.clock.t += OPEN_MS;
+  const view = await s.get(`code=${code}`);
+  assert.notEqual(view.status, 'closed');
+  assert.equal(view.closed, undefined);
+  assert.equal((await s.call({ action: 'ping', code, token: host.token })).http, 200);
 });

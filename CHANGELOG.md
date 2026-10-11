@@ -17,6 +17,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.2.0] - 2026-10-11
+
+**Las salas sin empezar se cierran a los 30 min**
+
+- Si pasan 30 minutos desde que se abre una sala y la partida no ha empezado, el servidor la
+  cierra. El anfitrión ve «⌛ Sala cerrada: no empezó en 30 min. Abre otra.» y tiene «Abrir sala»
+  en la misma pantalla para crear una nueva con otro código. Quien estaba invitado vuelve al inicio
+  con «… Pide otro enlace.», y si abre el enlace viejo se le explica por qué ya no vale.
+- Una sala que no llega a empezar se borra de Redis a la hora y media en vez de a las 24 h. Una
+  partida empezada no se cierra por este límite.
+- Medición: contador `expired` en el servidor y evento `online_expired` (`role`: `host` o `guest`).
+
+**Decisiones**
+
+- Idea de JoseLuis: así nadie se queda esperando para siempre y no se guardan salas olvidadas. La
+  cuenta empieza al abrir la sala, no cuando entra el rival.
+
 ## [3.1.0] - 2026-10-11
 
 **Invitaciones en línea más claras** ([a5c9bbd](https://github.com/chopenhauer/devin-juega-oso/commit/a5c9bbdaf0669ecf9c33fdde209844630c79d13b))

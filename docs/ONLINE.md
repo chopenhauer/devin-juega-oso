@@ -45,7 +45,9 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   jugar!» (el invitado ve «… está eligiendo el tablero…»). Estados de la sala en el servidor:
   `waiting` (anfitrión solo) → `lobby` (los dos; `profile` cambia nombre/avatar) → `start` del
   anfitrión → `playing` ⇄ `over`. Si el invitado sale del lobby, la sala vuelve a `waiting`; si sale
-  el anfitrión, se cierra. El botón 🌐 arriba a la izquierda presenta el modo. Ronda 2 de feedback: los
+  el anfitrión, se cierra. Si en 30 min (`OPEN_MS`) no empieza ninguna partida, la sala se cierra como
+  `expired` (idea de JoseLuis, 11-oct): el anfitrión ve «⌛ Sala cerrada…» en el toast y «Abrir sala»
+  otra vez en la misma pantalla, y el invitado vuelve al inicio con el aviso. El botón 🌐 arriba a la izquierda presenta el modo. Ronda 2 de feedback: los
   avisos del lobby salen en un toast arriba; la tarjeta del rival enseña su avatar en la rejilla (solo
   lectura); «¡A jugar!» se ve desactivado hasta que el rival entra; al empezar (y en cada revancha)
   hay una cuenta atrás 3-2-1 en los dos móviles: el servidor arranca el primer reloj `COUNTDOWN_MS`
@@ -70,7 +72,7 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   `online_nudge` (`role`, `answered`, `answer_ms`) para ajustar los 20 s.
 - **Revancha:** en la misma sala, alternando quién empieza.
 - **Privacidad:** sin cuentas. Solo se guardan apodo (máx. 16 caracteres), avatar y jugadas, y la
-  sala se borra sola a las 24 h. Límite de salas por IP para evitar abusos (la IP no se guarda).
+  sala se borra sola: a la hora y media si no llega a empezar y a las 24 h si hubo partida. Límite de salas por IP para evitar abusos (la IP no se guarda).
 
 ## Cómo sabremos si funciona
 

@@ -3403,6 +3403,11 @@ body.legal-page {
 body:has(#gameScreen:not(.hidden)) .online-toggle {
   display: none;
 }
+/* On the first steps (the guest's «Sala cerrada»), the notice takes the place of the top buttons. */
+body:has(.online-toast:not(.hidden))
+  :is(.theme-toggle, .sound-toggle, .share-toggle, .online-toggle, .theme-menu) {
+  visibility: hidden;
+}
 .online-seat,
 .online-invite {
   display: none;

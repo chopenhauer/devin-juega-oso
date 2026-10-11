@@ -1214,6 +1214,8 @@ const { timeFor } = Engine;
   let pollTimeout = null;
   const ONLINE_ERRORS = {
     no_room: 'Esta sala ya no existe. Pide un enlace nuevo a quien te invitó.',
+    expired:
+      'Esta sala se cerró porque la partida no empezó en 30 min. Pide un enlace nuevo a quien te invitó.',
     code: 'Ese código no es válido.',
     full: 'Esta sala ya está completa.',
     avatar_taken: 'Ese avatar ya lo tiene tu rival. Elige otro.',
@@ -1265,14 +1267,30 @@ const { timeFor } = Engine;
     const waiting = over || remote(current) || !setup.classList.contains('hidden');
     schedulePoll(waiting ? Online.POLL_MS : Online.POLL_MS * 2);
   }
-  function roomGone() {
+  function roomGone(reason) {
     clearTimeout(pollTimeout);
     Online.clearSeat();
+    const seat = online?.seat;
     online = null;
+    if (reason === 'expired' && game.classList.contains('hidden')) return roomExpired(seat);
     if (game.classList.contains('hidden')) {
       renderLobby();
       onlineFail('no_room');
     } else msg.textContent = '⌛ La sala ha caducado.';
+  }
+  // No game started within 30 min (api/_sala.js OPEN_MS): the host opens another room right
+  // there; the guest goes back to the start and needs a new link.
+  let closedNews = null;
+  function roomExpired(seat) {
+    const host = seat === 0;
+    track('online_expired', { role: host ? 'host' : 'guest' });
+    invite = null;
+    closedNews = host
+      ? { step: 'players', text: '⌛ Sala cerrada: no empezó en 30 min. Abre otra.' }
+      : { step: 'mode', text: '⌛ Sala cerrada: no empezó en 30 min. Pide otro enlace.' };
+    setGameMode(host ? 'online' : 'two');
+    renderLobby();
+    showStep(closedNews.step);
   }
 
   // Shows the server state: board, scores, clocks, names and the end of the game.
@@ -1281,7 +1299,7 @@ const { timeFor } = Engine;
     o.rev = v.rev;
     o.seats = v.seats;
     o.status = v.status;
-    if (v.status === 'closed') return roomGone();
+    if (v.status === 'closed') return roomGone(v.closed);
     if (!v.match) return renderLobby();
     if (v.game !== o.game || game.classList.contains('hidden')) return startOnlineGame(v);
     const wasOver = over,
@@ -1573,7 +1591,15 @@ const { timeFor } = Engine;
           : online
             ? '⏳ Esperando a tu rival…'
             : 'Vuelve atrás y abre la sala para invitar a tu rival.';
-    toast(setupStep === 'players' ? seatNews : setupStep === 'board' ? boardNews : '');
+    toast(
+      closedNews?.step === setupStep
+        ? closedNews.text
+        : setupStep === 'players'
+          ? seatNews
+          : setupStep === 'board'
+            ? boardNews
+            : '',
+    );
   }
   function toast(text) {
     const el = q('onlineToast');
@@ -1590,6 +1616,7 @@ const { timeFor } = Engine;
   let setupStep = null;
   document.addEventListener('oso:step', (e) => {
     setupStep = e.detail;
+    if (closedNews?.step !== setupStep) closedNews = null;
     renderLobby();
   });
 
@@ -1604,6 +1631,7 @@ const { timeFor } = Engine;
     });
     btn.disabled = false;
     if (!r.ok) return onlineFail(r.error);
+    closedNews = null;
     connect(r, 0);
     track('online_create');
     renderLobby();
@@ -1632,6 +1660,7 @@ const { timeFor } = Engine;
     else {
       const r = await Online.send({ action: 'profile', code: online.code, token: online.token, ...body });
       if (r.error === 'avatar_taken') return toast(onlineError(r.error));
+      if (r.error === 'expired') return applyView(r.room);
       if (r.ok && online) applyView(r);
     }
     renderLobby();
@@ -1666,7 +1695,13 @@ const { timeFor } = Engine;
   async function offerJoin(code) {
     window.history.replaceState(null, '', Online.urlWithoutRoom());
     const room = await Online.fetchRoom(code);
-    const error = !room.ok ? room.error : room.status !== 'waiting' ? 'full' : null;
+    const error = !room.ok
+      ? room.error
+      : room.closed === 'expired'
+        ? 'expired'
+        : room.status !== 'waiting'
+          ? 'full'
+          : null;
     if (error) {
       track('online_join_fail', { reason: error });
       return onlineFail(error);
@@ -1724,6 +1759,7 @@ const { timeFor } = Engine;
         return;
       }
       Online.clearSeat();
+      if (v.closed === 'expired' && !code) return roomExpired(saved.seat);
     }
     if (code) offerJoin(code);
   }
