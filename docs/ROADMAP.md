@@ -67,40 +67,59 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   telemetría para revisar la decisión ([`ONLINE.md`](ONLINE.md)).
 - Repo ordenado: `main` protegida (ruleset: solo con el CI `check` en verde, sin force push ni
   borrado), licencia MIT y ramas antiguas borradas.
+- En línea más pulido (3.0.1–3.2.1): analítica solo en producción, invitaciones más claras, la sala
+  sin empezar se cierra a los 30 min con aviso y «Abrir otra», y pantalla final ordenada (botones
+  del mismo ancho y 👑 en su propia columna del marcador).
+- Secretos (3.3.0): cada 2 partidas, máximo uno al día, un aviso «🎁 ¡Tienes un premio!» cuenta
+  cómo activar una función escondida ([`secrets.js`](../public/js/secrets.js)).
+- Configuración del director del juego (3.3.1): todos los parámetros en
+  [`config.js`](../public/js/config.js), con la tabla [`CONFIG.md`](CONFIG.md) generada.
+- Tienda secreta (3.4.0, secreto n.º 2): 3 toques en un 💡, 🔄 o 🛟 gastado lo venden por segundos
+  del reloj (10 s, 10 s y 30 s), en todos los modos. Es una versión sencilla del Modo Mercado (T4.6).
 
-## Priorización (revisada tras la 2.2.1)
+## Priorización (revisada tras la 3.4.0)
 
 Solo lo pendiente, por valor y esfuerzo (estimados por Devin). Se revisa con cada versión y cuando
-lleguen opiniones de los jugadores. Ya hechos de la priorización anterior: temas por fechas y de
-temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
+lleguen opiniones de los jugadores. Julia decide el orden final.
 
-| #   | Idea                                                                                  | Valor      | Esfuerzo   | Fase     |
-| --- | ------------------------------------------------------------------------------------- | ---------- | ---------- | -------- |
-| 1   | ~~Política de privacidad~~ hecho en 2.4.0                                             | Alto       | Bajo       | Hecho    |
-| 2   | ~~Telemetría de partidas (`game_end`, paso 1 de la épica de tiempos)~~ hecho en 2.4.0 | Alto       | Bajo       | Hecho    |
-| 3   | ~~Feedback rápido 👍/👎 e «💡 Ideas»~~ hecho en 2.4.0                                 | Alto       | Bajo       | Hecho    |
-| 4   | ~~Reglas animadas (FigJam, segunda parte)~~ hecho en 2.3.0                            | Alto       | Medio      | Hecho    |
-| 5   | ~~Compartir por WhatsApp y email, con tarjeta del enlace~~ hecho en 2.6.0             | Alto       | Bajo       | Hecho    |
-| 6   | Tensión con poco tiempo (T4.3)                                                        | Medio-alto | Bajo       | 4        |
-| 7   | Hall of fame local                                                                    | Alto       | Medio      | 4        |
-| 8   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                    | Alto       | Medio      | 5        |
-| 9   | Feedback con texto libre (función de Vercel)                                          | Alto       | Medio      | 5        |
-| 10  | Equipos 2 contra 2                                                                    | Medio      | Medio      | 6        |
-| 11  | Tablero con teclado y OSOs sin depender del color                                     | Medio      | Medio      | Siempre  |
-| 12  | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)     | Bajo       | Bajo       | Siempre  |
-| 13  | Oso bailando al ganar (T4.5)                                                          | Medio      | Medio-alto | Reserva  |
-| 14  | Máquina «Experto» (B06)                                                               | Medio      | Medio      | Reserva  |
-| 15  | Modo Mercado / tiempo por ayudas (T4.6–T4.7)                                          | Medio      | Alto       | Reserva  |
-| 16  | Hall of fame global                                                                   | Medio      | Alto       | Reserva  |
-| 17  | Vibración (T4.4)                                                                      | Bajo       | Bajo       | Reserva  |
-| 18  | Reloj con la pestaña dormida                                                          | Bajo       | Bajo       | Decidir  |
-| 19  | Regalos desbloqueables                                                                | —          | Medio      | Sin plan |
-| 20  | Reacciones con emoji entre rivales en línea                                           | Medio      | Bajo-medio | Decidir  |
+**Lo que dicen los datos (GA4, 28 días hasta el 11-10-2026, solo con cookies aceptadas):** 33
+personas, 32 partidas terminadas (16 contra la máquina, 7 «Juntos» y 6 en línea), sobre todo en el
+móvil (23 de 33). En línea se abrieron 11 salas y solo hubo 2 uniones (más 2 fallos por sala
+caducada). Solo 2 de 31 partidas acabaron por tiempo (6 %, el objetivo es 50 %). Son pocos datos y
+muchos de pruebas de casa: sirven para orientar, no para decidir.
 
-**Por qué este orden:** primero las reglas animadas del FigJam, ya diseñadas (decisión de
-JoseLuis), que mejoran la primera partida de quien llega nuevo. Justo después, medir: la telemetría
-necesita semanas de partidas antes de poder ajustar nada y la política de privacidad debe estar
-antes de medir más. Mercado, equipos y ranking global, cuando el feedback diga que se quieren.
+| #   | Idea                                                                                 | Valor      | Esfuerzo   | Cuándo       |
+| --- | ------------------------------------------------------------------------------------ | ---------- | ---------- | ------------ |
+| 1   | En línea: que quien recibe el enlace llegue a jugar (embudo sala → unirse → empezar) | Alto       | Bajo-medio | Ahora        |
+| 2   | Reacciones con emoji entre rivales en línea                                          | Medio-alto | Bajo-medio | Ahora        |
+| 3   | En línea: avisar al rival de lo que hace el otro (🛒 compras, 💡 🔄 usados)          | Medio      | Bajo       | Ahora        |
+| 4   | Secreto n.º 3, inventado por Julia                                                   | Medio      | Bajo       | Ahora        |
+| 5   | Tensión con poco tiempo (T4.3)                                                       | Medio-alto | Bajo       | Siguiente    |
+| 6   | Hall of fame local                                                                   | Alto       | Medio      | Siguiente    |
+| 7   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo        | Medio      | Medio      | Decidir      |
+| 8   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                   | Alto       | Medio      | ~100/tablero |
+| 9   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md)   | Alto       | Bajo       | 50 partidas  |
+| 10  | Feedback con texto libre (función de Vercel)                                         | Alto       | Medio      | Siguiente    |
+| 11  | Tablero con teclado y OSOs sin depender del color                                    | Medio      | Medio      | Siempre      |
+| 12  | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)    | Bajo       | Bajo       | Siempre      |
+| 13  | Equipos 2 contra 2                                                                   | Medio      | Medio      | Si se pide   |
+| 14  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)        | Medio      | Alto       | Reserva      |
+| 15  | Oso bailando al ganar (T4.5)                                                         | Medio      | Medio-alto | Reserva      |
+| 16  | Máquina «Experto» (B06)                                                              | Medio      | Medio      | Reserva      |
+| 17  | Hall of fame global                                                                  | Medio      | Alto       | Reserva      |
+| 18  | Vibración (T4.4)                                                                     | Bajo       | Bajo       | Reserva      |
+| 19  | Reloj con la pestaña dormida                                                         | Bajo       | Bajo       | Decidir      |
+| 20  | Regalos desbloqueables                                                               | —          | Medio      | Sin plan     |
+
+Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
+(2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
+que cubre el Modo Mercado en su versión sencilla.
+
+**Por qué este orden:** el modo en línea ya existe, pero casi nadie llega a jugar: de 11 salas, 2
+uniones. Antes de añadirle más cosas conviene que la invitación funcione (1). Las reacciones y los
+avisos al rival (2 y 3) hacen que la partida en línea se sienta acompañada y son baratos. El secreto
+n.º 3 (4) es la mejor tarea para Julia. Los tiempos y la revisión del modo en línea esperan a tener
+datos suficientes.
 
 ## Plan por fases
 
@@ -124,22 +143,26 @@ preguntan una a una al empezar cada fase.
    - Título, descripción e imagen Open Graph para que WhatsApp muestre la tarjeta del oso.
    - Evento `share` y enlaces con `utm_source` para medirlo.
    - Decidido: los textos no llevan los nombres de los jugadores (pueden ser niños).
-4. **2.7.0 · Más emoción**
+4. **Próxima · En línea, más acompañado** (propuesta)
+   - Embudo de la invitación: medir dónde se pierde quien recibe el enlace (lo abre, pone nombre,
+     entra) y arreglar ese paso.
+   - Reacciones con emoji y avisos de lo que hace el rival (compras de la tienda, extras usados).
+5. **Más emoción**
    - Tensión con poco tiempo (T4.3): con 20 s o menos el fondo se tiñe poco a poco.
    - Hall of fame local: récords y rachas en el dispositivo, «¡Nuevo récord!» al acabar.
-5. **2.8.0 · Ajustar con datos** (cuando haya unas 100 partidas por tablero)
+6. **Ajustar con datos** (cuando haya unas 100 partidas por tablero)
    - Informe en GA4 y script que propone el tiempo de cada tablero. La tabla de tiempos ya está en
      [`config.js`](../public/js/config.js) desde la 3.3.1 (ver [`CONFIG.md`](CONFIG.md)).
    - Feedback con texto libre por una función de Vercel, con protección contra spam.
-6. ~~**3.0.0 · Jugar en línea 1 contra 1**~~ hecho: invitar a un amigo con un enlace o un código.
+7. ~~**3.0.0 · Jugar en línea 1 contra 1**~~ hecho: invitar a un amigo con un enlace o un código.
    Decisión, telemetría y umbrales para revisarla en [`ONLINE.md`](ONLINE.md).
-7. **4.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
+8. **4.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
 
 **Siempre, en paralelo:** accesibilidad (tablero con teclado, OSOs sin depender del color), deuda de
 diseño (unificar los tamaños de letra fuera de escala, ver [`DESIGN.md`](DESIGN.md)) y afinar los temas
 cuando se acerque cada fecha.
 
-**En reserva:** oso bailando, máquina «Experto», Modo Mercado, hall of fame global, vibración y
+**En reserva:** oso bailando, máquina «Experto», hall of fame global, vibración y
 reloj con la pestaña dormida. Los regalos desbloqueables siguen como idea sin planificar.
 
 ## Roadmap F4 (pendiente)
@@ -154,7 +177,9 @@ reloj con la pestaña dormida. Los regalos desbloqueables siguen como idea sin p
 | T4.7  | Modo Mercado: interfaz          | Medio      | Precio en cada extra, estado «comprable» y confirmación para no comprar sin querer.                                          |
 | T4.8  | Prueba completa de cierre de F4 | Medio      | E2E de todo lo anterior.                                                                                                     |
 
-Decisiones pendientes del Modo Mercado: costes exactos, límite de compras por jugador, margen
+**T4.6 y T4.7, hechos en versión sencilla en 3.4.0 (tienda secreta):** precios fijos en segundos
+(💡 10 s, 🔄 10 s, 🛟 30 s), sin límite mientras quede tiempo, en todos los modos; la máquina no
+compra. Queda como idea un Modo Mercado completo, visible y opcional. Decisiones que tenía: costes exactos, límite de compras por jugador, margen
 mínimo de tiempo tras comprar (propuesta: 10 s) y si existe en modo 1 jugador.
 
 ## Nuevas ideas
@@ -289,6 +314,8 @@ especiales o un extra adicional en la siguiente partida.
 - **Guardado:** en `localStorage`, igual que las preferencias y el hall of fame local.
 
 ### Intercambio de tiempo por ayudas
+
+**Hecho en 3.4.0** como la tienda secreta (ver arriba).
 
 Que el jugador consiga ventajas a cambio de dedicar tiempo de su reloj: más pistas, ayudas
 adicionales u otros extras del roadmap. Es la misma idea que el **Modo Mercado (T4.6/T4.7)**, que
