@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.4.0] - 2026-10-11
 
-**Secreto n.º 2: la tienda secreta de extras**
+**Secreto n.º 2: la tienda secreta de extras ([b8b4d97](https://github.com/chopenhauer/devin-juega-oso/commit/b8b4d97ec79e81d60861e3513491cd13a9a2a032))**
 
 Idea de JoseLuis: un segundo easter egg con los extras, que también estrena «Ya sabías…».
 
