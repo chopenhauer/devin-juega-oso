@@ -63,20 +63,27 @@ test('the session leaderboard adds up games between the same players', async ({ 
   const first = page.locator('#sessionRows tr').first();
   await expect(first).toHaveClass(/leader/);
   await expect(first.locator('th')).toContainText('Jugador 1');
-  await expect(first.locator('td')).toHaveText(['1', '1']);
-  // The crown hangs outside the board so the names line up under «Jugador».
-  const crown = first.locator('.session-crown');
-  await expect(crown).toHaveText('👑');
-  const [crownBox, boardBox] = [await crown.boundingBox(), await page.locator('#sessionBoard').boundingBox()];
-  expect(crownBox.x + crownBox.width).toBeLessThanOrEqual(boardBox.x);
-  const starts = await page.locator('#sessionRows th').evaluateAll((ths) =>
+  await expect(first.locator('td:not(.session-crown)')).toHaveText(['1', '1']);
+  // The crown has its own column, so the names line up under «Jugador».
+  await expect(first.locator('td.session-crown')).toHaveText('👑');
+  await expect(page.locator('#sessionRows tr').nth(1).locator('td.session-crown')).toHaveText('');
+  const header = await page.locator('#sessionBoard thead .session-player').boundingBox();
+  const crownBox = await first.locator('td.session-crown span').boundingBox();
+  expect(crownBox.x + crownBox.width).toBeLessThanOrEqual(header.x);
+  const starts = await page.locator('#sessionRows .session-player').evaluateAll((ths) =>
     ths.map((th) => {
       const range = document.createRange();
-      range.selectNodeContents(th.lastChild);
+      range.selectNodeContents(th);
       return Math.round(range.getBoundingClientRect().x);
     }),
   );
   expect(new Set(starts).size).toBe(1);
+  const label = await page.locator('#sessionBoard thead .session-player').evaluate((th) => {
+    const range = document.createRange();
+    range.selectNodeContents(th);
+    return Math.round(range.getBoundingClientRect().x);
+  });
+  expect(starts[0]).toBe(label);
 
   await page.click('#otherBoard');
   expect(await step(page)).toBe('board');

@@ -1175,22 +1175,24 @@ const { timeFor } = Engine;
       ...order.map((p) => {
         const row = document.createElement('tr');
         row.classList.toggle('leader', p === leader);
+        const crown = document.createElement('td');
+        crown.className = 'session-crown';
+        if (p === leader) {
+          const icon = document.createElement('span');
+          icon.setAttribute('role', 'img');
+          icon.setAttribute('aria-label', 'Va en cabeza');
+          icon.textContent = '👑';
+          crown.append(icon);
+        }
         const who = document.createElement('th');
         who.scope = 'row';
+        who.className = 'session-player';
         who.textContent = `${avatars[p]} ${names[p]}`;
-        if (p === leader) {
-          const crown = document.createElement('span');
-          crown.className = 'session-crown';
-          crown.setAttribute('role', 'img');
-          crown.setAttribute('aria-label', 'Va en cabeza');
-          crown.textContent = '👑';
-          who.prepend(crown);
-        }
         const wins = document.createElement('td');
         wins.textContent = st.wins[p];
         const points = document.createElement('td');
         points.textContent = st.points[p];
-        row.append(who, wins, points);
+        row.append(crown, who, wins, points);
         return row;
       }),
     );

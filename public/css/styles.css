@@ -1248,7 +1248,7 @@ select option {
   font-weight: var(--fw-semibold);
   color: var(--muted);
 }
-.session-board th:first-child {
+.session-board .session-player {
   text-align: left;
   overflow: hidden;
   max-width: 200px;
@@ -1258,15 +1258,11 @@ select option {
 .session-board tr.leader > * {
   color: var(--accent);
 }
-/* The crown sits outside the board so every avatar and name lines up under «Jugador». */
-.session-board tr.leader {
-  position: relative;
-}
-.session-crown {
-  position: absolute;
-  top: 50%;
-  right: calc(100% + var(--space-3-5) + var(--space-2));
-  transform: translateY(-50%);
+/* The crown gets its own column so every avatar and name lines up under «Jugador». */
+.session-board .session-crown {
+  width: 1.5em;
+  padding-right: 0;
+  text-align: center;
 }
 .session-meta {
   margin: var(--space-1) 0 0;
