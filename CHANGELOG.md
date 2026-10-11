@@ -44,6 +44,15 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - Mobile first y responsive como regla general (JoseLuis): se diseña primero para el móvil en
   vertical y se amplía para iPad y escritorio. También está en `docs/DESIGN.md`.
 
+**Difusión (fuera del juego)**
+
+- JoseLuis añade juegaoso.com a los «Enlaces externos» del artículo
+  [Oso (juego)](https://es.wikipedia.org/wiki/Oso_(juego)) de Wikipedia en español
+  ([edición del 11-oct](https://es.wikipedia.org/w/index.php?diff=175771474)). En el resumen de la
+  edición declara el conflicto de intereses, porque somos los autores; el juego sigue las reglas de
+  ese mismo artículo. Las normas de Wikipedia desaconsejan enlazar webs propias, así que puede que
+  otro editor lo retire. Si pasa, no se vuelve a añadir: se propone en la página de discusión.
+
 ## [3.0.1] - 2026-10-11
 
 **Analítica solo en producción y paneles para seguir el juego en línea** ([e43b69a](https://github.com/chopenhauer/devin-juega-oso/commit/e43b69ac85905609d4fabca886998a7457cd79a2))

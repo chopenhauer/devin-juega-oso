@@ -375,6 +375,13 @@ resultado» en la pantalla final; tarjeta Open Graph (`public/og.png`, se regene
 `npm run og`), evento `share` con `channel` y `place`, y `utm_campaign=boca_oreja`. Sin nombres.
 Queda lo de «Más adelante».
 
+**Acciones realizadas:**
+
+- 2026-10-11 · Enlace a juegaoso.com en «Enlaces externos» del artículo
+  [Oso (juego)](https://es.wikipedia.org/wiki/Oso_(juego)) de Wikipedia en español, con el conflicto
+  de intereses declarado en el resumen de la edición (ver CHANGELOG 3.1.0). Si lo retiran, se
+  propone en la página de discusión en vez de volver a añadirlo.
+
 Que corra la voz: que quien juega lo comparta fácilmente con familia y amigos.
 
 - **Dónde:**
