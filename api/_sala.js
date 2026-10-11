@@ -1,7 +1,8 @@
 // Referee for online 1 vs 1 games (docs/ONLINE.md). One endpoint, /api/sala:
 //   GET  ?code=K7QD2&rev=3   room state (just {rev, same} if unchanged), settles the clock
-//   GET  ?stats=1            this month's anonymous counters
-//   POST {action: create | join | profile | start | move | rematch | leave | ping, ...}
+//   GET  ?code=K7QD2&open=1  the same, counted as an invite link opened by the guest
+//   GET  ?stats=1            this month's anonymous counters (npm run online:report)
+//   POST {action: create | invite | join | profile | start | move | rematch | leave | ping, ...}
 //   move.type: place | swap | sos | power | buy (🛒 buy back a spent extra)
 // A room goes waiting (host alone) → lobby (both in, host picks the board) → playing ⇄ over.
 // If no game starts within OPEN_MS it closes as `expired`.
@@ -24,6 +25,7 @@ export const COUNTDOWN_MS = GAME.online.countdownSeconds * 1000;
 const STATS_TTL = 400 * 24 * 3600;
 const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const CODE_RE = new RegExp(`^[${CODE_CHARS}]{5}$`);
+const INVITE_CHANNELS = ['whatsapp', 'copy'];
 const RATE = { limit: GAME.online.roomsPerConnection, window: GAME.online.roomsWindowMinutes * 60 };
 const MOVES = {
   place: (m, p, x, now) => Match.place(m, p, x.index, x.letter, now),
@@ -181,7 +183,18 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     room.status = 'lobby';
     await save(room, expected);
     stats.joined = 1;
+    // Summed per month: divided by `joined` it gives how long a guest takes to arrive.
+    stats.join_wait_s = Math.round((now - room.created) / 1000);
     return { seat: 1, token, room };
+  }
+
+  // The host shares the link (WhatsApp or copy): only counted, the room doesn't change.
+  async function invite(body, now, stats) {
+    const room = await load(body.code, now, stats);
+    const seat = seatOf(room, body.token);
+    stats.invited = 1;
+    if (INVITE_CHANNELS.includes(body.channel)) stats[`invite_${body.channel}`] = 1;
+    return { seat, room };
   }
 
   // Before the game both can still change their name and avatar.
@@ -284,7 +297,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     return { seat, room };
   }
 
-  const ACTIONS = { create, join, profile, start, move, rematch, leave, ping };
+  const ACTIONS = { create, invite, join, profile, start, move, rematch, leave, ping };
 
   return async function handle(request) {
     const started = clock();
@@ -300,6 +313,12 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
           body = { month: month(now).slice(6), counters: await store.counters(month(now)) };
         } else {
           let room = await load(url.searchParams.get('code'), now, stats, true);
+          // The invite funnel: link opened, and whether it arrived too late or the room was full.
+          if (url.searchParams.get('open')) {
+            stats.opened = 1;
+            if (room.closed === 'expired') stats.open_late = 1;
+            else if (room.status !== 'waiting') stats.open_full = 1;
+          }
           if (settle(room, now, stats)) {
             const expected = room.rev;
             room = await save(room, expected).catch(() => load(room.code));

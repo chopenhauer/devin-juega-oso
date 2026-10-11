@@ -92,6 +92,13 @@ const SOUNDS = {
       [440, 0.6, 0.5],
     ],
   },
+  // The online rival has just arrived in the room.
+  join: {
+    notes: [
+      [523.25, 0, 0.12],
+      [783.99, 0.12, 0.24],
+    ],
+  },
   egg: {
     notes: [
       [523.25, 0, 0.16],

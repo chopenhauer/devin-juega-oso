@@ -78,17 +78,14 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
 
 Telemetría pensada para evaluar **esta decisión** (no solo el uso). Dos fuentes:
 
-1. **GA4** (solo con cookies aceptadas, sin nombres): eventos `online_create`, `online_join`,
+1. **GA4** (solo con cookies aceptadas, sin nombres): eventos `online_create`, `online_invite` (`channel`), `online_invite_open`, `online_join`,
    `online_join_fail` y `game_start`/`game_end`/`game_abandon` con `mode: 'online'`. Al acabar
    cada partida en línea, `online_quality` con:
    - `move_rtt_p50_ms` / `move_rtt_p95_ms`: lo que tarda el servidor en aceptar tu jugada.
    - `sync_p50_ms` / `sync_p95_ms`: desde que el servidor acepta la jugada del rival hasta que tu
      dispositivo la recibe (medido con la hora del servidor, sin depender del reloj del móvil).
    - `polls`, `poll_errors`, `reconnects` (cortes de más de 5 s) y `conflicts` (409).
-2. **Contadores del servidor** en Redis, por día y 90 días: salas creadas y unidas, partidas
-   terminadas por motivo, jugadas, peticiones, errores 4xx/5xx, conflictos, comandos de Redis y
-   duración de las funciones. Se consultan con `npm run online:report` (lee `/api/stats`, protegido
-   con `STATS_TOKEN`) y se comparan con estos umbrales.
+2. **Contadores del servidor** en Redis, por mes (se guardan 400 días), anónimos y sin depender de las cookies: el embudo de la invitación (salas creadas, enlaces enviados por WhatsApp o copiados, enlaces abiertos —también tarde o con la sala llena—, invitados dentro y su espera media, partidas empezadas y terminadas por motivo), jugadas, peticiones, errores 4xx/5xx, conflictos, comandos de Redis y duración de las funciones. Se consultan con `npm run online:report` (lee `/api/sala?stats=1`) y se comparan con estos umbrales.
 
 | Métrica                                        | Va bien    | Revisar la decisión | Qué haríamos                                                  |
 | ---------------------------------------------- | ---------- | ------------------- | ------------------------------------------------------------- |

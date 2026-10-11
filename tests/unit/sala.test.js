@@ -320,3 +320,33 @@ test('🛒 buying back an extra goes through the referee and costs seconds of th
   const e = await mv(host, d.rev, { type: 'sos' });
   assert.equal(e.match.word, 'OSO');
 });
+
+test('the invite funnel is counted: links sent, opened (late or full), joins and their wait', async () => {
+  const s = setup();
+  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
+  const sent = await s.call({ action: 'invite', code: host.code, token: host.token, channel: 'whatsapp' });
+  assert.equal(sent.http, 200);
+  assert.equal(sent.rev, host.rev);
+  await s.call({ action: 'invite', code: host.code, token: host.token, channel: 'copy' });
+  assert.equal(
+    (await s.call({ action: 'invite', code: host.code, token: 'nope', channel: 'copy' })).http,
+    403,
+  );
+  await s.get(`code=${host.code}&rev=0&open=1`);
+  s.clock.t += 90_000;
+  await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
+  await s.get(`code=${host.code}&rev=0&open=1`);
+  await s.get(`code=${host.code}&rev=0`);
+  const late = await s.call({ action: 'create', name: 'Eva', avatar: '🐻' });
+  s.clock.t += OPEN_MS;
+  await s.get(`code=${late.code}&rev=0&open=1`);
+  const { counters } = await s.get('stats=1');
+  assert.equal(counters.invited, 2);
+  assert.equal(counters.invite_whatsapp, 1);
+  assert.equal(counters.invite_copy, 1);
+  assert.equal(counters.opened, 3);
+  assert.equal(counters.open_full, 1);
+  assert.equal(counters.open_late, 1);
+  assert.equal(counters.joined, 1);
+  assert.equal(counters.join_wait_s, 90);
+});

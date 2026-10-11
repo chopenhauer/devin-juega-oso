@@ -3450,13 +3450,9 @@ body:has(.online-toast:not(.hidden), .secret-toast:not(.hidden))
 .online-invite {
   display: none;
 }
-.online-setup .pconfig.remote > :not(.small-label, .online-seat, .avatars),
+.online-setup .pconfig.remote > :not(.small-label, .online-seat),
 .online-setup .second-player.inviting > :not(.small-label, .online-invite) {
   display: none;
-}
-/* The rival's card shows their pick; it can't be changed from here. */
-.online-setup .pconfig.remote .avatars {
-  pointer-events: none;
 }
 .online-setup .pconfig.remote .online-seat,
 .online-setup .second-player.inviting .online-invite {

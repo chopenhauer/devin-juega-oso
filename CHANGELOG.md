@@ -17,6 +17,33 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.5.0] - 2026-10-11
+
+**En línea, más acompañado: la invitación y los avisos del rival**
+
+Las dos primeras prioridades del ROADMAP revisado tras la 3.4.0. En octubre se abrieron 5 salas en
+producción y solo en 2 entró alguien: se perdían antes de entrar.
+
+- **Quién es quién:** en la sala, la tarjeta propia dice «Tú» y la otra «Te invita» (o «Tu rival»
+  para quien abre la sala). La del rival solo enseña su avatar y su nombre, sin la rejilla de
+  avatares, que parecía que se podía tocar.
+- **Cuando llega el rival,** quien abrió la sala oye un aviso, el título de la pestaña pasa a
+  «✅ Leo ya está aquí · OSO» (se ve aunque estés en WhatsApp) y pasa solo a elegir el tablero.
+- **Avisos del rival** en la línea de mensajes: «💡 Ana ha usado una pista», «👁️ Ana ha mirado tu
+  última jugada», «🔄 Ana ha cambiado una letra», «🛟 Ana ha cambiado a SOS» y «🛒 Ana ha comprado una
+  💡 pista en la tienda secreta (−10 s)». Si llegan dos cosas a la vez, van en el mismo aviso.
+- **Medir el embudo** sin depender de las cookies: el servidor cuenta enlaces enviados (WhatsApp o
+  copiar), enlaces abiertos (y si llegan tarde o con la sala llena), invitados dentro y cuánto tardan
+  de media. Se ve con `npm run online:report`. En GA, con permiso: `online_invite` (`channel`) y
+  `online_invite_open`.
+
+**Decisiones**
+
+- Avisar también de las compras de la tienda secreta: así el rival descubre el secreto por la otra
+  persona (boca-oreja).
+- Pasar solo al tablero cuando llega el rival, sin pulsar →.
+- Los 30 minutos de la sala no cambian hasta saber cuántos enlaces se abren tarde.
+
 ## [3.4.0] - 2026-10-11
 
 **Secreto n.º 2: la tienda secreta de extras ([b8b4d97](https://github.com/chopenhauer/devin-juega-oso/commit/b8b4d97ec79e81d60861e3513491cd13a9a2a032))**

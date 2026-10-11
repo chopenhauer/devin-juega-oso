@@ -69,7 +69,7 @@ async function joinRoom(host, guest, code, name, hostName = 'Ana') {
   await guest.goto(`/?sala=${code}`);
   await expect(guest.locator('#onlineToast')).toContainText(`${hostName} te invita`);
   await expect(guest.locator('.pconfig.remote .online-seat-name')).toHaveText(hostName);
-  await expect(guest.locator('.pconfig.remote .avatar-btn.selected')).toHaveText('🐻');
+  await expect(guest.locator('.pconfig.remote .online-seat-avatar')).toHaveText('🐻');
   await guest.fill('#nickname2', name);
   await guest.click('#stepNext');
   await expect(guest.locator('#onlineToast')).toContainText(`${hostName} está eligiendo el tablero`);
@@ -239,5 +239,55 @@ test('after 20 s without a move the player on turn is asked «¿Sigues ahí?» a
   await expect(guest.locator('#message')).toContainText('Ana sigue ahí, está pensando');
   await cell(host, 0).click();
   await expect(cell(guest, 0)).toHaveText('O');
+  expect(errors).toEqual([]);
+});
+
+test('the guest sees whose card is whose; the host hears them arrive and goes on to the board', async ({
+  browser,
+}) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  const code = await createRoom(host);
+  await expect(host.locator('.pconfig').first().locator('.small-label')).toHaveText('Tú');
+  await expect(host.locator('.second-player .small-label')).toHaveText('Tu rival');
+  await host.evaluate(() => {
+    window.sounds = [];
+    document.addEventListener('oso:sound', (e) => window.sounds.push(e.detail));
+  });
+  await guest.goto(`/?sala=${code}`);
+  await expect(guest.locator('.second-player .small-label')).toHaveText('Tú');
+  await expect(guest.locator('.pconfig').first().locator('.small-label')).toHaveText('Te invita');
+  await expect(guest.locator('.pconfig.remote .avatars')).toBeHidden();
+  await guest.fill('#nickname2', 'Leo');
+  await guest.click('#stepNext');
+  await expect(host.locator('#sizeSelect')).toBeVisible();
+  await expect(host).toHaveTitle('✅ Leo ya está aquí · OSO');
+  expect(await host.evaluate(() => window.sounds)).toContain('join');
+  await host.click('#startGame');
+  await expect(host.locator('#gameScreen')).toBeVisible();
+  await expect(host).toHaveTitle('OSO · el juego de Julia');
+  expect(errors).toEqual([]);
+});
+
+test('the rival is told about the extras used and bought in the secret shop', async ({ browser }) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  const code = await createRoom(host);
+  await joinRoom(host, guest, code, 'Bea');
+  const news = guest.locator('#message');
+  await host.click('#hint1');
+  await expect(news).toContainText('💡 🐻 Ana ha usado una pista.');
+  await host.locator('#hint1').click({ clickCount: 3 });
+  await host.click('#shopBuy');
+  await expect(news).toContainText('🛒 🐻 Ana ha comprado una 💡 pista en la tienda secreta (−10 s).');
+  await cell(host, 0).click();
+  await expect(cell(guest, 0)).toHaveText('O');
+  await cell(guest, 5).click();
+  await expect(cell(host, 5)).toHaveText('O');
+  await host.click('#swap1');
+  await cell(host, 0).click();
+  await expect(cell(guest, 0)).toHaveText('S');
+  await expect(news).toContainText('🔄 🐻 Ana ha cambiado una letra.');
+  await expect(host.locator('#message')).not.toContainText('Ana ha cambiado');
   expect(errors).toEqual([]);
 });

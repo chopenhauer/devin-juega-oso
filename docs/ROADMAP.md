@@ -76,6 +76,9 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   [`config.js`](../public/js/config.js), con la tabla [`CONFIG.md`](CONFIG.md) generada.
 - Tienda secreta (3.4.0, secreto n.º 2): 3 toques en un 💡, 🔄 o 🛟 gastado lo venden por segundos
   del reloj (10 s, 10 s y 30 s), en todos los modos. Es una versión sencilla del Modo Mercado (T4.6).
+- En línea más acompañado (3.5.0): en la sala cada tarjeta dice «Tú» o «Te invita», quien abre la
+  sala oye y ve en la pestaña cuándo llega el rival y pasa solo al tablero, avisos de lo que hace el
+  rival (💡 👁️ 🔄 🛟 🛒) y el embudo de la invitación medido en el servidor (`npm run online:report`).
 
 ## Priorización (revisada tras la 3.4.0)
 
@@ -88,38 +91,35 @@ móvil (23 de 33). En línea se abrieron 11 salas y solo hubo 2 uniones (más 2 
 caducada). Solo 2 de 31 partidas acabaron por tiempo (6 %, el objetivo es 50 %). Son pocos datos y
 muchos de pruebas de casa: sirven para orientar, no para decidir.
 
-| #   | Idea                                                                                 | Valor      | Esfuerzo   | Cuándo       |
-| --- | ------------------------------------------------------------------------------------ | ---------- | ---------- | ------------ |
-| 1   | En línea: que quien recibe el enlace llegue a jugar (embudo sala → unirse → empezar) | Alto       | Bajo-medio | Ahora        |
-| 2   | Reacciones con emoji entre rivales en línea                                          | Medio-alto | Bajo-medio | Ahora        |
-| 3   | En línea: avisar al rival de lo que hace el otro (🛒 compras, 💡 🔄 usados)          | Medio      | Bajo       | Ahora        |
-| 4   | Secreto n.º 3, inventado por Julia                                                   | Medio      | Bajo       | Ahora        |
-| 5   | Tensión con poco tiempo (T4.3)                                                       | Medio-alto | Bajo       | Siguiente    |
-| 6   | Hall of fame local                                                                   | Alto       | Medio      | Siguiente    |
-| 7   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo        | Medio      | Medio      | Decidir      |
-| 8   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                   | Alto       | Medio      | ~100/tablero |
-| 9   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md)   | Alto       | Bajo       | 50 partidas  |
-| 10  | Feedback con texto libre (función de Vercel)                                         | Alto       | Medio      | Siguiente    |
-| 11  | Tablero con teclado y OSOs sin depender del color                                    | Medio      | Medio      | Siempre      |
-| 12  | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)    | Bajo       | Bajo       | Siempre      |
-| 13  | Equipos 2 contra 2                                                                   | Medio      | Medio      | Si se pide   |
-| 14  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)        | Medio      | Alto       | Reserva      |
-| 15  | Oso bailando al ganar (T4.5)                                                         | Medio      | Medio-alto | Reserva      |
-| 16  | Máquina «Experto» (B06)                                                              | Medio      | Medio      | Reserva      |
-| 17  | Hall of fame global                                                                  | Medio      | Alto       | Reserva      |
-| 18  | Vibración (T4.4)                                                                     | Bajo       | Bajo       | Reserva      |
-| 19  | Reloj con la pestaña dormida                                                         | Bajo       | Bajo       | Decidir      |
-| 20  | Regalos desbloqueables                                                               | —          | Medio      | Sin plan     |
+| #   | Idea                                                                               | Valor      | Esfuerzo   | Cuándo       |
+| --- | ---------------------------------------------------------------------------------- | ---------- | ---------- | ------------ |
+| 1   | Reacciones con emoji entre rivales en línea                                        | Medio-alto | Bajo-medio | Ahora        |
+| 2   | Secreto n.º 3, inventado por Julia                                                 | Medio      | Bajo       | Ahora        |
+| 3   | Tensión con poco tiempo (T4.3)                                                     | Medio-alto | Bajo       | Siguiente    |
+| 4   | Hall of fame local                                                                 | Alto       | Medio      | Siguiente    |
+| 5   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo      | Medio      | Medio      | Decidir      |
+| 6   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                 | Alto       | Medio      | ~100/tablero |
+| 7   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md) | Alto       | Bajo       | 50 partidas  |
+| 8   | Feedback con texto libre (función de Vercel)                                       | Alto       | Medio      | Siguiente    |
+| 9   | Tablero con teclado y OSOs sin depender del color                                  | Medio      | Medio      | Siempre      |
+| 10  | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)  | Bajo       | Bajo       | Siempre      |
+| 11  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide   |
+| 12  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva      |
+| 13  | Oso bailando al ganar (T4.5)                                                       | Medio      | Medio-alto | Reserva      |
+| 14  | Máquina «Experto» (B06)                                                            | Medio      | Medio      | Reserva      |
+| 15  | Hall of fame global                                                                | Medio      | Alto       | Reserva      |
+| 16  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
+| 17  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
+| 18  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
 que cubre el Modo Mercado en su versión sencilla.
 
-**Por qué este orden:** el modo en línea ya existe, pero casi nadie llega a jugar: de 11 salas, 2
-uniones. Antes de añadirle más cosas conviene que la invitación funcione (1). Las reacciones y los
-avisos al rival (2 y 3) hacen que la partida en línea se sienta acompañada y son baratos. El secreto
-n.º 3 (4) es la mejor tarea para Julia. Los tiempos y la revisión del modo en línea esperan a tener
-datos suficientes.
+**Por qué este orden:** la 3.5.0 ya aclara la invitación, avisa al anfitrión cuando llega el rival
+y cuenta en el servidor cada paso del embudo. Con eso, y las reacciones con emoji (1), la partida en
+línea se siente acompañada. El secreto n.º 3 (2) es la mejor tarea para Julia. Los tiempos y la
+revisión del modo en línea esperan a tener datos suficientes.
 
 ## Plan por fases
 
@@ -144,9 +144,9 @@ preguntan una a una al empezar cada fase.
    - Evento `share` y enlaces con `utm_source` para medirlo.
    - Decidido: los textos no llevan los nombres de los jugadores (pueden ser niños).
 4. **Próxima · En línea, más acompañado** (propuesta)
-   - Embudo de la invitación: medir dónde se pierde quien recibe el enlace (lo abre, pone nombre,
-     entra) y arreglar ese paso.
-   - Reacciones con emoji y avisos de lo que hace el rival (compras de la tienda, extras usados).
+   - ~~Embudo de la invitación y avisos de lo que hace el rival~~ (hecho en 3.5.0). Falta revisar
+     el embudo con `npm run online:report` cuando haya más salas, y decidir si los 30 min cambian.
+   - Reacciones con emoji.
 5. **Más emoción**
    - Tensión con poco tiempo (T4.3): con 20 s o menos el fondo se tiñe poco a poco.
    - Hall of fame local: récords y rachas en el dispositivo, «¡Nuevo récord!» al acabar.

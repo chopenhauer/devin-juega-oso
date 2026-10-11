@@ -93,11 +93,13 @@ export async function send(body, quality) {
   }
 }
 
-// Latest room state; `{ same: true }` when nothing changed since `rev`.
-export async function fetchRoom(code, rev = 0, quality = null) {
+// Latest room state; `{ same: true }` when nothing changed since `rev`. `open` counts the
+// guest opening the invite link.
+export async function fetchRoom(code, rev = 0, quality = null, open = false) {
   if (quality) quality.polls++;
   try {
-    const data = await parse(await fetch(`${ENDPOINT}?code=${code}&rev=${rev}`, { cache: 'no-store' }));
+    const query = `code=${code}&rev=${rev}${open ? '&open=1' : ''}`;
+    const data = await parse(await fetch(`${ENDPOINT}?${query}`, { cache: 'no-store' }));
     if (quality && !data.ok) quality.poll_errors++;
     // How long the rival's change waited on the server before reaching us.
     if (quality && data.ok && !data.same && data.updated)

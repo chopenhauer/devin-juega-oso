@@ -76,6 +76,7 @@ const { timeFor } = Engine;
   let m = null;
   // Online 1 vs 1: { code, token, seat, rev, game, seats, quality, busy, offline } or null.
   let online = null;
+  const baseTitle = document.title;
   function sync() {
     ({
       board,
@@ -986,9 +987,9 @@ const { timeFor } = Engine;
 
   // 🛒 Secret shop: quick taps on a spent 💡, 🔄 or 🛟 offer to buy it back with seconds (GAME.shop).
   const SHOP_ITEMS = {
-    hint: { name: 'otra 💡 pista', icon: '💡' },
-    swap: { name: 'otro 🔄 cambio de letra', icon: '🔄' },
-    sos: { name: 'otro 🛟 SOS', icon: '🛟' },
+    hint: { name: 'otra 💡 pista', icon: '💡', bought: 'una 💡 pista' },
+    swap: { name: 'otro 🔄 cambio de letra', icon: '🔄', bought: 'un 🔄 cambio de letra' },
+    sos: { name: 'otro 🛟 SOS', icon: '🛟', bought: 'un 🛟 SOS' },
   };
   let shopTaps = [],
     shopOffer = null;
@@ -1446,11 +1447,16 @@ const { timeFor } = Engine;
   // Shows the server state: board, scores, clocks, names and the end of the game.
   function applyView(v) {
     const o = online;
+    const arrived = o.seat === 0 && o.seats?.length === 1 && v.seats.length === 2;
     o.rev = v.rev;
     o.seats = v.seats;
     o.status = v.status;
     if (v.status === 'closed') return roomGone(v.closed);
-    if (!v.match) return renderLobby();
+    if (!v.match) {
+      renderLobby();
+      if (arrived) rivalArrived();
+      return;
+    }
     if (v.game !== o.game || game.classList.contains('hidden')) return startOnlineGame(v);
     const wasOver = over,
       oldBoard = board,
@@ -1466,6 +1472,12 @@ const { timeFor } = Engine;
     if (rivalSeat?.here > (o.rivalHere ?? 0) && o.rivalHere !== undefined && !v.match.over)
       msg.textContent = `🤔 ${rivalSeat.name} sigue ahí, está pensando.`;
     o.rivalHere = rivalSeat?.here ?? 0;
+    const before = m && {
+      extras: m.extras.map((e) => ({ ...e })),
+      credits: [...(m.sosCredits ?? [])],
+      history: m.history.length,
+      current: m.current,
+    };
     m = Match.fromJSON(v.match);
     m.times = v.match.clocks;
     m.since = performance.now() + v.match.holdMs;
@@ -1476,10 +1488,13 @@ const { timeFor } = Engine;
       namesEl[i].textContent = s.name;
       avatarsEl[i].textContent = s.avatar;
     });
+    const rival = 1 - o.seat;
+    const news = before ? rivalNews(before, rival) : [];
+    let text = '';
     if (targetWord !== oldWord) {
       play('sos');
       setSeaTheme(targetWord === 'SOS');
-      msg.textContent = `🛟 Ahora se puntúa ${targetWord}. Marcador recalculado: ${scores.join(' – ')}.`;
+      text = `${before?.current === rival ? `🛟 ${who(rival)} ha cambiado a ${targetWord}.` : `🛟 Ahora se puntúa ${targetWord}.`} Marcador recalculado: ${scores.join(' – ')}.`;
     } else if (oldBoard.length === board.length) {
       const changed = board.findIndex((x, i) => x !== oldBoard[i]);
       const made = [...scored.keys()].filter((k) => !oldKeys.has(k));
@@ -1490,19 +1505,40 @@ const { timeFor } = Engine;
         hintCell = null;
         lastCell = null;
         swapMode = null;
-        msg.textContent = made.length
+        text = made.length
           ? `¡${avatars[current]} ${names[current]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`
           : remote(current)
             ? `Turno de ${avatars[current]} ${names[current]}`
             : `${avatars[current]} ¡Te toca, ${names[current]}!`;
       }
     }
+    if (news.length || text) msg.textContent = [...news, text].filter(Boolean).join(' ');
     scoresEl.forEach((e, k) => (e.textContent = scores[k] ?? 0));
     render();
     updateTimers();
     updateControls();
     if (over && !wasOver) finish(m.winner, m.reason, m.timedOut);
     if (over) showRematchState(v);
+  }
+
+  const who = (p) => `${avatars[p]} ${names[p]}`;
+  // What the online rival did since the last update that the board doesn't show by itself.
+  function rivalNews(before, r) {
+    const news = [];
+    const was = before.extras[r] ?? {},
+      now = extras[r] ?? {};
+    const bought = (power) =>
+      news.push(
+        `🛒 ${who(r)} ha comprado ${SHOP_ITEMS[power].bought} en la tienda secreta (−${Match.price(power)} s).`,
+      );
+    const swaps = history.slice(before.history).filter((x) => x.player === r && x.power === 'swap').length;
+    if (now.hint > was.hint) bought('hint');
+    if (now.swap + swaps > was.swap) bought('swap');
+    if ((sosCredits[r] ?? 0) > (before.credits[r] ?? 0)) bought('sos');
+    if (now.hint < was.hint) news.push(`💡 ${who(r)} ha usado una pista.`);
+    if (now.last < was.last) news.push(`👁️ ${who(r)} ha mirado tu última jugada.`);
+    if (swaps) news.push(`🔄 ${who(r)} ha cambiado una letra.`);
+    return news;
   }
 
   function showRematchState(v) {
@@ -1517,6 +1553,8 @@ const { timeFor } = Engine;
 
   function startOnlineGame(v) {
     stopGame();
+    m = null;
+    document.title = baseTitle;
     gameMode = 'online';
     online.game = v.game;
     size = v.size;
@@ -1706,6 +1744,15 @@ const { timeFor } = Engine;
     syncAvatars();
     const host = me === 0,
       ready = seats.length === 2;
+    cards.forEach((card, i) => {
+      card.querySelector('.small-label').textContent = !on
+        ? `Jugador ${i + 1}`
+        : i === me
+          ? 'Tú'
+          : host
+            ? 'Tu rival'
+            : 'Te invita';
+    });
     cards[1].classList.toggle('inviting', on && host && !ready);
     q('openRoom').classList.toggle('hidden', !!online);
     q('roomShare').classList.toggle('hidden', !online);
@@ -1718,6 +1765,7 @@ const { timeFor } = Engine;
       );
     }
     const rival = seats[1 - me]?.name;
+    document.title = on && host && online && ready ? `✅ ${rival} ya está aquí · OSO` : baseTitle;
     const seatNews = !on
       ? ''
       : host
@@ -1750,6 +1798,12 @@ const { timeFor } = Engine;
             ? boardNews
             : '',
     );
+  }
+  // Host: the rival came in, maybe while the host was in WhatsApp. A sound, the tab title and
+  // straight on to the board.
+  function rivalArrived() {
+    play('join');
+    if (setupStep === 'players' && !setup.classList.contains('hidden')) q('stepNext').click();
   }
   function toast(text) {
     const el = q('onlineToast');
@@ -1847,7 +1901,7 @@ const { timeFor } = Engine;
   // Guest: the invite link opens the players step with the host's card.
   async function offerJoin(code) {
     window.history.replaceState(null, '', Online.urlWithoutRoom());
-    const room = await Online.fetchRoom(code);
+    const room = await Online.fetchRoom(code, 0, null, true);
     const error = !room.ok
       ? room.error
       : room.closed === 'expired'
@@ -1859,6 +1913,7 @@ const { timeFor } = Engine;
       track('online_join_fail', { reason: error });
       return onlineFail(error);
     }
+    track('online_invite_open');
     setGameMode('online');
     invite = { code, room };
     seatAsGuest(room);
@@ -1874,7 +1929,14 @@ const { timeFor } = Engine;
     syncAvatars();
   }
 
+  // Counted by the server (invite funnel, docs/ONLINE.md) and in GA if allowed.
+  function inviteSent(channel) {
+    track('online_invite', { channel });
+    if (online) Online.send({ action: 'invite', code: online.code, token: online.token, channel });
+  }
+  q('onlineWhatsapp').addEventListener('click', () => inviteSent('whatsapp'));
   q('onlineCopy').addEventListener('click', async () => {
+    inviteSent('copy');
     try {
       await navigator.clipboard.writeText(Online.inviteUrl(online.code, 'copy'));
       toast('🔗 Enlace copiado. ⏳ Esperando a tu rival…');
