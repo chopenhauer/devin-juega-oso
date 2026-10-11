@@ -188,3 +188,27 @@ test('B07: tienda secreta: «Ahora no» no compra nada y el extra sigue gastado'
   await expect(page.locator('#hint1 .count')).toHaveText('0');
   await expect(page.locator('#hint1')).toHaveClass(/used/);
 });
+
+test('B08: tienda secreta: un 🔄 comprado espera a que lo pulses y luego elijas la letra', async ({
+  page,
+}) => {
+  await startGame(page);
+  await cell(page, 0).click();
+  await cell(page, 1).click();
+  await page.click('#swap1');
+  await cell(page, 0).click();
+  await expect(page.locator('#swap1 .count')).toHaveText('0');
+  await cell(page, 2).click();
+  await page.locator('#swap1').click({ clickCount: 3 });
+  await expect(page.locator('#shopText')).toContainText('otro 🔄 cambio de letra por 10 segundos');
+  const before = await boardText(page);
+  await page.click('#shopBuy');
+  await expect(page.locator('#swap1 .count')).toHaveText('1');
+  await expect(page.locator('#swap1')).not.toHaveClass(/mode/);
+  expect(await boardText(page)).toBe(before);
+  await page.click('#swap1');
+  await expect(page.locator('#swap1')).toHaveClass(/mode/);
+  await cell(page, 1).click();
+  await expect(page.locator('#swap1 .count')).toHaveText('0');
+  expect(await boardText(page)).not.toBe(before);
+});
