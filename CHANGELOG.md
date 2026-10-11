@@ -17,6 +17,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.2.1] - 2026-10-11
+
+**Botones de la pantalla final alineados en línea**
+
+- En las partidas en línea no está «Otro tablero», y «Salir» se quedaba solo en media fila.
+  Ahora ocupa la fila entera, como «Revancha» y «Compartir resultado»: los tres botones tienen el
+  mismo ancho y van centrados (petición de JoseLuis). En el modo «Juntos» no cambia nada.
+- Roadmap: nueva idea de JoseLuis, mandar al rival un emoji o una reacción rápida en las
+  partidas en línea.
+
 ## [3.2.0] - 2026-10-11
 
 **Las salas sin empezar se cierran a los 30 min ([0852acf](https://github.com/chopenhauer/devin-juega-oso/commit/0852acf42680ea12054dbe7482cde76054e11cbb))**

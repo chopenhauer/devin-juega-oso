@@ -122,6 +122,14 @@ test('invite a friend, play turns remotely, resume after reload and win when the
   await expect(host.locator('#winnerTitle')).toHaveText('¡Gana Ana!');
   await expect(host.locator('#winnerSub')).toContainText('Bea ha salido');
   await expect(host.locator('#rematch')).toBeDisabled();
+  await expect(host.locator('#changePlayers')).toHaveText('Salir');
+  const boxes = await Promise.all(
+    ['#rematch', '#changePlayers', '#shareResult'].map((id) => host.locator(id).boundingBox()),
+  );
+  for (const box of boxes) {
+    expect(box.x).toBeCloseTo(boxes[0].x, 0);
+    expect(box.width).toBeCloseTo(boxes[0].width, 0);
+  }
   expect(errors).toEqual([]);
 });
 

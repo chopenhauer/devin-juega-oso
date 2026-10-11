@@ -95,6 +95,7 @@ temporada (2.1.0), sonidos (2.2.0) y proteger `main`.
 | 17  | Vibración (T4.4)                                                                      | Bajo       | Bajo       | Reserva  |
 | 18  | Reloj con la pestaña dormida                                                          | Bajo       | Bajo       | Decidir  |
 | 19  | Regalos desbloqueables                                                                | —          | Medio      | Sin plan |
+| 20  | Reacciones con emoji entre rivales en línea                                           | Medio      | Bajo-medio | Decidir  |
 
 **Por qué este orden:** primero las reglas animadas del FigJam, ya diseñadas (decisión de
 JoseLuis), que mejoran la primera partida de quien llega nuevo. Justo después, medir: la telemetría
@@ -402,6 +403,20 @@ Que corra la voz: que quien juega lo comparta fácilmente con familia y amigos.
   enseñarlo en la tablet.
 - **Decisiones abiertas:** si el texto incluye los nombres de los jugadores (por defecto no) y
   dónde sale el botón.
+
+### Reacciones en línea (idea de JoseLuis)
+
+En una partida en línea, mandar al rival un emoji o una reacción rápida (👏 😮 😅 🔥…) para darle
+feedback sin escribir.
+
+- **Propuesta:** una fila corta de emojis fijos, sin texto libre. Así no hace falta moderar y
+  sirve igual con niños. La reacción sale un par de segundos junto a la tarjeta de quien la manda.
+- **Técnica:** una acción `react` en `api/sala` que guarde solo la última reacción de cada asiento
+  y llegue con el polling que ya existe; con un límite de frecuencia para que no se convierta en
+  spam.
+- **Medición:** evento `online_react` con el emoji, para ver cuáles se usan.
+- **Decisiones abiertas:** qué emojis, si se puede silenciar al rival y si también vale en el modo
+  «Juntos».
 
 ## Otras ideas y decisiones abiertas
 
