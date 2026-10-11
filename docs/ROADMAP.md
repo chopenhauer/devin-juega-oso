@@ -79,6 +79,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - En línea más acompañado (3.5.0): en la sala cada tarjeta dice «Tú» o «Te invita», quien abre la
   sala oye y ve en la pestaña cuándo llega el rival y pasa solo al tablero, avisos de lo que hace el
   rival (💡 👁️ 🔄 🛟 🛒) y el embudo de la invitación medido en el servidor (`npm run online:report`).
+- Tensión con poco tiempo (3.6.0, T4.3): con 20 s o menos en el turno el fondo se tiñe de rojo poco a poco y late (quieto con «reducir movimiento»), y todos los tableros tienen 30 s menos de reloj.
 
 ## Priorización (revisada tras la 3.4.0)
 
@@ -95,22 +96,21 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | --- | ---------------------------------------------------------------------------------- | ---------- | ---------- | ------------ |
 | 1   | Reacciones con emoji entre rivales en línea                                        | Medio-alto | Bajo-medio | Ahora        |
 | 2   | Secreto n.º 3, inventado por Julia                                                 | Medio      | Bajo       | Ahora        |
-| 3   | Tensión con poco tiempo (T4.3)                                                     | Medio-alto | Bajo       | Siguiente    |
-| 4   | Hall of fame local                                                                 | Alto       | Medio      | Siguiente    |
-| 5   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo      | Medio      | Medio      | Decidir      |
-| 6   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                 | Alto       | Medio      | ~100/tablero |
-| 7   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md) | Alto       | Bajo       | 50 partidas  |
-| 8   | Feedback con texto libre (función de Vercel)                                       | Alto       | Medio      | Siguiente    |
-| 9   | Tablero con teclado y OSOs sin depender del color                                  | Medio      | Medio      | Siempre      |
-| 10  | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)  | Bajo       | Bajo       | Siempre      |
-| 11  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide   |
-| 12  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva      |
-| 13  | Oso bailando al ganar (T4.5)                                                       | Medio      | Medio-alto | Reserva      |
-| 14  | Máquina «Experto» (B06)                                                            | Medio      | Medio      | Reserva      |
-| 15  | Hall of fame global                                                                | Medio      | Alto       | Reserva      |
-| 16  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
-| 17  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
-| 18  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
+| 3   | Hall of fame local                                                                 | Alto       | Medio      | Siguiente    |
+| 4   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo      | Medio      | Medio      | Decidir      |
+| 5   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                 | Alto       | Medio      | ~100/tablero |
+| 6   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md) | Alto       | Bajo       | 50 partidas  |
+| 7   | Feedback con texto libre (función de Vercel)                                       | Alto       | Medio      | Siguiente    |
+| 8   | Tablero con teclado y OSOs sin depender del color                                  | Medio      | Medio      | Siempre      |
+| 9   | Unificar los tamaños de letra fuera de escala (`--fs-letter-*`, `--fs-title-xl`…)  | Bajo       | Bajo       | Siempre      |
+| 10  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide   |
+| 11  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva      |
+| 12  | Oso bailando al ganar (T4.5)                                                       | Medio      | Medio-alto | Reserva      |
+| 13  | Máquina «Experto» (B06)                                                            | Medio      | Medio      | Reserva      |
+| 14  | Hall of fame global                                                                | Medio      | Alto       | Reserva      |
+| 15  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
+| 16  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
+| 17  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
@@ -148,7 +148,7 @@ preguntan una a una al empezar cada fase.
      el embudo con `npm run online:report` cuando haya más salas, y decidir si los 30 min cambian.
    - Reacciones con emoji.
 5. **Más emoción**
-   - Tensión con poco tiempo (T4.3): con 20 s o menos el fondo se tiñe poco a poco.
+   - ~~Tensión con poco tiempo (T4.3)~~ hecho en 3.6.0, junto con 30 s menos en todos los tableros.
    - Hall of fame local: récords y rachas en el dispositivo, «¡Nuevo récord!» al acabar.
 6. **Ajustar con datos** (cuando haya unas 100 partidas por tablero)
    - Informe en GA4 y script que propone el tiempo de cada tablero. La tabla de tiempos ya está en
@@ -194,7 +194,7 @@ Reglas decididas con JoseLuis:
   comparten la victoria.
 - **Jugadores:** solo personas (sin máquinas), cada una con nombre, avatar exclusivo y color.
 - **Tablero y reloj:** se elige entre 6 × 6, 7 × 7 y 8 × 8, con el mismo reloj que con 2 jugadores
-  en ese tablero (2:30, 3:00 y 4:00 por jugador).
+  en ese tablero (2:00, 2:30 y 3:30 por jugador).
 - **Sin tiempo:** quien se queda sin tiempo queda fuera, conserva sus puntos y los demás siguen.
   La partida acaba al llenarse el tablero o cuando solo queda un jugador con tiempo; gana quien
   tenga más puntos.
@@ -361,8 +361,7 @@ hay que decidir dos cosas:
 
 Ajustar el reloj de cada tablero con lo que pasa en partidas reales, no con una fórmula.
 
-- **Hoy:** el tiempo por jugador sale de una fórmula (`timeFor` en `engine.js`): 4×4 1:30, 5×5
-  2:00, 6×6 2:30, 7×7 3:00 y 8×8 4:00. Es el mismo con 1, 2 y 4 jugadores.
+- **Hoy:** el tiempo por jugador está en la tabla `board.seconds` de `config.js`: 4×4 1:00, 5×5 1:30, 6×6 2:00, 7×7 2:30 y 8×8 3:30. En la 3.6.0 se quitaron 30 s a todos porque solo un 6 % de las partidas acababa por tiempo. Es el mismo con 1, 2 y 4 jugadores.
 - **Objetivo:** que el **50 %** de las partidas terminen porque a alguien se le acaba el tiempo.
   El 50 % es un parámetro (por ejemplo `TIMEOUT_TARGET = 0.5`) en un solo sitio, para poder
   cambiarlo sin tocar el resto.

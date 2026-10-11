@@ -73,7 +73,7 @@ test('with analytics accepted, games send anonymous start, end and abandon event
     mode: 'two',
     vs_machine: false,
     end_reason: 'board_full',
-    time_available: 120,
+    time_available: 90,
     cells_filled: 25,
     cells_total: 25,
   });

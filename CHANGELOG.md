@@ -17,6 +17,26 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.6.0] - 2026-10-11
+
+**Tensión con poco tiempo y relojes 30 s más cortos**
+
+Idea del ROADMAP (T4.3) elegida por JoseLuis, con un ajuste suyo: para que la tensión se vea, menos
+tiempo en todos los tableros.
+
+- Con 20 s o menos en el reloj de quien tiene el turno, el fondo se va tiñendo de rojo desde los
+  bordes, cada vez más, y late como un corazón (dos latidos por segundo). Se suma al reloj que
+  parpadea y al pitido que ya había. Con «reducir movimiento» solo cambia el color, sin latir.
+- Relojes: 4×4 1:00, 5×5 1:30, 6×6 2:00, 7×7 2:30 y 8×8 3:30 (30 s menos en todos). También en 4
+  jugadores y en línea, porque salen de la misma tabla de `config.js`.
+
+**Decisiones**
+
+- Quitar 30 s ya, sin esperar a las 100 partidas por tablero: solo un 6 % de las partidas acababa
+  por tiempo (2 de 31 en 28 días) y el objetivo es el 50 %. Lo revisaremos con `game_end`.
+- El umbral de la tensión es el mismo `clock.lowSeconds` (20 s) del aviso del reloj, para que todo
+  empiece a la vez.
+
 ## [3.5.0] - 2026-10-11
 
 **En línea, más acompañado: la invitación y los avisos del rival ([0946baf](https://github.com/chopenhauer/devin-juega-oso/commit/0946baf70330b44cf32d59ee947777c32c488828))**

@@ -9,7 +9,7 @@ const freeze = (o) =>
 
 export const GAME = freeze({
   board: {
-    seconds: { 4: 90, 5: 120, 6: 150, 7: 180, 8: 240 },
+    seconds: { 4: 60, 5: 90, 6: 120, 7: 150, 8: 210 },
     defaultSize: 5,
     fourPlayersMinSize: 6,
   },
@@ -104,7 +104,7 @@ export const HELP = {
   'clock.bonusSeconds':
     'Segundos que gana quien forma un OSO (por cada uno). Más = partidas más largas y premia más puntuar.',
   'clock.lowSeconds':
-    'Con este tiempo o menos el reloj se pone en aviso y suena; en línea se anima a quien espera.',
+    'Con este tiempo o menos el reloj se pone en aviso y suena, el fondo se va tiñendo de rojo y late (tensión), y en línea se anima a quien espera.',
   'extras.hint': '💡 Pistas por jugador y partida. 0 = desactivada.',
   'extras.last': '👁️ Ver la última jugada del rival, por jugador y partida. 0 = desactivada.',
   'extras.swap': '🔄 Cambiar una O por una S (o al revés), por jugador y partida. 0 = desactivado.',

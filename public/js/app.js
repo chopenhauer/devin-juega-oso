@@ -634,6 +634,15 @@ const { timeFor } = Engine;
   window.addEventListener('pointercancel', () => drag && endDrag(false));
   window.addEventListener('blur', () => drag && endDrag(false));
 
+  // Tension: with GAME.clock.lowSeconds or less for whoever is on turn, the background turns red
+  // more and more (0 → 1) and beats.
+  function setTension(level) {
+    let el = document.querySelector('.tension');
+    if (!el)
+      el = document.body.appendChild(Object.assign(document.createElement('div'), { className: 'tension' }));
+    el.style.setProperty('--tension', level.toFixed(3));
+    el.classList.toggle('on', level > 0);
+  }
   function fmt(v) {
     v = Math.max(0, Math.ceil(v));
     return Math.floor(v / 60) + ':' + String(v % 60).padStart(2, '0');
@@ -647,6 +656,10 @@ const { timeFor } = Engine;
         play('low');
       }
     });
+    const left = times[current] ?? Infinity;
+    setTension(
+      over || replaying || left > GAME.clock.lowSeconds ? 0 : 1 - Math.max(0, left) / GAME.clock.lowSeconds,
+    );
   }
   function updateControls() {
     sides.forEach((s, i) => {
@@ -722,6 +735,7 @@ const { timeFor } = Engine;
   }
 
   function stopGame() {
+    setTension(0);
     closeShop();
     gameId++;
     clearInterval(timer);

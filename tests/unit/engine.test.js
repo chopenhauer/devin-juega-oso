@@ -17,9 +17,9 @@ const parse = (rows) =>
     .map((c) => (c === ' ' ? '' : c));
 
 test('timeFor gives 30-second steps that grow with the board', () => {
-  assert.equal(timeFor(4), 90);
-  assert.equal(timeFor(5), 120);
-  assert.equal(timeFor(8), 240);
+  assert.equal(timeFor(4), 60);
+  assert.equal(timeFor(5), 90);
+  assert.equal(timeFor(8), 210);
 });
 
 test('findNew detects rows, columns and both diagonals through the placed cell', () => {

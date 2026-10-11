@@ -44,7 +44,7 @@ test('names fall back to placeholders and the clock runs (B01, T4.1)', async ({ 
   await startGame(page);
   await expect(page.locator('#name1')).toHaveText('Jugador 1');
   await expect(page.locator('#name2')).toHaveText('Jugador 2');
-  await expect(page.locator('#timer1')).not.toHaveText('2:00', { timeout: 3000 });
+  await expect(page.locator('#timer1')).not.toHaveText('1:30', { timeout: 3000 });
   await expect(page.locator('#turnBarTop')).toContainText('Jugador 1');
 });
 
@@ -211,4 +211,21 @@ test('B08: tienda secreta: un 🔄 comprado espera a que lo pulses y luego elija
   await cell(page, 1).click();
   await expect(page.locator('#swap1 .count')).toHaveText('0');
   expect(await boardText(page)).not.toBe(before);
+});
+
+test('with little time on turn the background turns red and beats (T4.3)', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/');
+  await startGame(page);
+  const tension = page.locator('.tension');
+  await expect(tension).not.toHaveClass(/\bon\b/);
+  await page.clock.runFor(75_000);
+  await expect(page.locator('#timer1')).toHaveText('0:15');
+  await expect(tension).toHaveClass(/\bon\b/);
+  const level = await tension.evaluate((e) => Number(e.style.getPropertyValue('--tension')));
+  expect(level).toBeCloseTo(0.25, 1);
+  expect(await tension.evaluate((e) => getComputedStyle(e).animationName)).toBe('heartbeat');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  expect(await tension.evaluate((e) => getComputedStyle(e).animationName)).toBe('none');
+  expect(Number(await tension.evaluate((e) => getComputedStyle(e).opacity))).toBeGreaterThan(0);
 });

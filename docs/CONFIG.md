@@ -18,7 +18,7 @@ Cómo cambiar uno:
 
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
-| `board.seconds` | 4×4 1:30 · 5×5 2:00 · 6×6 2:30 · 7×7 3:00 · 8×8 4:00 | Tableros que se pueden elegir y segundos de reloj de cada jugador en cada uno. Añadir o quitar un tamaño cambia el selector y lo que acepta el servidor. Más tiempo = partidas más largas y menos finales por tiempo. |
+| `board.seconds` | 4×4 1:00 · 5×5 1:30 · 6×6 2:00 · 7×7 2:30 · 8×8 3:30 | Tableros que se pueden elegir y segundos de reloj de cada jugador en cada uno. Añadir o quitar un tamaño cambia el selector y lo que acepta el servidor. Más tiempo = partidas más largas y menos finales por tiempo. |
 | `board.defaultSize` | 5 | Tablero que sale elegido la primera vez (después se recuerda el último). |
 | `board.fourPlayersMinSize` | 6 | Tablero mínimo con 4 jugadores; los más pequeños se desactivan. |
 
@@ -27,7 +27,7 @@ Cómo cambiar uno:
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
 | `clock.bonusSeconds` | 10 | Segundos que gana quien forma un OSO (por cada uno). Más = partidas más largas y premia más puntuar. |
-| `clock.lowSeconds` | 20 | Con este tiempo o menos el reloj se pone en aviso y suena; en línea se anima a quien espera. |
+| `clock.lowSeconds` | 20 | Con este tiempo o menos el reloj se pone en aviso y suena, el fondo se va tiñendo de rojo y late (tensión), y en línea se anima a quien espera. |
 
 ## Extras (usos por jugador y partida)
 

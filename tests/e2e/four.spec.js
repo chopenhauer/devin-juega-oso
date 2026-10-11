@@ -42,7 +42,7 @@ test('four players take turns 1 → 2 → 3 → 4 and finish with four scores', 
   for (const [i, name] of ['Ana', 'Bea', 'Carla', 'Dani'].entries()) {
     await expect(sides[i]).toBeVisible();
     await expect(page.locator(`#name${i + 1}`)).toHaveText(name);
-    await expect(page.locator(`#timer${i + 1}`)).toHaveText('2:30');
+    await expect(page.locator(`#timer${i + 1}`)).toHaveText('2:00');
   }
   for (const [turn, index] of [0, 7, 14, 21].entries()) {
     await expect(sides[turn]).toHaveClass(/active/);
@@ -101,7 +101,7 @@ test('with four players, whoever runs out of time is out and the others carry on
   await page.click('#startGame');
 
   const side = (n) => page.locator(`#side${n}`);
-  await page.clock.runFor(151_000);
+  await page.clock.runFor(121_000);
   await expect(side(1)).toHaveClass(/\bout\b/);
   await expect(side(2)).toHaveClass(/active/);
   await expect(page.locator('#message')).toContainText('se queda sin tiempo');
@@ -114,9 +114,9 @@ test('with four players, whoever runs out of time is out and the others carry on
   await cell(page, 2).click();
   await expect(side(2)).toHaveClass(/active/);
 
-  await page.clock.runFor(151_000);
+  await page.clock.runFor(121_000);
   await expect(side(3)).toHaveClass(/active/);
-  await page.clock.runFor(151_000);
+  await page.clock.runFor(121_000);
   await expect(page.locator('#winnerOverlay')).toBeVisible();
   await expect(page.locator('#winnerSub')).toHaveText(/\d+ – \d+ – \d+ – \d+/);
 });

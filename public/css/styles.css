@@ -1358,6 +1358,36 @@ select option {
   }
 }
 
+/* TENSION: little time left on turn (GAME.clock.lowSeconds). --tension grows 0 → 1. */
+.tension {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, var(--rojo-400) 130%);
+  opacity: calc(var(--tension, 0) * 0.7);
+  transition: opacity 1s linear;
+}
+.tension.on {
+  animation: heartbeat 1s infinite;
+}
+@keyframes heartbeat {
+  15% {
+    opacity: calc(var(--tension, 0) * 0.95);
+  }
+  30% {
+    opacity: calc(var(--tension, 0) * 0.7);
+  }
+  45% {
+    opacity: calc(var(--tension, 0) * 0.85);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tension.on {
+    animation: none;
+  }
+}
+
 /* SOS SEA THEME */
 html::before,
 body::after {
