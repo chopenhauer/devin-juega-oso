@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.2.0] - 2026-10-11
 
-**Las salas sin empezar se cierran a los 30 min**
+**Las salas sin empezar se cierran a los 30 min ([0852acf](https://github.com/chopenhauer/devin-juega-oso/commit/0852acf42680ea12054dbe7482cde76054e11cbb))**
 
 - Si pasan 30 minutos desde que se abre una sala y la partida no ha empezado, el servidor la
   cierra. El anfitrión ve «⌛ Sala cerrada: no empezó en 30 min. Abre otra.» y tiene «Abrir sala»
