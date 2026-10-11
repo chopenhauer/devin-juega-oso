@@ -24,7 +24,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 Idea de JoseLuis: premiar que se vuelva y se juegue más contando, poco a poco, las funciones
 escondidas (easter eggs) del juego.
 
-- Cada 2 partidas terminadas sale un 🎁 «¡Tienes un premio!». Al abrirlo: «Déjame que te cuente un
+- Cada 2 partidas terminadas sale arriba un aviso «🎁 ¡Tienes un premio!», igual que los de
+  las salas en línea, con el botón «Ábrelo» al final. Al abrirlo: «Déjame que te cuente un
   secreto…» y cómo se activa una función escondida, pero no qué pasa, para que lo descubras tú.
 - Cuenta jugar, no ganar: cualquier modo (máquina, «Juntos» o en línea) y cualquier resultado.
 - Como mucho un secreto al día, de uno en uno y sin repetir. Si toca en plena racha, sale en la

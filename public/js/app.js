@@ -284,13 +284,14 @@ const { timeFor } = Engine;
   // Secrets: a 🎁 on the first screens (for coming back) or at the end of a game (for playing on)
   // tells the next hidden feature, see secrets.js.
   initSecrets();
-  const secretGift = q('secretGift'),
-    secretEnd = q('secretEnd'),
+  const secretToast = q('secretToast'),
     secretDialog = q('secretDialog');
   let secretPlace = null;
   const dueSecret = () => nextSecret(readSecrets(), isoDay(new Date()));
+  const resultShown = () => !q('winnerOverlay').classList.contains('hidden');
   function syncSecretGift() {
-    secretGift.classList.toggle('hidden', !THEME_STEPS.includes(setup.dataset.step) || !dueSecret());
+    const here = resultShown() || THEME_STEPS.includes(setup.dataset.step);
+    secretToast.classList.toggle('hidden', !here || !dueSecret());
   }
   function openSecret(place) {
     const secret = dueSecret();
@@ -314,12 +315,10 @@ const { timeFor } = Engine;
     );
     q('secretKnown').classList.toggle('hidden', !before.length);
     secretPlace = place;
-    secretGift.classList.add('hidden');
-    secretEnd.classList.add('hidden');
+    secretToast.classList.add('hidden');
     secretDialog.showModal();
   }
-  secretGift.addEventListener('click', () => openSecret('start'));
-  secretEnd.addEventListener('click', () => openSecret('end'));
+  q('secretOpen').addEventListener('click', () => openSecret(resultShown() ? 'end' : 'start'));
   secretDialog.addEventListener('close', () =>
     (secretPlace === 'end' ? q('rematch') : themeToggle).focus({ preventScroll: true }),
   );
@@ -1123,7 +1122,7 @@ const { timeFor } = Engine;
     showSession(st);
     countGame();
     const secret = dueSecret();
-    secretEnd.classList.toggle('hidden', !secret);
+    syncSecretGift();
     showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret }));
   }
 
@@ -1666,7 +1665,10 @@ const { timeFor } = Engine;
     placeToast();
   }
   function placeToast() {
-    const top = document.querySelector('.panel').getBoundingClientRect().top + window.scrollY;
+    // Layout position (offsetTop) rather than getBoundingClientRect, so an entry animation moving
+    // the card doesn't leave the toast off-centre.
+    let top = 0;
+    for (let el = document.querySelector('.panel'); el; el = el.offsetParent) top += el.offsetTop;
     document.documentElement.style.setProperty('--toast-mid', `${Math.round(top / 2)}px`);
   }
   new ResizeObserver(placeToast).observe(document.querySelector('.panel'));

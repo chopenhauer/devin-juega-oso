@@ -46,19 +46,19 @@ async function finishGame(page) {
 test('after the 2nd game the end screen has a 🎁 that tells a secret, once a day', async ({ page }) => {
   await seed(page, { 'oso.consent.v1': 'denied' });
   await page.goto('/');
-  await expect(page.locator('#secretGift')).toBeHidden();
+  await expect(page.locator('#secretToast')).toBeHidden();
   await page.click('#introSkip');
   for (let i = 0; i < 4; i++) await page.click('#stepNext');
   await page.click('#startGame');
   await finishGame(page);
-  await expect(page.locator('#secretEnd')).toBeHidden();
+  await expect(page.locator('#secretToast')).toBeHidden();
 
   await page.click('#rematch');
   await finishGame(page);
-  const gift = page.locator('#secretEnd');
-  await expect(gift).toHaveText('🎁 ¡Tienes un premio!');
+  const gift = page.locator('#secretToast');
+  await expect(gift).toContainText('🎁 ¡Tienes un premio!');
   await expect(page.locator('#feedbackAsk'), 'the secret goes first').toBeHidden();
-  await gift.click();
+  await gift.getByRole('button', { name: 'Ábrelo' }).click();
   const dialog = page.locator('#secretDialog');
   await expect(dialog).toBeVisible();
   await expect(page.locator('#secretTitle')).toHaveText('Déjame que te cuente un secreto…');
@@ -80,9 +80,16 @@ test('after the 2nd game the end screen has a 🎁 that tells a secret, once a d
 test('coming back with games already played, the 🎁 waits on the first screen', async ({ page }) => {
   await seed(page, { 'oso.consent.v1': 'granted', 'oso.feedback.v1': { games: 5, lastAsk: 1 } });
   await page.goto('/');
-  const gift = page.locator('#secretGift');
+  const gift = page.locator('#secretToast');
   await expect(gift, 'counts the games played before secrets existed').toBeVisible();
-  await gift.click();
+  // Same place as the online news: halfway between the top of the screen and the card.
+  await expect
+    .poll(async () => {
+      const [toast, panel] = await Promise.all([gift.boundingBox(), page.locator('.panel').boundingBox()]);
+      return Math.abs(toast.y + toast.height / 2 - panel.y / 2);
+    })
+    .toBeLessThan(2);
+  await gift.getByRole('button', { name: 'Ábrelo' }).click();
   await expect(page.locator('#secretDialog')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.locator('#themeToggle')).toBeFocused();

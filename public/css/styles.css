@@ -3269,34 +3269,6 @@ body[data-motion='rise'] .theme-decor span {
 }
 
 /* QUICK FEEDBACK (end of game, only at chosen moments; secondary to the actions) */
-/* Secrets (secrets.js): the 🎁 that opens the next one, on the first screens and at the end. */
-.secret-gift {
-  display: block;
-  min-height: 48px;
-  margin: 0 auto var(--space-3);
-  padding: 0 var(--space-5);
-  border: 2px solid var(--accent);
-  border-radius: var(--r-pill);
-  background: var(--blanco-a06);
-  color: var(--accent);
-  font: inherit;
-  font-size: var(--fs-base);
-  font-weight: var(--fw-bold);
-  cursor: pointer;
-  animation: giftGlow 1.8s var(--ease-soft) infinite;
-}
-.secret-gift:hover {
-  background: var(--blanco-a16);
-}
-.secret-end {
-  margin: 22px auto 0;
-}
-/* A glow, not a bounce: the button stays put so it is easy to tap. */
-@keyframes giftGlow {
-  50% {
-    background: var(--blanco-a16);
-  }
-}
 .secret-known {
   text-align: left;
 }
@@ -3466,7 +3438,7 @@ body:has(#gameScreen:not(.hidden)) .online-toggle {
   display: none;
 }
 /* On the first steps (the guest's «Sala cerrada»), the notice takes the place of the top buttons. */
-body:has(.online-toast:not(.hidden))
+body:has(.online-toast:not(.hidden), .secret-toast:not(.hidden))
   :is(.theme-toggle, .sound-toggle, .share-toggle, .online-toggle, .theme-menu) {
   visibility: hidden;
 }
@@ -3489,7 +3461,8 @@ body:has(.online-toast:not(.hidden))
   gap: var(--space-2);
 }
 /* Lobby news («Esperando a tu amigo…») as a toast between the toolbar and the card. */
-.online-toast {
+.online-toast,
+.secret-toast {
   position: fixed;
   /* Centred between the top of the screen and the card (--toast-mid, set by app.js) and as tall
      as the ← → buttons. The top buttons are hidden on these steps. */
@@ -3528,6 +3501,50 @@ body:has(#gameScreen:not(.hidden)) .online-toast {
     opacity: 0;
     transform: translate(-50%, -8px);
   }
+}
+/* Secrets (secrets.js): «¡Tienes un premio!» uses the same toast as the online news, with a
+   button at the end. It is on the first steps and on the end screen, at the top. */
+.secret-toast {
+  gap: var(--space-3);
+  /* With the button inside it stays as tall as ← →, like the online news. */
+  padding-block: var(--space-1);
+  padding-inline-end: var(--space-1);
+  /* Centred on --toast-mid whatever its height. */
+  top: max(calc(env(safe-area-inset-top) + var(--space-8)), var(--toast-mid, 100px));
+  transform: translate(-50%, -50%);
+  animation-name: secretToastIn;
+}
+.secret-toast span {
+  white-space: nowrap;
+}
+@keyframes secretToastIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 8px));
+  }
+}
+.secret-toast.hidden,
+body:has(.online-toast:not(.hidden)) .secret-toast,
+body:has(#gameScreen:not(.hidden)):has(#winnerOverlay.hidden) .secret-toast {
+  display: none;
+}
+body:has(#winnerOverlay:not(.hidden)) .secret-toast {
+  top: calc(env(safe-area-inset-top) + var(--space-3));
+  transform: translateX(-50%);
+  animation-name: toastIn;
+  z-index: calc(var(--z-overlay) + 1);
+}
+.secret-toast button {
+  flex: none;
+  min-height: 34px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--r-sm);
+  background: var(--btn-primary-bg);
+  color: var(--naranja-900-2);
+  font: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
 }
 .start-countdown {
   position: fixed;

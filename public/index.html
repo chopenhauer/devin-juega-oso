@@ -58,6 +58,10 @@
     </button>
     <button id="onlineToggle" class="online-toggle" type="button" aria-label="Jugar en línea">🌐</button>
     <p id="onlineToast" class="online-toast hidden" role="status" aria-live="polite"></p>
+    <div id="secretToast" class="secret-toast hidden" role="status" aria-live="polite">
+      <span>🎁 ¡Tienes un premio!</span>
+      <button id="secretOpen" type="button">Ábrelo</button>
+    </div>
     <button id="shareToggle" class="share-toggle" type="button" aria-label="Invitar a jugar">📣</button>
     <div id="themeMenu" class="theme-menu hidden" role="group" aria-label="Tema"></div>
     <div id="eggParty" class="egg-party" role="status" aria-live="polite"></div>
@@ -66,7 +70,6 @@
       <h1 class="visually-hidden">OSO · el juego de Julia</h1>
       <section class="panel">
         <div id="setupScreen" class="setup">
-          <button id="secretGift" class="secret-gift hidden" type="button">🎁 ¡Tienes un premio!</button>
           <div id="setupSteps" class="setup-steps">
             <div class="step" data-step="welcome">
               <div id="brandIcon" class="brand-bear" aria-hidden="true">🐻</div>
@@ -790,9 +793,6 @@
                 📣 Compartir resultado
               </button>
             </div>
-            <button id="secretEnd" class="secret-gift secret-end hidden" type="button">
-              🎁 ¡Tienes un premio!
-            </button>
             <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
               <h2 id="feedbackTitle" class="feedback-title">¿Os está gustando OSO?</h2>
               <div class="feedback-actions">
