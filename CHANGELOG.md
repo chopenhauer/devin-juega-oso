@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.2.1] - 2026-10-11
 
-**Pantalla final más ordenada: botones en línea y marcador de la sesión**
+**Pantalla final más ordenada: botones en línea y marcador de la sesión ([3500548](https://github.com/chopenhauer/devin-juega-oso/commit/35005485c9ec6178dae4c3fbbdb6693fa949a0e4))**
 
 - En las partidas en línea no está «Otro tablero», y «Salir» se quedaba solo en media fila.
   Ahora ocupa la fila entera, como «Revancha» y «Compartir resultado»: los tres botones tienen el
