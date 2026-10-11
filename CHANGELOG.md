@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.3.1] - 2026-10-11
 
-**Todos los parámetros del juego en un solo fichero**
+**Todos los parámetros del juego en un solo fichero ([d451806](https://github.com/chopenhauer/devin-juega-oso/commit/d4518066b05ec443f88727cdcf3a48657caf60a4))**
 
 Idea de JoseLuis: como director del juego, tener a mano todo lo que se puede ajustar.
 
