@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.3.0] - 2026-10-11
 
-**Secretos: un premio por volver a jugar**
+**Secretos: un premio por volver a jugar ([9c975dd](https://github.com/chopenhauer/devin-juega-oso/commit/9c975dd4adf3618b7307f66e1b587b2310b20bc2))**
 
 Idea de JoseLuis: premiar que se vuelva y se juegue más contando, poco a poco, las funciones
 escondidas (easter eggs) del juego.
