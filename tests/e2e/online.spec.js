@@ -16,6 +16,35 @@ async function player(browser, errors) {
   return page;
 }
 
+test('the WhatsApp invite has one link with the room and UTM, and its own share card', async ({
+  browser,
+}) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  const code = await createRoom(host);
+  const text = new URL(await host.locator('#onlineWhatsapp').getAttribute('href')).searchParams.get('text');
+  const link = `http://localhost:4173/?sala=${code}&utm_source=whatsapp&utm_medium=share&utm_campaign=en_linea`;
+  expect(text).toBe(`¿Jugamos a OSO? 🐻 Entra en mi sala: ${link}`);
+  // The notice sits halfway between the top of the screen and the card, as tall as ← →.
+  const boxes = () =>
+    Promise.all(['#onlineToast', '.panel', '#stepNext'].map((s) => host.locator(s).boundingBox()));
+  await expect
+    .poll(async () => {
+      const [notice, panel] = await boxes();
+      return Math.abs(notice.y + notice.height / 2 - panel.y / 2) < 2;
+    })
+    .toBe(true);
+  const [notice, , next] = await boxes();
+  expect(notice.height).toBe(next.height);
+  const html = await (await guest.request.get(`/?sala=${code}`)).text();
+  expect(html).toContain('content="https://juegaoso.com/og-sala.png"');
+  expect(await (await guest.request.get('/')).text()).toContain('content="https://juegaoso.com/og.png"');
+  await guest.goto(link.replace('http://localhost:4173', ''));
+  await expect(guest.locator('#onlineToast')).toContainText('Ana te invita');
+  await expect(guest).toHaveURL(/\/\?utm_source=whatsapp&utm_medium=share&utm_campaign=en_linea$/);
+  expect(errors).toEqual([]);
+});
+
 const cell = (page, i) => page.locator('#board .cell').nth(i);
 
 async function createRoom(host, name = 'Ana') {
@@ -29,7 +58,7 @@ async function createRoom(host, name = 'Ana') {
   await host.fill('#nickname1', name);
   await host.click('#openRoom');
   await expect(host.locator('#onlineCode')).toHaveText(/^[A-Z2-9]{5}$/);
-  await expect(host.locator('#onlineToast')).toContainText('Esperando a tu amigo');
+  await expect(host.locator('#onlineToast')).toContainText('Esperando a tu rival');
   return host.locator('#onlineCode').textContent();
 }
 
@@ -45,7 +74,7 @@ async function joinRoom(host, guest, code, name, hostName = 'Ana') {
   await guest.click('#stepNext');
   await expect(guest.locator('#onlineToast')).toContainText(`${hostName} está eligiendo el tablero`);
   await expect(guest.locator('#startGame')).toBeHidden();
-  await expect(host.locator('#onlineToast')).toContainText(`${name} está listo`);
+  await expect(host.locator('#onlineToast')).toContainText(`${name} ya está aquí`);
   await expect(host.locator('.second-player .online-seat-name')).toHaveText(name);
   await host.selectOption('#sizeSelect', '4');
   await host.click('#startGame');

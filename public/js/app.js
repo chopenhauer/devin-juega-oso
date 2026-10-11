@@ -1213,10 +1213,10 @@ const { timeFor } = Engine;
   const onlineDialog = q('onlineDialog');
   let pollTimeout = null;
   const ONLINE_ERRORS = {
-    no_room: 'Esta sala ya no existe. Pide a tu amigo un enlace nuevo.',
+    no_room: 'Esta sala ya no existe. Pide un enlace nuevo a quien te invitó.',
     code: 'Ese código no es válido.',
     full: 'Esta sala ya está completa.',
-    avatar_taken: 'Ese avatar ya lo tiene tu amigo. Elige otro.',
+    avatar_taken: 'Ese avatar ya lo tiene tu rival. Elige otro.',
     rate: 'Demasiados intentos. Espera unos minutos.',
     network: 'No hay conexión. Revisa internet y vuelve a probar.',
   };
@@ -1236,7 +1236,7 @@ const { timeFor } = Engine;
       offline: false,
     };
     Online.saveSeat({ code: r.code, token: r.token, seat });
-    if (Online.codeFromUrl()) window.history.replaceState(null, '', location.pathname);
+    if (Online.codeFromUrl()) window.history.replaceState(null, '', Online.urlWithoutRoom());
   }
 
   function schedulePoll(delay = Online.POLL_MS) {
@@ -1340,7 +1340,7 @@ const { timeFor } = Engine;
   function showRematchState(v) {
     const mine = v.seats[online.seat],
       theirs = v.seats[1 - online.seat];
-    const rival = theirs?.name ?? 'tu amigo';
+    const rival = theirs?.name ?? 'tu rival';
     q('rematch').disabled = !!mine?.rematch || !!theirs?.left;
     if (theirs?.left) q('winnerSub').textContent = `${rival} ha salido de la sala`;
     else if (mine?.rematch) q('winnerSub').textContent = `Esperando a que ${rival} acepte la revancha…`;
@@ -1544,8 +1544,10 @@ const { timeFor } = Engine;
     q('roomCodeLine').classList.toggle('hidden', !online);
     if (online) {
       q('onlineCode').textContent = online.code;
-      const url = Online.inviteUrl(online.code);
-      q('onlineWhatsapp').href = whatsappHref(`¿Jugamos a OSO? 🐻 Entra en mi sala: ${url}`);
+      q('onlineWhatsapp').href = whatsappHref(
+        '¿Jugamos a OSO? 🐻 Entra en mi sala:',
+        Online.inviteUrl(online.code, 'whatsapp'),
+      );
     }
     const rival = seats[1 - me]?.name;
     const seatNews = !on
@@ -1554,30 +1556,37 @@ const { timeFor } = Engine;
         ? online
           ? ready
             ? `✅ ¡${rival} ya está aquí!`
-            : '⏳ Esperando a tu amigo…'
+            : '⏳ Esperando a tu rival…'
           : ''
         : online
           ? '✅ ¡Ya estás dentro!'
-          : `${seats[0]?.name ?? 'Tu amigo'} te invita. Pon tu nombre y pulsa →`;
+          : `${seats[0]?.name ?? 'Alguien'} te invita. Pon tu nombre y pulsa →`;
     q('sizeSelect').disabled = on && !host;
     q('startGame').classList.toggle('hidden', on && !host);
     q('startGame').disabled = on && host && online?.status !== 'lobby';
     const boardNews = !on
       ? ''
       : !host
-        ? `⏳ ${seats[0]?.name ?? 'Tu amigo'} está eligiendo el tablero…`
+        ? `⏳ ${seats[0]?.name ?? 'Tu rival'} está eligiendo el tablero…`
         : ready
-          ? `✅ ${rival} está listo. ¡Elige el tablero!`
+          ? `✅ ${rival} ya está aquí. ¡Elige el tablero!`
           : online
-            ? '⏳ Esperando a tu amigo…'
-            : 'Vuelve atrás y abre la sala para invitar a tu amigo.';
+            ? '⏳ Esperando a tu rival…'
+            : 'Vuelve atrás y abre la sala para invitar a tu rival.';
     toast(setupStep === 'players' ? seatNews : setupStep === 'board' ? boardNews : '');
   }
   function toast(text) {
     const el = q('onlineToast');
     if (el.textContent !== text) el.textContent = text;
     el.classList.toggle('hidden', !text);
+    placeToast();
   }
+  function placeToast() {
+    const top = document.querySelector('.panel').getBoundingClientRect().top + window.scrollY;
+    document.documentElement.style.setProperty('--toast-mid', `${Math.round(top / 2)}px`);
+  }
+  new ResizeObserver(placeToast).observe(document.querySelector('.panel'));
+  window.addEventListener('resize', placeToast);
   let setupStep = null;
   document.addEventListener('oso:step', (e) => {
     setupStep = e.detail;
@@ -1655,7 +1664,7 @@ const { timeFor } = Engine;
 
   // Guest: the invite link opens the players step with the host's card.
   async function offerJoin(code) {
-    window.history.replaceState(null, '', location.pathname);
+    window.history.replaceState(null, '', Online.urlWithoutRoom());
     const room = await Online.fetchRoom(code);
     const error = !room.ok ? room.error : room.status !== 'waiting' ? 'full' : null;
     if (error) {
@@ -1679,10 +1688,10 @@ const { timeFor } = Engine;
 
   q('onlineCopy').addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText(Online.inviteUrl(online.code));
-      toast('🔗 Enlace copiado. ⏳ Esperando a tu amigo…');
+      await navigator.clipboard.writeText(Online.inviteUrl(online.code, 'copy'));
+      toast('🔗 Enlace copiado. ⏳ Esperando a tu rival…');
     } catch {
-      toast(Online.inviteUrl(online.code));
+      toast(Online.inviteUrl(online.code, 'copy'));
     }
   });
   q('onlineCancel').addEventListener('click', () => onlineDialog.close());

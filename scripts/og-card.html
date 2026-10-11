@@ -88,5 +88,12 @@
       <p class="tagline">Conecta · forma · gana</p>
       <div class="url">juegaoso.com</div>
     </div>
+    <script>
+      // og-card.html?sala is the card for online invites (public/og-sala.png).
+      if (location.search === '?sala') {
+        document.querySelector('.tagline').textContent = '¡Te reto a una partida!';
+        document.querySelector('.url').textContent = '🌐 Juega en línea';
+      }
+    </script>
   </body>
 </html>

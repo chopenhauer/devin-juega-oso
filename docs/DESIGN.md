@@ -67,7 +67,11 @@ capas, los alias como referencias (`{primitive.sol-400}`) y los temas de CSS.
 
 ### Disposición
 
-`--side-w` y `--avatar-cols` siguen en `styles.css`: dependen del tamaño de la pantalla, no del tema.
+**Mobile first y responsive.** Todo se diseña primero para el móvil en vertical (390 px) y luego se
+amplía con `min-width` para iPad y escritorio, sin pantallas aparte. Cada cambio visual se revisa en
+móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposición, también en iPad.
+
+`--nav-btn-h` (altura de ← → y del aviso del juego en línea) está en `styles.css`. `--side-w` y `--avatar-cols` siguen en `styles.css`: dependen del tamaño de la pantalla, no del tema.
 
 ## Componentes
 
@@ -85,6 +89,12 @@ capas, los alias como referencias (`{primitive.sol-400}`) y los temas de CSS.
 - **Compartir** (`#shareToggle`, `#shareMenu`, `#shareResult`): 📣 redondo junto a 🔊 y 🎨 en el inicio (se oculta en la partida), «📣 Invitar a jugar» en el menú ☰ y «📣 Compartir resultado» a todo el ancho bajo las acciones finales. Abre el menú nativo (`navigator.share`); si no hay, `#shareDialog` (`.info-dialog`) con el texto, WhatsApp (principal), Email, «Copiar enlace», un estado `role="status"` y «Cerrar». Los textos nunca llevan nombres.
 - **Pie** (`.credits`): una sola línea, «made by Vilarequi with ❤️ · versión · Cookies · Privacidad».
 - **Celebraciones:** confeti al ganar y lluvia de huevos con el fondo oscurecido en el easter egg de temas; con «reducir movimiento» solo queda el mensaje.
+
+## Textos
+
+- Lenguaje inclusivo: no sabemos si quien juega es chico o chica. Usamos términos neutros
+  («rival», «quien te invitó», «alguien», «… ya está aquí») en vez de «amigo», «listo» o «amig@». La
+  @ y la x se leen mal con lector de pantalla.
 
 ## Reglas de accesibilidad
 

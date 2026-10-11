@@ -32,6 +32,8 @@ test('WhatsApp and email links carry the text and their own utm_source', () => {
   const wa = new URL(whatsappHref('Hola'));
   assert.equal(wa.origin, 'https://wa.me');
   assert.equal(wa.searchParams.get('text'), `Hola ${shareUrl('whatsapp')}`);
+  const invite = 'https://juegaoso.com/?sala=K7QD2&utm_source=whatsapp';
+  assert.equal(new URL(whatsappHref('Hola', invite)).searchParams.get('text'), `Hola ${invite}`);
   const mail = new URL(emailHref('Hola'));
   assert.equal(mail.protocol, 'mailto:');
   assert.equal(mail.searchParams.get('subject'), '¿Jugamos a OSO? 🐻');

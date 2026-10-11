@@ -1,6 +1,10 @@
-# Only the static site (public/), the functions (api/) and their config are uploaded to Vercel.
+# Only the static site (public/), the functions (api/), their config and the build script that
+# writes public/sala.html are uploaded to Vercel.
 /*
 !/public
 !/vercel.json
 !/api
 !/package.json
+!/scripts
+/scripts/*
+!/scripts/invite-page.js

@@ -5,10 +5,12 @@ import { readFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { createHandler } from '../api/_sala.js';
 import { memoryStore } from '../api/_store.js';
+import { writeInvitePage } from './invite-page.js';
 
 const root = resolve('public');
 const port = Number(process.env.PORT) || 4173;
 const config = JSON.parse(await readFile('vercel.json', 'utf8'));
+writeInvitePage();
 const types = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
@@ -38,9 +40,16 @@ async function api(req, res) {
   res.writeHead(response.status, Object.fromEntries(response.headers)).end(await response.text());
 }
 
+// Same rewrites as Vercel (only exact sources with `has` query keys are used).
+const rewrite = (url) =>
+  config.rewrites?.find(
+    ({ source, has = [] }) => source === url.pathname && has.every(({ key }) => url.searchParams.has(key)),
+  )?.destination ?? url.pathname;
+
 createServer(async (req, res) => {
-  const path = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-  if (path === '/api/sala') return api(req, res);
+  const url = new URL(req.url, 'http://localhost');
+  if (url.pathname === '/api/sala') return api(req, res);
+  const path = decodeURIComponent(rewrite(url));
   const file = normalize(join(root, path === '/' ? 'index.html' : path));
   if (!file.startsWith(root)) {
     res.writeHead(403).end();

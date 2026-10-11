@@ -1,10 +1,22 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "[ \"$VERCEL_ENV\" = preview ] || rm -f public/design.html public/js/design.js public/css/design.css",
+  "buildCommand": "node scripts/invite-page.js && { [ \"$VERCEL_ENV\" = preview ] || rm -f public/design.html public/js/design.js public/css/design.css; }",
   "installCommand": "",
   "outputDirectory": "public",
   "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "sala"
+        }
+      ],
+      "destination": "/sala"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

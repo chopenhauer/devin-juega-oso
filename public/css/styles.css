@@ -122,6 +122,11 @@ body:has(#gameScreen:not(.hidden)) .credits {
   pointer-events: auto;
 }
 
+/* Height of the ← → step buttons, shared with the online notice. */
+html {
+  --nav-btn-h: 46px;
+}
+
 /* COOKIE CONSENT (setup screens only; both choices equally prominent) */
 .consent {
   position: fixed;
@@ -505,7 +510,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-8);
 }
 .select-wrap {
   position: relative;
@@ -2013,7 +2018,7 @@ body:has(#helpModal:not(.hidden))
 .wizard-nav .primary,
 .wizard-nav .secondary {
   width: 76px;
-  min-height: 46px;
+  min-height: var(--nav-btn-h);
   padding: 0 var(--space-2-5);
   font-size: var(--fs-3xl);
   line-height: 1.1;
@@ -3419,19 +3424,29 @@ body:has(#gameScreen:not(.hidden)) .online-toggle {
 /* Lobby news («Esperando a tu amigo…») as a toast between the toolbar and the card. */
 .online-toast {
   position: fixed;
-  top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+  /* Centred between the top of the screen and the card (--toast-mid, set by app.js) and as tall
+     as the ← → buttons. The top buttons are hidden on these steps. */
+  top: max(
+    calc(env(safe-area-inset-top) + var(--space-2)),
+    calc(var(--toast-mid, 100px) - var(--nav-btn-h) / 2)
+  );
   left: 50%;
   z-index: var(--z-toolbar);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: max-content;
-  max-width: calc(100% - 32px);
+  max-width: min(calc(100% - 32px), 440px);
+  min-height: var(--nav-btn-h);
   margin: 0;
-  padding: var(--space-2) var(--space-4);
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  padding: var(--space-2) var(--space-5);
+  border: 2px solid var(--accent);
+  border-radius: var(--r-md);
   background: var(--noche-950-a97);
   color: var(--accent);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
   text-align: center;
   box-shadow: 0 8px 24px var(--noche-950-a97);
   transform: translateX(-50%);

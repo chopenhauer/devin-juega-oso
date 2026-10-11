@@ -27,7 +27,15 @@ export function clearSeat() {
   }
 }
 
-export const inviteUrl = (code) => `${location.origin}/?sala=${code}`;
+// `source` (whatsapp, copy) and the campaign tell GA how many visits come from online invites.
+export const inviteUrl = (code, source) =>
+  `${location.origin}/?sala=${code}&utm_source=${source}&utm_medium=share&utm_campaign=en_linea`;
+// Drops the room code from the address once used, keeping the UTM tags for GA.
+export function urlWithoutRoom(href = location.href) {
+  const url = new URL(href);
+  url.searchParams.delete('sala');
+  return url.pathname + url.search + url.hash;
+}
 export function codeFromUrl(search = location.search) {
   const code = new URLSearchParams(search).get('sala')?.toUpperCase() ?? '';
   return CODE_RE.test(code) ? code : null;

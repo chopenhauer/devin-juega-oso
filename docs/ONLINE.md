@@ -1,6 +1,6 @@
 # Jugar en línea 1 contra 1 · decisión y plan
 
-Registro de la decisión de arquitectura para invitar a un amigo a una partida a distancia, con las
+Registro de la decisión de arquitectura para invitar a alguien a una partida a distancia, con las
 alternativas que descartamos y los números que nos dirán si acertamos. Si algún día lo revisamos,
 empezar por [«Cómo sabremos si funciona»](#cómo-sabremos-si-funciona).
 
@@ -40,14 +40,14 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   `K7QD2`) y un enlace `juegaoso.com/?sala=K7QD2` que se comparte por WhatsApp o copiando. Flujo
   (feedback de JoseLuis, 10-oct): «2 jugadores» → «¿Dónde está tu rival?» (🛋️ Juntos / 🌐 En
   línea) → en «¿Quién juega?» la tarjeta del jugador 2 es la invitación («Abrir sala», código,
-  WhatsApp, Copiar). El amigo abre el enlace y ve la misma pantalla con la tarjeta del anfitrión
+  WhatsApp, Copiar). Quien recibe la invitación abre el enlace y ve la misma pantalla con la tarjeta del anfitrión
   (solo lectura) y la suya. Los dos pasan al tablero; solo el anfitrión elige tamaño y pulsa «¡A
   jugar!» (el invitado ve «… está eligiendo el tablero…»). Estados de la sala en el servidor:
   `waiting` (anfitrión solo) → `lobby` (los dos; `profile` cambia nombre/avatar) → `start` del
   anfitrión → `playing` ⇄ `over`. Si el invitado sale del lobby, la sala vuelve a `waiting`; si sale
   el anfitrión, se cierra. El botón 🌐 arriba a la izquierda presenta el modo. Ronda 2 de feedback: los
   avisos del lobby salen en un toast arriba; la tarjeta del rival enseña su avatar en la rejilla (solo
-  lectura); «¡A jugar!» se ve desactivado hasta que el amigo entra; al empezar (y en cada revancha)
+  lectura); «¡A jugar!» se ve desactivado hasta que el rival entra; al empezar (y en cada revancha)
   hay una cuenta atrás 3-2-1 en los dos móviles: el servidor arranca el primer reloj `COUNTDOWN_MS`
   (3 s) más tarde y rechaza jugadas antes (`countdown`).
 - **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El

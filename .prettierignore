@@ -4,3 +4,4 @@ package-lock.json
 test-results/
 playwright-report/
 docs/tokens.json
+public/sala.html

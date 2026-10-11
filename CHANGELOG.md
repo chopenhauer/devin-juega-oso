@@ -17,6 +17,33 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.1.0] - 2026-10-11
+
+**Invitaciones en línea más claras**
+
+- Los textos del juego en línea usan palabras que valen para cualquiera: «Esperando a tu rival…»,
+  «Invita a tu rival», «… ya está aquí. ¡Elige el tablero!», «Tu rival espera tu jugada», «Invita a
+  quien quieras». Antes decían «tu amigo» o «está listo».
+- El mensaje de WhatsApp lleva un solo enlace, el de la sala, con la UTM dentro
+  (`utm_campaign=en_linea`, `utm_source=whatsapp` o `copy`). Así GA separa las invitaciones a
+  partidas en línea del «compartir» de boca-oreja. Al entrar se quita el código de la dirección,
+  pero la UTM se queda para que GA la vea.
+- Los enlaces de sala tienen su propia tarjeta en WhatsApp: «Te reto a una partida de OSO 🐻» con la
+  imagen `og-sala.png` («¡Te reto a una partida!» · «🌐 Juega en línea»). Vercel sirve
+  `sala.html`, que es la misma página con otras etiquetas Open Graph y se genera al publicar.
+- Más espacio entre el selector de tablero y «¡A jugar!».
+- El aviso del juego en línea («Esperando a tu rival…») se ve más: queda centrado entre el borde de
+  arriba de la pantalla y la tarjeta, tiene la misma altura que los botones ← → y lleva letra más
+  grande con borde amarillo.
+
+**Decisiones**
+
+- Lenguaje inclusivo (propuesta de JoseLuis): términos neutros como «rival» o «quien te invitó» en
+  vez de «amig@», porque los lectores de pantalla leen mal la @. La regla está en
+  [`docs/DESIGN.md`](docs/DESIGN.md).
+- Mobile first y responsive como regla general (JoseLuis): se diseña primero para el móvil en
+  vertical y se amplía para iPad y escritorio. También está en `docs/DESIGN.md`.
+
 ## [3.0.1] - 2026-10-11
 
 **Analítica solo en producción y paneles para seguir el juego en línea** ([e43b69a](https://github.com/chopenhauer/devin-juega-oso/commit/e43b69ac85905609d4fabca886998a7457cd79a2))

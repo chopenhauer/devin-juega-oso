@@ -23,8 +23,8 @@ export function shareText(result = null) {
   return `¡Partidazo de OSO 🐻: ${hi} a ${lo}! ¿Juegas conmigo?`;
 }
 
-export const whatsappHref = (text) =>
-  `https://wa.me/?text=${encodeURIComponent(`${text} ${shareUrl('whatsapp')}`)}`;
+export const whatsappHref = (text, url = shareUrl('whatsapp')) =>
+  `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`;
 
 export const emailHref = (text) =>
   `mailto:?subject=${encodeURIComponent(SHARE_SUBJECT)}&body=${encodeURIComponent(`${text}\n\n${shareUrl('email')}`)}`;

@@ -1,6 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { cheer, codeFromUrl, qualityParams, newQuality } from '../../public/js/online.js';
+import { cheer, codeFromUrl, qualityParams, newQuality, urlWithoutRoom } from '../../public/js/online.js';
+
+test('the room code leaves the address but the UTM tags stay for GA', () => {
+  assert.equal(
+    urlWithoutRoom(
+      'https://juegaoso.com/?sala=K7QD2&utm_source=whatsapp&utm_medium=share&utm_campaign=en_linea',
+    ),
+    '/?utm_source=whatsapp&utm_medium=share&utm_campaign=en_linea',
+  );
+  assert.equal(urlWithoutRoom('https://juegaoso.com/?sala=K7QD2'), '/');
+});
 
 test('the waiting player gets a message that fits the game', () => {
   const base = { mine: 0, theirs: 0, free: 9, rivalName: 'Bea', rivalTime: 60 };
