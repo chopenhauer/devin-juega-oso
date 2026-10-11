@@ -17,6 +17,30 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.3.0] - 2026-10-11
+
+**Secretos: un premio por volver a jugar**
+
+Idea de JoseLuis: premiar que se vuelva y se juegue más contando, poco a poco, las funciones
+escondidas (easter eggs) del juego.
+
+- Cada 2 partidas terminadas sale un 🎁 «¡Tienes un premio!». Al abrirlo: «Déjame que te cuente un
+  secreto…» y cómo se activa una función escondida, pero no qué pasa, para que lo descubras tú.
+- Cuenta jugar, no ganar: cualquier modo (máquina, «Juntos» o en línea) y cualquier resultado.
+- Como mucho un secreto al día, de uno en uno y sin repetir. Si toca en plena racha, sale en la
+  pantalla final; si toca al volver otro día, en el inicio.
+- Con el segundo secreto aparece «Ya sabías…», con una pista corta de los anteriores y «Saber más».
+- El primer secreto es el de los temas (las 6 pulsaciones del 🎨). Los nuevos se añaden al final
+  de `public/js/secrets.js`; por ahora salen en ese orden.
+- Se guarda solo en el navegador (`oso.secretos.v1`), sin cuentas. El contador arranca con las
+  partidas que el dispositivo ya había jugado, así que quien ya jugaba recibe su primer secreto
+  en el inicio.
+- Si el secreto y la pregunta «¿Os está gustando OSO?» coinciden, gana el secreto y la pregunta
+  espera a otra partida.
+- Medición: eventos `secret_shown` (qué secreto y dónde: `place` start o end) y `secret_found`
+  (al activarlo, con `told` para saber si se le había contado). Las dimensiones `secret` y
+  `told` quedan registradas en GA4 por la API.
+
 ## [3.2.1] - 2026-10-11
 
 **Pantalla final más ordenada: botones en línea y marcador de la sesión ([3500548](https://github.com/chopenhauer/devin-juega-oso/commit/35005485c9ec6178dae4c3fbbdb6693fa949a0e4))**

@@ -97,10 +97,11 @@ function saveFeedback(state) {
 }
 
 // Counts a finished game and returns the moment to ask for feedback, if any.
-export function nextFeedback({ mode, winner, sessionGames }) {
+// `quiet`: something else is on the end screen (a secret), so the question waits for another game.
+export function nextFeedback({ mode, winner, sessionGames, quiet = false }) {
   const state = readFeedback();
   state.games += 1;
-  const moment = feedbackMoment({ state, version: VERSION, mode, winner, sessionGames });
+  const moment = quiet ? null : feedbackMoment({ state, version: VERSION, mode, winner, sessionGames });
   if (moment) state.lastAsk = state.games;
   return saveFeedback(state) ? moment : null;
 }

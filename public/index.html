@@ -66,6 +66,7 @@
       <h1 class="visually-hidden">OSO · el juego de Julia</h1>
       <section class="panel">
         <div id="setupScreen" class="setup">
+          <button id="secretGift" class="secret-gift hidden" type="button">🎁 ¡Tienes un premio!</button>
           <div id="setupSteps" class="setup-steps">
             <div class="step" data-step="welcome">
               <div id="brandIcon" class="brand-bear" aria-hidden="true">🐻</div>
@@ -789,6 +790,9 @@
                 📣 Compartir resultado
               </button>
             </div>
+            <button id="secretEnd" class="secret-gift secret-end hidden" type="button">
+              🎁 ¡Tienes un premio!
+            </button>
             <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
               <h2 id="feedbackTitle" class="feedback-title">¿Os está gustando OSO?</h2>
               <div class="feedback-actions">
@@ -823,6 +827,23 @@
         >
         <form method="dialog">
           <button id="thanksClose" class="secondary" type="submit">Cerrar</button>
+        </form>
+      </dialog>
+      <dialog
+        id="secretDialog"
+        class="info-dialog secret-dialog"
+        aria-labelledby="secretTitle"
+        aria-describedby="secretHow"
+      >
+        <div class="info-emoji" aria-hidden="true">🤫</div>
+        <h2 id="secretTitle" class="step-title">Déjame que te cuente un secreto…</h2>
+        <p id="secretHow" class="step-lead"></p>
+        <section id="secretKnown" class="secret-known hidden" aria-labelledby="secretKnownTitle">
+          <h3 id="secretKnownTitle">Ya sabías…</h3>
+          <ul id="secretList"></ul>
+        </section>
+        <form method="dialog">
+          <button class="primary" type="submit" autofocus>¡Voy a probarlo!</button>
         </form>
       </dialog>
       <dialog id="nudgeDialog" class="info-dialog" aria-labelledby="nudgeTitle">

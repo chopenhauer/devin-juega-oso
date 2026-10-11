@@ -3269,6 +3269,60 @@ body[data-motion='rise'] .theme-decor span {
 }
 
 /* QUICK FEEDBACK (end of game, only at chosen moments; secondary to the actions) */
+/* Secrets (secrets.js): the 🎁 that opens the next one, on the first screens and at the end. */
+.secret-gift {
+  display: block;
+  min-height: 48px;
+  margin: 0 auto var(--space-3);
+  padding: 0 var(--space-5);
+  border: 2px solid var(--accent);
+  border-radius: var(--r-pill);
+  background: var(--blanco-a06);
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  animation: giftGlow 1.8s var(--ease-soft) infinite;
+}
+.secret-gift:hover {
+  background: var(--blanco-a16);
+}
+.secret-end {
+  margin: 22px auto 0;
+}
+/* A glow, not a bounce: the button stays put so it is easy to tap. */
+@keyframes giftGlow {
+  50% {
+    background: var(--blanco-a16);
+  }
+}
+.secret-known {
+  text-align: left;
+}
+.secret-known h3 {
+  margin: 0 0 var(--space-1);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--muted);
+}
+.secret-known ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.secret-known summary {
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.secret-known p {
+  margin: var(--space-1) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
 .feedback-ask {
   margin: 22px auto 0;
   opacity: 0.85;

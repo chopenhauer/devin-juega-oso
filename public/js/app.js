@@ -5,6 +5,7 @@ import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, iso
 import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
+import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
 import { shareText, shareUrl, whatsappHref, emailHref } from './share.js';
 import * as Online from './online.js';
 const { timeFor } = Engine;
@@ -278,7 +279,50 @@ const { timeFor } = Engine;
     soundToggle.classList.toggle('hidden', !show);
     shareToggle.classList.toggle('hidden', !show);
     q('onlineToggle').classList.toggle('hidden', !show);
+    syncSecretGift();
   };
+  // Secrets: a 🎁 on the first screens (for coming back) or at the end of a game (for playing on)
+  // tells the next hidden feature, see secrets.js.
+  initSecrets();
+  const secretGift = q('secretGift'),
+    secretEnd = q('secretEnd'),
+    secretDialog = q('secretDialog');
+  let secretPlace = null;
+  const dueSecret = () => nextSecret(readSecrets(), isoDay(new Date()));
+  function syncSecretGift() {
+    secretGift.classList.toggle('hidden', !THEME_STEPS.includes(setup.dataset.step) || !dueSecret());
+  }
+  function openSecret(place) {
+    const secret = dueSecret();
+    if (!secret) return;
+    const before = knownSecrets(readSecrets(), secret.id);
+    tellSecret(secret.id, isoDay(new Date()));
+    track('secret_shown', { secret: secret.id, place });
+    q('secretHow').textContent = secret.how;
+    q('secretList').replaceChildren(
+      ...before.map((s) => {
+        const more = document.createElement('details');
+        const hint = document.createElement('summary');
+        hint.textContent = s.hint;
+        const how = document.createElement('p');
+        how.textContent = s.how;
+        more.append(hint, how);
+        const li = document.createElement('li');
+        li.append(more);
+        return li;
+      }),
+    );
+    q('secretKnown').classList.toggle('hidden', !before.length);
+    secretPlace = place;
+    secretGift.classList.add('hidden');
+    secretEnd.classList.add('hidden');
+    secretDialog.showModal();
+  }
+  secretGift.addEventListener('click', () => openSecret('start'));
+  secretEnd.addEventListener('click', () => openSecret('end'));
+  secretDialog.addEventListener('close', () =>
+    (secretPlace === 'end' ? q('rematch') : themeToggle).focus({ preventScroll: true }),
+  );
   new MutationObserver(syncThemeToggle).observe(setup, {
     attributes: true,
     attributeFilter: ['data-step'],
@@ -315,6 +359,7 @@ const { timeFor } = Engine;
       themeTaps.length = 0;
       toggleThemeMenu(true);
       celebrateEgg();
+      track('secret_found', { secret: 'temas', told: readSecrets().told.includes('temas') });
       return;
     }
     if (!repeat) toggleThemeMenu(themeMenu.classList.contains('hidden'));
@@ -1076,7 +1121,10 @@ const { timeFor } = Engine;
     lastResult = { mode: gameMode, winner: w, scores: [...scores] };
     const st = recordSession(w);
     showSession(st);
-    showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games }));
+    countGame();
+    const secret = dueSecret();
+    secretEnd.classList.toggle('hidden', !secret);
+    showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret }));
   }
 
   let feedbackMomentNow = null;
