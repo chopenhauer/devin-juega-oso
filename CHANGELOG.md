@@ -17,6 +17,24 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.4.0] - 2026-10-11
+
+**Secreto n.º 2: la tienda secreta de extras**
+
+Idea de JoseLuis: un segundo easter egg con los extras, que también estrena «Ya sabías…».
+
+- Pulsar 3 veces seguidas un 💡, 🔄 o 🛟 ya gastado abre «🛒 Tienda secreta»: «¿Compras otra 💡 pista
+  por 10 segundos de tu reloj?». Al comprar se restan los segundos y el extra vuelve a estar
+  disponible, pero no se usa solo: hay que volver a pulsarlo.
+- Decidido: 💡 pista y 🔄 cambio de letra cuestan 10 s; 🛟 SOS, 30 s. Se puede comprar tantas veces
+  como tiempo quede (siempre tiene que quedar algo después de pagar), en todos los modos, también en
+  línea, donde lo valida el servidor.
+- Un 🛟 comprado vuelve a cambiar la partida (de SOS a OSO, o al revés) para todo el mundo, igual que
+  el primero.
+- Es el 2.º secreto de la lista: se cuenta como los demás (cada 2 partidas, uno al día) y mide
+  `secret_found` con `secret: tienda`; cada compra manda `extra_bought` con `extra`.
+- Precios y número de toques en `config.js` (apartado «Tienda secreta», ver `docs/CONFIG.md`).
+
 ## [3.3.1] - 2026-10-11
 
 **Todos los parámetros del juego en un solo fichero ([d451806](https://github.com/chopenhauer/devin-juega-oso/commit/d4518066b05ec443f88727cdcf3a48657caf60a4))**

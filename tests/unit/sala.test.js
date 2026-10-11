@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { COUNTDOWN_MS, createHandler, OPEN_MS, ROOM_TTL } from '../../api/_sala.js';
 import { memoryStore } from '../../api/_store.js';
 import { timeFor } from '../../public/js/engine.js';
+import { GAME } from '../../public/js/config.js';
 
 function setup() {
   const store = memoryStore();
@@ -300,4 +301,22 @@ test('a game started within 30 min is not closed later', async () => {
   assert.notEqual(view.status, 'closed');
   assert.equal(view.closed, undefined);
   assert.equal((await s.call({ action: 'ping', code, token: host.token })).http, 200);
+});
+
+test('🛒 buying back an extra goes through the referee and costs seconds of the buyer', async () => {
+  const s = setup();
+  const { host, guest, code } = await startedRoom(s);
+  const mv = (who, rev, move) => s.call({ action: 'move', code, token: who.token, rev, move });
+  const a = await mv(host, guest.rev, { type: 'power', power: 'hint' });
+  const b = await mv(host, a.rev, { type: 'buy', power: 'hint' });
+  assert.equal(b.match.extras[0].hint, 1);
+  assert.equal(b.match.clocks[0], timeFor(4) - GAME.shop.hintSeconds);
+  assert.equal((await mv(host, b.rev, { type: 'buy', power: 'hint' })).error, 'available');
+  const c = await mv(host, b.rev, { type: 'sos' });
+  s.clock.t += c.match.holdMs;
+  assert.equal((await mv(guest, c.rev, { type: 'buy', power: 'sos' })).error, 'turn');
+  const d = await mv(host, c.rev, { type: 'buy', power: 'sos' });
+  assert.deepEqual(d.match.sosCredits, [1, 0]);
+  const e = await mv(host, d.rev, { type: 'sos' });
+  assert.equal(e.match.word, 'OSO');
 });

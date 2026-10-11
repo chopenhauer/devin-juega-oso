@@ -13,6 +13,11 @@ export const SECRETS = [
     hint: 'El 🎨 del inicio esconde algo',
     how: `En el inicio, pulsa el 🎨 ${times(GAME.themes.eggTaps)} seguidas, muy rápido… y mira qué pasa.`,
   },
+  {
+    id: 'tienda',
+    hint: 'Los extras gastados esconden algo',
+    how: `En plena partida, pulsa ${times(GAME.shop.taps)} seguidas un extra que ya hayas gastado (💡, 🔄 o 🛟)… y mira qué pasa.`,
+  },
 ];
 export const GAMES_PER_SECRET = GAME.secrets.gamesPerSecret;
 

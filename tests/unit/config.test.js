@@ -47,6 +47,9 @@ test('times, counts and limits are positive and consistent', () => {
   assert.ok(GAME.online.nudgeSeconds * 1000 > GAME.online.pollMs);
   assert.ok(GAME.themes.eggTaps >= 2 && GAME.themes.menuMax <= GAME.themes.listMax);
   assert.ok(GAME.themes.eggTapGapMs <= GAME.themes.eggWindowMs);
+  assert.ok(GAME.shop.taps >= 2 && Number.isInteger(GAME.shop.taps));
+  for (const k of ['hintSeconds', 'swapSeconds', 'sosSeconds'])
+    assert.ok(GAME.shop[k] < GAME.board.seconds[BOARD_SIZES[0]], `shop.${k} must be affordable`);
   for (const k of ['streak', 'cooldown', 'gamesPerSecret'])
     assert.ok(Number.isInteger(GAME.feedback[k] ?? GAME.secrets[k]), k);
 });

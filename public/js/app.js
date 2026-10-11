@@ -66,6 +66,7 @@ const { timeFor } = Engine;
     machineThinking = false,
     targetWord = 'OSO',
     sosUsed = false,
+    sosCredits = [],
     replaying = false,
     gameId = 0,
     helpPaused = false,
@@ -76,8 +77,22 @@ const { timeFor } = Engine;
   // Online 1 vs 1: { code, token, seat, rev, game, seats, quality, busy, offline } or null.
   let online = null;
   function sync() {
-    ({ board, current, scores, times, scored, history, extras, over, word: targetWord, sosUsed } = m);
+    ({
+      board,
+      current,
+      scores,
+      times,
+      scored,
+      history,
+      extras,
+      over,
+      word: targetWord,
+      sosUsed,
+      sosCredits = [],
+    } = m);
   }
+
+  const sosReady = (p) => !sosUsed || sosCredits[p] > 0;
 
   const avatarGrids = [...document.querySelectorAll('.avatars')];
   let avatarChoices = [...avatarGrids[0].querySelectorAll('.avatar-btn')].map((b) => b.dataset.avatar);
@@ -659,8 +674,8 @@ const { timeFor } = Engine;
       const hintUsed = !extras[i].hint;
       const lastUsed = !extras[i].last;
       const swapUsed = !extras[i].swap;
-
-      hintBtns[i].disabled = !humanCanAct || hintUsed;
+      // Spent 💡, 🔄 and 🛟 stay tappable on one's turn: quick taps open the secret shop (GAME.shop).
+      hintBtns[i].disabled = !humanCanAct;
       hintBtns[i].classList.toggle('used', hintUsed);
 
       const hasOpponentMove = history.some((m) => m.player !== i);
@@ -668,24 +683,21 @@ const { timeFor } = Engine;
       lastBtns[i].classList.toggle('used', lastUsed);
 
       const hasPlacedLetters = board.some(Boolean);
-      swapBtns[i].disabled = !humanCanAct || swapUsed || !hasPlacedLetters;
+      swapBtns[i].disabled = !humanCanAct || !hasPlacedLetters;
       swapBtns[i].classList.toggle('used', swapUsed);
       swapBtns[i].classList.toggle('mode', swapMode === i && !swapUsed);
 
-      // SOS is global: once either player uses it, both buttons become consumed.
-      sosBtns[i].disabled = !humanCanAct || sosUsed;
-      sosBtns[i].classList.toggle('used', sosUsed);
-      [hintBtns[i], lastBtns[i], swapBtns[i], sosBtns[i]].forEach((b) =>
-        b.setAttribute('aria-label', extraLabel(b)),
-      );
-
+      // SOS is global: once anybody uses it, it is spent for everybody unless bought back.
+      sosBtns[i].disabled = !humanCanAct;
+      sosBtns[i].classList.toggle('used', !sosReady(i));
       [
-        [hintBtns[i], hintUsed],
-        [lastBtns[i], lastUsed],
-        [swapBtns[i], swapUsed],
-        [sosBtns[i], sosUsed],
-      ].forEach(([btn, used]) => {
-        btn.querySelector('.count').textContent = used ? '0' : '1';
+        [hintBtns[i], extras[i].hint],
+        [lastBtns[i], extras[i].last],
+        [swapBtns[i], extras[i].swap],
+        [sosBtns[i], sosUsed ? (sosCredits[i] ?? 0) : 1],
+      ].forEach(([btn, left]) => {
+        btn.querySelector('.count').textContent = String(left);
+        btn.setAttribute('aria-label', extraLabel(btn));
       });
     });
     document
@@ -709,6 +721,7 @@ const { timeFor } = Engine;
   }
 
   function stopGame() {
+    closeShop();
     gameId++;
     clearInterval(timer);
     clearTimeout(machineTimeout);
@@ -907,7 +920,8 @@ const { timeFor } = Engine;
 
   hintBtns.forEach((b, p) =>
     b.addEventListener('click', async () => {
-      if (b.disabled || p !== current || !extras[p].hint || over || replaying || settle()) return;
+      if (b.disabled || p !== current || over || replaying || settle()) return;
+      if (!extras[p].hint) return shopTap(p, 'hint');
 
       const h = bestHint();
       if (!h) return;
@@ -956,7 +970,8 @@ const { timeFor } = Engine;
 
   swapBtns.forEach((b, p) =>
     b.addEventListener('click', () => {
-      if (b.disabled || p !== current || !extras[p].swap || over || replaying || settle()) return;
+      if (b.disabled || p !== current || over || replaying || settle()) return;
+      if (!extras[p].swap) return shopTap(p, 'swap');
 
       swapMode = swapMode === p ? null : p;
       if (swapMode === p) play('swap');
@@ -968,6 +983,61 @@ const { timeFor } = Engine;
         swapMode === p ? '🔄 Elige una letra del tablero para cambiar O ↔ S.' : 'Cambio cancelado.';
     }),
   );
+
+  // 🛒 Secret shop: quick taps on a spent 💡, 🔄 or 🛟 offer to buy it back with seconds (GAME.shop).
+  const SHOP_ITEMS = {
+    hint: { name: 'otra 💡 pista', icon: '💡' },
+    swap: { name: 'otro 🔄 cambio de letra', icon: '🔄' },
+    sos: { name: 'otro 🛟 SOS', icon: '🛟' },
+  };
+  let shopTaps = [],
+    shopOffer = null;
+  function shopTap(p, power) {
+    const now = performance.now();
+    const last = shopTaps.at(-1);
+    if (!last || last.p !== p || last.power !== power || now - last.at > GAME.shop.tapGapMs) shopTaps = [];
+    shopTaps.push({ p, power, at: now });
+    if (shopTaps.length < GAME.shop.taps) return;
+    shopTaps = [];
+    openShop(p, power);
+  }
+  function openShop(p, power) {
+    const cost = Match.price(power);
+    const item = SHOP_ITEMS[power];
+    const enough = times[p] > cost;
+    shopOffer = enough ? { p, power, cost, game: gameId } : null;
+    q('shopText').textContent = enough
+      ? `¿Compras ${item.name} por ${cost} segundos de tu reloj?`
+      : `Para comprar ${item.name} necesitas más de ${cost} segundos en tu reloj.`;
+    q('shopNote').textContent =
+      power === 'sos' && enough
+        ? `Al usarlo, la partida pasará a puntuar ${targetWord === 'SOS' ? 'OSO' : 'SOS'} para todo el mundo.`
+        : '';
+    q('shopBuy').classList.toggle('hidden', !enough);
+    q('shopDialog').showModal();
+    track('secret_found', { secret: 'tienda', told: readSecrets().told.includes('tienda') });
+  }
+  function closeShop() {
+    shopOffer = null;
+    if (q('shopDialog').open) q('shopDialog').close();
+  }
+  async function buyExtra() {
+    const o = shopOffer;
+    shopOffer = null;
+    if (!o || o.game !== gameId || o.p !== current || over || replaying || settle()) return;
+    if (online) {
+      if (!(await onlineMove({ type: 'buy', power: o.power }))) return;
+    } else {
+      if (!Match.buy(m, o.p, o.power, performance.now()).ok) return;
+      sync();
+    }
+    play('hint');
+    updateTimers();
+    updateControls();
+    msg.textContent = `🛒 ¡Comprado por ${o.cost} s! Pulsa ${SHOP_ITEMS[o.power].icon} para usarlo.`;
+    track('extra_bought', { extra: o.power });
+  }
+  q('shopBuy').addEventListener('click', buyExtra);
 
   function chooseMachineMove() {
     return Engine.chooseMachineMove(board, size, scored, targetWord, difficulty);
@@ -1010,19 +1080,16 @@ const { timeFor } = Engine;
   }
 
   async function activateSOS(player) {
-    if (over || sosUsed || replaying || helpPaused || player !== current) return;
+    if (over || !sosReady(player) || replaying || helpPaused || player !== current) return;
     if (settle()) return;
     const id = gameId;
 
-    // Global, one-time power-up: consume it for both players immediately.
+    // Global power-up: spent for everybody at once; a bought-back one switches OSO ↔ SOS again.
     const { replay: savedHistory } = Match.sos(m, player, performance.now()).events[0];
-    sosUsed = true;
+    const word = m.word;
+    ({ sosUsed, sosCredits = [] } = m);
     replaying = true;
     play('sos');
-    sosBtns.forEach((btn) => {
-      btn.disabled = true;
-      btn.classList.add('used');
-    });
     updateControls();
     clearTimeout(machineTimeout);
     clearInterval(timer);
@@ -1031,25 +1098,26 @@ const { timeFor } = Engine;
     hintCell = null;
     lastCell = null;
 
-    setSeaTheme(true);
+    setSeaTheme(word === 'SOS');
+    q('modeFlash').querySelector('.mode-flash-title').textContent = `¡Ahora es ${word}!`;
     q('modeFlash').classList.remove('hidden');
     updateControls();
     await sleep(GAME.sos.flashMs);
     if (id !== gameId) return;
     q('modeFlash').classList.add('hidden');
 
-    targetWord = 'SOS';
+    targetWord = word;
     board = Array(size * size).fill('');
     scores = Array(scores.length).fill(0);
     scored = new Map();
     scoresEl.forEach((e) => (e.textContent = '0'));
     render();
-    msg.textContent = '🛟 Reproduciendo la partida con criterio SOS…';
+    msg.textContent = `🛟 Reproduciendo la partida con criterio ${word}…`;
     await sleep(GAME.sos.pauseMs);
     if (id !== gameId) return;
 
     for (const move of savedHistory) {
-      ({ board, scored, scores } = Engine.replayMove({ size, board, scored, scores }, move, 'SOS'));
+      ({ board, scored, scores } = Engine.replayMove({ size, board, scored, scores }, move, word));
       scoresEl.forEach((e, i) => (e.textContent = scores[i]));
 
       render();
@@ -1065,7 +1133,7 @@ const { timeFor } = Engine;
     replaying = false;
     render();
     updateControls();
-    msg.textContent = `🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores.join(' – ')}.`;
+    msg.textContent = `🛟 Ahora se puntúa ${targetWord}. Marcador recalculado: ${scores.join(' – ')}.`;
 
     Match.resume(m, performance.now());
     timer = setInterval(tick, 100);
@@ -1074,7 +1142,8 @@ const { timeFor } = Engine;
 
   sosBtns.forEach((btn, p) =>
     btn.addEventListener('click', () => {
-      if (btn.disabled || sosUsed || over || replaying || p !== current) return;
+      if (btn.disabled || over || replaying || p !== current) return;
+      if (!sosReady(p)) return shopTap(p, 'sos');
       if (online) return void onlineMove({ type: 'sos' });
       activateSOS(p);
     }),
@@ -1088,6 +1157,7 @@ const { timeFor } = Engine;
     finish(e.winner, e.reason, e.timedOut);
   }
   function finish(w, reason, timedOut = reason === 'tiempo') {
+    closeShop();
     over = true;
     playing = false;
     track(
@@ -1408,8 +1478,8 @@ const { timeFor } = Engine;
     });
     if (targetWord !== oldWord) {
       play('sos');
-      setSeaTheme(true);
-      msg.textContent = `🛟 Ahora se puntúa SOS. Marcador recalculado: ${scores.join(' – ')}.`;
+      setSeaTheme(targetWord === 'SOS');
+      msg.textContent = `🛟 Ahora se puntúa ${targetWord}. Marcador recalculado: ${scores.join(' – ')}.`;
     } else if (oldBoard.length === board.length) {
       const changed = board.findIndex((x, i) => x !== oldBoard[i]);
       const made = [...scored.keys()].filter((k) => !oldKeys.has(k));

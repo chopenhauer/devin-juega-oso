@@ -136,3 +136,55 @@ test('loads the Google Analytics tag without CSP errors', async ({ page }) => {
   expect(await page.evaluate(() => typeof window.gtag)).toBe('function');
   expect(await page.evaluate(() => window.dataLayer.some((e) => e[0] === 'config'))).toBe(true);
 });
+
+const clockSeconds = async (page, id) => {
+  const [, mm, ss] = (await page.locator(id).textContent()).match(/(\d+):(\d\d)/);
+  return +mm * 60 + +ss;
+};
+
+test('B05: tienda secreta: tres toques en un 💡 gastado lo venden por segundos y luego se usa', async ({
+  page,
+}) => {
+  await startGame(page);
+  await page.click('#hint1');
+  await expect(page.locator('#hint1 .count')).toHaveText('0');
+  for (let i = 0; i < 3; i++) await page.click('#hint1');
+  await expect(page.locator('#shopDialog')).toBeVisible();
+  await expect(page.locator('#shopText')).toContainText('otra 💡 pista por 10 segundos');
+  const before = await clockSeconds(page, '#timer1');
+  await page.click('#shopBuy');
+  await expect(page.locator('#shopDialog')).toBeHidden();
+  await expect(page.locator('#hint1 .count')).toHaveText('1');
+  await expect(page.locator('#message')).toContainText('Comprado');
+  expect(before - (await clockSeconds(page, '#timer1'))).toBeGreaterThanOrEqual(10);
+  await page.click('#hint1');
+  await expect(page.locator('#hint1 .count')).toHaveText('0');
+  await expect(page.locator('#message')).toContainText('💡 Prueba');
+});
+
+test('B06: tienda secreta: un 🛟 comprado devuelve la partida a OSO para todo el mundo', async ({ page }) => {
+  await startGame(page);
+  await page.click('#sos1');
+  await expect(page.locator('#message')).toContainText('Ahora se puntúa SOS', { timeout: 6000 });
+  for (let i = 0; i < 3; i++) await page.click('#sos1');
+  await expect(page.locator('#shopText')).toContainText('otro 🛟 SOS por 30 segundos');
+  await expect(page.locator('#shopNote')).toContainText('puntuar OSO');
+  await page.click('#shopBuy');
+  await expect(page.locator('#sos1 .count')).toHaveText('1');
+  await expect(page.locator('#sos2 .count')).toHaveText('0');
+  await page.click('#sos1');
+  await expect(page.locator('#message')).toContainText('Ahora se puntúa OSO', { timeout: 6000 });
+  await expect(page.locator('.score-label').first()).toHaveText('puntos OSO');
+  await expect(page.locator('body')).not.toHaveClass(/sea-theme/);
+  await expect(page.locator('#sos1 .count')).toHaveText('0');
+});
+
+test('B07: tienda secreta: «Ahora no» no compra nada y el extra sigue gastado', async ({ page }) => {
+  await startGame(page);
+  await page.click('#hint1');
+  for (let i = 0; i < 3; i++) await page.click('#hint1');
+  await page.click('#shopDialog button.secondary');
+  await expect(page.locator('#shopDialog')).toBeHidden();
+  await expect(page.locator('#hint1 .count')).toHaveText('0');
+  await expect(page.locator('#hint1')).toHaveClass(/used/);
+});

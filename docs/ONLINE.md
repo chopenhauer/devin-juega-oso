@@ -54,7 +54,7 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   (3 s) más tarde y rechaza jugadas antes (`countdown`).
 - **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El
   token va en `localStorage` (`oso.online.v1`) para poder volver tras recargar o perder la conexión.
-- **Árbitro:** el cliente envía intenciones (`place`, `swap`, `sos`, `power`, `leave`) con la
+- **Árbitro:** el cliente envía intenciones (`place`, `swap`, `sos`, `power`, `buy`, `leave`) con la
   `version` que conoce; el servidor las valida con `match.js`, descuenta el reloj con su propia hora
   y guarda el estado nuevo con `version + 1`. Una jugada con versión antigua se rechaza (409) y el
   cliente recibe el estado actual: así se evitan duplicados y reintentos.

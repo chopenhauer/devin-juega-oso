@@ -153,3 +153,49 @@ test('a match survives a JSON round trip', () => {
   assert.deepEqual(copy, m);
   assert.equal(place(copy, 0, 3, 'S', 0).ok, true);
 });
+
+import { buy, price } from '../../public/js/match.js';
+import { GAME } from '../../public/js/config.js';
+
+test('🛒 spent extras are bought back with seconds; using them is a separate action', () => {
+  const m = newMatch({ size: 4, now: 0 });
+  assert.equal(buy(m, 0, 'hint', 0).error, 'available');
+  usePower(m, 0, 'hint', 0);
+  const t = m.times[0];
+  const r = buy(m, 0, 'hint', 0);
+  assert.equal(r.ok, true);
+  assert.equal(r.events[0].cost, price('hint'));
+  assert.equal(m.times[0], t - GAME.shop.hintSeconds);
+  assert.equal(m.extras[0].hint, 1);
+  assert.equal(usePower(m, 0, 'hint', 0).ok, true);
+  assert.equal(buy(m, 0, 'hint', 0).ok, true, 'as many as time allows');
+  assert.equal(buy(m, 0, 'last', 0).error, 'power');
+  assert.equal(buy(m, 1, 'swap', 0).error, 'available');
+  m.extras[1].swap = 0;
+  assert.equal(buy(m, 1, 'swap', 0).error, 'turn');
+  m.times[0] = GAME.shop.swapSeconds;
+  m.extras[0].swap = 0;
+  assert.equal(buy(m, 0, 'swap', 0).error, 'funds', 'some time must be left after paying');
+});
+
+test('🛒 a bought 🛟 switches the whole game back (SOS ↔ OSO) for everybody', () => {
+  const m = newMatch({ size: 4, now: 0 });
+  place(m, 0, 0, 'O', 0);
+  place(m, 1, 1, 'S', 0);
+  place(m, 0, 2, 'O', 0);
+  assert.deepEqual(m.scores, [1, 0]);
+  assert.equal(buy(m, 0, 'sos', 0).error, 'available');
+  sos(m, 0, 0);
+  assert.equal(m.word, 'SOS');
+  assert.deepEqual(m.scores, [0, 0]);
+  const t = m.since;
+  const before = m.times[0];
+  assert.equal(buy(m, 0, 'sos', t).ok, true);
+  assert.equal(m.times[0], before - GAME.shop.sosSeconds);
+  assert.deepEqual(m.sosCredits, [1, 0]);
+  assert.equal(sos(m, 0, t).ok, true);
+  assert.equal(m.word, 'OSO');
+  assert.deepEqual(m.scores, [1, 0]);
+  assert.deepEqual(m.sosCredits, [0, 0]);
+  assert.equal(sos(m, 0, m.since).error, 'used');
+});

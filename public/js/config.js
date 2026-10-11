@@ -27,6 +27,13 @@ export const GAME = freeze({
     pauseMs: 220,
     moveMs: 260,
   },
+  shop: {
+    taps: 3,
+    tapGapMs: 700,
+    hintSeconds: 10,
+    swapSeconds: 10,
+    sosSeconds: 30,
+  },
   machine: {
     delayMs: 650,
     easyScoreChance: 0.7,
@@ -77,6 +84,7 @@ export const SECTIONS = {
   clock: 'Reloj',
   extras: 'Extras (usos por jugador y partida)',
   sos: '🛟 SOS',
+  shop: '🛒 Tienda secreta (comprar extras gastados)',
   machine: 'Máquina',
   online: 'En línea',
   secrets: 'Secretos',
@@ -103,6 +111,14 @@ export const HELP = {
   'sos.flashMs': 'Lo que dura el aviso «SOS» antes de repetir la partida. El reloj espera mientras tanto.',
   'sos.pauseMs': 'Pausa entre el aviso y la repetición.',
   'sos.moveMs': 'Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir.',
+  'shop.taps':
+    'Toques seguidos en un 💡, 🔄 o 🛟 ya gastado para abrir la tienda (el texto del secreto se ajusta solo).',
+  'shop.tapGapMs': 'Tiempo máximo entre dos toques para que cuenten como seguidos.',
+  'shop.hintSeconds':
+    'Segundos del propio reloj que cuesta otra 💡 pista. Se puede comprar mientras queden segundos.',
+  'shop.swapSeconds': 'Segundos que cuesta otro 🔄 cambio de letra.',
+  'shop.sosSeconds':
+    'Segundos que cuesta otro 🛟 SOS. Al usarlo, la partida cambia de OSO a SOS (o vuelve) para todo el mundo.',
   'machine.delayMs': 'Lo que «piensa» la máquina antes de mover. Menos = más ágil pero menos natural.',
   'machine.easyScoreChance':
     'En fácil, probabilidad (0 a 1) de que aproveche un OSO que tiene a mano. Más = máquina fácil más difícil.',

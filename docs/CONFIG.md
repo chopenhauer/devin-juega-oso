@@ -45,6 +45,16 @@ Cómo cambiar uno:
 | `sos.pauseMs` | 220 | Pausa entre el aviso y la repetición. |
 | `sos.moveMs` | 260 | Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir. |
 
+## 🛒 Tienda secreta (comprar extras gastados)
+
+| Parámetro | Valor | Qué hace |
+| --- | --- | --- |
+| `shop.taps` | 3 | Toques seguidos en un 💡, 🔄 o 🛟 ya gastado para abrir la tienda (el texto del secreto se ajusta solo). |
+| `shop.tapGapMs` | 700 | Tiempo máximo entre dos toques para que cuenten como seguidos. |
+| `shop.hintSeconds` | 10 | Segundos del propio reloj que cuesta otra 💡 pista. Se puede comprar mientras queden segundos. |
+| `shop.swapSeconds` | 10 | Segundos que cuesta otro 🔄 cambio de letra. |
+| `shop.sosSeconds` | 30 | Segundos que cuesta otro 🛟 SOS. Al usarlo, la partida cambia de OSO a SOS (o vuelve) para todo el mundo. |
+
 ## Máquina
 
 | Parámetro | Valor | Qué hace |

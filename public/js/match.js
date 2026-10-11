@@ -7,6 +7,9 @@ import { LETTERS, findNew, rebuildScores, replayHistory, timeFor } from './engin
 
 export const BONUS = GAME.clock.bonusSeconds;
 export const POWERS = ['hint', 'last'];
+// 🛒 Spent extras that can be bought back with seconds (GAME.shop).
+export const SHOP = ['hint', 'swap', 'sos'];
+export const price = (power) => GAME.shop[`${power}Seconds`];
 // How long the 🛟 SOS replay animation lasts; the clock does not run meanwhile.
 export const sosReplayMs = (moves) => GAME.sos.flashMs + GAME.sos.pauseMs + GAME.sos.moveMs * moves;
 
@@ -23,6 +26,8 @@ export function newMatch({ size, players = 2, first = 0, now = 0 }) {
     extras: Array.from({ length: players }, () => ({ ...GAME.extras })),
     word: 'OSO',
     sosUsed: false,
+    // 🛟 SOS bought back by each player (the first one is free for everybody).
+    sosCredits: Array(players).fill(0),
     over: false,
     winner: null,
     reason: null,
@@ -162,14 +167,34 @@ export function usePower(m, p, power, now) {
   return { ok: true, events: [{ type: 'power', player: p, power }] };
 }
 
-// 🛟 Once per game for everybody: the whole game is scored again as SOS.
-// The clock waits while the replay is shown.
-export function sos(m, p, now) {
-  if (m.sosUsed) return fail('used');
+// 🛒 Buys back a spent 💡, 🔄 or 🛟 with seconds of one's own clock, as long as some are left
+// afterwards. Using it is a separate action.
+export function buy(m, p, power, now) {
+  if (!SHOP.includes(power)) return fail('power');
+  if (power === 'sos' ? sosReady(m, p) : m.extras[p]?.[power]) return fail('available');
   const error = begin(m, p, now);
   if (error) return error;
+  const cost = price(power);
+  if (m.times[p] <= cost) return fail('funds');
+  m.times[p] -= cost;
+  if (power === 'sos') (m.sosCredits ??= Array(m.players).fill(0))[p]++;
+  else m.extras[p][power]++;
+  m.version++;
+  return { ok: true, events: [{ type: 'buy', player: p, power, cost }] };
+}
+
+export const sosReady = (m, p) => !m.sosUsed || m.sosCredits?.[p] > 0;
+
+// 🛟 Once per game for everybody: the whole game is scored again as SOS. A 🛟 bought back
+// switches it again (SOS ↔ OSO), also for everybody. The clock waits while the replay is shown.
+export function sos(m, p, now) {
+  if (!sosReady(m, p)) return fail('used');
+  const error = begin(m, p, now);
+  if (error) return error;
+  if (m.sosUsed) m.sosCredits[p]--;
+  const word = m.word === 'SOS' ? 'OSO' : 'SOS';
   const replay = m.history.map((x) => ({ ...x }));
-  Object.assign(m, { sosUsed: true, word: 'SOS' }, replayHistory(m.size, replay, 'SOS', m.players));
+  Object.assign(m, { sosUsed: true, word }, replayHistory(m.size, replay, word, m.players));
   m.since = now + sosReplayMs(replay.length);
   m.version++;
   return { ok: true, events: [{ type: 'sos', player: p, replay }] };

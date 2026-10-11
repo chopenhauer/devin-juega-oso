@@ -867,6 +867,10 @@ select option {
   filter: grayscale(1);
   cursor: default;
   box-shadow: none;
+}
+/* Spent extras stay tappable on one's turn: they open the secret shop. */
+.power:disabled,
+.sos-power:disabled {
   pointer-events: none;
 }
 .power.mode {
@@ -1022,8 +1026,8 @@ select option {
     transform: translateY(-2px) scale(1.1);
     background: var(--blanco-a18);
   }
-  .power:hover,
-  .sos-power:hover {
+  .power:not(.used):hover,
+  .sos-power:not(.used):hover {
     transform: translateY(-2px) scale(1.07);
   }
   .help-toggle:hover,

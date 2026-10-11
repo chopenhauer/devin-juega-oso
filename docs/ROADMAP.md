@@ -278,7 +278,7 @@ Con tantos temas, el menú 🎨 no puede enseñarlos todos. Hecho en 2.1.0:
 **Primer paso hecho en 3.3.0: los secretos.** Cada 2 partidas (máximo uno al día) se cuenta cómo
 activar una función escondida (ver `public/js/secrets.js` y el CHANGELOG). Para añadir un secreto
 nuevo basta una entrada al final de `SECRETS`: una buena tarea para Julia es inventar el
-siguiente. Lo de desbloquear regalos de verdad sigue siendo solo idea:
+siguiente. En 3.4.0 llegó el 2.º, la tienda secreta (comprar extras gastados con segundos). Lo de desbloquear regalos de verdad sigue siendo solo idea:
 
 Pequeños regalos que se desbloquean jugando (por ejemplo al ganar, al formar varios OSO seguidos
 o al completar partidas): avatares nuevos, temas o skins (como el marino del SOS), fichas

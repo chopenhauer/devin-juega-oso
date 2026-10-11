@@ -2,6 +2,7 @@
 //   GET  ?code=K7QD2&rev=3   room state (just {rev, same} if unchanged), settles the clock
 //   GET  ?stats=1            this month's anonymous counters
 //   POST {action: create | join | profile | start | move | rematch | leave | ping, ...}
+//   move.type: place | swap | sos | power | buy (🛒 buy back a spent extra)
 // A room goes waiting (host alone) → lobby (both in, host picks the board) → playing ⇄ over.
 // If no game starts within OPEN_MS it closes as `expired`.
 // The client only sends intentions; turns, clocks, scores and winners are decided here.
@@ -29,6 +30,7 @@ const MOVES = {
   swap: (m, p, x, now) => Match.swap(m, p, x.index, now),
   sos: (m, p, x, now) => Match.sos(m, p, now),
   power: (m, p, x, now) => Match.usePower(m, p, x.power, now),
+  buy: (m, p, x, now) => Match.buy(m, p, x.power, now),
 };
 
 const hash = (s) => createHash('sha256').update(s).digest('hex');
@@ -230,7 +232,8 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
       throw new HttpError(result.error === 'turn' || result.error === 'time' ? 409 : 422, result.error, room);
     }
     stats.moves = 1;
-    if (body.move.type !== 'place') stats[`power_${body.move.power ?? body.move.type}`] = 1;
+    if (body.move.type === 'buy') stats[`buy_${body.move.power}`] = 1;
+    else if (body.move.type !== 'place') stats[`power_${body.move.power ?? body.move.type}`] = 1;
     await save(room, expected);
     return { seat, room };
   }
