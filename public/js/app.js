@@ -1177,7 +1177,15 @@ const { timeFor } = Engine;
         row.classList.toggle('leader', p === leader);
         const who = document.createElement('th');
         who.scope = 'row';
-        who.textContent = `${p === leader ? '👑 ' : ''}${avatars[p]} ${names[p]}`;
+        who.textContent = `${avatars[p]} ${names[p]}`;
+        if (p === leader) {
+          const crown = document.createElement('span');
+          crown.className = 'session-crown';
+          crown.setAttribute('role', 'img');
+          crown.setAttribute('aria-label', 'Va en cabeza');
+          crown.textContent = '👑';
+          who.prepend(crown);
+        }
         const wins = document.createElement('td');
         wins.textContent = st.wins[p];
         const points = document.createElement('td');

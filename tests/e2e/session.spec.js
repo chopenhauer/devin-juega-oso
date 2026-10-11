@@ -64,6 +64,19 @@ test('the session leaderboard adds up games between the same players', async ({ 
   await expect(first).toHaveClass(/leader/);
   await expect(first.locator('th')).toContainText('Jugador 1');
   await expect(first.locator('td')).toHaveText(['1', '1']);
+  // The crown hangs outside the board so the names line up under «Jugador».
+  const crown = first.locator('.session-crown');
+  await expect(crown).toHaveText('👑');
+  const [crownBox, boardBox] = [await crown.boundingBox(), await page.locator('#sessionBoard').boundingBox()];
+  expect(crownBox.x + crownBox.width).toBeLessThanOrEqual(boardBox.x);
+  const starts = await page.locator('#sessionRows th').evaluateAll((ths) =>
+    ths.map((th) => {
+      const range = document.createRange();
+      range.selectNodeContents(th.lastChild);
+      return Math.round(range.getBoundingClientRect().x);
+    }),
+  );
+  expect(new Set(starts).size).toBe(1);
 
   await page.click('#otherBoard');
   expect(await step(page)).toBe('board');

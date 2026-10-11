@@ -1258,6 +1258,16 @@ select option {
 .session-board tr.leader > * {
   color: var(--accent);
 }
+/* The crown sits outside the board so every avatar and name lines up under «Jugador». */
+.session-board tr.leader {
+  position: relative;
+}
+.session-crown {
+  position: absolute;
+  top: 50%;
+  right: calc(100% + var(--space-3-5) + var(--space-2));
+  transform: translateY(-50%);
+}
 .session-meta {
   margin: var(--space-1) 0 0;
   font-size: var(--fs-2xs);

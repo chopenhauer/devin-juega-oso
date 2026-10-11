@@ -19,11 +19,14 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.2.1] - 2026-10-11
 
-**Botones de la pantalla final alineados en línea**
+**Pantalla final más ordenada: botones en línea y marcador de la sesión**
 
 - En las partidas en línea no está «Otro tablero», y «Salir» se quedaba solo en media fila.
   Ahora ocupa la fila entera, como «Revancha» y «Compartir resultado»: los tres botones tienen el
   mismo ancho y van centrados (petición de JoseLuis). En el modo «Juntos» no cambia nada.
+- Marcador de la sesión: la 👑 de quien va en cabeza sale fuera de la tabla, a la izquierda de su
+  fila. Así los avatares y los nombres de todos quedan alineados a la izquierda bajo «Jugador»
+  (petición de JoseLuis).
 - Roadmap: nueva idea de JoseLuis, mandar al rival un emoji o una reacción rápida en las
   partidas en línea.
 
