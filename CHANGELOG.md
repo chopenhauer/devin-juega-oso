@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.6.0] - 2026-10-11
 
-**Tensión con poco tiempo y relojes 30 s más cortos**
+**Tensión con poco tiempo y relojes 30 s más cortos ([86f5740](https://github.com/chopenhauer/devin-juega-oso/commit/86f57409785dbd582e4138a57b0887b15e26adb3))**
 
 Idea del ROADMAP (T4.3) elegida por JoseLuis, con un ajuste suyo: para que la tensión se vea, menos
 tiempo en todos los tableros.
