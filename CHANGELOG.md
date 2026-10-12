@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.6.1] - 2026-10-12
 
-**El botón de cada secreto te lleva a usarlo, y «Cuéntanos más» con su altura**
+**El botón de cada secreto te lleva a usarlo, y «Cuéntanos más» con su altura ([dccb524](https://github.com/chopenhauer/devin-juega-oso/commit/dccb5248718d834a6eddd1c739c71d4422a8a1ae))**
 
 Dos ajustes que pidió JoseLuis.
 
