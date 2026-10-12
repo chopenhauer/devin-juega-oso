@@ -97,7 +97,7 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 
 | #   | Idea                                                                               | Valor      | Esfuerzo   | Cuándo       |
 | --- | ---------------------------------------------------------------------------------- | ---------- | ---------- | ------------ |
-| 1   | Reacciones con emoji entre rivales en línea                                        | Medio-alto | Bajo-medio | Ahora        |
+| 1   | Barra de juego en línea: reacciones o frases y 🍅 tomatada                         | Medio-alto | Medio      | Ahora        |
 | 2   | Secreto n.º 3, inventado por Julia                                                 | Medio      | Bajo       | Ahora        |
 | 3   | Hall of fame local                                                                 | Alto       | Medio      | Siguiente    |
 | 4   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo      | Medio      | Medio      | Decidir      |
@@ -114,15 +114,14 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 15  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
 | 16  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
 | 17  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
-| 18  | Edición papel: cuadrícula a mano y S/O escritas con el dedo                        | Alto       | Alto       | Decidir      |
-| 19  | Tomatada en línea: tapar la pantalla del rival 5 s (versión por tema)              | Medio-alto | Medio      | Decidir      |
+| 18  | Edición papel: modo aparte, «edición superespecial»                                | Alto       | Alto       | Futuro       |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
 que cubre el Modo Mercado en su versión sencilla.
 
 **Por qué este orden:** la 3.5.0 ya aclara la invitación, avisa al anfitrión cuando llega el rival
-y cuenta en el servidor cada paso del embudo. Con eso, y las reacciones con emoji (1), la partida en
+y cuenta en el servidor cada paso del embudo. Con eso, y la barra de juego en línea (1), la partida en
 línea se siente acompañada. El secreto n.º 3 (2) es la mejor tarea para Julia. Los tiempos ya
 bajaron 30 s en la 3.6.0; el ajuste fino de cada tablero y la revisión del modo en línea esperan a
 tener datos suficientes.
@@ -152,7 +151,7 @@ preguntan una a una al empezar cada fase.
 4. **Próxima · En línea, más acompañado** (propuesta)
    - ~~Embudo de la invitación y avisos de lo que hace el rival~~ (hecho en 3.5.0). Falta revisar
      el embudo con `npm run online:report` cuando haya más salas, y decidir si los 30 min cambian.
-   - Reacciones con emoji.
+   - Barra de juego en línea: reacciones o frases y la 🍅 tomatada.
 5. **Más emoción**
    - ~~Tensión con poco tiempo (T4.3)~~ hecho en 3.6.0, junto con 30 s menos en todos los tableros.
    - Hall of fame local: récords y rachas en el dispositivo, «¡Nuevo récord!» al acabar.
@@ -442,23 +441,60 @@ Que corra la voz: que quien juega lo comparta fácilmente con familia y amigos.
 - **Decisiones abiertas:** si el texto incluye los nombres de los jugadores (por defecto no) y
   dónde sale el botón.
 
-### Reacciones en línea (idea de JoseLuis)
+### Barra de juego en línea (idea de JoseLuis y Julia)
 
-En una partida en línea, mandar al rival un emoji o una reacción rápida (👏 😮 😅 🔥…) para darle
-feedback sin escribir.
+Reinterpretar la barra de extras cuando juegas en línea. Como no estáis juntos, apetece
+comunicarse, dar ambiente y también hacer alguna trastada que en persona no tendría gracia. Junta
+dos ideas: las reacciones y la tomatada.
 
-- **Propuesta:** una fila corta de emojis fijos, sin texto libre. Así no hace falta moderar y
-  sirve igual con niños. La reacción sale un par de segundos junto a la tarjeta de quien la manda.
+**Reacciones o frases**
+
+- **Para qué:** dar ambiente, mostrar cómo te sientes con la partida (como las reacciones de Google
+  Meet) y, de paso, distraer al rival.
+- **Dos opciones, por decidir:**
+  - **Emojis de ánimo:** una fila corta y fija (😠 😅 😮 👏 🔥…).
+  - **Frases cortas:** «¡Guau, vaya remontada!», «Esta va a ser tu partida final», «Oye, no me
+    machaques». Pueden ser fijas o salir según cómo vaya la partida (vas ganando, te remontan,
+    queda poco tiempo…).
+- **Sin texto libre:** solo frases y emojis del juego, en lenguaje inclusivo. Así no hace falta
+  moderar y sirve igual con niños.
 - **Técnica:** una acción `react` en `api/sala` que guarde solo la última reacción de cada asiento
-  y llegue con el polling que ya existe; con un límite de frecuencia para que no se convierta en
-  spam.
-- **Medición:** evento `online_react` con el emoji, para ver cuáles se usan.
-- **Decisiones abiertas:** qué emojis, si se puede silenciar al rival y si también vale en el modo
-  «Juntos».
+  y llegue con el polling que ya existe, con un límite de frecuencia para que no sea spam. La
+  reacción sale un par de segundos junto a la tarjeta de quien la manda.
+- **Medición:** evento `online_react` con el emoji o la frase, para ver cuáles se usan.
+
+**🍅 Tomatada**
+
+Le lanzas una tomatada al rival y su pantalla queda tapada durante 5 s, para que no pueda ver ni
+pensar y pierda tiempo. Las manchas se van quitando poco a poco hasta que vuelve a ver el tablero.
+
+- **Cuántas:** una por partida. Quizá, después de gastarla, se puedan comprar más con segundos de
+  tu reloj, como en la tienda secreta.
+- **Versión por tema:** tomates en el clásico, telarañas en Halloween, bolas de nieve en Navidad,
+  confeti en el cumpleaños… Cada tema pone su «proyectil» en `themes.js`.
+- **Técnica:** una jugada nueva `throw` en `api/_sala.js`, como `hint` o `buy`, que llega al rival
+  con el polling de siempre (puede tardar alrededor de un segundo). La duración y las reglas van en
+  `config.js` (`throw.seconds`…). Mientras te tapan, tu reloj sigue corriendo: esa es la gracia.
+- **Con niños y accesibilidad:** nada que dé miedo ni ofenda y sin destellos. Con «reducir
+  movimiento», las manchas se desvanecen sin animación. El aviso «🍅 Ana te ha lanzado una
+  tomatada» sale en la línea de mensajes, como los demás avisos del rival.
+- **Medición:** `extra_used` con `extra: 'throw'` y el contador del servidor `power_throw`.
+
+**Decidido:** la tomatada va con su propio botón en la barra y es una por partida. Las reacciones
+son para el modo en línea; en «Juntos» no hacen falta.
+
+**Por decidir (estudiarlo antes de construir):**
+
+- Cómo conviven con los extras de ahora (💡 👁️ 🔄 🛟). Hay dos opciones: que en línea sustituyan al
+  extra que menos se use (los datos de `extra_used` lo dirán) o una interacción nueva que abra
+  otros menús (reacciones, frases…).
+- Reacciones con emoji, frases o las dos; y si las frases son fijas o salen según la partida.
+- Si la tomatada se puede comprar con segundos después de gastarla, y si hay límites (no en los
+  últimos segundos del rival, no dos seguidas).
 
 ### Edición papel (idea de JoseLuis y Julia)
 
-Un modo y tema «edición superespecial» que parezca jugar en una hoja de cuaderno: cuadrícula
+Un modo aparte, «edición superespecial», que parezca jugar en una hoja de cuaderno: cuadrícula
 dibujada a mano, sin fichas, y la S o la O se escriben con el dedo.
 
 - **Cómo se siente:** el trazo sale primero tal cual lo haces y, al soltar, se convierte en una S o
@@ -475,30 +511,11 @@ dibujada a mano, sin fichas, y la S o la O se escriben con el dedo.
   el ratón o con el toque de siempre.
 - **Medición:** cuántas partidas se juegan en papel y cuántas letras se reconocen a la primera o
   hay que corregir.
-- **Decisiones abiertas:** si es un tema (como Halloween) o un modo aparte; si sale siempre o se
-  desbloquea como secreto («edición superespecial»), y si en línea el rival ve tu letra tal cual o
-  ya pasada a limpio.
-
-### Tomatada en línea (idea de JoseLuis y Julia)
-
-Un extra solo para el modo en línea: le lanzas una tomatada al rival y su pantalla queda tapada
-durante 5 s. Las manchas se van quitando poco a poco hasta que vuelve a ver el tablero.
-
-- **Versión por tema:** tomates en el clásico, telarañas en Halloween, bolas de nieve en Navidad,
-  confeti en el cumpleaños… Cada tema pone su «proyectil» en `themes.js`.
-- **Técnica:** una jugada nueva `throw` en `api/_sala.js`, como `hint` o `buy`, que llega al rival
-  con el polling de siempre (puede tardar alrededor de un segundo). La duración y las reglas, en
-  `config.js` (`throw.seconds`…).
-- **Equilibrio (por decidir):** una por partida o comprada en la tienda secreta con segundos de tu
-  reloj; mientras te tapan, tu reloj sigue corriendo (que es la gracia) pero no se puede lanzar en
-  los últimos segundos del rival ni dos seguidas.
-- **Con niños y accesibilidad:** nada que dé miedo ni ofenda; sin destellos; con «reducir
-  movimiento», las manchas se desvanecen sin animación. El aviso «🍅 Ana te ha lanzado una
-  tomatada» sale en la línea de mensajes, como los demás avisos del rival.
-- **Medición:** `extra_used` con `extra: 'throw'` y el contador del servidor `power_throw`.
-- **Decisiones abiertas:** si cuenta como extra (con su botón) o como reacción (junto a las
-  reacciones con emoji), cómo se consigue y si también vale en «Juntos» (allí taparía la pantalla
-  de ambos, así que seguramente no).
+- **Decidido:** es un modo aparte, una «edición superespecial» que cambia la dinámica pero
+  reutiliza las reglas y los componentes (`engine.js`, `match.js`). Se entraría por un enlace
+  propio o de otra forma por decidir. Es una idea loca, para más adelante.
+- **Por decidir:** cómo se llega a ella y si en línea el rival ve tu letra tal cual o ya pasada a
+  limpio.
 
 ## Otras ideas y decisiones abiertas
 
