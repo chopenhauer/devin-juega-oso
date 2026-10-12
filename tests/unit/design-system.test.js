@@ -36,6 +36,28 @@ test('styles only use tokens: no raw colours, font sizes, weights, layers or eas
   }
 });
 
+test('font sizes come from one scale of 12 steps, plus the fluid 🛟 hero', () => {
+  const sizes = [...strip(tokensCss).matchAll(/(--fs-[\w-]+)\s*:/g)].map((m) => m[1]);
+  const scale = [
+    '2xs',
+    'sm',
+    'base',
+    'lg',
+    'xl',
+    '2xl',
+    '3xl',
+    '4xl',
+    'display-sm',
+    'display',
+    'hero',
+    'hero-xl',
+  ];
+  assert.deepEqual(sizes, [...scale.map((s) => `--fs-${s}`), '--fs-sos-hero', '--fs-sos-ring']);
+  for (const f of cssFiles) {
+    for (const m of strip(read(f)).matchAll(/(--fs-[\w-]+)\s*:/g)) assert.fail(`${f} defines ${m[1]}`);
+  }
+});
+
 test('colours in JS live only in theme data', () => {
   for (const f of jsFiles.filter((f) => !f.endsWith('themes.js'))) {
     assert.doesNotMatch(read(f), COLOUR, f);

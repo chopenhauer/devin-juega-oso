@@ -25,7 +25,7 @@ test('changing a token restyles the game straight away', async ({ page }) => {
   const button = page.locator('#introStart');
   await page.evaluate(() => document.body.style.setProperty('--color-accent-light', 'rgb(1, 2, 3)'));
   await expect.poll(() => style(button, 'backgroundImage')).toContain('rgb(1, 2, 3)');
-  await page.evaluate(() => document.documentElement.style.setProperty('--fs-2xl', '31px'));
+  await page.evaluate(() => document.documentElement.style.setProperty('--fs-xl', '31px'));
   await expect.poll(() => style(button, 'fontSize')).toBe('31px');
 });
 

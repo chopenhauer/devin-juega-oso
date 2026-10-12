@@ -17,6 +17,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.7.3] - 2026-10-12
+
+**Una sola escala de tamaños de letra**
+
+Quedaban 28 tamaños de letra: 20 en una escala con pasos de 1 px (12, 13, 14, 15…) y 8 sueltos de
+componentes (letras del tablero, título de victoria, iconos de los extras…). Ahora hay 12.
+
+- La escala: 12 · 14 · 16 · 18 · 20 · 24 · 28 · 32 · 44 · 56 · 80 · 100 px (`--fs-2xs` … `--fs-hero-xl`).
+- Cada tamaño antiguo pasa al más cercano, casi siempre a 1 o 2 px. Lo que más se nota: los textos
+  de 15 px (mensajes, nombres, relojes, ayuda) pasan a 16 y los de 17 a 18, que se leen mejor, y la
+  etiqueta 🤖 sube de 10 a 12 px.
+- Desaparecen los tokens de componente (`--fs-letter-*`, `--fs-title-xl`, `--fs-extra`,
+  `--fs-emoji-xl`, `--fs-legal-heading`). Solo queda aparte el 🛟 gigante, que crece con la pantalla.
+- Decisión: 12 pasos y no los 7 que estaban apuntados, porque con 7 había saltos de 15 a 20 px o de
+  34 a 48 px y el juego cambiaba de aspecto.
+- Un test falla si alguien añade un tamaño de letra fuera de la escala.
+
 ## [3.7.2] - 2026-10-12
 
 **Medimos qué extras se usan y documentamos toda la analítica ([adede81](https://github.com/chopenhauer/devin-juega-oso/commit/adede817a5ba360329e6e6834c86bf95c53f11fd))**

@@ -17,12 +17,15 @@ solo usa tokens. Si cambias un token, cambian el juego, la guía viva y `docs/to
 Semánticos, componentes y alias se declaran también en `body`: así, si un tema cambia un semántico
 en `body`, todo lo que depende de él se recalcula solo.
 
-**Escalas:** letra `--fs-3xs` (10) … `--fs-hero-xl` (100); peso `--fw-semibold` `--fw-bold`;
+**Escalas:** letra en 12 pasos, `--fs-2xs` (12) `--fs-sm` (14) `--fs-base` (16) `--fs-lg` (18)
+`--fs-xl` (20) `--fs-2xl` (24) `--fs-3xl` (28) `--fs-4xl` (32) `--fs-display-sm` (44)
+`--fs-display` (56) `--fs-hero` (80) `--fs-hero-xl` (100); peso `--fw-semibold` `--fw-bold`;
 espacios de 4 en 4 px (`--space-1` = 4 px, `--space-2-5` = 10 px…); radios `--r-4xs` … `--r-pill`;
 duraciones `--dur-fast` `--dur-quick` `--dur-base`; curvas `--ease-soft` `--ease-pop`
-`--ease-bounce` `--ease-spring`; capas `--z-toolbar` (10) … `--z-modal` (100). Los tamaños que no
-encajan en la escala (letras del tablero, título de victoria…) son tokens de componente
-(`--fs-letter-md`, `--fs-title-xl`…) para unificarlos más adelante sin buscar por el CSS.
+`--ease-bounce` `--ease-spring`; capas `--z-toolbar` (10) … `--z-modal` (100). No hay tamaños de
+letra sueltos ni de componente: las letras del tablero usan `--fs-2xl` y `--fs-3xl`, y el título de
+victoria `--fs-display-sm`. La única excepción es el 🛟 gigante (`--fs-sos-hero` y `--fs-sos-ring`),
+que crece con la pantalla. `tests/unit/design-system.test.js` falla si aparece un tamaño nuevo.
 
 ### Temas
 
@@ -134,7 +137,8 @@ Arreglado: falta de `h1`, créditos fuera de una región (`<footer>`), selector 
 
 ## Propuestas pendientes de decidir
 
-1. **Escala tipográfica:** hay 26 tamaños distintos; reducirlos a unos 7 tokens (`--fs-xs` … `--fs-display`).
+1. ~~**Escala tipográfica**~~ hecho en 3.7.3: de 28 tamaños a una escala de 12 más el 🛟 gigante.
+   Se descartó dejarla en 7 porque obligaba a saltos grandes (15 → 20 px, 34 → 48 px) y cambiaba el aspecto.
 2. **Colores semánticos:** hay 53 colores sueltos; pasarlos a tokens (`--success`, `--danger`, `--sea-*`), lo que también prepararía los temas de temporada.
 3. **Tablero con teclado:** moverse con las flechas por el tablero (patrón _grid_ con un solo tabulador), como en los juegos de tablero web accesibles.
 4. **OSOs sin depender del color:** añadir a los OSOs de cada jugador un borde o patrón distinto, para jugadores daltónicos.
