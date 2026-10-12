@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.7.2] - 2026-10-12
 
-**Medimos qué extras se usan y documentamos toda la analítica**
+**Medimos qué extras se usan y documentamos toda la analítica ([adede81](https://github.com/chopenhauer/devin-juega-oso/commit/adede817a5ba360329e6e6834c86bf95c53f11fd))**
 
 JoseLuis quería saber qué extra se usa más: 💡 pista, 👁️ última jugada, 🔄 cambio de letra o 🛟 SOS.
 Hasta ahora no se medía. El juego no cambia.
