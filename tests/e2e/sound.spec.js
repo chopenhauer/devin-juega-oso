@@ -75,7 +75,8 @@ test('the mute button on the intro and in the ☰ menu silences every sound and 
   await expect(toggle).toHaveAttribute('aria-pressed', 'true');
   await expect(toggle).toHaveText('🔇');
 
-  for (let i = 0; i < 6; i++) await page.click('#themeToggle');
+  // One burst: the 🎨 egg needs quick taps (`themes.eggTapGapMs`), and a slow CI runner spaces clicks out.
+  await page.locator('#themeToggle').click({ clickCount: 6 });
   await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
   expect(await sounds(page)).toEqual([]);
 

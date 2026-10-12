@@ -37,6 +37,8 @@ Hasta ahora no se medía. El juego no cambia.
 - Nuevo [`AGENTS.md`](AGENTS.md): inventario del repo, documentos, comandos, cómo se publica y
   reglas del proyecto, para que cualquier agente futuro arranque rápido.
 - Decisión: no preguntamos «¿Qué extra te ha ayudado más?» al acabar; basta con medir el uso.
+- Tests: los toques del easter egg del 🎨 se envían como una ráfaga, porque en el CI lento se
+  espaciaban demasiado (`themes.eggTapGapMs`) y fallaban a veces.
 
 ## [3.7.1] - 2026-10-12
 
