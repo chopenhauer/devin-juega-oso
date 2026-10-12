@@ -111,11 +111,13 @@ test('a full game against the machine ends with a winner screen', async ({ page 
   test.setTimeout(90_000);
   await startGame(page, { solo: true });
   const overlay = page.locator('#winnerOverlay');
-  for (let turn = 0; turn < 40 && !(await overlay.isVisible()); turn++) {
+  // The machine takes its time to think: only play on the human's turn, and stop when it ends.
+  for (let tick = 0; tick < 300 && !(await overlay.isVisible()); tick++) {
     const empty = (await boardText(page)).indexOf('.');
     if (empty < 0) break;
-    await cell(page, empty).click({ force: true });
-    await page.waitForTimeout(800);
+    if (await page.locator('#side1').evaluate((e) => e.classList.contains('active')))
+      await cell(page, empty).click({ force: true });
+    await page.waitForTimeout(200);
   }
   await expect(overlay).toBeVisible({ timeout: 5000 });
   await expect(page.locator('#winnerTitle')).not.toBeEmpty();

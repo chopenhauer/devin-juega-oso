@@ -40,6 +40,7 @@ async function finishGame(page) {
 }
 
 test('the session leaderboard adds up games between the same players', async ({ page }) => {
+  test.slow(); // plays four whole games
   await page.goto('/');
   await page.click('#introSkip');
   for (let i = 0; i < 4; i++) await page.click('#stepNext');

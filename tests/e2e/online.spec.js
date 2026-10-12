@@ -138,6 +138,7 @@ test('invite a friend, play turns remotely, resume after reload and win when the
 });
 
 test('rematch starts a new game when both accept', async ({ browser }) => {
+  test.slow(); // two browsers play a whole game through polling
   const errors = [];
   const host = await player(browser, errors);
   const guest = await player(browser, errors);

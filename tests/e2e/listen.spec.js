@@ -119,6 +119,7 @@ test('with analytics rejected, no game events are sent', async ({ page }) => {
 test('the 👍/👎 question shows after the first game, below the actions, and thanks in a modal', async ({
   page,
 }) => {
+  test.slow(); // plays several whole games
   await consent(page, 'granted');
   await start(page);
   await finishGame(page);

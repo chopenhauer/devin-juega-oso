@@ -133,10 +133,12 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   await page.reload();
   await toggle.click();
   const width = (await page.locator('#themeMenu').boundingBox()).width;
-  for (let i = 0; i < 5; i++) {
-    await toggle.click();
-    await expect(page.locator('#themeMenu')).toBeVisible();
-  }
+  // Closing the menu forgets that tap; then one burst of six, because the 🎨 egg needs quick taps
+  // (`themes.eggTapGapMs`) and a slow CI runner spaces separate clicks out.
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#themeMenu')).toBeHidden();
+  await toggle.click({ clickCount: 6 });
+  await expect(page.locator('#themeMenu')).toBeVisible();
   const party = page.locator('#eggParty');
   await expect(party).toContainText('¡Tienes más temas disponibles!');
   expect(await party.locator('span').count()).toBeGreaterThan(10);

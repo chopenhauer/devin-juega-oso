@@ -64,6 +64,17 @@ npm run online:report  # embudo y extras del juego en línea del mes (necesita U
 Si Playwright reutiliza un `scripts/serve.js` que se quedó abierto de antes, sirve el servidor de
 salas antiguo: ciérralo antes de lanzar los tests.
 
+**Pruebas en navegador estables.** El runner del CI es unas tres veces más lento que un portátil,
+así que allí cada prueba tiene 60 s y cada `expect` 10 s (`playwright.config.js`). Para que no
+fallen solo en el CI:
+
+- Los toques seguidos (easter egg del 🎨, tienda secreta) se mandan como una ráfaga con
+  `click({ clickCount: n })`, nunca con clics sueltos en un bucle.
+- Una prueba que juega varias partidas enteras lleva `test.slow()`.
+- Contra la máquina, se juega solo en el turno de la persona y se para cuando sale el final.
+- En línea, cada jugador lleva su `x-real-ip` (límite de salas) y se espera a que el invitado
+  reciba la partida por polling antes de medir su pantalla.
+
 ## Cómo se trabaja
 
 1. Rama `devin/<timestamp>-<tema>` con su preview de Vercel, capturas en móvil, iPad y escritorio,
