@@ -17,6 +17,27 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.6.1] - 2026-10-12
+
+**El botón de cada secreto te lleva a usarlo, y «Cuéntanos más» con su altura**
+
+Dos ajustes que pidió JoseLuis.
+
+- El botón del mensaje de cada secreto te lleva a donde se usa. «Llévame al 🎨» te devuelve al
+  inicio, al paso «¿A qué jugáis?», y hace brillar el 🎨. «¡A jugar!», de la tienda secreta, empieza
+  la revancha desde la pantalla final, o desde el inicio te lleva al tablero con «¡A jugar!» brillando.
+  Al empezar la partida, brillan también los extras. Con «reducir movimiento» se marca con un borde,
+  sin animación. Lo que brilla y cuánto dura (`secrets.spotlightMs`, 3 s) está en `config.js`.
+- El easter egg de los temas solo saltaba una vez hasta recargar la página. Ahora «Llévame al 🎨» lo
+  vuelve a activar, para que se pueda ver sin recargar ni borrar nada.
+- Decisión: en línea el botón sigue siendo «¡Voy a probarlo!» y no te mueve, para no sacarte de la
+  sala ni quitarte la revancha con tu rival.
+- Cada secreto de `secrets.js` dice ahora su botón (`cta`: texto y destino `home` o `play`). El
+  secreto n.º 3 de Julia solo tendrá que elegir uno.
+- En el diálogo «¡Gracias!», el botón «Cuéntanos más» salía enorme en Safari: el diálogo era algo más
+  alto que su contenido y el espacio sobrante estiraba el enlace. Ahora el contenido de los diálogos
+  se queda centrado y el botón tiene la altura de cualquier botón principal (54 px).
+
 ## [3.6.0] - 2026-10-11
 
 **Tensión con poco tiempo y relojes 30 s más cortos ([86f5740](https://github.com/chopenhauer/devin-juega-oso/commit/86f57409785dbd582e4138a57b0887b15e26adb3))**

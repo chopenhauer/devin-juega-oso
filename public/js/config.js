@@ -51,6 +51,7 @@ export const GAME = freeze({
   },
   secrets: {
     gamesPerSecret: 2,
+    spotlightMs: 3000,
   },
   themes: {
     eggTaps: 6,
@@ -136,6 +137,8 @@ export const HELP = {
   'online.closedRoomHours': 'Horas que se guarda una sala cerrada, para avisar a quien abra el enlace viejo.',
   'secrets.gamesPerSecret':
     'Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día.',
+  'secrets.spotlightMs':
+    'Milisegundos que brilla lo que hay que pulsar (🎨, «¡A jugar!», extras) al ir desde el botón del secreto.',
   'themes.eggTaps':
     'Pulsaciones seguidas en 🎨 para descubrir todos los temas (el texto del secreto se ajusta solo).',
   'themes.eggTapGapMs': 'Tiempo máximo entre dos pulsaciones para que cuenten como seguidas.',

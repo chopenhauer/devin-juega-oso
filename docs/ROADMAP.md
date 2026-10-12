@@ -80,6 +80,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   sala oye y ve en la pestaña cuándo llega el rival y pasa solo al tablero, avisos de lo que hace el
   rival (💡 👁️ 🔄 🛟 🛒) y el embudo de la invitación medido en el servidor (`npm run online:report`).
 - Tensión con poco tiempo (3.6.0, T4.3): con 20 s o menos en el turno el fondo se tiñe de rojo poco a poco y late (quieto con «reducir movimiento»), y todos los tableros tienen 30 s menos de reloj.
+- El botón de cada secreto lleva a usarlo (3.6.1): «Llévame al 🎨» vuelve al inicio y vuelve a activar el easter egg, «¡A jugar!» empieza una partida con los extras brillando; en línea no te mueve. «Cuéntanos más» con la altura de los demás botones.
 
 ## Priorización (revisada tras la 3.4.0)
 

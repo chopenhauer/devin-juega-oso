@@ -115,6 +115,11 @@ test('the 👍/👎 question shows after the first game, below the actions, and 
   await expect(dialog).toBeVisible();
   await expect(ask).toBeHidden();
   await expect(page.locator('#thanksTitle')).toHaveText('¡Gracias!');
+  const moreHeight = () => page.evaluate(() => document.querySelector('#feedbackMore').offsetHeight);
+  expect(await moreHeight(), 'as tall as any main button').toBe(54);
+  await page.evaluate(() => (document.querySelector('#thanksDialog').style.height = '90vh'));
+  expect(await moreHeight(), 'a taller dialog (Safari) does not stretch it').toBe(54);
+  await page.evaluate(() => (document.querySelector('#thanksDialog').style.height = ''));
   await expect(page.locator('#feedbackMore')).toHaveAttribute(
     'href',
     'mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO',

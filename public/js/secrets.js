@@ -1,7 +1,8 @@
 // Secrets: hidden features told one by one as a reward for coming back to play (docs/ROADMAP.md).
 // Every GAMES_PER_SECRET finished games (any mode, any result) one more is due, at most one a day.
 // They are told in the order of SECRETS, so new ones go at the end. `how` says how to trigger it,
-// never what happens; `hint` is the short reminder shown later under «Ya sabías…».
+// never what happens; `hint` is the short reminder shown later under «Ya sabías…». `cta` is the
+// button that takes you where it is used: `go` 'home' (the 🎨 step) or 'play' (a game with extras).
 import { GAME } from './config.js';
 
 const WORDS = ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
@@ -12,11 +13,13 @@ export const SECRETS = [
     id: 'temas',
     hint: 'El 🎨 del inicio esconde algo',
     how: `En el inicio, pulsa el 🎨 ${times(GAME.themes.eggTaps)} seguidas, muy rápido… y mira qué pasa.`,
+    cta: { label: 'Llévame al 🎨', go: 'home' },
   },
   {
     id: 'tienda',
     hint: 'Los extras gastados esconden algo',
     how: `En plena partida, pulsa ${times(GAME.shop.taps)} seguidas un extra que ya hayas gastado (💡, 🔄 o 🛟)… y mira qué pasa.`,
+    cta: { label: '¡A jugar!', go: 'play' },
   },
 ];
 export const GAMES_PER_SECRET = GAME.secrets.gamesPerSecret;

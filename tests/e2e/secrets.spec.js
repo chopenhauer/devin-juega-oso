@@ -64,14 +64,20 @@ test('after the 2nd game the end screen has a 🎁 that tells a secret, once a d
   await expect(page.locator('#secretTitle')).toHaveText('Déjame que te cuente un secreto…');
   await expect(page.locator('#secretHow')).toContainText('pulsa el 🎨 seis veces seguidas');
   await expect(page.locator('#secretKnown')).toBeHidden();
-  await page.click('#secretDialog button');
+  await page.getByRole('button', { name: 'Llévame al 🎨' }).click();
   await expect(dialog).toBeHidden();
   await expect(gift).toBeHidden();
-  await expect(page.locator('#rematch')).toBeFocused();
+  // Takes you to where it is used: the first screens, with the 🎨 shining.
+  await expect(overlay(page)).toBeHidden();
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'mode');
+  await expect(page.locator('#themeToggle')).toBeFocused();
+  await expect(page.locator('#themeToggle')).toHaveClass(/\bspotlight\b/);
   expect(await told(page)).toMatchObject({ played: 2, told: ['temas'] });
 
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
+  await page.click('#startGame');
   for (let game = 3; game <= 4; game++) {
-    await page.click('#rematch');
+    if (game > 3) await page.click('#rematch');
     await finishGame(page);
     await expect(gift, 'one a day at most').toBeHidden();
   }
@@ -107,4 +113,57 @@ test('coming back with games already played, the 🎁 waits on the first screen'
   await page.reload();
   await expect(page.locator('#brandIcon').or(page.locator('.mode-brand')).first()).toBeVisible();
   await expect(gift, 'already told').toBeHidden();
+});
+
+test('the 🎨 secret re-arms the egg, so it shows again without reloading', async ({ page }) => {
+  await seed(page, { 'oso.consent.v1': 'denied', 'oso.secretos.v1': { played: 1, told: [], day: null } });
+  await page.goto('/');
+  for (let i = 0; i < 6; i++) await page.locator('#themeToggle').click();
+  await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
+  await expect(page.locator('#eggParty')).toBeEmpty({ timeout: 6000 });
+  await page.keyboard.press('Escape');
+  await page.click('#introSkip');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
+  await page.click('#startGame');
+  await finishGame(page);
+  await page.locator('#secretToast').getByRole('button', { name: 'Ábrelo' }).click();
+  await page.getByRole('button', { name: 'Llévame al 🎨' }).click();
+  await expect(page.locator('#themeMenu')).toBeHidden();
+  for (let i = 0; i < 6; i++) await page.locator('#themeToggle').click();
+  await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
+});
+
+test('the shop secret takes you to play, with «¡A jugar!» and then the extras shining', async ({ page }) => {
+  await seed(page, {
+    'oso.consent.v1': 'denied',
+    'oso.secretos.v1': { played: 4, told: ['temas'], day: '2000-01-01' },
+  });
+  await page.goto('/');
+  await page.locator('#secretToast').getByRole('button', { name: 'Ábrelo' }).click();
+  await expect(page.locator('#secretHow')).toContainText('un extra que ya hayas gastado');
+  await page.getByRole('button', { name: '¡A jugar!' }).click();
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'board');
+  const start = page.locator('#startGame');
+  await expect(start).toBeFocused();
+  await expect(start).toHaveClass(/\bspotlight\b/);
+  await start.click();
+  await expect(page.locator('#hint1')).toHaveClass(/\bspotlight\b/);
+  await expect(page.locator('#swap1')).toHaveClass(/\bspotlight\b/);
+  await expect(page.locator('#hint1'), 'only for a few seconds').not.toHaveClass(/\bspotlight\b/, {
+    timeout: 5000,
+  });
+});
+
+test('Esc closes a secret without moving you', async ({ page }) => {
+  await seed(page, {
+    'oso.consent.v1': 'denied',
+    'oso.secretos.v1': { played: 4, told: ['temas'], day: '2000-01-01' },
+  });
+  await page.goto('/');
+  const step = await page.locator('#setupScreen').getAttribute('data-step');
+  await page.locator('#secretToast').getByRole('button', { name: 'Ábrelo' }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#secretDialog')).toBeHidden();
+  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', step);
+  await expect(page.locator('#startGame')).not.toHaveClass(/\bspotlight\b/);
 });

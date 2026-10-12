@@ -81,6 +81,7 @@ Cómo cambiar uno:
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
 | `secrets.gamesPerSecret` | 2 | Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día. |
+| `secrets.spotlightMs` | 3000 | Milisegundos que brilla lo que hay que pulsar (🎨, «¡A jugar!», extras) al ir desde el botón del secreto. |
 
 ## Temas y easter egg del 🎨
 

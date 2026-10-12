@@ -311,7 +311,18 @@ const { timeFor } = Engine;
   initSecrets();
   const secretToast = q('secretToast'),
     secretDialog = q('secretDialog');
-  let secretPlace = null;
+  let secretPlace = null,
+    secretGo = null,
+    spotExtras = false;
+  // Draws the eye to where a secret is used for a few seconds (just a ring with reduced motion).
+  function spotlight(els) {
+    for (const el of els) {
+      el.classList.remove('spotlight', 'hint');
+      void el.offsetWidth;
+      el.classList.add('spotlight');
+      setTimeout(() => el.classList.remove('spotlight'), GAME.secrets.spotlightMs);
+    }
+  }
   const dueSecret = () => nextSecret(readSecrets(), isoDay(new Date()));
   const resultShown = () => !q('winnerOverlay').classList.contains('hidden');
   function syncSecretGift() {
@@ -340,13 +351,37 @@ const { timeFor } = Engine;
     );
     q('secretKnown').classList.toggle('hidden', !before.length);
     secretPlace = place;
+    // Online, leaving for the 🎨 or a new game would drop the room and the rematch.
+    secretGo = online ? null : (secret.cta?.go ?? null);
+    q('secretGo').textContent = (secretGo && secret.cta.label) || '¡Voy a probarlo!';
+    secretDialog.returnValue = '';
     secretToast.classList.add('hidden');
     secretDialog.showModal();
   }
   q('secretOpen').addEventListener('click', () => openSecret(resultShown() ? 'end' : 'start'));
-  secretDialog.addEventListener('close', () =>
-    (secretPlace === 'end' ? q('rematch') : themeToggle).focus({ preventScroll: true }),
-  );
+  secretDialog.addEventListener('close', () => {
+    const go = secretDialog.returnValue === 'go' ? secretGo : null;
+    if (go === 'home') {
+      if (secretPlace === 'end') {
+        backToSetup();
+        showStep('mode');
+        syncThemeToggle();
+      }
+      // The 🎨 egg only fires once per page load: re-arm it so it can be seen again now.
+      allThemes = false;
+      toggleThemeMenu(false);
+      spotlight([themeToggle]);
+      return themeToggle.focus({ preventScroll: true });
+    }
+    if (go === 'play') {
+      spotExtras = true;
+      if (secretPlace === 'end') return q('rematch').click();
+      showStep('board');
+      spotlight([q('startGame')]);
+      return q('startGame').focus({ preventScroll: true });
+    }
+    (secretPlace === 'end' ? q('rematch') : themeToggle).focus({ preventScroll: true });
+  });
   new MutationObserver(syncThemeToggle).observe(setup, {
     attributes: true,
     attributeFilter: ['data-step'],
@@ -783,6 +818,10 @@ const { timeFor } = Engine;
     updateTimers();
     updateControls();
     msg.textContent = `${avatars[0]} ${names[0]} empieza.`;
+    if (spotExtras) {
+      spotExtras = false;
+      spotlight([...hintBtns, ...swapBtns, ...sosBtns].filter((b) => b.offsetParent));
+    }
     timer = setInterval(tick, 100);
     playing = true;
     track('game_start', modeParams());

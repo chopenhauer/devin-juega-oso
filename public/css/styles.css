@@ -295,6 +295,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
 .info-dialog[open] {
   display: grid;
   gap: var(--space-3);
+  align-content: center;
   animation: dialogIn 0.35s var(--ease-pop);
 }
 .info-dialog::backdrop {
@@ -1309,6 +1310,23 @@ select option {
 @keyframes pulse {
   50% {
     opacity: 0.35;
+  }
+}
+.spotlight {
+  animation: spotlight 1s ease-in-out 3;
+}
+@keyframes spotlight {
+  50% {
+    box-shadow:
+      0 0 0 4px var(--accent),
+      0 0 24px var(--accent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight {
+    animation: none;
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
   }
 }
 @keyframes fadeIn {
@@ -3364,7 +3382,6 @@ body[data-motion='rise'] .theme-decor span {
   align-items: center;
   justify-content: center;
   justify-self: center;
-  min-height: 48px;
   padding: 0 22px;
   box-sizing: border-box;
   text-decoration: none;
