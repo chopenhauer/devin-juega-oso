@@ -117,7 +117,8 @@ cualquier rama. Dependabot propone actualizaciones mensuales de dependencias y a
   desde el propio dominio. Un aviso de cookies (`public/js/consent.js`, `oso.consent.v1`) pide
   permiso: Clarity solo se carga al aceptar y GA usa Consent Mode v2 (analítica denegada hasta
   aceptar, publicidad siempre denegada). Los eventos de partida (`public/js/telemetry.js`) solo se
-  envían con el permiso concedido y no llevan nombres, avatares ni texto escrito. Los tests e2e sustituyen Clarity y GA por respuestas vacías para no
+  envían con el permiso concedido y no llevan nombres, avatares ni texto escrito; sí el tema
+  (`theme`, `theme_source`) para saber qué temas se usan. Los tests e2e sustituyen Clarity y GA por respuestas vacías para no
   enviar datos.
 - El texto que escriben los jugadores (nombres) se pinta siempre con `textContent`, nunca como HTML.
 - `.vercelignore` solo sube `public/`, `api/`, `middleware.js`, `vercel.json`, `package.json` y el

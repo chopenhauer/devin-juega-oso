@@ -17,6 +17,30 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.7.0] - 2026-10-12
+
+**Sala con el tema del anfitrión, cada uno abajo, intro «S🛟S» y temas medidos en GA4**
+
+Tres peticiones de JoseLuis tras jugar en línea, más una pregunta: «¿estamos midiendo en GA4 cuáles son los
+temas o skins más usados?» (no lo estábamos).
+
+- **El tema viaja con la sala:** al abrir la sala se guarda el tema del anfitrión (`theme`, validado
+  contra `THEMES`) y quien abre el enlace lo ve y elige entre sus avatares. Decisión: el tema del
+  invitado no se guarda; al salir de la sala vuelve el suyo. Mientras hay sala, el 🎨 no cambia el
+  tema (el anfitrión tendría que abrir otra sala), para que los avatares de los dos sigan siendo del
+  mismo tema.
+- **Cada uno se ve abajo:** en el móvil del invitado, su barra va abajo y la del anfitrión arriba
+  (antes lo veía al revés). En escritorio, cada uno tiene su panel a la izquierda. Los colores de cada
+  jugador no cambian.
+- **Intro SOS a pantalla completa:** al activar el 🛟 sale «S🛟S» (o «O🛟O» al volver) durante
+  `sos.flashMs`, que pasa de 0,9 a 2,5 s, sin botón. Las letras entran de golpe, el 🛟 gira, la
+  pantalla tiembla y salen ondas; con «reducir movimiento», la misma pantalla quieta. Ahora también
+  sale en línea, en los dos móviles: el servidor ya paraba el reloj ese tiempo.
+- **GA4:** `game_start`, `game_end`, `game_abandon` y `feedback` llevan `theme` y `theme_source`
+  (`chosen`, `festival`, `host` o `default`), para distinguir lo que se elige de lo que pone la fecha.
+  Nuevo evento `theme_change` (`theme`, `theme_from`) al elegir en 🎨. Dimensiones registradas en
+  GA4; solo hay datos desde la publicación.
+
 ## [3.6.1] - 2026-10-12
 
 **El botón de cada secreto te lleva a usarlo, y «Cuéntanos más» con su altura ([dccb524](https://github.com/chopenhauer/devin-juega-oso/commit/dccb5248718d834a6eddd1c739c71d4422a8a1ae))**

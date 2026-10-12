@@ -10,6 +10,7 @@
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import * as Match from '../public/js/match.js';
 import { GAME, BOARD_SIZES } from '../public/js/config.js';
+import { THEMES } from '../public/js/themes.js';
 
 // Every number below comes from the game parameters (public/js/config.js).
 export const SIZES = BOARD_SIZES;
@@ -44,6 +45,8 @@ const cleanName = (s, fallback) =>
   (typeof s === 'string' ? s.replace(/[\p{C}<>]/gu, '').trim() : '').slice(0, 16) || fallback;
 const cleanAvatar = (s, fallback) =>
   typeof s === 'string' && s.length > 0 && s.length <= 16 && !/[\p{L}\p{N}<>]/u.test(s) ? s : fallback;
+// The host's theme (skin) travels with the room so the guest sees the same one.
+const cleanTheme = (s) => (typeof s === 'string' && Object.hasOwn(THEMES, s) ? s : 'classic');
 
 class HttpError extends Error {
   constructor(status, code, room) {
@@ -65,6 +68,7 @@ export function publicView(room, now) {
     now,
     updated: room.updated,
     game: room.game,
+    theme: room.theme ?? 'classic',
     seats: room.seats.map(({ name, avatar, rematch, left, here }) => ({
       left: !!left,
       here: here ?? 0,
@@ -158,6 +162,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
         status: 'waiting',
         game: 1,
         size: null,
+        theme: cleanTheme(body.theme),
         seats: [seat],
         created: now,
       };

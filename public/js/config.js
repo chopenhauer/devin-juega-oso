@@ -23,7 +23,7 @@ export const GAME = freeze({
     swap: 1,
   },
   sos: {
-    flashMs: 900,
+    flashMs: 2500,
     pauseMs: 220,
     moveMs: 260,
   },
@@ -109,7 +109,8 @@ export const HELP = {
   'extras.hint': '💡 Pistas por jugador y partida. 0 = desactivada.',
   'extras.last': '👁️ Ver la última jugada del rival, por jugador y partida. 0 = desactivada.',
   'extras.swap': '🔄 Cambiar una O por una S (o al revés), por jugador y partida. 0 = desactivado.',
-  'sos.flashMs': 'Lo que dura el aviso «SOS» antes de repetir la partida. El reloj espera mientras tanto.',
+  'sos.flashMs':
+    'Lo que dura la intro a pantalla completa «S🛟S» antes de repetir la partida (2-3 s). El reloj espera mientras tanto.',
   'sos.pauseMs': 'Pausa entre el aviso y la repetición.',
   'sos.moveMs': 'Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir.',
   'shop.taps':

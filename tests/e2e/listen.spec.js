@@ -78,6 +78,10 @@ test('with analytics accepted, games send anonymous start, end and abandon event
     cells_total: 25,
   });
   expect(end.app_version).toMatch(/^\d+\.\d+\.\d+$/);
+  expect(sent[0][1]).toMatchObject({
+    theme: expect.any(String),
+    theme_source: expect.stringMatching(/^(default|festival)$/),
+  });
   expect(JSON.stringify(sent)).not.toMatch(/Jugador|🐻|🐼/);
 
   await page.click('#rematch');
@@ -166,4 +170,26 @@ test('«💡 Ideas» in the ☰ menu opens an email with the subject ready', asy
   await page.locator('#shareMenu').focus();
   await page.keyboard.press('Tab');
   await expect(ideas).toBeFocused();
+});
+
+test('choosing a theme in 🎨 sends theme_change, and games carry the theme and why it is on', async ({
+  page,
+}) => {
+  await consent(page, 'granted');
+  await page.clock.setFixedTime(new Date('2026-12-01T12:00:00'));
+  await page.goto('/');
+  await page.click('#themeToggle');
+  await page.click('.theme-option[data-theme="halloween"]');
+  await page.click('#introSkip');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
+  await page.click('#startGame');
+  const sent = await events(page);
+  expect(sent.find(([name]) => name === 'theme_change')[1]).toMatchObject({
+    theme: 'halloween',
+    theme_from: 'classic',
+  });
+  expect(sent.find(([name]) => name === 'game_start')[1]).toMatchObject({
+    theme: 'halloween',
+    theme_source: 'chosen',
+  });
 });

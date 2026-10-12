@@ -291,3 +291,50 @@ test('the rival is told about the extras used and bought in the secret shop', as
   await expect(host.locator('#message')).not.toContainText('Ana ha cambiado');
   expect(errors).toEqual([]);
 });
+
+test("the guest wears the host's theme, each sees their own panel at the bottom and SOS stops both screens", async ({
+  browser,
+}) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  await host.clock.setFixedTime(new Date('2026-12-01T12:00:00'));
+  await host.addInitScript(() => localStorage.setItem('oso.theme.v1', 'halloween'));
+  await guest.goto('/');
+  const own = await guest.locator('body').getAttribute('data-theme');
+  const code = await createRoom(host);
+  await expect(host.locator('body')).toHaveAttribute('data-theme', 'halloween');
+  await host.click('#stepNext');
+  await guest.goto(`/?sala=${code}`);
+  await expect(guest.locator('body')).toHaveAttribute('data-theme', 'halloween');
+  await expect(guest.locator('.pconfig.remote .online-seat-avatar')).toHaveText('🎃');
+  await expect(guest.locator('.avatars[data-player="1"] .avatar-btn').first()).toHaveText('🎃');
+  await guest.fill('#nickname2', 'Leo');
+  await guest.click('#stepNext');
+  await expect(host.locator('#onlineToast')).toContainText('Leo ya está aquí');
+  await host.click('#startGame');
+  await expect(host.locator('#countdown')).toBeHidden({ timeout: 8000 });
+  await expect(guest.locator('#countdown')).toBeHidden({ timeout: 8000 });
+
+  // Own panel below the rival's (on wide screens, left of it).
+  const ownFirst = async (page, mine, theirs) => {
+    const [a, b] = await Promise.all([mine, theirs].map((s) => page.locator(s).boundingBox()));
+    return a.y > b.y + b.height / 2 || a.x + a.width / 2 < b.x;
+  };
+  expect(await ownFirst(host, '#side1', '#side2')).toBe(true);
+  expect(await ownFirst(guest, '#side2', '#side1')).toBe(true);
+
+  await host.click('#sos1');
+  for (const page of [host, guest]) {
+    await expect(page.locator('#modeFlash')).toBeVisible();
+    await expect(page.locator('.sos-hero')).toHaveText('S🛟S');
+  }
+  for (const page of [host, guest]) await expect(page.locator('#modeFlash')).toBeHidden({ timeout: 4000 });
+  await expect(guest.locator('.score-label').first()).toHaveText('puntos SOS');
+
+  // Leaving the room gives the guest their own theme back; their saved choice is untouched.
+  await guest.locator('.menu-btn:visible').first().click();
+  await guest.click('#newGame');
+  await expect(guest.locator('body')).toHaveAttribute('data-theme', own);
+  expect(await guest.evaluate(() => localStorage.getItem('oso.theme.v1'))).toBeNull();
+  expect(errors).toEqual([]);
+});

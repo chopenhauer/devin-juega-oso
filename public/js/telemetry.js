@@ -35,22 +35,36 @@ export function track(name, params = {}) {
 const seconds = (s) => Math.round(Math.max(0, s));
 
 // Parameters shared by every game event.
-export function gameParams({ size, mode, difficulty }) {
+export function gameParams({ size, mode, difficulty, theme = 'classic', themeSource = 'default' }) {
   return {
     board_size: `${size}x${size}`,
     players: mode === 'four' ? 4 : 2,
     mode,
     vs_machine: mode === 'solo',
     difficulty: mode === 'solo' ? difficulty : 'none',
+    theme,
+    theme_source: themeSource,
   };
 }
 
 // `game_end`: how the game finished and how much clock each player used.
-export function gameEndParams({ size, mode, difficulty, reason, winner, scores, available, times, filled }) {
+export function gameEndParams({
+  size,
+  mode,
+  difficulty,
+  theme,
+  themeSource,
+  reason,
+  winner,
+  scores,
+  available,
+  times,
+  filled,
+}) {
   const left = times.map(seconds);
   const used = times.map((t) => seconds(available - t));
   const params = {
-    ...gameParams({ size, mode, difficulty }),
+    ...gameParams({ size, mode, difficulty, theme, themeSource }),
     end_reason: reason === 'tiempo' ? 'timeout' : 'board_full',
     result: winner === null ? 'draw' : mode === 'solo' && winner === 1 ? 'machine' : 'player',
     time_available: seconds(available),

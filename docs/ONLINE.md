@@ -52,6 +52,14 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   lectura; desde la 3.5.0 sin la rejilla, y las tarjetas dicen «Tú», «Te invita» o «Tu rival»); «¡A jugar!» se ve desactivado hasta que el rival entra; al empezar (y en cada revancha)
   hay una cuenta atrás 3-2-1 en los dos móviles: el servidor arranca el primer reloj `COUNTDOWN_MS`
   (3 s) más tarde y rechaza jugadas antes (`countdown`).
+- **Tema y lados (3.7.0, petición de JoseLuis):** `create` guarda el tema del anfitrión
+  (`room.theme`, validado contra `THEMES`; si no, `classic`) y la vista pública lo incluye. El
+  invitado lo lleva puesto desde que abre el enlace (elige entre los avatares de ese tema) hasta que
+  sale de la sala; no se guarda en su `oso.theme.v1`. Con sala abierta el 🎨 no cambia el tema. En
+  la partida cada uno ve su panel abajo (a la izquierda en pantallas anchas): `.game.online.guest`
+  cambia el orden de `#side1` y `#side2` en el móvil del invitado. Al activar 🛟, la intro «S🛟S»
+  sale en los dos móviles durante el tiempo que el servidor tiene parado el reloj (máx.
+  `sos.flashMs`).
 - **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El
   token va en `localStorage` (`oso.online.v1`) para poder volver tras recargar o perder la conexión.
 - **Árbitro:** el cliente envía intenciones (`place`, `swap`, `sos`, `power`, `buy`, `leave`) con la

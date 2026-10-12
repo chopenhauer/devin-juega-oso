@@ -229,3 +229,53 @@ test('with little time on turn the background turns red and beats (T4.3)', async
   expect(await tension.evaluate((e) => getComputedStyle(e).animationName)).toBe('none');
   expect(Number(await tension.evaluate((e) => getComputedStyle(e).opacity))).toBeGreaterThan(0);
 });
+
+const watchFlash = (page) =>
+  page.evaluate(() => {
+    const f = document.getElementById('modeFlash');
+    window.flashLog = [];
+    new MutationObserver(() =>
+      window.flashLog.push([f.classList.contains('hidden'), performance.now()]),
+    ).observe(f, { attributes: true, attributeFilter: ['class'] });
+  });
+
+test('SOS: a full-screen «S🛟S» intro stops the game for 2-3 s, with no button', async ({ page }) => {
+  await startGame(page);
+  await watchFlash(page);
+  await page.click('#sos1', { force: true });
+  const flash = page.locator('#modeFlash');
+  await expect(flash).toBeVisible();
+  await expect(page.locator('.sos-hero')).toHaveText('S🛟S');
+  await expect(flash).toHaveAttribute('role', 'alert');
+  await expect(flash.locator('button')).toHaveCount(0);
+  const box = await flash.boundingBox();
+  const view = page.viewportSize();
+  expect(box.x).toBeLessThanOrEqual(1);
+  expect(box.y).toBeLessThanOrEqual(1);
+  expect(box.width).toBeGreaterThanOrEqual(view.width - 20);
+  expect(box.height).toBeGreaterThanOrEqual(view.height - 1);
+  const covered = await page.evaluate(() => {
+    const r = document.getElementById('board').getBoundingClientRect();
+    return document
+      .getElementById('modeFlash')
+      .contains(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2));
+  });
+  expect(covered).toBe(true);
+  await expect(flash).toBeHidden({ timeout: 4000 });
+  const [[, shown], [, hidden]] = await page.evaluate(() => window.flashLog);
+  expect(hidden - shown).toBeGreaterThanOrEqual(2000);
+  expect(hidden - shown).toBeLessThanOrEqual(3000);
+  await expect(page.locator('#message')).toContainText('Ahora se puntúa SOS', { timeout: 4000 });
+});
+
+test('SOS intro with «reduce motion»: same screen, nothing moves', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await startGame(page);
+  await page.click('#sos1', { force: true });
+  await expect(page.locator('#modeFlash')).toBeVisible();
+  const moving = await page.evaluate(() => {
+    const f = document.getElementById('modeFlash');
+    return document.getAnimations().filter((a) => f.contains(a.effect.target)).length;
+  });
+  expect(moving).toBe(0);
+});

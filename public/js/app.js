@@ -163,6 +163,10 @@ const { timeFor } = Engine;
     themeMenu = q('themeMenu'),
     themeOptions = () => [...themeMenu.querySelectorAll('.theme-option')];
   let theme = 'classic';
+  // Why this theme is on, for GA: chosen in 🎨, festival of the day, the online host's, or default.
+  let themeSource = 'default';
+  // A guest wears the host's theme while in the room; their own comes back on leaving.
+  let ownTheme = null;
   let allThemes = false;
   let lowWarned = new Set();
   const themeTaps = [];
@@ -190,10 +194,11 @@ const { timeFor } = Engine;
       }),
     );
   }
-  function applyTheme(id, save = true) {
+  function applyTheme(id, save = true, source = 'chosen') {
     const next = THEMES[id] ? id : 'classic';
     avatars = mapAvatars(avatars, themeOf(theme), themeOf(next));
     theme = next;
+    themeSource = source;
     const t = themeOf(theme);
     avatarChoices = t.avatars;
     avatarGrids.forEach((g) =>
@@ -430,6 +435,15 @@ const { timeFor } = Engine;
   themeMenu.addEventListener('click', (e) => {
     const b = e.target.closest('.theme-option');
     if (!b) return;
+    if (online || invite) {
+      toggleThemeMenu(false);
+      return toast(
+        online?.seat === 0
+          ? '🎨 Tu rival ya ve este tema. Para cambiarlo, abre otra sala.'
+          : '🎨 El tema lo elige quien abre la sala.',
+      );
+    }
+    if (b.dataset.theme !== theme) track('theme_change', { theme: b.dataset.theme, theme_from: theme });
     applyTheme(b.dataset.theme);
     toggleThemeMenu(false);
     themeToggle.focus();
@@ -449,15 +463,16 @@ const { timeFor } = Engine;
   });
   {
     const today = new Date();
-    let saved = 'classic',
+    let saved = null,
       choseToday = false;
     try {
-      saved = localStorage.getItem(THEME_KEY) ?? 'classic';
+      saved = localStorage.getItem(THEME_KEY);
       choseToday = localStorage.getItem(THEME_DAY_KEY) === isoDay(today);
     } catch {
       /* ignore */
     }
-    applyTheme((!choseToday && festivalOn(today)) || saved, false);
+    const festival = !choseToday && festivalOn(today);
+    applyTheme(festival || saved || 'classic', false, festival ? 'festival' : saved ? 'chosen' : 'default');
   }
 
   function setGameMode(mode) {
@@ -755,6 +770,7 @@ const { timeFor } = Engine;
     game.classList.toggle('solo', gameMode === 'solo');
     game.classList.toggle('four', gameMode === 'four');
     game.classList.toggle('online', !!online);
+    game.classList.toggle('guest', online?.seat === 1);
 
     turnBarTop.textContent = over
       ? 'Partida terminada'
@@ -787,7 +803,7 @@ const { timeFor } = Engine;
   }
 
   const filledCells = () => board.filter(Boolean).length;
-  const modeParams = () => gameParams({ size, mode: gameMode, difficulty });
+  const modeParams = () => gameParams({ size, mode: gameMode, difficulty, theme, themeSource });
   // A game left before it ends (new game, other board, closing the page).
   function abandon() {
     if (!playing) return;
@@ -1133,6 +1149,19 @@ const { timeFor } = Engine;
     return new Promise((r) => setTimeout(r, ms));
   }
 
+  // Full screen «S🛟S» (or «O🛟O»): the game stops and the rules change. No button.
+  let introTimeout;
+  function sosIntro(word, ms) {
+    const box = q('modeFlash');
+    box.querySelectorAll('.sos-hero-letter').forEach((e) => (e.textContent = word[0]));
+    box.querySelector('.mode-flash-title').textContent = `¡Ahora es ${word}!`;
+    box.querySelector('.mode-flash-sub').textContent =
+      `Cambio de juego: ahora cuentan los ${word}. Recalculando la partida…`;
+    box.classList.remove('hidden');
+    clearTimeout(introTimeout);
+    if (ms) introTimeout = setTimeout(() => box.classList.add('hidden'), ms);
+  }
+
   async function activateSOS(player) {
     if (over || !sosReady(player) || replaying || helpPaused || player !== current) return;
     if (settle()) return;
@@ -1153,8 +1182,7 @@ const { timeFor } = Engine;
     lastCell = null;
 
     setSeaTheme(word === 'SOS');
-    q('modeFlash').querySelector('.mode-flash-title').textContent = `¡Ahora es ${word}!`;
-    q('modeFlash').classList.remove('hidden');
+    sosIntro(word);
     updateControls();
     await sleep(GAME.sos.flashMs);
     if (id !== gameId) return;
@@ -1220,6 +1248,8 @@ const { timeFor } = Engine;
         size,
         mode: gameMode,
         difficulty,
+        theme,
+        themeSource,
         reason: timedOut ? 'tiempo' : reason,
         winner: w,
         scores,
@@ -1470,6 +1500,7 @@ const { timeFor } = Engine;
     Online.clearSeat();
     const seat = online?.seat;
     online = null;
+    restoreOwnTheme();
     if (reason === 'expired' && game.classList.contains('hidden')) return roomExpired(seat);
     if (game.classList.contains('hidden')) {
       renderLobby();
@@ -1504,6 +1535,7 @@ const { timeFor } = Engine;
     o.rev = v.rev;
     o.seats = v.seats;
     o.status = v.status;
+    if (o.seat === 1) wearHostTheme(v.theme);
     if (v.status === 'closed') return roomGone(v.closed);
     if (!v.match) {
       renderLobby();
@@ -1547,6 +1579,8 @@ const { timeFor } = Engine;
     if (targetWord !== oldWord) {
       play('sos');
       setSeaTheme(targetWord === 'SOS');
+      const intro = Math.min(GAME.sos.flashMs, v.match.holdMs);
+      if (intro > 0) sosIntro(targetWord, intro);
       text = `${before?.current === rival ? `🛟 ${who(rival)} ha cambiado a ${targetWord}.` : `🛟 Ahora se puntúa ${targetWord}.`} Marcador recalculado: ${scores.join(' – ')}.`;
     } else if (oldBoard.length === board.length) {
       const changed = board.findIndex((x, i) => x !== oldBoard[i]);
@@ -1757,6 +1791,7 @@ const { timeFor } = Engine;
 
   function leaveOnline() {
     invite = null;
+    restoreOwnTheme();
     if (!online) return renderLobby();
     closeNudge(false);
     const { code, token } = online;
@@ -1888,6 +1923,7 @@ const { timeFor } = Engine;
       action: 'create',
       name: namesIn[0].value.trim() || 'Jugador 1',
       avatar: avatars[0],
+      theme,
     });
     btn.disabled = false;
     if (!r.ok) return onlineFail(r.error);
@@ -1969,10 +2005,22 @@ const { timeFor } = Engine;
     track('online_invite_open');
     setGameMode('online');
     invite = { code, room };
+    wearHostTheme(room.theme);
     seatAsGuest(room);
     if (!namesIn[1].value.trim()) namesIn[1].value = namesIn[0].value.trim();
     renderLobby();
     showStep('players');
+  }
+  function wearHostTheme(id) {
+    if (!id || (id === theme && themeSource === 'host')) return;
+    ownTheme ??= { id: theme, source: themeSource };
+    applyTheme(id, false, 'host');
+  }
+  function restoreOwnTheme() {
+    if (!ownTheme) return;
+    const { id, source } = ownTheme;
+    ownTheme = null;
+    applyTheme(id, false, source);
   }
   // The guest's own card is the second one; the host's avatar is taken.
   function seatAsGuest(room) {

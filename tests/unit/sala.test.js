@@ -276,7 +276,7 @@ test('a room with no game after 30 min closes: polls see why, actions get «expi
   const s = setup();
   const host = await s.call({ action: 'create', name: 'Ana' });
   s.clock.t += OPEN_MS - 1;
-  assert.equal((await s.get(`code=${host.code}`)).status, 'waiting');
+  assert.equal((await s.get(`code=${host.code}&rev=0`)).status, 'waiting');
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   assert.equal(guest.status, 'lobby');
   s.clock.t += 1;
@@ -289,7 +289,7 @@ test('a room with no game after 30 min closes: polls see why, actions get «expi
   assert.equal(start.room.status, 'closed');
   const late = await s.call({ action: 'join', code: host.code, name: 'Eva', avatar: '🦊' });
   assert.equal(late.error, 'expired');
-  assert.equal((await s.get(`code=${host.code}`)).closed, 'expired');
+  assert.equal((await s.get(`code=${host.code}&rev=0`)).closed, 'expired');
   assert.equal((await s.get('stats=1')).counters.expired, 1);
 });
 
@@ -349,4 +349,18 @@ test('the invite funnel is counted: links sent, opened (late or full), joins and
   assert.equal(counters.open_late, 1);
   assert.equal(counters.joined, 1);
   assert.equal(counters.join_wait_s, 90);
+});
+
+test("the host's theme travels with the room; unknown themes fall back to classic", async () => {
+  const s = setup();
+  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🎃', theme: 'halloween' });
+  assert.equal(host.theme, 'halloween');
+  const seen = await s.get(`code=${host.code}&rev=0`);
+  assert.equal(seen.theme, 'halloween');
+  const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '👻' });
+  assert.equal(guest.theme, 'halloween');
+  const odd = await s.call({ action: 'create', name: 'Eva', avatar: '🐻', theme: '<script>' }, '5.6.7.8');
+  assert.equal(odd.theme, 'classic');
+  const none = await s.call({ action: 'create', name: 'Eva', avatar: '🐻' }, '5.6.7.9');
+  assert.equal(none.theme, 'classic');
 });

@@ -26,6 +26,8 @@ test('game_end describes the game without personal data', () => {
     mode: 'solo',
     vs_machine: true,
     difficulty: 'hard',
+    theme: 'classic',
+    theme_source: 'default',
     end_reason: 'timeout',
     result: 'machine',
     time_available: 120,
@@ -41,6 +43,18 @@ test('game_end describes the game without personal data', () => {
 
 test('game params cover 4 players, draws and time bonuses', () => {
   assert.equal(gameParams({ size: 7, mode: 'four', difficulty: 'easy' }).difficulty, 'none');
+  assert.deepEqual(
+    gameParams({ size: 5, mode: 'online', difficulty: 'easy', theme: 'halloween', themeSource: 'host' }),
+    {
+      board_size: '5x5',
+      players: 2,
+      mode: 'online',
+      vs_machine: false,
+      difficulty: 'none',
+      theme: 'halloween',
+      theme_source: 'host',
+    },
+  );
   const params = gameEndParams({
     size: 7,
     mode: 'four',

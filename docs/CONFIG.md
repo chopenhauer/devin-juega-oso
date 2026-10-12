@@ -41,7 +41,7 @@ Cómo cambiar uno:
 
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
-| `sos.flashMs` | 900 | Lo que dura el aviso «SOS» antes de repetir la partida. El reloj espera mientras tanto. |
+| `sos.flashMs` | 2500 | Lo que dura la intro a pantalla completa «S🛟S» antes de repetir la partida (2-3 s). El reloj espera mientras tanto. |
 | `sos.pauseMs` | 220 | Pausa entre el aviso y la repetición. |
 | `sos.moveMs` | 260 | Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir. |
 

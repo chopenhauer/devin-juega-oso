@@ -223,7 +223,7 @@
   --z-popover: 11;
   --z-scrim: 12;
   --z-drawer: 13;
-  --z-flash: 18;
+  --z-flash: 90;
   --z-overlay: 20;
   --z-party: 40;
   --z-drag: 50;
@@ -288,6 +288,8 @@ body {
   --fs-letter-md: 26px;
   --fs-title-xl: 42px;
   --fs-emoji-xl: 44px;
+  --fs-sos-hero: clamp(96px, 28vw, 220px);
+  --fs-sos-ring: calc(var(--fs-sos-hero) * 0.8);
 
   /* Botón principal */
   --btn-primary-bg: linear-gradient(180deg, var(--color-accent-light), var(--color-accent-2));

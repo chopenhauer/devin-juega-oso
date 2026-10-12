@@ -1496,36 +1496,112 @@ body.sea-theme::before {
 .panel.sos-mode .board-shell {
   background: linear-gradient(180deg, var(--cielo-800-4), var(--cielo-900-4));
 }
+/* SOS INTRO: full screen «S🛟S» for GAME.sos.flashMs, no button, the game stops */
 .mode-flash {
-  position: absolute;
+  position: fixed;
   inset: 0;
   z-index: var(--z-flash);
   display: grid;
   place-items: center;
+  overflow: hidden;
   background: radial-gradient(circle, var(--cielo-700-a96), var(--cielo-950-a98));
   text-align: center;
   padding: var(--space-5);
-  animation: fadeIn 0.3s;
+  animation: fadeIn var(--dur-quick);
+}
+.mode-flash::before,
+.mode-flash::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: var(--fs-sos-hero);
+  aspect-ratio: 1;
+  border: 6px solid var(--menta-300-a60);
+  border-radius: 50%;
+  translate: -50% -50%;
+  opacity: 0;
+  animation: sosWave 1.4s 0.45s ease-out infinite;
+}
+.mode-flash::after {
+  animation-delay: 1.15s;
 }
 .mode-flash-card {
+  position: relative;
   display: grid;
-  gap: var(--space-2-5);
+  gap: var(--space-3);
   justify-items: center;
+  animation: sosShake 0.4s 0.45s;
 }
-.mode-flash-icon {
-  font-size: var(--fs-hero);
-  animation: bob 0.7s ease-in-out infinite alternate;
+.sos-hero {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-sos-hero);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  color: var(--menta-300);
+  text-shadow: 0 0 40px var(--menta-300-a60);
+}
+.sos-hero-letter {
+  animation: sosSlamLeft 0.45s var(--ease-bounce) both;
+}
+.sos-hero-letter:last-child {
+  animation-name: sosSlamRight;
+}
+.sos-hero-ring {
+  font-size: var(--fs-sos-ring);
+  margin-inline: 0.05em;
+  animation:
+    sosSpin 0.7s 0.15s var(--ease-pop) both,
+    bob 0.7s 0.85s ease-in-out infinite alternate;
 }
 .mode-flash-title {
   font-size: var(--fs-title-xl);
   font-weight: var(--fw-bold);
   color: var(--menta-300);
   text-shadow: 0 0 24px var(--menta-300-a60);
+  animation: fadeIn var(--dur-base) 0.6s both;
 }
 .mode-flash-sub {
+  max-width: 28ch;
   font-size: var(--fs-base);
   font-weight: var(--fw-semibold);
   color: var(--mar-200);
+  animation: fadeIn var(--dur-base) 0.8s both;
+}
+@keyframes sosSlamLeft {
+  from {
+    transform: translateX(-60vw) rotate(-25deg) scale(1.6);
+  }
+}
+@keyframes sosSlamRight {
+  from {
+    transform: translateX(60vw) rotate(25deg) scale(1.6);
+  }
+}
+@keyframes sosSpin {
+  from {
+    transform: scale(0) rotate(-540deg);
+  }
+}
+@keyframes sosShake {
+  20%,
+  60% {
+    transform: translateX(-10px);
+  }
+  40%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+@keyframes sosWave {
+  from {
+    opacity: 1;
+    scale: 0.6;
+  }
+  to {
+    opacity: 0;
+    scale: 3;
+  }
 }
 @keyframes bob {
   from {
@@ -1534,6 +1610,21 @@ body.sea-theme::before {
   to {
     transform: translateY(6px) rotate(6deg);
   }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mode-flash,
+  .mode-flash *,
+  .mode-flash::before,
+  .mode-flash::after {
+    animation: none;
+  }
+}
+/* Online, each player sees their own panel at the bottom (left on wide screens) */
+.game.online.guest #side1 {
+  order: -1;
+}
+.game.online.guest #side2 {
+  order: 1;
 }
 .replay-mark {
   animation: replayPulse 0.32s ease;
@@ -2595,6 +2686,12 @@ body:has(#helpModal:not(.hidden))
   }
   .center-area {
     grid-area: board;
+  }
+  .game.online.guest #side1 {
+    grid-area: p2;
+  }
+  .game.online.guest #side2 {
+    grid-area: p1;
   }
   .board-shell {
     max-width: min(100%, calc(100dvh - 130px));

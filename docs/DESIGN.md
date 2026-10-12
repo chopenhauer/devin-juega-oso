@@ -93,6 +93,13 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 - **Tienda secreta** (`#shopDialog`, 3.4.0): 3 toques seguidos en un extra gastado, solo en tu turno (👁️ no se vende). Dice el precio y si te quedarías sin tiempo; «Comprar» solo aparece si te queda más tiempo que el precio. El reloj sigue corriendo con la tienda abierta. Comprar solo recarga el extra, que se usa con otro toque. Los extras gastados siguen atenuados (`.used`) para que la tienda siga siendo un secreto.
 - **Avisos del rival en línea** (3.5.0): en la línea de mensajes, con emoji y nombre («💡 🐻 Ana ha usado una pista»); varios a la vez van juntos. La casilla de la pista no se le enseña al rival.
 - **Tensión con poco tiempo** (`.tension`, 3.6.0): con `clock.lowSeconds` (20 s) o menos en el reloj de quien tiene el turno, una viñeta roja desde los bordes, por detrás de `.app`, sube de 0 a 1 (`--tension`) y late dos veces por segundo. Si el turno pasa a alguien con más tiempo, desaparece. Nunca va sola: el reloj parpadea (`.timer.low`) y suena `low` una vez. En escritorio se nota menos porque el panel ocupa casi toda la pantalla; si hace falta, el siguiente paso sería teñir también el borde del panel.
+- **Intro SOS** (`#modeFlash`, `.sos-hero`, 3.7.0): pantalla completa (`position: fixed`,
+  `--z-flash` por encima de todo salvo los diálogos) con «S🛟S» en `--fs-sos-hero`, «¡Ahora es
+  SOS!» y una línea de qué cambia, durante `sos.flashMs` (2,5 s). Sin botón, a propósito: el juego se
+  interrumpe y cambia de dinámica. Las S entran desde los lados, el 🛟 gira, la tarjeta tiembla y
+  salen ondas; `role="alert"` para lectores de pantalla y todo quieto con «reducir movimiento».
+- **Paneles en línea** (3.7.0): cada jugador ve su panel abajo (izquierda en ancho); el invitado
+  lleva `.game.online.guest`, que solo cambia el orden, no los colores.
 - **Pie** (`.credits`): una sola línea, «made by Vilarequi with ❤️ · versión · Cookies · Privacidad».
 - **Celebraciones:** confeti al ganar y lluvia de huevos con el fondo oscurecido en el easter egg de temas; con «reducir movimiento» solo queda el mensaje.
 
