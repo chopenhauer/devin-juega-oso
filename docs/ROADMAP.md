@@ -114,6 +114,8 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 15  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
 | 16  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
 | 17  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
+| 18  | Edición papel: cuadrícula a mano y S/O escritas con el dedo                        | Alto       | Alto       | Decidir      |
+| 19  | Tomatada en línea: tapar la pantalla del rival 5 s (versión por tema)              | Medio-alto | Medio      | Decidir      |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
@@ -453,6 +455,50 @@ feedback sin escribir.
 - **Medición:** evento `online_react` con el emoji, para ver cuáles se usan.
 - **Decisiones abiertas:** qué emojis, si se puede silenciar al rival y si también vale en el modo
   «Juntos».
+
+### Edición papel (idea de JoseLuis y Julia)
+
+Un modo y tema «edición superespecial» que parezca jugar en una hoja de cuaderno: cuadrícula
+dibujada a mano, sin fichas, y la S o la O se escriben con el dedo.
+
+- **Cómo se siente:** el trazo sale primero tal cual lo haces y, al soltar, se convierte en una S o
+  una O «pasada a limpio» (un trazo más firme o más fino y menos tembloroso, como si se repasara a
+  boli). Los OSOs se tachan con una raya hecha a mano en lugar de colorearse.
+- **Técnica:** la cuadrícula y el trazo van en un `<canvas>` o SVG encima del tablero, sin
+  dependencias. Para saber si has escrito S u O basta una regla sencilla: la O se cierra sobre sí
+  misma y la S cambia de curva. Si no está claro, se pregunta con los dos botones S/O de siempre.
+  La lógica de la partida no cambia: el trazo acaba en la misma jugada `place` de `match.js`.
+- **Accesibilidad:** tocar la casilla y elegir S/O tiene que seguir funcionando (teclado, lectores
+  de pantalla y quien no quiera dibujar). Con «reducir movimiento», la letra se pasa a limpio sin
+  animación.
+- **Mobile first:** pensado para el dedo en el móvil; en iPad, con dedo o lápiz; en escritorio, con
+  el ratón o con el toque de siempre.
+- **Medición:** cuántas partidas se juegan en papel y cuántas letras se reconocen a la primera o
+  hay que corregir.
+- **Decisiones abiertas:** si es un tema (como Halloween) o un modo aparte; si sale siempre o se
+  desbloquea como secreto («edición superespecial»), y si en línea el rival ve tu letra tal cual o
+  ya pasada a limpio.
+
+### Tomatada en línea (idea de JoseLuis y Julia)
+
+Un extra solo para el modo en línea: le lanzas una tomatada al rival y su pantalla queda tapada
+durante 5 s. Las manchas se van quitando poco a poco hasta que vuelve a ver el tablero.
+
+- **Versión por tema:** tomates en el clásico, telarañas en Halloween, bolas de nieve en Navidad,
+  confeti en el cumpleaños… Cada tema pone su «proyectil» en `themes.js`.
+- **Técnica:** una jugada nueva `throw` en `api/_sala.js`, como `hint` o `buy`, que llega al rival
+  con el polling de siempre (puede tardar alrededor de un segundo). La duración y las reglas, en
+  `config.js` (`throw.seconds`…).
+- **Equilibrio (por decidir):** una por partida o comprada en la tienda secreta con segundos de tu
+  reloj; mientras te tapan, tu reloj sigue corriendo (que es la gracia) pero no se puede lanzar en
+  los últimos segundos del rival ni dos seguidas.
+- **Con niños y accesibilidad:** nada que dé miedo ni ofenda; sin destellos; con «reducir
+  movimiento», las manchas se desvanecen sin animación. El aviso «🍅 Ana te ha lanzado una
+  tomatada» sale en la línea de mensajes, como los demás avisos del rival.
+- **Medición:** `extra_used` con `extra: 'throw'` y el contador del servidor `power_throw`.
+- **Decisiones abiertas:** si cuenta como extra (con su botón) o como reacción (junto a las
+  reacciones con emoji), cómo se consigue y si también vale en «Juntos» (allí taparía la pantalla
+  de ambos, así que seguramente no).
 
 ## Otras ideas y decisiones abiertas
 
