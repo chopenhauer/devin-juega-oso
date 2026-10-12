@@ -7,11 +7,13 @@ al STEM y decida el roadmap.
 - Producción: https://juegaoso.com y https://devin-juega-oso.vercel.app (cada push a `main` se
   publica solo).
 - Cada rama y PR genera una preview en Vercel.
+- Guía rápida para agentes (inventario y reglas): [`AGENTS.md`](AGENTS.md).
 - Roadmap e ideas de mejora: [`docs/ROADMAP.md`](docs/ROADMAP.md).
 - Versiones, mejoras y decisiones: [`CHANGELOG.md`](CHANGELOG.md). La versión del pie sale de
   `public/js/version.js`.
 - Sistema de diseño y accesibilidad: [`docs/DESIGN.md`](docs/DESIGN.md).
 - Juego en línea (decisión, arquitectura y umbrales de revisión): [`docs/ONLINE.md`](docs/ONLINE.md).
+- Analítica (qué se mide, para qué y qué no se mide nunca): [`docs/ANALYTICS.md`](docs/ANALYTICS.md).
 - Parámetros del juego (tiempos, extras, salas, secretos…): [`docs/CONFIG.md`](docs/CONFIG.md), generado desde
   [`public/js/config.js`](public/js/config.js).
 

@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  EXTRAS,
   feedbackMoment,
   gameEndParams,
   gameParams,
@@ -38,6 +39,10 @@ test('game_end describes the game without personal data', () => {
     score_total: 5,
     time_left_p1: 0,
     time_left_p2: 48,
+    extras_hint: 0,
+    extras_last: 0,
+    extras_swap: 0,
+    extras_sos: 0,
   });
 });
 
@@ -71,6 +76,25 @@ test('game params cover 4 players, draws and time bonuses', () => {
   assert.equal(params.result, 'draw');
   assert.equal(params.time_used_max, 180);
   assert.equal(params.time_left_p4, 5);
+});
+
+test('game_end counts each extra used on this device', () => {
+  const params = gameEndParams({
+    size: 5,
+    mode: 'two',
+    difficulty: 'easy',
+    reason: 'puntos',
+    winner: 0,
+    scores: [2, 1],
+    available: 90,
+    times: [30, 40],
+    filled: 25,
+    extras: { hint: 2, sos: 1 },
+  });
+  assert.deepEqual(
+    EXTRAS.map((e) => params[`extras_${e}`]),
+    [2, 0, 0, 1],
+  );
 });
 
 test('ideas open an email with the subject filled in and the target is configurable', () => {

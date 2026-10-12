@@ -47,7 +47,11 @@ export function gameParams({ size, mode, difficulty, theme = 'classic', themeSou
   };
 }
 
-// `game_end`: how the game finished and how much clock each player used.
+// The four extras, in the order of the buttons (`extra_used`, `extras_*` in `game_end`).
+export const EXTRAS = ['hint', 'last', 'swap', 'sos'];
+
+// `game_end`: how the game finished, how much clock each player used and how many
+// times each extra was used on this device (`extras_hint`, `extras_last`, ...).
 export function gameEndParams({
   size,
   mode,
@@ -60,6 +64,7 @@ export function gameEndParams({
   available,
   times,
   filled,
+  extras = {},
 }) {
   const left = times.map(seconds);
   const used = times.map((t) => seconds(available - t));
@@ -75,6 +80,7 @@ export function gameEndParams({
     score_total: scores.reduce((a, b) => a + b, 0),
   };
   left.forEach((t, i) => (params[`time_left_p${i + 1}`] = t));
+  for (const e of EXTRAS) params[`extras_${e}`] = extras[e] ?? 0;
   return params;
 }
 

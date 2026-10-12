@@ -1,0 +1,99 @@
+# AGENTS.md
+
+Guía rápida para cualquier agente (o persona) que llegue nuevo a OSO: qué hay, dónde está y qué
+reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo el mapa.
+
+## Qué es
+
+- **OSO**: juego web de O y S (y su variante SOS) para 1 jugador contra la máquina, 2 o 4 en el
+  mismo dispositivo, o 1 contra 1 en línea. Producción: https://juegaoso.com (y
+  https://devin-juega-oso.vercel.app).
+- **Proyecto familiar de STEM** de JoseLuis con su hija Julia: ella influye en el roadmap y en las
+  decisiones. Es un pet-project web, con licencia MIT; no hay planes de app nativa.
+- **Sin build ni framework**: HTML, CSS y JavaScript (módulos ES) servidos tal cual desde
+  `public/`, más una Vercel Function para las salas en línea. Cero dependencias en producción.
+
+## Mapa del repo
+
+| Dónde                         | Qué                                                                                           |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| `public/index.html`           | La página del juego (`sala.html` se genera al publicar con `scripts/invite-page.js`)          |
+| `public/js/engine.js`         | Reglas puras: OSO/SOS, puntuación, pistas, IA. Sin DOM                                        |
+| `public/js/match.js`          | Estado de una partida (jugadas, relojes, extras, compras); lo usan el navegador y el servidor |
+| `public/js/app.js`            | Interfaz y flujo de la partida                                                                |
+| `public/js/config.js`         | **Todos los parámetros ajustables** (tiempos, extras, tienda, salas, secretos…)               |
+| `public/js/onboarding.js`     | Pasos del inicio: `welcome`, `rules`, `mode`, `where`, `players`, `view`, `board`             |
+| `public/js/online.js`         | Cliente de las salas en línea                                                                 |
+| `public/js/secrets.js`        | Secretos (easter eggs): 🎨 temas y 🛒 tienda. El n.º 3 está reservado para Julia              |
+| `public/js/telemetry.js`      | Eventos anónimos de GA4 (solo con permiso) y cuándo pedir 👍/👎                               |
+| `public/js/themes.js`         | Temas y en qué fechas salen                                                                   |
+| `public/css/tokens.css`       | Sistema de diseño: única fuente de colores, letra, espacios…                                  |
+| `api/sala.js`, `api/_sala.js` | Salas en línea (`/api/sala`): árbitro con `match.js`, relojes y contadores anónimos           |
+| `api/_store.js`               | Upstash Redis por REST (en memoria en local y en tests)                                       |
+| `scripts/`                    | Servidor local, generadores (`CONFIG.md`, tokens, og, `sala.html`) y `online-report.js`       |
+| `tests/unit/`                 | `node:test`: motor, partida, servidor, configuración, telemetría…                             |
+| `tests/e2e/`                  | Playwright, proyectos `mobile` y `desktop`, con chequeos de accesibilidad                     |
+| `old-references/`             | Versiones históricas (no se publican)                                                         |
+
+## Documentos
+
+| Documento                                | Para qué                                                      |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| [`README.md`](README.md)                 | Estructura completa, `localStorage`, desarrollo, seguridad    |
+| [`CHANGELOG.md`](CHANGELOG.md)           | Cada versión (SemVer) con sus mejoras **y sus decisiones**    |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md)     | Hecho, pendiente y priorización con datos                     |
+| [`docs/DESIGN.md`](docs/DESIGN.md)       | Sistema de diseño, accesibilidad y comportamiento visible     |
+| [`docs/ONLINE.md`](docs/ONLINE.md)       | Juego en línea: decisión, arquitectura, contadores y umbrales |
+| [`docs/ANALYTICS.md`](docs/ANALYTICS.md) | Qué se mide, para qué y qué no se mide nunca                  |
+| [`docs/CONFIG.md`](docs/CONFIG.md)       | Parámetros del juego (generado desde `config.js`, no editar)  |
+
+## Comandos
+
+```bash
+npm install
+npm start              # http://localhost:4173 (mismas cabeceras que vercel.json)
+npm run lint           # ESLint + Prettier
+npm test               # tests unitarios
+npm run test:e2e       # Playwright (npx playwright install chromium la primera vez)
+npm run check          # todo lo anterior
+npm run config         # regenera docs/CONFIG.md tras tocar config.js
+npm run tokens         # regenera docs/tokens.json tras tocar tokens.css
+npm run online:report  # embudo y extras del juego en línea del mes (necesita Upstash)
+```
+
+Si Playwright reutiliza un `scripts/serve.js` que se quedó abierto de antes, sirve el servidor de
+salas antiguo: ciérralo antes de lanzar los tests.
+
+## Cómo se trabaja
+
+1. Rama `devin/<timestamp>-<tema>` con su preview de Vercel, capturas en móvil, iPad y escritorio,
+   y tests nuevos.
+2. Se publica cuando JoseLuis dice «publica» (o lo ha autorizado antes): se sube la versión en
+   `package.json`, `package-lock.json` y `public/js/version.js` (un test comprueba que coinciden
+   con el `CHANGELOG.md`), se apunta la entrada en el CHANGELOG con sus decisiones y se enlaza el
+   commit.
+3. `main` está protegida: sin force-push, y solo acepta commits cuyo job `check` del CI ya ha
+   pasado. Cada push a `main` se publica en Vercel. Al acabar se borra la rama.
+4. Commits con el email noreply de GitHub de chopenhauer
+   (`13889217+chopenhauer@users.noreply.github.com`), nunca con el del trabajo.
+
+## Reglas del proyecto
+
+- **Mobile first** y responsive: primero el móvil; iPad y escritorio tienen que funcionar bien.
+- **Lenguaje inclusivo** en los textos: «tu rival», «amig@», nada que suponga el género.
+- **Español** en textos, documentación y commits; código y comentarios en inglés.
+- **Parámetros en `config.js`**, nunca números sueltos en el código; después `npm run config`.
+- **Colores y medidas solo desde `tokens.css`** (un test prohíbe colores sueltos).
+- **CSP estricta**: nada de scripts ni estilos inline; los textos de los jugadores con
+  `textContent`.
+- **Privacidad**: juegan niños. Sin datos personales en la analítica, todo con consentimiento; ver
+  [`docs/ANALYTICS.md`](docs/ANALYTICS.md) antes de medir algo nuevo.
+- **Decisiones documentadas**: lo que se decide va al CHANGELOG y al documento que toque.
+- **El secreto n.º 3 lo inventa Julia**: no lo propongas como hecho ni lo implementes sin ella.
+
+## Fuera de este repo
+
+- `chopenhauer/oso-privado` (privado): paneles de GA4 y la configuración de GA4 como código
+  (`ga4/config.json`, `sync.py plan|apply`, `check.py`). Aquí no van IDs privados ni claves.
+- Secretos (nunca en el repo): la cuenta de servicio de GA4 y las credenciales de Upstash viven en
+  los secretos del entorno y en Vercel.

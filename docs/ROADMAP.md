@@ -376,6 +376,8 @@ Ajustar el reloj de cada tablero con lo que pasa en partidas reales, no con una 
     versión del juego;
   - sin nombres ni datos personales.
   - **Ojo:** solo llega de quien acepta las cookies, así que la muestra puede estar sesgada.
+  - Desde la 3.7.2, también cuántas veces se usó cada extra (`extras_hint`, `extras_last`,
+    `extras_swap`, `extras_sos`), y un evento `extra_used` cada vez que se usa uno.
 - **Herramientas (paso 2):**
   - una exploración en GA4 con el porcentaje de partidas que terminan por tiempo en cada tablero;
   - un script en el repo (`scripts/`) que lea los datos (exportación o GA4 Data API) y proponga

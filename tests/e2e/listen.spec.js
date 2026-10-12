@@ -43,6 +43,23 @@ async function finishGame(page) {
   await expect(overlay(page)).toBeVisible();
 }
 
+test('with analytics accepted, each extra used is sent and counted in game_end', async ({ page }) => {
+  await consent(page, 'granted');
+  await start(page);
+  await page.click('#hint1');
+  await expect(page.locator('#hint1')).toHaveClass(/\bused\b/);
+  await finishGame(page);
+  const sent = await events(page);
+  const used = sent.filter(([name]) => name === 'extra_used').map(([, p]) => p);
+  expect(used).toEqual([expect.objectContaining({ extra: 'hint', mode: 'two', board_size: '5x5' })]);
+  expect(sent.find(([name]) => name === 'game_end')[1]).toMatchObject({
+    extras_hint: 1,
+    extras_last: 0,
+    extras_swap: 0,
+    extras_sos: 0,
+  });
+});
+
 test('the privacy policy is linked from the footer and the cookie banner', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#consentBanner')).toBeVisible();

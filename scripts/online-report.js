@@ -4,6 +4,9 @@ const base = process.argv[2] ?? 'https://juegaoso.com';
 const { month, counters: c } = await (await fetch(`${base}/api/sala?stats=1`)).json();
 const n = (k) => c[k] ?? 0;
 const pct = (a, b) => (b ? `${Math.round((100 * a) / b)} %` : '—');
+const USED = ['power_hint', 'power_last', 'power_swap', 'power_sos'];
+const BOUGHT = ['buy_hint', 'buy_swap', 'buy_sos'];
+const sum = (keys) => keys.reduce((a, k) => a + n(k), 0);
 const rows = [
   ['Salas creadas', n('created'), ''],
   ['Enlace enviado (WhatsApp / copiar)', n('invited'), `${n('invite_whatsapp')} / ${n('invite_copy')}`],
@@ -16,6 +19,8 @@ const rows = [
   ['Partidas empezadas', n('started'), `${n('rematches')} revanchas`],
   ['Partidas terminadas', n('finished'), `${pct(n('finished'), n('started'))} de las empezadas`],
   ['Salas caducadas sin empezar', n('expired'), ''],
+  ['Extras usados (💡 / 👁️ / 🔄 / 🛟)', sum(USED), USED.map(n).join(' / ')],
+  ['Extras comprados (💡 / 🔄 / 🛟)', sum(BOUGHT), BOUGHT.map(n).join(' / ')],
 ];
 console.log(`Contadores del servidor · ${month}\n`);
 for (const [label, value, extra] of rows)

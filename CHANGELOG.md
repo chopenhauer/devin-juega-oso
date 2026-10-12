@@ -17,6 +17,27 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.7.2] - 2026-10-12
+
+**Medimos qué extras se usan y documentamos toda la analítica**
+
+JoseLuis quería saber qué extra se usa más: 💡 pista, 👁️ última jugada, 🔄 cambio de letra o 🛟 SOS.
+Hasta ahora no se medía. El juego no cambia.
+
+- Cada vez que alguien usa un extra se envía `extra_used` con `extra` (`hint`, `last`, `swap` o
+  `sos`), el modo y el tablero. Solo cuenta lo que se usa en este dispositivo: ni la máquina ni,
+  en línea, el rival (su propio móvil lo cuenta).
+- `game_end` lleva cuántas veces se usó cada extra en la partida (`extras_hint`, `extras_last`,
+  `extras_swap`, `extras_sos`), también con 0, para ver si los extras cambian quién gana o si se
+  acaba más por tiempo. Las cuatro métricas y la dimensión `extra` están registradas en GA4.
+- En línea, el servidor ya contaba los extras sin cookies; ahora `npm run online:report` los enseña,
+  junto con las compras de la tienda secreta.
+- Nuevo [`docs/ANALYTICS.md`](docs/ANALYTICS.md): qué se mide, para qué sirve cada dato, qué no se
+  mide nunca y cómo añadir una medición nueva.
+- Nuevo [`AGENTS.md`](AGENTS.md): inventario del repo, documentos, comandos, cómo se publica y
+  reglas del proyecto, para que cualquier agente futuro arranque rápido.
+- Decisión: no preguntamos «¿Qué extra te ha ayudado más?» al acabar; basta con medir el uso.
+
 ## [3.7.1] - 2026-10-12
 
 **Todo escala con la pantalla: el juego cabe en móviles estrechos o con «tamaño de pantalla» grande**

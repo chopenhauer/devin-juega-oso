@@ -804,6 +804,13 @@ const { timeFor } = Engine;
 
   const filledCells = () => board.filter(Boolean).length;
   const modeParams = () => gameParams({ size, mode: gameMode, difficulty, theme, themeSource });
+  // Extras used on this device in the current game (never the machine's or the online rival's).
+  let extrasUsed = {};
+  function usedExtra(extra, p = current) {
+    if (gameMode === 'solo' && p === 1) return;
+    extrasUsed[extra] = (extrasUsed[extra] ?? 0) + 1;
+    track('extra_used', { ...modeParams(), extra });
+  }
   // A game left before it ends (new game, other board, closing the page).
   function abandon() {
     if (!playing) return;
@@ -840,6 +847,7 @@ const { timeFor } = Engine;
     }
     timer = setInterval(tick, 100);
     playing = true;
+    extrasUsed = {};
     track('game_start', modeParams());
   }
   // Charges the active player for the time elapsed since the last settlement.
@@ -942,6 +950,7 @@ const { timeFor } = Engine;
       sync();
       if (!r.ok) return handleEnd(r.events);
       play('place');
+      usedExtra('swap', p);
       justPlaced = i;
       swapMode = null;
       scoresEl.forEach((e, k) => (e.textContent = scores[k]));
@@ -1003,6 +1012,7 @@ const { timeFor } = Engine;
         sync();
       }
       play('hint');
+      usedExtra('hint', p);
       updateControls();
       selected[p] = h.letter;
       hintCell = h.index;
@@ -1028,6 +1038,7 @@ const { timeFor } = Engine;
         sync();
       }
       play('last');
+      usedExtra('last', p);
       updateControls();
       lastCell = move.index;
       hintCell = null;
@@ -1169,6 +1180,7 @@ const { timeFor } = Engine;
 
     // Global power-up: spent for everybody at once; a bought-back one switches OSO ↔ SOS again.
     const { replay: savedHistory } = Match.sos(m, player, performance.now()).events[0];
+    usedExtra('sos', player);
     const word = m.word;
     ({ sosUsed, sosCredits = [] } = m);
     replaying = true;
@@ -1226,7 +1238,7 @@ const { timeFor } = Engine;
     btn.addEventListener('click', () => {
       if (btn.disabled || over || replaying || p !== current) return;
       if (!sosReady(p)) return shopTap(p, 'sos');
-      if (online) return void onlineMove({ type: 'sos' });
+      if (online) return void onlineMove({ type: 'sos' }).then((ok) => ok && usedExtra('sos'));
       activateSOS(p);
     }),
   );
@@ -1256,6 +1268,7 @@ const { timeFor } = Engine;
         available: timeFor(size),
         times,
         filled: filledCells(),
+        extras: extrasUsed,
       }),
     );
     if (online)
@@ -1670,6 +1683,7 @@ const { timeFor } = Engine;
         ? `Empieza ${avatars[current]} ${names[current]}.`
         : `${avatars[current]} ¡Empiezas tú, ${names[current]}!`;
       playing = true;
+      extrasUsed = {};
       track('game_start', modeParams());
     }
     timer = setInterval(tick, 100);
@@ -1776,7 +1790,7 @@ const { timeFor } = Engine;
     if (over || remote(current) || online.busy || performance.now() < online.goAt) return;
     if (swapMode === current) {
       if (!board[i]) msg.textContent = '🔄 Elige una casilla ocupada.';
-      else onlineMove({ type: 'swap', index: i });
+      else onlineMove({ type: 'swap', index: i }).then((ok) => ok && usedExtra('swap'));
       return;
     }
     if (!board[i]) onlineMove({ type: 'place', index: i, letter: selected[current] });
