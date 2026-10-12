@@ -2,7 +2,11 @@ import { test, expect } from '@playwright/test';
 
 // Two independent browsers play through scripts/serve.js, which serves /api/sala from memory.
 async function player(browser, errors) {
-  const context = await browser.newContext();
+  // Each player has its own address for the room rate limit (20 per 10 min), so the suite and its
+  // retries never run out of rooms.
+  const context = await browser.newContext({
+    extraHTTPHeaders: { 'x-real-ip': `online-${Math.random().toString(36).slice(2)}` },
+  });
   await context.addInitScript(
     () => localStorage.getItem('oso.consent.v1') ?? localStorage.setItem('oso.consent.v1', 'denied'),
   );
@@ -312,8 +316,11 @@ test("the guest wears the host's theme, each sees their own panel at the bottom 
   await guest.click('#stepNext');
   await expect(host.locator('#onlineToast')).toContainText('Leo ya está aquí');
   await host.click('#startGame');
-  await expect(host.locator('#countdown')).toBeHidden({ timeout: 8000 });
-  await expect(guest.locator('#countdown')).toBeHidden({ timeout: 8000 });
+  // The guest learns about the start by polling: wait for its board before the countdown check.
+  for (const page of [host, guest]) {
+    await expect(page.locator('#gameScreen')).toBeVisible({ timeout: 8000 });
+    await expect(page.locator('#countdown')).toBeHidden({ timeout: 8000 });
+  }
 
   // Own panel below the rival's (on wide screens, left of it).
   const ownFirst = async (page, mine, theirs) => {
