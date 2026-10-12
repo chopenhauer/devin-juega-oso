@@ -18,7 +18,7 @@ const blocks = (css) =>
 
 const typeOf = (k, v) => {
   if (/^(#|rgba?\()/.test(v)) return 'color';
-  if (/^-?[\d.]+px$/.test(v)) return 'dimension';
+  if (/^-?[\d.]+(px|rem)$/.test(v)) return 'dimension';
   if (/^[\d.]+m?s$/.test(v)) return 'duration';
   if (v.startsWith('cubic-bezier')) return 'cubicBezier';
   if (k.startsWith('font-family')) return 'fontFamily';

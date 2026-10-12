@@ -17,6 +17,31 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.7.1] - 2026-10-12
+
+**Todo escala con la pantalla: el juego cabe en móviles estrechos o con «tamaño de pantalla» grande**
+
+JoseLuis mandó capturas del Oppo de un amigo: el pie partido en dos líneas, «1 / jugador», los botones
+de la sala fuera de la tarjeta, los emojis fuera de sus círculos y el tablero con scroll. Lo
+reproducimos: su Chrome muestra la web como si el móvil midiera unos 270 px de ancho (el «tamaño de
+pantalla» o el zoom en grande), y la interfaz estaba hecha en píxeles fijos a partir de 360 px.
+
+- **Una sola unidad que escala:** todos los tamaños de `tokens.css` y `styles.css` pasan de px a rem
+  (los bordes y detalles de 1–3 px siguen en px). La raíz mide 16 px a partir de 360 px de ancho y, por
+  debajo, encoge con la pantalla (`--font-root`, hasta el 75 %): letra, botones, avatares, paneles y
+  tablero encogen juntos. En el móvil en vertical también encoge si hay menos de 615 px de alto
+  (`--font-root-phone`), para que la configuración y la partida quepan sin scroll.
+- **El tablero sale del alto que queda:** en el móvil, `100dvh - 19,5rem` (antes 300 px fijos, que
+  se quedaban cortos con paneles más altos y daban unos píxeles de scroll a 412×640).
+- **Las etiquetas de modo no se parten** (`white-space: nowrap`).
+- **Decisión:** en móviles de 360 px o más, tablets y escritorio todo se ve igual que antes: 30 de 32
+  capturas idénticas píxel a píxel y las otras 2 solo cambian el reloj (32 px).
+- **Decisión:** en pantallas de menos de 360 px la letra baja del mínimo de 12 px (9 px a 270 px). En
+  esos móviles todo se ve ampliado, así que en la mano miden lo mismo que en un móvil normal.
+- **Pruebas:** `tests/e2e/responsive.spec.js` comprueba a 270×490, 320×568 y 360×560 que no hay
+  scroll, que el pie y las etiquetas van en una línea, que los emojis caben en sus círculos, que los
+  botones de la sala no se salen y que la raíz vuelve a 16 px a 390 px.
+
 ## [3.7.0] - 2026-10-12
 
 **Sala con el tema del anfitrión, cada uno abajo, intro «S🛟S» y temas medidos en GA4**

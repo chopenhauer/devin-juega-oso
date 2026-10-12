@@ -68,7 +68,15 @@ capas, los alias como referencias (`{primitive.sol-400}`) y los temas de CSS.
 ### Disposición
 
 **Mobile first y responsive.** Todo se diseña primero para el móvil en vertical (390 px) y luego se
-amplía con `min-width` para iPad y escritorio, sin pantallas aparte. Cada cambio visual se revisa en
+amplía con `min-width` para iPad y escritorio, sin pantallas aparte.
+
+**Todo en rem, que escala (desde la 3.7.1).** Los tamaños se escriben en rem (1rem = 16 px); solo los
+bordes y detalles de 1–3 px van en px. La raíz (`--font-root`) mide 16 px a partir de 360 px de ancho y
+por debajo encoge con la pantalla, hasta el 75 % (12 px a 270 px), así que letra, botones, avatares y
+tablero encogen juntos. En el móvil en vertical también encoge si hay menos de 615 px de alto
+(`--font-root-phone`). Sirve para móviles estrechos y para los que tienen el «tamaño de pantalla» o el
+zoom en grande (un Oppo mostraba la web a unos 270 px). Las media queries siguen en px.
+`tests/e2e/responsive.spec.js` lo comprueba a 270×490, 320×568 y 360×560. Cada cambio visual se revisa en
 móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposición, también en iPad.
 
 `--nav-btn-h` (altura de ← → y del aviso del juego en línea) está en `styles.css`. `--side-w` y `--avatar-cols` siguen en `styles.css`: dependen del tamaño de la pantalla, no del tema.
@@ -112,7 +120,7 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 ## Reglas de accesibilidad
 
 - Contraste WCAG AA y foco visible (`outline` amarillo de 3 px) en todo lo interactivo.
-- Texto de 12 px como mínimo.
+- Texto de 12 px como mínimo a partir de 360 px de ancho; por debajo escala con la pantalla (ver «Disposición»).
 - Objetivos táctiles de 24 px como mínimo (WCAG 2.2 AA); los extras amplían su zona táctil con `::after` hasta unos 44 px.
 - Un `h1` (oculto visualmente) por página y títulos en orden.
 - Nunca depender solo del color: cada jugador tiene también avatar, nombre y posición.

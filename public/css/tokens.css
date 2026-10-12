@@ -159,55 +159,59 @@
   --sol-400-a80: rgba(255, 210, 63, 0.8);
   --sol-400-2: #ffd23f;
 
-  /* Tipografía */
+  /* Tipografía. Todo se mide en rem: por debajo de 360 px de ancho la raíz encoge con la
+     pantalla (hasta el 75 %) y la interfaz entera escala junta. */
+  --font-root: clamp(75%, 4.4445vw, 100%);
+  /* En el móvil en vertical también encoge si falta alto (menos de 615 px), para que todo quepa sin scroll. */
+  --font-root-phone: clamp(75%, min(4.4445vw, 2.6svh), 100%);
   --font-family: 'Fredoka', 'Baloo 2', ui-rounded, 'Nunito', 'Segoe UI', system-ui, sans-serif;
-  --fs-3xs: 10px;
-  --fs-2xs: 12px;
-  --fs-xs: 13px;
-  --fs-sm: 14px;
-  --fs-md: 15px;
-  --fs-base: 16px;
-  --fs-lg: 17px;
-  --fs-xl: 18px;
-  --fs-2xl: 20px;
-  --fs-3xl: 22px;
-  --fs-4xl: 24px;
-  --fs-5xl: 28px;
-  --fs-6xl: 30px;
-  --fs-7xl: 34px;
-  --fs-display-xs: 40px;
-  --fs-display-sm: 46px;
-  --fs-display-md: 54px;
-  --fs-display-lg: 60px;
-  --fs-hero: 80px;
-  --fs-hero-xl: 100px;
+  --fs-3xs: 0.625rem;
+  --fs-2xs: 0.75rem;
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 0.9375rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.0625rem;
+  --fs-xl: 1.125rem;
+  --fs-2xl: 1.25rem;
+  --fs-3xl: 1.375rem;
+  --fs-4xl: 1.5rem;
+  --fs-5xl: 1.75rem;
+  --fs-6xl: 1.875rem;
+  --fs-7xl: 2.125rem;
+  --fs-display-xs: 2.5rem;
+  --fs-display-sm: 2.875rem;
+  --fs-display-md: 3.375rem;
+  --fs-display-lg: 3.75rem;
+  --fs-hero: 5rem;
+  --fs-hero-xl: 6.25rem;
   --fw-semibold: 600;
   --fw-bold: 700;
 
   /* Espacios (base 4 px) */
   --space-0-5: 2px;
-  --space-1: 4px;
-  --space-1-5: 6px;
-  --space-2: 8px;
-  --space-2-5: 10px;
-  --space-3: 12px;
-  --space-3-5: 14px;
-  --space-4: 16px;
-  --space-4-5: 18px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-7: 28px;
-  --space-8: 32px;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-3-5: 0.875rem;
+  --space-4: 1rem;
+  --space-4-5: 1.125rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
 
   /* Radios */
   --r-4xs: 2px;
   --r-3xs: 3px;
-  --r-xs: 10px;
-  --r-sm: 14px;
-  --r-md: 18px;
-  --r-lg: 22px;
-  --r-xl: 28px;
-  --r-pill: 999px;
+  --r-xs: 0.625rem;
+  --r-sm: 0.875rem;
+  --r-md: 1.125rem;
+  --r-lg: 1.375rem;
+  --r-xl: 1.75rem;
+  --r-pill: 62.4375rem;
 
   /* Animación */
   --dur-fast: 0.15s;
@@ -276,19 +280,19 @@ body {
 body {
   /* Escena y tablero */
   --bg-scene:
-    radial-gradient(1100px 700px at 10% -10%, var(--color-bg-glow-1) 0, transparent 60%),
-    radial-gradient(900px 600px at 110% 110%, var(--color-bg-glow-2) 0, transparent 55%),
+    radial-gradient(68.75rem 43.75rem at 10% -10%, var(--color-bg-glow-1) 0, transparent 60%),
+    radial-gradient(56.25rem 37.5rem at 110% 110%, var(--color-bg-glow-2) 0, transparent 55%),
     linear-gradient(160deg, var(--color-bg-1), var(--color-bg-2) 55%, var(--color-bg-3));
   --board-shell-bg: linear-gradient(180deg, var(--color-board-1), var(--color-board-2));
 
   /* Tamaños propios de componentes (fuera de la escala, a unificar) */
-  --fs-legal-heading: 19px;
-  --fs-extra: 21px;
-  --fs-letter-sm: 23px;
-  --fs-letter-md: 26px;
-  --fs-title-xl: 42px;
-  --fs-emoji-xl: 44px;
-  --fs-sos-hero: clamp(96px, 28vw, 220px);
+  --fs-legal-heading: 1.1875rem;
+  --fs-extra: 1.3125rem;
+  --fs-letter-sm: 1.4375rem;
+  --fs-letter-md: 1.625rem;
+  --fs-title-xl: 2.625rem;
+  --fs-emoji-xl: 2.75rem;
+  --fs-sos-hero: clamp(6rem, 28vw, 13.75rem);
   --fs-sos-ring: calc(var(--fs-sos-hero) * 0.8);
 
   /* Botón principal */
@@ -297,12 +301,12 @@ body {
   --btn-primary-edge: var(--color-accent-edge);
 
   /* Relieves, sombras y brillos */
-  --relief-tile: 0 5px 0 var(--color-tile-relief);
-  --relief-blue: 0 5px 0 var(--cielo-700-3);
+  --relief-tile: 0 0.3125rem 0 var(--color-tile-relief);
+  --relief-blue: 0 0.3125rem 0 var(--cielo-700-3);
   --shadow-hairline: inset 0 0 0 1px var(--color-line);
-  --shadow-lg: 0 16px 40px var(--negro-a50);
-  --shadow-xl: 0 30px 90px var(--negro-a55);
-  --glow-accent: 0 0 18px var(--sol-400-a35);
+  --shadow-lg: 0 1rem 2.5rem var(--negro-a50);
+  --shadow-xl: 0 1.875rem 5.625rem var(--negro-a55);
+  --glow-accent: 0 0 1.125rem var(--sol-400-a35);
 
   /* Confeti por defecto (los temas de themes.js pueden traer el suyo) */
   --confetti:
@@ -384,11 +388,11 @@ body[data-theme='christmas'] {
 
 /* Densidad compacta (reservado: <html data-density="compact">). */
 [data-density='compact'] {
-  --space-2: 6px;
-  --space-2-5: 8px;
-  --space-3: 10px;
-  --space-3-5: 12px;
-  --space-4: 14px;
-  --space-5: 16px;
-  --space-6: 20px;
+  --space-2: 0.375rem;
+  --space-2-5: 0.5rem;
+  --space-3: 0.625rem;
+  --space-3-5: 0.75rem;
+  --space-4: 0.875rem;
+  --space-5: 1rem;
+  --space-6: 1.25rem;
 }
