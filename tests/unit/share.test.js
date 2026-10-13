@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { emailHref, shareText, shareUrl, whatsappHref } from '../../public/js/share.js';
+import { emailHref, shareText, shareUrl, whatsappHref, SHARE_SUBJECT } from '../../public/js/share.js';
 
 test('shared links say where the visit came from', () => {
   assert.equal(
@@ -13,18 +13,18 @@ test('the share text tells the result without names', () => {
   assert.match(shareText(), /^Juega conmigo a OSO 🐻/);
   assert.equal(
     shareText({ mode: 'solo', winner: 0, scores: [7, 5] }),
-    '¡He ganado a la máquina 7 a 5 en OSO 🐻!\n\n¿Te atreves?',
+    'He ganado a la máquina 7 a 5 en OSO 🐻!\n\nTe atreves?',
   );
   assert.equal(
     shareText({ mode: 'solo', winner: 1, scores: [2, 4] }),
-    'La máquina me ha ganado 4 a 2 en OSO 🐻.\n\n¿Tú puedes con ella?',
+    'La máquina me ha ganado 4 a 2 en OSO 🐻.\n\nTú puedes con ella?',
   );
-  assert.match(shareText({ mode: 'solo', winner: null, scores: [3, 3] }), /^¡Empate 3 a 3 contra la máquina/);
+  assert.match(shareText({ mode: 'solo', winner: null, scores: [3, 3] }), /^Empate 3 a 3 contra la máquina/);
   assert.equal(
     shareText({ mode: 'two', winner: 1, scores: [5, 8] }),
-    '¡Partidazo de OSO 🐻: 8 a 5!\n\n¿Juegas conmigo?',
+    'Partidazo de OSO 🐻: 8 a 5!\n\nJuegas conmigo?',
   );
-  assert.match(shareText({ mode: 'two', winner: null, scores: [4, 4] }), /^¡Empate 4 a 4 en OSO/);
+  assert.match(shareText({ mode: 'two', winner: null, scores: [4, 4] }), /^Empate 4 a 4 en OSO/);
   assert.match(shareText({ mode: 'four', winner: 2, scores: [1, 2, 6, 0] }), /a cuatro: 1 – 2 – 6 – 0/);
 });
 
@@ -36,6 +36,22 @@ test('WhatsApp and email links carry the text and their own utm_source', () => {
   assert.equal(new URL(whatsappHref('Hola', invite)).searchParams.get('text'), `Hola\n\n${invite}`);
   const mail = new URL(emailHref('Hola'));
   assert.equal(mail.protocol, 'mailto:');
-  assert.equal(mail.searchParams.get('subject'), '¿Jugamos a OSO? 🐻');
+  assert.equal(mail.searchParams.get('subject'), 'Jugamos a OSO? 🐻');
   assert.equal(mail.searchParams.get('body'), `Hola\n\n${shareUrl('email')}`);
+});
+
+test('messages for other people only use the closing ? and ! (spoken Spanish)', async () => {
+  const { t } = await import('../../public/js/i18n.js');
+  const results = [
+    null,
+    { mode: 'solo', winner: 0, scores: [7, 5] },
+    { mode: 'solo', winner: 1, scores: [3, 5] },
+    { mode: 'solo', winner: null, scores: [4, 4] },
+    { mode: 'four', winner: 0, scores: [5, 4, 3, 2] },
+    { mode: 'two', winner: null, scores: [4, 4] },
+    { mode: 'two', winner: 1, scores: [3, 6] },
+  ];
+  for (const text of [...results.map(shareText), SHARE_SUBJECT, t('share.room')]) {
+    assert.doesNotMatch(text, /[¿¡]/, text);
+  }
 });

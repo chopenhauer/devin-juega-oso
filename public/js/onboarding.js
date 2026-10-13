@@ -1,6 +1,7 @@
 // Step-by-step setup screen. The intro (welcome + rules carousel) is shown only
 // on the first visit; later visits start at "mode" with the last choices restored.
 import { GAME } from './config.js';
+import { t } from './i18n.js';
 
 const STORAGE_KEY = 'oso.prefs.v1';
 const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
@@ -89,12 +90,16 @@ function currentPrefs() {
 
 function summary() {
   const name = (i) => nameInputs[i].value.trim() || nameInputs[i].placeholder;
+  const hard = $('difficultyHard').classList.contains('selected');
+  const players = isFour()
+    ? t('summary.four', { first: [0, 1, 2].map(name).join(', '), last: name(3) })
+    : t('summary.two', { a: name(0), b: name(1) });
   const versus = isOnline()
-    ? 'Partida en línea'
+    ? t('summary.online')
     : isSolo()
-      ? `${name(0)} contra la máquina (${$('difficultyHard').classList.contains('selected') ? 'difícil' : 'fácil'})`
-      : `${isFour() ? `${[0, 1, 2].map(name).join(', ')} y ${name(3)}` : `${name(0)} contra ${name(1)}`} (${currentView() === 'same' ? 'misma vista' : 'enfrentados'})`;
-  return `${versus} · tablero ${$('sizeSelect').selectedOptions[0].textContent}`;
+      ? t('summary.solo', { name: name(0), level: t(hard ? 'summary.hard' : 'summary.easy') })
+      : t('summary.view', { players, view: t(currentView() === 'same' ? 'summary.same' : 'summary.facing') });
+  return t('summary.board', { versus, board: $('sizeSelect').selectedOptions[0].textContent });
 }
 
 // Every step shares one grid cell, so the panel keeps the height of the tallest
@@ -133,13 +138,13 @@ function show(step, slideIndex = 0) {
   setup.dataset.step = step;
   setSetupMode(modeNow());
   $('stepBack').classList.toggle('invisible', step === 'welcome');
-  $('stepBack').textContent = step === 'mode' ? '👀 Cómo se juega' : '←';
-  $('stepBack').setAttribute('aria-label', step === 'mode' ? 'Cómo se juega' : 'Atrás');
+  $('stepBack').textContent = step === 'mode' ? t('stepBack.rules') : '←';
+  $('stepBack').setAttribute('aria-label', t(step === 'mode' ? 'ruleCarousel.label' : 'stepBack.label'));
   $('stepNext').classList.toggle('invisible', NO_NEXT.has(step));
   // The intro only explains, so its arrows are plain; setup steps keep a yellow «next».
   $('stepNext').classList.toggle('primary', step !== 'rules');
   $('stepNext').classList.toggle('secondary', step === 'rules');
-  $('stepNext').textContent = step === 'mode' ? 'Siguiente →' : '→';
+  $('stepNext').textContent = step === 'mode' ? t('stepNext.text') : '→';
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
   equalizeHeight();

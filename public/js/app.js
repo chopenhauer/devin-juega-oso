@@ -3,6 +3,7 @@ import * as Match from './match.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
 import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
+import { t, translateDom } from './i18n.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
@@ -14,6 +15,7 @@ const { timeFor } = Engine;
   const { BONUS } = Match;
   const MACHINE_DELAY = GAME.machine.delayMs;
   const q = (id) => document.getElementById(id);
+  translateDom();
   q('appVersion').textContent = `v${VERSION}`;
   // Texts and options that depend on the game parameters (config.js).
   document.querySelectorAll('[data-config]').forEach((e) => (e.textContent = configValue(e.dataset.config)));
@@ -43,7 +45,7 @@ const { timeFor } = Engine;
     sosBtns = byPlayer('sos');
 
   let avatars = ['🐻', '🐼'],
-    names = ['Jugador 1', 'Jugador 2', 'Jugador 3', 'Jugador 4'],
+    names = [t('common.jugador_1'), t('common.jugador_2'), t('common.jugador_3'), t('common.jugador_4')],
     size = GAME.board.defaultSize,
     board = [],
     current = 0,
@@ -115,7 +117,7 @@ const { timeFor } = Engine;
   };
   const extraLabel = (b) => {
     const left = b.querySelector('.count')?.textContent;
-    return `${b.title}${left ? `, quedan ${left}` : ''}${b.classList.contains('used') ? ' (ya usado)' : ''}`;
+    return `${b.title}${left ? t('extras.left', { left }) : ''}${b.classList.contains('used') ? t('extras.used') : ''}`;
   };
   const firstFreeAvatar = (taken) => avatarChoices.find((a) => a !== taken);
 
@@ -128,7 +130,7 @@ const { timeFor } = Engine;
         b.classList.toggle('selected', b.dataset.avatar === avatars[p]);
         b.setAttribute('aria-pressed', String(b.dataset.avatar === avatars[p]));
         b.disabled = taken;
-        b.title = taken ? 'Ya lo ha elegido otro jugador' : '';
+        b.title = taken ? t('avatar.taken') : '';
       });
       previews[p].textContent = avatars[p];
     });
@@ -249,7 +251,7 @@ const { timeFor } = Engine;
       more.type = 'button';
       more.id = 'themeMore';
       more.className = 'theme-more';
-      more.textContent = 'Ver otros temas';
+      more.textContent = t('themeMenu.more');
       more.setAttribute('aria-controls', 'themeOthers');
       more.setAttribute('aria-expanded', String(open));
       more.addEventListener('click', () => {
@@ -291,7 +293,7 @@ const { timeFor } = Engine;
     const m = isMuted();
     soundToggle.textContent = m ? '🔇' : '🔊';
     soundToggle.setAttribute('aria-pressed', String(m));
-    soundMenu.textContent = m ? '🔇 Sonido: silenciado' : '🔊 Sonido: activado';
+    soundMenu.textContent = m ? t('sound.off') : t('soundMenu');
   }
   [soundToggle, soundMenu].forEach((b) =>
     b.addEventListener('click', () => {
@@ -358,7 +360,7 @@ const { timeFor } = Engine;
     secretPlace = place;
     // Online, leaving for the 🎨 or a new game would drop the room and the rematch.
     secretGo = online ? null : (secret.cta?.go ?? null);
-    q('secretGo').textContent = (secretGo && secret.cta.label) || '¡Voy a probarlo!';
+    q('secretGo').textContent = (secretGo && secret.cta.label) || t('secretGo');
     secretDialog.returnValue = '';
     secretToast.classList.add('hidden');
     secretDialog.showModal();
@@ -407,7 +409,7 @@ const { timeFor } = Engine;
       return s;
     });
     const msg = document.createElement('p');
-    msg.textContent = '🥚 ¡Tienes más temas disponibles!';
+    msg.textContent = t('themes.unlocked');
     eggParty.replaceChildren(...drops, msg);
     clearTimeout(eggTimer);
     eggTimer = setTimeout(() => eggParty.replaceChildren(), GAME.themes.eggPartyMs);
@@ -437,11 +439,7 @@ const { timeFor } = Engine;
     if (!b) return;
     if (online || invite) {
       toggleThemeMenu(false);
-      return toast(
-        online?.seat === 0
-          ? '🎨 Tu rival ya ve este tema. Para cambiarlo, abre otra sala.'
-          : '🎨 El tema lo elige quien abre la sala.',
-      );
+      return toast(online?.seat === 0 ? t('themes.host_locked') : t('themes.guest_locked'));
     }
     if (b.dataset.theme !== theme) track('theme_change', { theme: b.dataset.theme, theme_from: theme });
     applyTheme(b.dataset.theme);
@@ -492,18 +490,19 @@ const { timeFor } = Engine;
     if (mode === 'four') dedupeAvatars();
     const p2Config = namesIn[1].closest('.pconfig');
     const p2Avatars = p2Config.querySelector('.avatars');
-    p2Config.querySelector('.small-label').textContent = mode === 'solo' ? 'Máquina' : 'Jugador 2';
+    p2Config.querySelector('.small-label').textContent =
+      mode === 'solo' ? t('machineBadge') : t('common.jugador_2');
     previews[1].classList.toggle('robot', mode === 'solo');
 
     if (mode === 'solo') {
-      namesIn[1].value = 'Máquina';
+      namesIn[1].value = t('machineBadge');
       namesIn[1].disabled = true;
       p2Avatars.style.opacity = '.35';
       p2Avatars.style.pointerEvents = 'none';
       avatars[1] = '🤖';
       previews[1].textContent = '🤖';
     } else {
-      if (namesIn[1].value === 'Máquina') namesIn[1].value = '';
+      if (namesIn[1].value === t('machineBadge')) namesIn[1].value = '';
       namesIn[1].disabled = false;
       p2Avatars.style.opacity = '';
       p2Avatars.style.pointerEvents = '';
@@ -593,7 +592,7 @@ const { timeFor } = Engine;
       updateControls();
       render();
     }
-    msg.textContent = `${avatars[p]} ${names[p]} jugará ${selected[p]}.`;
+    msg.textContent = t('game.plays_letter', { avatar: avatars[p], name: names[p], letter: selected[p] });
     return true;
   }
 
@@ -766,23 +765,23 @@ const { timeFor } = Engine;
     });
     document
       .querySelectorAll('.score-label')
-      .forEach((e) => (e.textContent = targetWord === 'SOS' ? 'puntos SOS' : 'puntos OSO'));
+      .forEach((e) => (e.textContent = targetWord === 'SOS' ? t('score.sos') : t('common.puntos_oso')));
     game.classList.toggle('solo', gameMode === 'solo');
     game.classList.toggle('four', gameMode === 'four');
     game.classList.toggle('online', !!online);
     game.classList.toggle('guest', online?.seat === 1);
 
     turnBarTop.textContent = over
-      ? 'Partida terminada'
+      ? t('status.over')
       : helpPaused
-        ? '⏸ Pausa: ayuda abierta'
+        ? t('status.paused')
         : replaying
-          ? '🛟 Recalculando SOS…'
+          ? t('status.sos')
           : machineThinking
-            ? '🤖 La máquina está pensando…'
+            ? t('status.machine')
             : remote(current)
-              ? `${avatars[current]} Esperando a ${names[current]} · ${targetWord}`
-              : `${avatars[current]} Turno de ${names[current]} · ${targetWord}`;
+              ? t('game.waiting', { avatar: avatars[current], name: names[current], word: targetWord })
+              : t('game.turn_word', { avatar: avatars[current], name: names[current], word: targetWord });
   }
 
   function stopGame() {
@@ -877,7 +876,11 @@ const { timeFor } = Engine;
     lastCell = null;
     render();
     updateControls();
-    msg.textContent = `⏱️ ${names[p]} se queda sin tiempo. Turno de ${avatars[current]} ${names[current]}`;
+    msg.textContent = t('game.timeout_turn', {
+      name: names[p],
+      avatar: avatars[current],
+      next: names[current],
+    });
     play('timeout');
   }
   function tick() {
@@ -895,7 +898,7 @@ const { timeFor } = Engine;
       c.className = 'cell';
       c.setAttribute(
         'aria-label',
-        `Fila ${Math.floor(i / size) + 1}, columna ${(i % size) + 1}: ${v || 'vacía'}`,
+        t('board.cell', { row: Math.floor(i / size) + 1, col: (i % size) + 1, value: v || t('board.empty') }),
       );
 
       if (v) c.classList.add('filled');
@@ -941,7 +944,7 @@ const { timeFor } = Engine;
 
     if (swapMode === current) {
       if (!board[i]) {
-        msg.textContent = '🔄 Elige una casilla ocupada.';
+        msg.textContent = t('extras.swap_pick_full');
         return;
       }
 
@@ -956,7 +959,7 @@ const { timeFor } = Engine;
       scoresEl.forEach((e, k) => (e.textContent = scores[k]));
       hintCell = null;
       lastCell = null;
-      msg.textContent = `🔄 ${names[p]} cambia la letra a ${board[i]}.`;
+      msg.textContent = t('game.swapped', { name: names[p], letter: board[i] });
       render();
       updateControls();
 
@@ -981,9 +984,15 @@ const { timeFor } = Engine;
       void scoresEl[p].offsetWidth;
       scoresEl[p].classList.add('bump');
       updateTimers();
-      msg.textContent = `¡${avatars[p]} ${names[p]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`;
+      msg.textContent = t('game.scored', {
+        count: made.length,
+        avatar: avatars[p],
+        name: names[p],
+        word: targetWord,
+        bonus: BONUS * made.length,
+      });
     } else {
-      msg.textContent = `Turno de ${avatars[current]} ${names[current]}`;
+      msg.textContent = t('game.turn', { avatar: avatars[current], name: names[current] });
     }
 
     hintCell = null;
@@ -1020,7 +1029,7 @@ const { timeFor } = Engine;
       swapMode = null;
       render();
       updateControls();
-      msg.textContent = `💡 Prueba ${h.letter} en la casilla marcada.`;
+      msg.textContent = t('extras.hint_try', { letter: h.letter });
     }),
   );
 
@@ -1045,7 +1054,7 @@ const { timeFor } = Engine;
       swapMode = null;
       render();
       updateControls();
-      msg.textContent = `👁️ Última jugada rival: ${move.letter}.`;
+      msg.textContent = t('extras.last_move', { letter: move.letter });
     }),
   );
 
@@ -1060,16 +1069,15 @@ const { timeFor } = Engine;
       lastCell = null;
       render();
       updateControls();
-      msg.textContent =
-        swapMode === p ? '🔄 Elige una letra del tablero para cambiar O ↔ S.' : 'Cambio cancelado.';
+      msg.textContent = swapMode === p ? t('extras.swap_pick') : t('extras.swap_cancel');
     }),
   );
 
   // 🛒 Secret shop: quick taps on a spent 💡, 🔄 or 🛟 offer to buy it back with seconds (GAME.shop).
   const SHOP_ITEMS = {
-    hint: { name: 'otra 💡 pista', icon: '💡', bought: 'una 💡 pista' },
-    swap: { name: 'otro 🔄 cambio de letra', icon: '🔄', bought: 'un 🔄 cambio de letra' },
-    sos: { name: 'otro 🛟 SOS', icon: '🛟', bought: 'un 🛟 SOS' },
+    hint: { name: t('shop.hint.name'), icon: '💡', bought: t('shop.hint.bought') },
+    swap: { name: t('shop.swap.name'), icon: '🔄', bought: t('shop.swap.bought') },
+    sos: { name: t('shop.sos.name'), icon: '🛟', bought: t('shop.sos.bought') },
   };
   let shopTaps = [],
     shopOffer = null;
@@ -1088,12 +1096,10 @@ const { timeFor } = Engine;
     const enough = times[p] > cost;
     shopOffer = enough ? { p, power, cost, game: gameId } : null;
     q('shopText').textContent = enough
-      ? `¿Compras ${item.name} por ${cost} segundos de tu reloj?`
-      : `Para comprar ${item.name} necesitas más de ${cost} segundos en tu reloj.`;
+      ? t('shop.ask', { item: item.name, cost })
+      : t('shop.need', { item: item.name, cost });
     q('shopNote').textContent =
-      power === 'sos' && enough
-        ? `Al usarlo, la partida pasará a puntuar ${targetWord === 'SOS' ? 'OSO' : 'SOS'} para todo el mundo.`
-        : '';
+      power === 'sos' && enough ? t('shop.sos_warn', { word: targetWord === 'SOS' ? 'OSO' : 'SOS' }) : '';
     q('shopBuy').classList.toggle('hidden', !enough);
     q('shopDialog').showModal();
     track('secret_found', { secret: 'tienda', told: readSecrets().told.includes('tienda') });
@@ -1115,7 +1121,7 @@ const { timeFor } = Engine;
     play('hint');
     updateTimers();
     updateControls();
-    msg.textContent = `🛒 ¡Comprado por ${o.cost} s! Pulsa ${SHOP_ITEMS[o.power].icon} para usarlo.`;
+    msg.textContent = t('shop.bought', { cost: o.cost, icon: SHOP_ITEMS[o.power].icon });
     track('extra_bought', { extra: o.power });
   }
   q('shopBuy').addEventListener('click', buyExtra);
@@ -1165,9 +1171,8 @@ const { timeFor } = Engine;
   function sosIntro(word, ms) {
     const box = q('modeFlash');
     box.querySelectorAll('.sos-hero-letter').forEach((e) => (e.textContent = word[0]));
-    box.querySelector('.mode-flash-title').textContent = `¡Ahora es ${word}!`;
-    box.querySelector('.mode-flash-sub').textContent =
-      `Cambio de juego: ahora cuentan los ${word}. Recalculando la partida…`;
+    box.querySelector('.mode-flash-title').textContent = t('sos.now', { word });
+    box.querySelector('.mode-flash-sub').textContent = t('sos.change', { word });
     box.classList.remove('hidden');
     clearTimeout(introTimeout);
     if (ms) introTimeout = setTimeout(() => box.classList.add('hidden'), ms);
@@ -1206,7 +1211,7 @@ const { timeFor } = Engine;
     scored = new Map();
     scoresEl.forEach((e) => (e.textContent = '0'));
     render();
-    msg.textContent = `🛟 Reproduciendo la partida con criterio ${word}…`;
+    msg.textContent = t('sos.replaying', { word });
     await sleep(GAME.sos.pauseMs);
     if (id !== gameId) return;
 
@@ -1227,7 +1232,7 @@ const { timeFor } = Engine;
     replaying = false;
     render();
     updateControls();
-    msg.textContent = `🛟 Ahora se puntúa ${targetWord}. Marcador recalculado: ${scores.join(' – ')}.`;
+    msg.textContent = t('sos.recalculated', { word: targetWord, scores: scores.join(' – ') });
 
     Match.resume(m, performance.now());
     timer = setInterval(tick, 100);
@@ -1278,29 +1283,28 @@ const { timeFor } = Engine;
     q('winnerOverlay').classList.remove('hidden');
     q('rematch').disabled = false;
     q('otherBoard').classList.toggle('hidden', !!online);
-    q('changePlayers').textContent = online ? 'Salir' : 'Cambiar jugadores';
+    q('changePlayers').textContent = online ? 'Salir' : t('changePlayers');
     q('rematch').focus({ preventScroll: true });
 
     const result = scores.join(' – ');
-    const timeout =
-      gameMode === 'four' ? `${names[current]} se quedó sin tiempo` : 'El rival se quedó sin tiempo';
+    const timeout = gameMode === 'four' ? t('end.timeout', { name: names[current] }) : t('end.rival_timeout');
     if (Array.isArray(w)) {
       q('winnerAvatar').textContent = w.map((i) => avatars[i]).join('');
-      q('winnerTitle').textContent = `¡Ganan ${joinNames(w.map((i) => names[i]))}!`;
-      q('winnerSub').textContent = `${reason === 'tiempo' ? timeout : 'Victoria compartida'} · ${result}`;
+      q('winnerTitle').textContent = t('end.winners', { names: joinNames(w.map((i) => names[i])) });
+      q('winnerSub').textContent = `${reason === 'tiempo' ? timeout : t('end.shared')} · ${result}`;
       confetti();
     } else if (w === null) {
       q('winnerAvatar').textContent = '🤝';
-      q('winnerTitle').textContent = '¡Empate!';
+      q('winnerTitle').textContent = t('end.draw');
       q('winnerSub').textContent = `${scores.join(' – ')}`;
     } else {
       q('winnerAvatar').textContent = avatars[w];
-      q('winnerTitle').textContent = `¡Gana ${names[w]}!`;
+      q('winnerTitle').textContent = t('end.winner', { name: names[w] });
       q('winnerSub').textContent =
-        reason === 'tiempo' ? `${timeout} · ${result}` : `Resultado final: ${scores.join(' – ')}`;
+        reason === 'tiempo' ? `${timeout} · ${result}` : t('end.final', { scores: scores.join(' – ') });
       confetti();
     }
-    if (reason === 'abandono') q('winnerSub').textContent = `${names[1 - w]} ha salido de la partida`;
+    if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     lastResult = { mode: gameMode, winner: w, scores: [...scores] };
     const st = recordSession(w);
@@ -1337,7 +1341,10 @@ const { timeFor } = Engine;
     if (navigator.share) {
       try {
         // The link goes inside the text, after a blank line: with `url` apart, Android glues it on with a space.
-        await navigator.share({ title: 'OSO · el juego de Julia', text: withLink(text, shareUrl('native')) });
+        await navigator.share({
+          title: t('common.oso_el_juego_de'),
+          text: withLink(text, shareUrl('native')),
+        });
         track('share', { channel: 'native', place });
         return;
       } catch (e) {
@@ -1359,10 +1366,10 @@ const { timeFor } = Engine;
     const url = shareUrl('copy');
     try {
       await navigator.clipboard.writeText(url);
-      q('shareStatus').textContent = '✅ ¡Enlace copiado!';
+      q('shareStatus').textContent = t('share.copied');
       track('share', { channel: 'copy', place: sharePlace });
     } catch {
-      q('shareStatus').textContent = `Copia este enlace: ${url}`;
+      q('shareStatus').textContent = t('share.copy_this', { url: url });
     }
   });
   shareToggle.addEventListener('click', () => share('start'));
@@ -1413,7 +1420,7 @@ const { timeFor } = Engine;
         if (p === leader) {
           const icon = document.createElement('span');
           icon.setAttribute('role', 'img');
-          icon.setAttribute('aria-label', 'Va en cabeza');
+          icon.setAttribute('aria-label', t('session.leader'));
           icon.textContent = '👑';
           crown.append(icon);
         }
@@ -1429,8 +1436,8 @@ const { timeFor } = Engine;
         return row;
       }),
     );
-    const draws = st.draws ? ` · ${st.draws} ${st.draws === 1 ? 'empate' : 'empates'}` : '';
-    const games = st.games === 1 ? '1 partida' : `${st.games} partidas seguidas`;
+    const draws = st.draws ? t('session.draws', { count: st.draws }) : '';
+    const games = t('session.games', { count: st.games });
     q('sessionMeta').textContent = `${games}${draws}`;
   }
   function confetti() {
@@ -1456,15 +1463,15 @@ const { timeFor } = Engine;
   const onlineDialog = q('onlineDialog');
   let pollTimeout = null;
   const ONLINE_ERRORS = {
-    no_room: 'Esta sala ya no existe. Pide un enlace nuevo a quien te invitó.',
-    expired: `Esta sala se cerró porque la partida no empezó en ${GAME.online.closeAfterMinutes} min. Pide un enlace nuevo a quien te invitó.`,
-    code: 'Ese código no es válido.',
-    full: 'Esta sala ya está completa.',
-    avatar_taken: 'Ese avatar ya lo tiene tu rival. Elige otro.',
-    rate: 'Demasiados intentos. Espera unos minutos.',
-    network: 'No hay conexión. Revisa internet y vuelve a probar.',
+    no_room: t('online.err.gone'),
+    expired: t('online.err.closed', { min: GAME.online.closeAfterMinutes }),
+    code: t('online.err.code'),
+    full: t('online.err.full'),
+    avatar_taken: t('online.err.avatar'),
+    rate: t('online.err.rate'),
+    network: t('online.err.offline'),
   };
-  const onlineError = (e) => ONLINE_ERRORS[e] ?? 'Algo ha fallado. Vuelve a probar.';
+  const onlineError = (e) => ONLINE_ERRORS[e] ?? t('online.err.generic');
   const setOnlineStatus = (text) => (q('onlineStatus').textContent = text);
 
   function connect(r, seat) {
@@ -1496,14 +1503,14 @@ const { timeFor } = Engine;
       if (o.offline) {
         o.offline = false;
         o.quality.reconnects++;
-        msg.textContent = '📡 Conectado de nuevo.';
+        msg.textContent = t('online.reconnected');
       }
       if (!v.same) applyView(v);
     } else if (v.http === 404) {
       return roomGone();
     } else if (!o.offline) {
       o.offline = true;
-      msg.textContent = '📡 Sin conexión, reintentando…';
+      msg.textContent = t('online.retrying');
     }
     // Poll faster while waiting for the rival; on our own turn only clocks and leaving can change.
     const waiting = over || remote(current) || !setup.classList.contains('hidden');
@@ -1519,7 +1526,7 @@ const { timeFor } = Engine;
     if (game.classList.contains('hidden')) {
       renderLobby();
       onlineFail('no_room');
-    } else msg.textContent = '⌛ La sala ha caducado.';
+    } else msg.textContent = t('online.expired');
   }
   // No game started in time (GAME.online.closeAfterMinutes): the host opens another room right
   // there; the guest goes back to the start and needs a new link.
@@ -1531,11 +1538,11 @@ const { timeFor } = Engine;
     closedNews = host
       ? {
           step: 'players',
-          text: `⌛ Sala cerrada: no empezó en ${GAME.online.closeAfterMinutes} min. Abre otra.`,
+          text: t('online.closed_host', { min: GAME.online.closeAfterMinutes }),
         }
       : {
           step: 'mode',
-          text: `⌛ Sala cerrada: no empezó en ${GAME.online.closeAfterMinutes} min. Pide otro enlace.`,
+          text: t('online.closed_guest', { min: GAME.online.closeAfterMinutes }),
         };
     setGameMode(host ? 'online' : 'two');
     renderLobby();
@@ -1569,7 +1576,7 @@ const { timeFor } = Engine;
     }
     const rivalSeat = v.seats[1 - o.seat];
     if (rivalSeat?.here > (o.rivalHere ?? 0) && o.rivalHere !== undefined && !v.match.over)
-      msg.textContent = `🤔 ${rivalSeat.name} sigue ahí, está pensando.`;
+      msg.textContent = t('online.thinking', { name: rivalSeat.name });
     o.rivalHere = rivalSeat?.here ?? 0;
     const before = m && {
       extras: m.extras.map((e) => ({ ...e })),
@@ -1595,7 +1602,13 @@ const { timeFor } = Engine;
       setSeaTheme(targetWord === 'SOS');
       const intro = Math.min(GAME.sos.flashMs, v.match.holdMs);
       if (intro > 0) sosIntro(targetWord, intro);
-      text = `${before?.current === rival ? `🛟 ${who(rival)} ha cambiado a ${targetWord}.` : `🛟 Ahora se puntúa ${targetWord}.`} Marcador recalculado: ${scores.join(' – ')}.`;
+      text = t('online.recalculated', {
+        msg:
+          before?.current === rival
+            ? t('online.sos_by', { name: who(rival), word: targetWord })
+            : t('online.sos_now', { word: targetWord }),
+        scores: scores.join(' – '),
+      });
     } else if (oldBoard.length === board.length) {
       const changed = board.findIndex((x, i) => x !== oldBoard[i]);
       const made = [...scored.keys()].filter((k) => !oldKeys.has(k));
@@ -1607,10 +1620,16 @@ const { timeFor } = Engine;
         lastCell = null;
         swapMode = null;
         text = made.length
-          ? `¡${avatars[current]} ${names[current]} consigue ${made.length === 1 ? 'un ' + targetWord : made.length + ' ' + targetWord}! +${BONUS * made.length}s`
+          ? t('game.scored', {
+              count: made.length,
+              avatar: avatars[current],
+              name: names[current],
+              word: targetWord,
+              bonus: BONUS * made.length,
+            })
           : remote(current)
-            ? `Turno de ${avatars[current]} ${names[current]}`
-            : `${avatars[current]} ¡Te toca, ${names[current]}!`;
+            ? t('game.turn', { avatar: avatars[current], name: names[current] })
+            : t('online.your_turn', { avatar: avatars[current], name: names[current] });
       }
     }
     if (news.length || text) msg.textContent = [...news, text].filter(Boolean).join(' ');
@@ -1630,26 +1649,26 @@ const { timeFor } = Engine;
       now = extras[r] ?? {};
     const bought = (power) =>
       news.push(
-        `🛒 ${who(r)} ha comprado ${SHOP_ITEMS[power].bought} en la tienda secreta (−${Match.price(power)} s).`,
+        t('online.bought', { name: who(r), item: SHOP_ITEMS[power].bought, cost: Match.price(power) }),
       );
     const swaps = history.slice(before.history).filter((x) => x.player === r && x.power === 'swap').length;
     if (now.hint > was.hint) bought('hint');
     if (now.swap + swaps > was.swap) bought('swap');
     if ((sosCredits[r] ?? 0) > (before.credits[r] ?? 0)) bought('sos');
-    if (now.hint < was.hint) news.push(`💡 ${who(r)} ha usado una pista.`);
-    if (now.last < was.last) news.push(`👁️ ${who(r)} ha mirado tu última jugada.`);
-    if (swaps) news.push(`🔄 ${who(r)} ha cambiado una letra.`);
+    if (now.hint < was.hint) news.push(t('online.used_hint', { name: who(r) }));
+    if (now.last < was.last) news.push(t('online.used_last', { name: who(r) }));
+    if (swaps) news.push(t('online.used_swap', { name: who(r) }));
     return news;
   }
 
   function showRematchState(v) {
     const mine = v.seats[online.seat],
       theirs = v.seats[1 - online.seat];
-    const rival = theirs?.name ?? 'tu rival';
+    const rival = theirs?.name ?? t('online.rival');
     q('rematch').disabled = !!mine?.rematch || !!theirs?.left;
-    if (theirs?.left) q('winnerSub').textContent = `${rival} ha salido de la sala`;
-    else if (mine?.rematch) q('winnerSub').textContent = `Esperando a que ${rival} acepte la revancha…`;
-    else if (theirs?.rematch) q('winnerSub').textContent = `${rival} quiere la revancha`;
+    if (theirs?.left) q('winnerSub').textContent = t('online.left_room', { name: rival });
+    else if (mine?.rematch) q('winnerSub').textContent = t('online.rematch_wait', { name: rival });
+    else if (theirs?.rematch) q('winnerSub').textContent = t('online.rematch_asked', { name: rival });
   }
 
   function startOnlineGame(v) {
@@ -1681,8 +1700,8 @@ const { timeFor } = Engine;
     if (!over && !v.match.history.length && v.match.holdMs > 0) countdown(v.match.holdMs);
     if (!over) {
       msg.textContent = remote(current)
-        ? `Empieza ${avatars[current]} ${names[current]}.`
-        : `${avatars[current]} ¡Empiezas tú, ${names[current]}!`;
+        ? t('online.starts', { avatar: avatars[current], name: names[current] })
+        : t('online.you_start', { avatar: avatars[current], name: names[current] });
       playing = true;
       extrasUsed = {};
       track('game_start', modeParams());
@@ -1783,14 +1802,14 @@ const { timeFor } = Engine;
       // A «¡Sigo aquí!» or rematch flag moved the revision on; the turn is still ours.
       if (r.error === 'stale' && retry && !over && !remote(current)) return onlineMove(move, false);
     } else if (r.http === 404) roomGone();
-    else msg.textContent = '📡 No se ha podido enviar. Vuelve a probar.';
+    else msg.textContent = t('online.send_failed');
     return r.ok;
   }
 
   function onlineCell(i) {
     if (over || remote(current) || online.busy || performance.now() < online.goAt) return;
     if (swapMode === current) {
-      if (!board[i]) msg.textContent = '🔄 Elige una casilla ocupada.';
+      if (!board[i]) msg.textContent = t('extras.swap_pick_full');
       else onlineMove({ type: 'swap', index: i }).then((ok) => ok && usedExtra('swap'));
       return;
     }
@@ -1849,12 +1868,12 @@ const { timeFor } = Engine;
       ready = seats.length === 2;
     cards.forEach((card, i) => {
       card.querySelector('.small-label').textContent = !on
-        ? `Jugador ${i + 1}`
+        ? t('player.n', { n: i + 1 })
         : i === me
-          ? 'Tú'
+          ? t('online.you')
           : host
-            ? 'Tu rival'
-            : 'Te invita';
+            ? t('online.rival_cap')
+            : t('online.invites');
     });
     cards[1].classList.toggle('inviting', on && host && !ready);
     q('openRoom').classList.toggle('hidden', !!online);
@@ -1862,36 +1881,33 @@ const { timeFor } = Engine;
     q('roomCodeLine').classList.toggle('hidden', !online);
     if (online) {
       q('onlineCode').textContent = online.code;
-      q('onlineWhatsapp').href = whatsappHref(
-        '¿Jugamos a OSO? 🐻 Entra en mi sala:',
-        Online.inviteUrl(online.code, 'whatsapp'),
-      );
+      q('onlineWhatsapp').href = whatsappHref(t('share.room'), Online.inviteUrl(online.code, 'whatsapp'));
     }
     const rival = seats[1 - me]?.name;
-    document.title = on && host && online && ready ? `✅ ${rival} ya está aquí · OSO` : baseTitle;
+    document.title = on && host && online && ready ? t('online.arrived_title', { name: rival }) : baseTitle;
     const seatNews = !on
       ? ''
       : host
         ? online
           ? ready
-            ? `✅ ¡${rival} ya está aquí!`
-            : '⏳ Esperando a tu rival…'
+            ? t('online.arrived', { name: rival })
+            : t('online.waiting')
           : ''
         : online
-          ? '✅ ¡Ya estás dentro!'
-          : `${seats[0]?.name ?? 'Alguien'} te invita. Pon tu nombre y pulsa →`;
+          ? t('online.in')
+          : t('online.guest_lead', { name: seats[0]?.name ?? t('online.someone') });
     q('sizeSelect').disabled = on && !host;
     q('startGame').classList.toggle('hidden', on && !host);
     q('startGame').disabled = on && host && online?.status !== 'lobby';
     const boardNews = !on
       ? ''
       : !host
-        ? `⏳ ${seats[0]?.name ?? 'Tu rival'} está eligiendo el tablero…`
+        ? t('online.host_choosing', { name: seats[0]?.name ?? t('online.rival_cap') })
         : ready
-          ? `✅ ${rival} ya está aquí. ¡Elige el tablero!`
+          ? t('online.arrived_pick', { name: rival })
           : online
-            ? '⏳ Esperando a tu rival…'
-            : 'Vuelve atrás y abre la sala para invitar a tu rival.';
+            ? t('online.waiting')
+            : t('online.open_first');
     toast(
       closedNews?.step === setupStep
         ? closedNews.text
@@ -1936,7 +1952,7 @@ const { timeFor } = Engine;
     btn.disabled = true;
     const r = await Online.send({
       action: 'create',
-      name: namesIn[0].value.trim() || 'Jugador 1',
+      name: namesIn[0].value.trim() || t('common.jugador_1'),
       avatar: avatars[0],
       theme,
     });
@@ -1954,7 +1970,7 @@ const { timeFor } = Engine;
   document.addEventListener('oso:online-next', async (e) => {
     e.preventDefault();
     const me = online ? online.seat : invite ? 1 : 0;
-    const body = { name: namesIn[me].value.trim() || `Jugador ${me + 1}`, avatar: avatars[me] };
+    const body = { name: namesIn[me].value.trim() || t('player.n', { n: me + 1 }), avatar: avatars[me] };
     if (invite) {
       const r = await Online.send({ action: 'join', code: invite.code, ...body });
       if (!r.ok) {
@@ -2055,7 +2071,7 @@ const { timeFor } = Engine;
     inviteSent('copy');
     try {
       await navigator.clipboard.writeText(Online.inviteUrl(online.code, 'copy'));
-      toast('🔗 Enlace copiado. ⏳ Esperando a tu rival…');
+      toast(t('online.copied_waiting'));
     } catch {
       toast(Online.inviteUrl(online.code, 'copy'));
     }
@@ -2098,8 +2114,8 @@ const { timeFor } = Engine;
 
   q('startGame').addEventListener('click', () => {
     if (gameMode === 'online') return void startOnline();
-    names = namesIn.map((input, i) => input.value.trim() || `Jugador ${i + 1}`);
-    if (gameMode === 'solo') names[1] = 'Máquina';
+    names = namesIn.map((input, i) => input.value.trim() || t('player.n', { n: i + 1 }));
+    if (gameMode === 'solo') names[1] = t('machineBadge');
 
     if (gameMode === 'solo') avatars[1] = '🤖';
 

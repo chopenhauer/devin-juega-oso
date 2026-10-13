@@ -4,11 +4,14 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+const es = JSON.parse(readFileSync(new URL('../public/locales/es.json', import.meta.url), 'utf8'));
+
+// Texts in public/locales/es.json, like the rest of the game.
 export const INVITE_META = {
-  'og:title': 'Te reto a una partida de OSO 🐻',
-  'og:description': 'Toca el enlace, pon tu nombre y jugamos en línea, cada uno desde su móvil.',
+  'og:title': es['invite.og_title'],
+  'og:description': es['invite.og_description'],
   'og:image': 'https://juegaoso.com/og-sala.png',
-  'og:image:alt': 'El oso de OSO con el reto «¡Te reto a una partida!» para jugar en línea',
+  'og:image:alt': es['invite.og_image_alt'],
 };
 
 export function invitePage(html) {

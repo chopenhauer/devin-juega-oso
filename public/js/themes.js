@@ -1,17 +1,16 @@
 // Visual themes (skins). They only change avatars, icons, colours and background;
 // the rules never change. Every theme offers the same number of avatars so a
 // player keeps the same slot when switching.
+import { t } from './i18n.js';
 import { GAME } from './config.js';
 
 export const THEMES = {
   classic: {
-    label: 'Clásico',
     icon: '🐻',
     avatars: ['🐻', '🐼', '🐻‍❄️', '🧸', '🦊', '🐯', '🦁', '🐸', '🐵', '🐨', '🐧', '🦄'],
     decor: [],
   },
   halloween: {
-    label: 'Halloween',
     when: { month: 10, day: 31 },
     icon: '🎃',
     avatars: ['🎃', '🧛', '👻', '🧙', '🦇', '💀', '🕷️', '🧟', '🐈‍⬛', '🦉', '🍬', '🩸'],
@@ -19,7 +18,6 @@ export const THEMES = {
     confetti: ['#ff8a1f', '#9b5de5', '#7dff6b', '#e63946', '#fff3b0'],
   },
   christmas: {
-    label: 'Navidad',
     when: { month: 12, day: 24, days: 2 },
     icon: '⛄',
     avatars: ['⛄', '🎅', '🦌', '🐧', '🥕', '☕', '🎁', '❄️', '🎄', '🍪', '🧦', '🐻‍❄️'],
@@ -27,7 +25,6 @@ export const THEMES = {
     confetti: ['#e63946', '#2a9d8f', '#ffffff', '#ffd23f', '#8ecae6'],
   },
   newyear: {
-    label: 'Año Nuevo',
     icon: '🎆',
     when: { month: 12, day: 31, days: 2 },
     avatars: ['🎆', '🥂', '🍇', '🕛', '🎉', '🥳', '🎇', '✨', '🎊', '🍾', '⏰', '🌟'],
@@ -38,7 +35,6 @@ export const THEMES = {
     motion: 'rise',
   },
   kings: {
-    label: 'Reyes Magos',
     icon: '👑',
     when: { month: 1, day: 5, days: 2 },
     avatars: ['👑', '🐪', '🎁', '⭐', '🍰', '🌟', '🏰', '💎', '🕯️', '🍬', '🐫', '📜'],
@@ -49,7 +45,6 @@ export const THEMES = {
     motion: 'fall',
   },
   valentine: {
-    label: 'San Valentín',
     icon: '💘',
     when: { month: 2, day: 14 },
     avatars: ['💘', '🌹', '💌', '🧸', '🍫', '🦢', '💖', '💝', '🌷', '🍓', '😍', '🦋'],
@@ -61,7 +56,6 @@ export const THEMES = {
   },
   // Idea de Julia. Before Carnaval so it wins when both share a day (17 feb 2026).
   chinesenewyear: {
-    label: 'Año Nuevo Chino',
     icon: '🏮',
     // Lunar date: no simple formula, so a table. Add years as they come.
     when: {
@@ -87,7 +81,6 @@ export const THEMES = {
     motion: 'rise',
   },
   carnival: {
-    label: 'Carnaval',
     icon: '🎭',
     when: { easter: -49, days: 3 },
     avatars: ['🎭', '🤡', '🦸', '🧚', '🦹', '🎊', '🪅', '🥁', '🎺', '🦜', '👸', '🤠'],
@@ -98,7 +91,6 @@ export const THEMES = {
     motion: 'fall',
   },
   stpatrick: {
-    label: 'San Patricio',
     icon: '☘️',
     when: { month: 3, day: 17 },
     avatars: ['☘️', '🍀', '🌈', '🪙', '🎩', '🧚', '🐸', '🐑', '🎻', '🦄', '🌿', '💚'],
@@ -109,7 +101,6 @@ export const THEMES = {
     motion: 'fall',
   },
   easter: {
-    label: 'Pascua',
     icon: '🐰',
     when: { easter: 0 },
     avatars: ['🐰', '🐣', '🥚', '🧺', '🍫', '🌷', '🐇', '🐥', '🌼', '🦆', '🍬', '🐑'],
@@ -120,7 +111,6 @@ export const THEMES = {
     motion: 'fall',
   },
   stgeorge: {
-    label: 'Sant Jordi',
     icon: '🐉',
     when: { month: 4, day: 23 },
     avatars: ['🐉', '🌹', '📚', '🏰', '🛡️', '👸', '🗡️', '🤴', '📖', '🐲', '🐴', '🎀'],
@@ -131,7 +121,6 @@ export const THEMES = {
     motion: 'fall',
   },
   stjohn: {
-    label: 'San Juan',
     icon: '🔥',
     when: { month: 6, day: 23, days: 2 },
     avatars: ['🔥', '🎆', '🎇', '🌙', '🌊', '✨', '🪵', '🌟', '🧙', '🦉', '🏖️', '🍉'],
@@ -142,7 +131,6 @@ export const THEMES = {
     motion: 'rise',
   },
   sanfermin: {
-    label: 'San Fermín',
     icon: '🐂',
     when: { month: 7, day: 7 },
     avatars: ['🐂', '🧣', '🎉', '🏃', '🔴', '⚪', '🎺', '🥁', '🐮', '🎊', '🏟️', '🍬'],
@@ -153,7 +141,6 @@ export const THEMES = {
     motion: 'fall',
   },
   thanksgiving: {
-    label: 'Acción de Gracias',
     icon: '🦃',
     when: { month: 11, weekday: 4, nth: 4 },
     avatars: ['🦃', '🥧', '🌽', '🍁', '🍂', '🥔', '🎃', '🍎', '🥖', '🐿️', '🌰', '🍯'],
@@ -164,7 +151,6 @@ export const THEMES = {
     motion: 'fall',
   },
   spring: {
-    label: 'Primavera',
     icon: '🌷',
     when: { from: [3, 21], to: [6, 20] },
     avatars: ['🌷', '🦋', '🐝', '🌸', '🐞', '🌱', '🌼', '🐛', '🌺', '🐦', '🌈', '🐌'],
@@ -175,7 +161,6 @@ export const THEMES = {
     motion: 'fall',
   },
   summer: {
-    label: 'Verano',
     icon: '🏖️',
     when: { from: [6, 21], to: [9, 22] },
     avatars: ['🏖️', '🦀', '🐠', '🐬', '🍉', '🍦', '🕶️', '☀️', '🌴', '🐚', '⛱️', '🏄'],
@@ -186,7 +171,6 @@ export const THEMES = {
     motion: 'fall',
   },
   autumn: {
-    label: 'Otoño',
     icon: '🍂',
     when: { from: [9, 23], to: [12, 20] },
     avatars: ['🍂', '🦔', '🐿️', '🍄', '🌰', '🦉', '🍁', '🍎', '🦊', '☔', '🎃', '🍇'],
@@ -197,7 +181,6 @@ export const THEMES = {
     motion: 'fall',
   },
   africa: {
-    label: 'África',
     icon: '🦁',
     avatars: ['🦁', '🐘', '🦒', '🦓', '🦏', '🐊', '🦛', '🐆', '🦩', '🐒', '🌍', '🌵'],
     decor: ['🌿', '🦒', '🌍', '🐘', '🌿'],
@@ -207,7 +190,6 @@ export const THEMES = {
     motion: 'fall',
   },
   antarctica: {
-    label: 'Antártida',
     icon: '🐧',
     avatars: ['🐧', '🦭', '🐋', '🧊', '🏔️', '🛷', '❄️', '🐳', '🐟', '⛷️', '🧤', '🌌'],
     decor: ['❄️', '🧊', '❄️', '🐧', '❄️'],
@@ -217,7 +199,6 @@ export const THEMES = {
     motion: 'fall',
   },
   atlantis: {
-    label: 'Atlántida',
     icon: '🔱',
     avatars: ['🧜', '🐙', '🐚', '🔱', '🏛️', '🐠', '🐡', '🦑', '🐬', '🪸', '💎', '🫧'],
     decor: ['🫧', '🐚', '🫧', '🐠', '🫧'],
@@ -227,7 +208,6 @@ export const THEMES = {
     motion: 'rise',
   },
   space: {
-    label: 'Espacio',
     icon: '🚀',
     avatars: ['🚀', '👽', '🪐', '🛸', '👩‍🚀', '🌙', '⭐', '☄️', '🌍', '🛰️', '🌌', '👾'],
     decor: ['⭐', '✨', '🪐', '☄️', '⭐'],
@@ -237,7 +217,6 @@ export const THEMES = {
     motion: 'fall',
   },
   dinosaurs: {
-    label: 'Dinosaurios',
     icon: '🦖',
     avatars: ['🦖', '🦕', '🌋', '🥚', '🌿', '🦴', '🐊', '🦎', '🐢', '🌴', '🪨', '☄️'],
     decor: ['🌿', '🌴', '🦴', '🌿', '🥚'],
@@ -247,7 +226,6 @@ export const THEMES = {
     motion: 'fall',
   },
   pirates: {
-    label: 'Piratas',
     icon: '🏴‍☠️',
     avatars: ['🏴‍☠️', '🦜', '💰', '🗺️', '⚓', '🦈', '🏝️', '⛵', '💎', '🗡️', '🐙', '🧭'],
     decor: ['🌊', '⚓', '🦜', '💰', '🗺️'],
@@ -257,7 +235,6 @@ export const THEMES = {
     motion: 'fall',
   },
   birthday: {
-    label: 'Cumpleaños',
     icon: '🎂',
     avatars: ['🎂', '🎈', '🎁', '🥳', '🎉', '🧁', '🎊', '🍰', '🕯️', '🍭', '🎀', '🪅'],
     decor: ['🎈', '🎉', '🎈', '🎊', '🎁'],
@@ -267,6 +244,7 @@ export const THEMES = {
     motion: 'rise',
   },
 };
+for (const [id, theme] of Object.entries(THEMES)) theme.label = t(`theme.${id}`);
 
 export const THEME_IDS = Object.keys(THEMES);
 export const themeOf = (id) => THEMES[id] ?? THEMES.classic;

@@ -39,6 +39,8 @@ public/               Sitio estático que publica Vercel (sin build)
   js/consent.js       Aviso de cookies; ga.js y clarity.js cargan la analítica según el permiso
   js/share.js         Textos y enlaces para compartir (WhatsApp, email, UTM), sin SDKs
   js/telemetry.js     Eventos anónimos de partida (con permiso), cuándo pedir 👍/👎 y email de ideas
+  js/i18n.js          Carga los textos del idioma (t('clave')) y los pone en la página
+  locales/es.json     Todos los textos del juego, clave → texto (un fichero por idioma)
   privacidad.html     Política de privacidad (/privacidad)
   fonts/              Fredoka (subconjunto latino, woff2) + licencia OFL
   favicon.svg

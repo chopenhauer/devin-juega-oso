@@ -93,6 +93,10 @@ fallen solo en el CI:
 - **Mobile first** y responsive: primero el móvil; iPad y escritorio tienen que funcionar bien.
 - **Lenguaje inclusivo** en los textos: «tu rival», «amig@», nada que suponga el género.
 - **Español** en textos, documentación y commits; código y comentarios en inglés.
+- **Textos solo en `public/locales/es.json`** (clave → texto): en el HTML con `data-i18n`,
+  `data-i18n-html` o `data-i18n-attr`, y en el código con `t('clave', { variables })`. Unos tests
+  fallan si queda un texto fuera, falta una clave o sobra alguna. Los mensajes que se mandan a otras
+  personas (compartir, invitar) llevan solo ? y ! al final; los del juego, ¿¡.
 - **Parámetros en `config.js`**, nunca números sueltos en el código; después `npm run config`.
 - **Colores y medidas solo desde `tokens.css`** (un test prohíbe colores sueltos).
 - **CSP estricta**: nada de scripts ni estilos inline; los textos de los jugadores con

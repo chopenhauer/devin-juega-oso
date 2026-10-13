@@ -3,19 +3,26 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <title>OSO · el juego de Julia</title>
+    <title data-i18n="common.oso_el_juego_de">OSO · el juego de Julia</title>
     <meta name="theme-color" content="#1b1145" />
     <meta
+      data-i18n-attr="content:meta.description"
       name="description"
       content="Un juego de letras para jugar en familia: coloca O y S y forma la palabra OSO más veces que tu rival. Gratis y sin anuncios."
     />
+    <link rel="preload" href="/locales/es.json" as="fetch" crossorigin />
     <link rel="canonical" href="https://juegaoso.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="OSO" />
     <meta property="og:locale" content="es_ES" />
     <meta property="og:url" content="https://juegaoso.com/" />
-    <meta property="og:title" content="OSO · el juego de Julia" />
     <meta
+      data-i18n-attr="content:common.oso_el_juego_de"
+      property="og:title"
+      content="OSO · el juego de Julia"
+    />
+    <meta
+      data-i18n-attr="content:meta.og_description"
       property="og:description"
       content="Coloca O y S y forma OSO más veces que tu rival. Para 1, 2 o 4 jugadores. ¿Te atreves?"
     />
@@ -23,7 +30,11 @@
     <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="El oso de OSO junto a las fichas O, S y O" />
+    <meta
+      data-i18n-attr="content:meta.og_image_alt"
+      property="og:image:alt"
+      content="El oso de OSO junto a las fichas O, S y O"
+    />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preload" href="/fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin />
@@ -37,6 +48,7 @@
   </head>
   <body>
     <button
+      data-i18n-attr="aria-label:themeToggle.label"
       id="themeToggle"
       class="theme-toggle"
       type="button"
@@ -48,6 +60,7 @@
       🎨
     </button>
     <button
+      data-i18n-attr="aria-label:soundToggle.label"
       id="soundToggle"
       class="sound-toggle"
       type="button"
@@ -56,36 +69,64 @@
     >
       🔊
     </button>
-    <button id="onlineToggle" class="online-toggle" type="button" aria-label="Jugar en línea">🌐</button>
+    <button
+      data-i18n-attr="aria-label:onlineToggle.label"
+      id="onlineToggle"
+      class="online-toggle"
+      type="button"
+      aria-label="Jugar en línea"
+    >
+      🌐
+    </button>
     <p id="onlineToast" class="online-toast hidden" role="status" aria-live="polite"></p>
     <div id="secretToast" class="secret-toast hidden" role="status" aria-live="polite">
-      <span>🎁 ¡Tienes un premio!</span>
-      <button id="secretOpen" type="button">Ábrelo</button>
+      <span data-i18n="secretToast.tienes_un_premio">🎁 ¡Tienes un premio!</span>
+      <button data-i18n="secretOpen" id="secretOpen" type="button">Ábrelo</button>
     </div>
-    <button id="shareToggle" class="share-toggle" type="button" aria-label="Invitar a jugar">📣</button>
-    <div id="themeMenu" class="theme-menu hidden" role="group" aria-label="Tema"></div>
+    <button
+      data-i18n-attr="aria-label:common.invitar_a_jugar"
+      id="shareToggle"
+      class="share-toggle"
+      type="button"
+      aria-label="Invitar a jugar"
+    >
+      📣
+    </button>
+    <div
+      data-i18n-attr="aria-label:themeMenu.label"
+      id="themeMenu"
+      class="theme-menu hidden"
+      role="group"
+      aria-label="Tema"
+    ></div>
     <div id="eggParty" class="egg-party" role="status" aria-live="polite"></div>
     <div id="themeDecor" class="theme-decor" aria-hidden="true"></div>
     <main class="app">
-      <h1 class="visually-hidden">OSO · el juego de Julia</h1>
+      <h1 data-i18n="common.oso_el_juego_de" class="visually-hidden">OSO · el juego de Julia</h1>
       <section class="panel">
         <div id="setupScreen" class="setup">
           <div id="setupSteps" class="setup-steps">
             <div class="step" data-step="welcome">
               <div id="brandIcon" class="brand-bear" aria-hidden="true">🐻</div>
-              <div class="brand" aria-label="OSO"><span>O</span><span>S</span><span>O</span></div>
-              <div class="tagline">Conecta · forma · gana</div>
-              <p class="step-lead">
+              <div data-i18n-attr="aria-label:welcome.oso.label" class="brand" aria-label="OSO">
+                <span>O</span><span>S</span><span>O</span>
+              </div>
+              <div data-i18n="common.conecta_forma_gana" class="tagline">Conecta · forma · gana</div>
+              <p data-i18n="welcome.un_juego_de_letras" class="step-lead">
                 Un juego de letras para dos jugadores, o contra la máquina: coloca O y S en el tablero y forma
                 la palabra OSO más veces que tu rival.
               </p>
               <div class="intro-actions">
-                <button id="introStart" class="primary" type="button">Cómo se juega →</button
-                ><button id="introSkip" class="secondary" type="button">Saltar e ir a jugar</button>
+                <button data-i18n="introStart" id="introStart" class="primary" type="button">
+                  Cómo se juega →</button
+                ><button data-i18n="introSkip" id="introSkip" class="secondary" type="button">
+                  Saltar e ir a jugar
+                </button>
               </div>
             </div>
             <div class="step inactive" data-step="rules">
               <div
+                data-i18n-attr="aria-label:ruleCarousel.label"
                 id="ruleCarousel"
                 class="rule-card carousel"
                 aria-roledescription="carrusel"
@@ -93,6 +134,7 @@
               >
                 <div id="ruleSlides" class="slides">
                   <div
+                    data-i18n-attr="aria-label:ruleSlides.1_de_4.label"
                     class="rule-slide"
                     data-slide="0"
                     role="group"
@@ -100,7 +142,9 @@
                     aria-label="1 de 4"
                   >
                     <div class="rule-emoji" aria-hidden="true">✏️</div>
-                    <h2 class="step-title">Por turnos, pon una O o una S</h2>
+                    <h2 data-i18n="ruleSlides.por_turnos_pon_una" class="step-title">
+                      Por turnos, pon una O o una S
+                    </h2>
                     <div class="demo demo-place" aria-hidden="true">
                       <div class="demo-row">
                         <span class="demo-tile">O</span
@@ -112,11 +156,12 @@
                       </div>
                       <span class="demo-ghost">S<span class="demo-hand">👆</span></span>
                     </div>
-                    <p class="step-lead">
+                    <p data-i18n="ruleSlides.elige_tu_letra_abajo" class="step-lead">
                       Elige tu letra abajo y arrástrala hasta una casilla vacía del tablero (o tócala).
                     </p>
                   </div>
                   <div
+                    data-i18n-attr="aria-label:ruleSlides.2_de_4.label"
                     class="rule-slide"
                     data-slide="1"
                     role="group"
@@ -124,7 +169,7 @@
                     aria-label="2 de 4"
                   >
                     <div class="rule-emoji" aria-hidden="true">⭐</div>
-                    <h2 class="step-title">Forma O-S-O y suma un punto</h2>
+                    <h2 data-i18n="ruleSlides.forma_o_s_o" class="step-title">Forma O-S-O y suma un punto</h2>
                     <div class="demo demo-score" aria-hidden="true">
                       <div class="demo-row win">
                         <span class="demo-tile">O</span><span class="demo-tile">S</span
@@ -137,14 +182,17 @@
                       <span class="demo-ghost">O<span class="demo-hand">👆</span></span>
                     </div>
                     <div class="demo-dirs" aria-hidden="true">
-                      <span>↔ horizontal</span><span>↕ vertical</span><span>⤡ diagonal</span>
+                      <span data-i18n="ruleSlides.horizontal">↔ horizontal</span
+                      ><span data-i18n="ruleSlides.vertical">↕ vertical</span
+                      ><span data-i18n="ruleSlides.diagonal">⤡ diagonal</span>
                     </div>
-                    <p class="step-lead">
+                    <p data-i18n-html="ruleSlides.en_horizontal_vertical_o" class="step-lead">
                       En horizontal, vertical o diagonal. Si consigues un OSO, ganas
                       <span data-config="clock.bonusSeconds">10</span> segundos y vuelves a jugar.
                     </p>
                   </div>
                   <div
+                    data-i18n-attr="aria-label:ruleSlides.3_de_4.label"
                     class="rule-slide"
                     data-slide="2"
                     role="group"
@@ -152,29 +200,38 @@
                     aria-label="3 de 4"
                   >
                     <div class="rule-emoji" aria-hidden="true">🎁</div>
-                    <h2 class="step-title">Cada uno tiene 4 extras, de un solo uso</h2>
+                    <h2 data-i18n="ruleSlides.cada_uno_tiene_4" class="step-title">
+                      Cada uno tiene 4 extras, de un solo uso
+                    </h2>
                     <ul class="extras-list">
                       <li>
                         <span class="extra-emoji" aria-hidden="true">💡</span
-                        ><span><b>Pista</b> te sugiere una jugada</span>
+                        ><span data-i18n-html="ruleSlides.b_pista_b_te"
+                          ><b>Pista</b> te sugiere una jugada</span
+                        >
                       </li>
                       <li>
                         <span class="extra-emoji" aria-hidden="true">👁️</span
-                        ><span><b>Ver</b> marca la última jugada rival</span>
+                        ><span data-i18n-html="ruleSlides.b_ver_b_marca"
+                          ><b>Ver</b> marca la última jugada rival</span
+                        >
                       </li>
                       <li>
                         <span class="extra-emoji" aria-hidden="true">🔄</span
-                        ><span><b>Cambio</b> convierte una letra del tablero (O ↔ S)</span>
+                        ><span data-i18n-html="ruleSlides.b_cambio_b_convierte"
+                          ><b>Cambio</b> convierte una letra del tablero (O ↔ S)</span
+                        >
                       </li>
                       <li>
                         <span class="extra-emoji" aria-hidden="true">🛟</span
-                        ><span
+                        ><span data-i18n-html="ruleSlides.b_sos_b_cambia"
                           ><b>SOS</b> cambia el objetivo a S-O-S para los dos y recalcula la partida</span
                         >
                       </li>
                     </ul>
                   </div>
                   <div
+                    data-i18n-attr="aria-label:ruleSlides.4_de_4.label"
                     class="rule-slide"
                     data-slide="3"
                     role="group"
@@ -182,22 +239,46 @@
                     aria-label="4 de 4"
                   >
                     <div class="rule-emoji" aria-hidden="true">⏱️</div>
-                    <h2 class="step-title">Vigila tu reloj</h2>
+                    <h2 data-i18n="ruleSlides.vigila_tu_reloj" class="step-title">Vigila tu reloj</h2>
                     <div class="demo-clock countdown" aria-hidden="true">
                       <span>0:07</span><span>0:06</span><span>0:05</span><span>0:04</span><span>0:03</span
                       ><span>0:02</span><span>0:01</span><span>0:00</span>
                     </div>
-                    <p class="step-lead">
+                    <p data-i18n="ruleSlides.cada_jugador_tiene_su" class="step-lead">
                       Cada jugador tiene su propio tiempo. Si se te acaba, pierdes. Cuando el tablero se
                       llena, gana quien tenga más puntos.
                     </p>
                   </div>
                 </div>
                 <div class="carousel-dots">
-                  <button class="dot" type="button" data-slide="0" aria-label="Tarjeta 1"></button
-                  ><button class="dot" type="button" data-slide="1" aria-label="Tarjeta 2"></button
-                  ><button class="dot" type="button" data-slide="2" aria-label="Tarjeta 3"></button
-                  ><button class="dot" type="button" data-slide="3" aria-label="Tarjeta 4"></button>
+                  <button
+                    data-i18n-attr="aria-label:ruleCarousel.tarjeta_1.label"
+                    class="dot"
+                    type="button"
+                    data-slide="0"
+                    aria-label="Tarjeta 1"
+                  ></button
+                  ><button
+                    data-i18n-attr="aria-label:ruleCarousel.tarjeta_2.label"
+                    class="dot"
+                    type="button"
+                    data-slide="1"
+                    aria-label="Tarjeta 2"
+                  ></button
+                  ><button
+                    data-i18n-attr="aria-label:ruleCarousel.tarjeta_3.label"
+                    class="dot"
+                    type="button"
+                    data-slide="2"
+                    aria-label="Tarjeta 3"
+                  ></button
+                  ><button
+                    data-i18n-attr="aria-label:ruleCarousel.tarjeta_4.label"
+                    class="dot"
+                    type="button"
+                    data-slide="3"
+                    aria-label="Tarjeta 4"
+                  ></button>
                 </div>
               </div>
             </div>
@@ -205,29 +286,42 @@
               <div class="mode-brand" aria-hidden="true">
                 <div class="brand-bear">🐻</div>
                 <div class="brand"><span>O</span><span>S</span><span>O</span></div>
-                <div class="tagline">Conecta · forma · gana</div>
+                <div data-i18n="common.conecta_forma_gana" class="tagline">Conecta · forma · gana</div>
               </div>
-              <h2 class="step-title">¿Cómo queréis jugar?</h2>
-              <div class="mode-choice" role="group" aria-label="Modo de juego">
+              <h2 data-i18n="mode.como_quereis_jugar" class="step-title">¿Cómo queréis jugar?</h2>
+              <div
+                data-i18n-attr="aria-label:mode.modo_de_juego.label"
+                class="mode-choice"
+                role="group"
+                aria-label="Modo de juego"
+              >
                 <button id="modeSolo" class="mode-btn" type="button">
-                  <span class="mode-emoji" aria-hidden="true">🤖</span><span>1 jugador</span>
+                  <span class="mode-emoji" aria-hidden="true">🤖</span
+                  ><span data-i18n="modeSolo.1_jugador">1 jugador</span>
                 </button>
                 <button id="modeTwo" class="mode-btn selected" type="button">
-                  <span class="mode-emoji" aria-hidden="true">👥</span><span>2 jugadores</span>
+                  <span class="mode-emoji" aria-hidden="true">👥</span
+                  ><span data-i18n="modeTwo.2_jugadores">2 jugadores</span>
                 </button>
                 <button id="modeFour" class="mode-btn soon" type="button" data-locked="true">
-                  <span class="mode-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span><span>4 jugadores</span>
+                  <span class="mode-emoji" aria-hidden="true">👨‍👩‍👧‍👦</span
+                  ><span data-i18n="modeFour.4_jugadores">4 jugadores</span>
                 </button>
               </div>
             </div>
             <div class="step inactive" data-step="where">
-              <h2 class="step-title">¿Dónde está tu rival?</h2>
-              <div class="view-choice" role="group" aria-label="Dónde está tu rival">
+              <h2 data-i18n="where.donde_esta_tu_rival" class="step-title">¿Dónde está tu rival?</h2>
+              <div
+                data-i18n-attr="aria-label:where.donde_esta_tu_rival.label"
+                class="view-choice"
+                role="group"
+                aria-label="Dónde está tu rival"
+              >
                 <button id="whereTogether" class="view-btn" type="button" aria-pressed="true">
                   <span class="view-icon" aria-hidden="true">🛋️</span>
                   <span class="view-text"
-                    ><strong>Juntos</strong
-                    ><span
+                    ><strong data-i18n="whereTogether.juntos">Juntos</strong
+                    ><span data-i18n="whereTogether.os_turnais_en_el"
                       >Os turnáis en un móvil, tablet u ordenador: enfrentados o con la misma vista.</span
                     ></span
                   >
@@ -235,8 +329,8 @@
                 <button id="whereOnline" class="view-btn" type="button" aria-pressed="false">
                   <span class="view-icon" aria-hidden="true">🌐</span>
                   <span class="view-text"
-                    ><strong>En línea</strong
-                    ><span
+                    ><strong data-i18n="whereOnline.en_linea">En línea</strong
+                    ><span data-i18n="whereOnline.cada_uno_en_su"
                       >Cada uno en su móvil, tablet u ordenador: tu rival entra con un enlace especial.</span
                     ></span
                   >
@@ -244,16 +338,17 @@
               </div>
             </div>
             <div class="step inactive" data-step="players">
-              <h2 class="step-title">¿Quién juega?</h2>
+              <h2 data-i18n="players.quien_juega" class="step-title">¿Quién juega?</h2>
               <div class="players-setup">
                 <div class="pconfig">
-                  <div class="small-label">Jugador 1</div>
+                  <div data-i18n="common.jugador_1" class="small-label">Jugador 1</div>
                   <div class="online-seat" data-seat="0">
                     <div class="preview online-seat-avatar"></div>
                     <p class="online-seat-name"></p>
                   </div>
                   <div id="preview1" class="preview">🐻</div>
                   <input
+                    data-i18n-attr="aria-label:nickname1.label;placeholder:common.jugador_1"
                     id="nickname1"
                     class="nickname"
                     value=""
@@ -278,13 +373,14 @@
                 </div>
 
                 <div class="pconfig second-player">
-                  <div class="small-label">Jugador 2</div>
+                  <div data-i18n="common.jugador_2" class="small-label">Jugador 2</div>
                   <div class="online-seat" data-seat="1">
                     <div class="preview online-seat-avatar"></div>
                     <p class="online-seat-name"></p>
                   </div>
                   <div id="preview2" class="preview">🐼</div>
                   <input
+                    data-i18n-attr="aria-label:nickname2.label;placeholder:common.jugador_2"
                     id="nickname2"
                     class="nickname"
                     value=""
@@ -309,14 +405,19 @@
                   <div id="onlineInvite" class="online-invite">
                     <div class="preview" aria-hidden="true">🌐</div>
                     <div class="online-invite-head">
-                      <p class="online-invite-lead">Invita a tu rival</p>
-                      <p id="roomCodeLine" class="online-code-line hidden">
+                      <p data-i18n="onlineInvite.invita_a_tu_rival" class="online-invite-lead">
+                        Invita a tu rival
+                      </p>
+                      <p data-i18n="roomCodeLine" id="roomCodeLine" class="online-code-line hidden">
                         Código: <span id="onlineCode" class="online-code"></span>
                       </p>
                     </div>
-                    <button id="openRoom" class="primary" type="button">Abrir sala</button>
+                    <button data-i18n="openRoom" id="openRoom" class="primary" type="button">
+                      Abrir sala
+                    </button>
                     <div id="roomShare" class="online-share hidden">
                       <a
+                        data-i18n="common.whatsapp"
                         id="onlineWhatsapp"
                         class="primary info-link"
                         href="https://wa.me/"
@@ -324,30 +425,53 @@
                         rel="noopener"
                         >💬 WhatsApp</a
                       >
-                      <button id="onlineCopy" class="secondary" type="button">🔗 Copiar enlace</button>
+                      <button
+                        data-i18n="common.copiar_enlace"
+                        id="onlineCopy"
+                        class="secondary"
+                        type="button"
+                      >
+                        🔗 Copiar enlace
+                      </button>
                     </div>
                   </div>
                   <div id="difficultyWrap" class="difficulty-wrap">
-                    <div class="difficulty-choice" role="group" aria-label="Dificultad de la máquina">
-                      <button id="difficultyEasy" class="difficulty-btn selected" type="button">
+                    <div
+                      data-i18n-attr="aria-label:difficultyWrap.dificultad_de_la_maquina.label"
+                      class="difficulty-choice"
+                      role="group"
+                      aria-label="Dificultad de la máquina"
+                    >
+                      <button
+                        data-i18n="difficultyEasy"
+                        id="difficultyEasy"
+                        class="difficulty-btn selected"
+                        type="button"
+                      >
                         <span class="robot-icon" data-mood="easy" aria-hidden="true"></span> Fácil
                       </button>
-                      <button id="difficultyHard" class="difficulty-btn" type="button">
+                      <button
+                        data-i18n="difficultyHard"
+                        id="difficultyHard"
+                        class="difficulty-btn"
+                        type="button"
+                      >
                         <span class="robot-icon" data-mood="hard" aria-hidden="true"></span> Difícil
                       </button>
                     </div>
                   </div>
                 </div>
                 <div class="pconfig extra-player">
-                  <div class="small-label">Jugador 3</div>
+                  <div data-i18n="common.jugador_3" class="small-label">Jugador 3</div>
                   <div id="preview3" class="preview">🐻</div>
                   <input
+                    data-i18n-attr="aria-label:nickname3.label;placeholder:common.jugador_3"
                     id="nickname3"
                     class="nickname"
                     value=""
                     placeholder="Jugador 3"
                     maxlength="16"
-                    aria-label="Nombre del jugador 1"
+                    aria-label="Nombre del jugador 3"
                   />
                   <div class="avatars" data-player="2">
                     <button type="button" class="avatar-btn selected" data-avatar="🐻">🐻</button
@@ -365,15 +489,16 @@
                   </div>
                 </div>
                 <div class="pconfig extra-player">
-                  <div class="small-label">Jugador 4</div>
+                  <div data-i18n="common.jugador_4" class="small-label">Jugador 4</div>
                   <div id="preview4" class="preview">🐻</div>
                   <input
+                    data-i18n-attr="aria-label:nickname4.label;placeholder:common.jugador_4"
                     id="nickname4"
                     class="nickname"
                     value=""
                     placeholder="Jugador 4"
                     maxlength="16"
-                    aria-label="Nombre del jugador 1"
+                    aria-label="Nombre del jugador 4"
                   />
                   <div class="avatars" data-player="3">
                     <button type="button" class="avatar-btn selected" data-avatar="🐻">🐻</button
@@ -393,13 +518,18 @@
               </div>
             </div>
             <div class="step inactive" data-step="view">
-              <h2 class="step-title">¿Cómo vais a jugar?</h2>
-              <div class="view-choice" role="group" aria-label="Orientación del jugador 2">
+              <h2 data-i18n="view.como_vais_a_jugar" class="step-title">¿Cómo vais a jugar?</h2>
+              <div
+                data-i18n-attr="aria-label:view.orientacion_del_jugador_2.label"
+                class="view-choice"
+                role="group"
+                aria-label="Orientación del jugador 2"
+              >
                 <button id="viewFacing" class="view-btn" type="button" data-view="facing">
                   <span class="view-icon" aria-hidden="true">↕️</span>
                   <span class="view-text"
-                    ><strong>Enfrentados</strong
-                    ><span
+                    ><strong data-i18n="viewFacing.enfrentados">Enfrentados</strong
+                    ><span data-i18n="viewFacing.cara_a_cara_con"
                       >Cara a cara, con el móvil o la tablet en la mesa. Cada uno ve su lado de frente.</span
                     ></span
                   >
@@ -407,28 +537,41 @@
                 <button id="viewSame" class="view-btn" type="button" data-view="same">
                   <span class="view-icon" aria-hidden="true">👀</span>
                   <span class="view-text"
-                    ><strong>Misma vista</strong
-                    ><span>Los dos miráis la pantalla desde el mismo lado y os turnáis.</span></span
+                    ><strong data-i18n="viewSame.misma_vista">Misma vista</strong
+                    ><span data-i18n="viewSame.los_dos_mirais_la"
+                      >Los dos miráis la pantalla desde el mismo lado y os turnáis.</span
+                    ></span
                   >
                 </button>
               </div>
             </div>
             <div class="step inactive" data-step="board">
-              <h2 class="step-title">Elige el tablero</h2>
-              <p class="step-lead">Cuanto más grande, más tiempo y más puntos OSO posibles.</p>
+              <h2 data-i18n="board.elige_el_tablero" class="step-title">Elige el tablero</h2>
+              <p data-i18n="board.cuanto_mas_grande_mas" class="step-lead">
+                Cuanto más grande, más tiempo y más puntos OSO posibles.
+              </p>
               <div class="setup-actions">
                 <div>
-                  <label class="small-label" for="sizeSelect">Tablero</label>
+                  <label data-i18n="board.tablero" class="small-label" for="sizeSelect">Tablero</label>
                   <span class="select-wrap"><select id="sizeSelect"></select></span>
                 </div>
-                <button id="startGame" class="primary">¡A jugar!</button>
+                <button data-i18n="startGame" id="startGame" class="primary">¡A jugar!</button>
               </div>
               <p id="setupSummary" class="setup-summary visually-hidden" aria-live="polite"></p>
             </div>
           </div>
-          <nav class="wizard-nav" aria-label="Pasos">
-            <button id="stepBack" class="secondary" type="button" aria-label="Atrás">←</button>
+          <nav data-i18n-attr="aria-label:setupScreen.pasos.label" class="wizard-nav" aria-label="Pasos">
             <button
+              data-i18n-attr="aria-label:stepBack.label"
+              id="stepBack"
+              class="secondary"
+              type="button"
+              aria-label="Atrás"
+            >
+              ←
+            </button>
+            <button
+              data-i18n-attr="aria-label:common.reglas_completas;title:common.reglas_completas"
               id="helpToggle"
               class="help-icon"
               type="button"
@@ -437,7 +580,15 @@
             >
               ❓
             </button>
-            <button id="stepNext" class="primary" type="button" aria-label="Siguiente">→</button>
+            <button
+              data-i18n-attr="aria-label:stepNext.label"
+              id="stepNext"
+              class="primary"
+              type="button"
+              aria-label="Siguiente"
+            >
+              →
+            </button>
           </nav>
         </div>
 
@@ -450,19 +601,23 @@
               <div id="avatar2" class="avatar">🐼</div>
               <div class="player-info">
                 <div class="name">
-                  <span id="name2">Jugador 2</span
-                  ><span id="machineBadge" class="machine-badge hidden">Máquina</span>
+                  <span data-i18n="common.jugador_2" id="name2">Jugador 2</span
+                  ><span data-i18n="machineBadge" id="machineBadge" class="machine-badge hidden"
+                    >Máquina</span
+                  >
                 </div>
                 <div class="stats">
                   <span id="timer2" class="timer">1:30</span>
                   <span class="score-wrap"
-                    ><span class="score-label">puntos OSO</span><span id="score2" class="score">0</span></span
+                    ><span data-i18n="common.puntos_oso" class="score-label">puntos OSO</span
+                    ><span id="score2" class="score">0</span></span
                   >
                 </div>
               </div>
             </div>
             <div class="panel-menu">
               <button
+                data-i18n-attr="aria-label:common.abrir_menu"
                 id="menu2"
                 class="menu-btn"
                 type="button"
@@ -484,11 +639,30 @@
                 </button>
               </div>
               <div class="tools">
-                <button id="hint2" class="power" title="Pista">💡<span class="count">1</span></button>
-                <button id="last2" class="power" title="Última jugada">👁️<span class="count">1</span></button>
-                <button id="swap2" class="power" title="Cambiar una letra">
+                <button data-i18n-attr="title:common.pista" id="hint2" class="power" title="Pista">
+                  💡<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.ultima_jugada"
+                  id="last2"
+                  class="power"
+                  title="Última jugada"
+                >
+                  👁️<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.cambiar_una_letra"
+                  id="swap2"
+                  class="power"
+                  title="Cambiar una letra"
+                >
                   🔄<span class="count">1</span></button
-                ><button id="sos2" class="sos-power" title="Cambiar de OSO a SOS">
+                ><button
+                  data-i18n-attr="title:common.cambiar_de_oso_a"
+                  id="sos2"
+                  class="sos-power"
+                  title="Cambiar de OSO a SOS"
+                >
                   🛟<span class="count">1</span>
                 </button>
               </div>
@@ -505,17 +679,19 @@
             <div class="identity">
               <div id="avatar1" class="avatar">🐻</div>
               <div class="player-info">
-                <div id="name1" class="name">Jugador 1</div>
+                <div data-i18n="common.jugador_1" id="name1" class="name">Jugador 1</div>
                 <div class="stats">
                   <span id="timer1" class="timer">1:30</span>
                   <span class="score-wrap"
-                    ><span class="score-label">puntos OSO</span><span id="score1" class="score">0</span></span
+                    ><span data-i18n="common.puntos_oso" class="score-label">puntos OSO</span
+                    ><span id="score1" class="score">0</span></span
                   >
                 </div>
               </div>
             </div>
             <div class="panel-menu">
               <button
+                data-i18n-attr="aria-label:common.abrir_menu"
                 id="menu1"
                 class="menu-btn"
                 type="button"
@@ -537,11 +713,30 @@
                 </button>
               </div>
               <div class="tools">
-                <button id="hint1" class="power" title="Pista">💡<span class="count">1</span></button>
-                <button id="last1" class="power" title="Última jugada">👁️<span class="count">1</span></button>
-                <button id="swap1" class="power" title="Cambiar una letra">
+                <button data-i18n-attr="title:common.pista" id="hint1" class="power" title="Pista">
+                  💡<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.ultima_jugada"
+                  id="last1"
+                  class="power"
+                  title="Última jugada"
+                >
+                  👁️<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.cambiar_una_letra"
+                  id="swap1"
+                  class="power"
+                  title="Cambiar una letra"
+                >
                   🔄<span class="count">1</span></button
-                ><button id="sos1" class="sos-power" title="Cambiar de OSO a SOS">
+                ><button
+                  data-i18n-attr="title:common.cambiar_de_oso_a"
+                  id="sos1"
+                  class="sos-power"
+                  title="Cambiar de OSO a SOS"
+                >
                   🛟<span class="count">1</span>
                 </button>
               </div>
@@ -551,17 +746,19 @@
             <div class="identity">
               <div id="avatar3" class="avatar">🐻</div>
               <div class="player-info">
-                <div id="name3" class="name">Jugador 1</div>
+                <div data-i18n="common.jugador_1" id="name3" class="name">Jugador 1</div>
                 <div class="stats">
                   <span id="timer3" class="timer">1:30</span>
                   <span class="score-wrap"
-                    ><span class="score-label">puntos OSO</span><span id="score3" class="score">0</span></span
+                    ><span data-i18n="common.puntos_oso" class="score-label">puntos OSO</span
+                    ><span id="score3" class="score">0</span></span
                   >
                 </div>
               </div>
             </div>
             <div class="panel-menu">
               <button
+                data-i18n-attr="aria-label:common.abrir_menu"
                 id="menu3"
                 class="menu-btn"
                 type="button"
@@ -583,11 +780,30 @@
                 </button>
               </div>
               <div class="tools">
-                <button id="hint3" class="power" title="Pista">💡<span class="count">1</span></button>
-                <button id="last3" class="power" title="Última jugada">👁️<span class="count">1</span></button>
-                <button id="swap3" class="power" title="Cambiar una letra">
+                <button data-i18n-attr="title:common.pista" id="hint3" class="power" title="Pista">
+                  💡<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.ultima_jugada"
+                  id="last3"
+                  class="power"
+                  title="Última jugada"
+                >
+                  👁️<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.cambiar_una_letra"
+                  id="swap3"
+                  class="power"
+                  title="Cambiar una letra"
+                >
                   🔄<span class="count">1</span></button
-                ><button id="sos3" class="sos-power" title="Cambiar de OSO a SOS">
+                ><button
+                  data-i18n-attr="title:common.cambiar_de_oso_a"
+                  id="sos3"
+                  class="sos-power"
+                  title="Cambiar de OSO a SOS"
+                >
                   🛟<span class="count">1</span>
                 </button>
               </div>
@@ -597,17 +813,19 @@
             <div class="identity">
               <div id="avatar4" class="avatar">🐻</div>
               <div class="player-info">
-                <div id="name4" class="name">Jugador 1</div>
+                <div data-i18n="common.jugador_1" id="name4" class="name">Jugador 1</div>
                 <div class="stats">
                   <span id="timer4" class="timer">1:30</span>
                   <span class="score-wrap"
-                    ><span class="score-label">puntos OSO</span><span id="score4" class="score">0</span></span
+                    ><span data-i18n="common.puntos_oso" class="score-label">puntos OSO</span
+                    ><span id="score4" class="score">0</span></span
                   >
                 </div>
               </div>
             </div>
             <div class="panel-menu">
               <button
+                data-i18n-attr="aria-label:common.abrir_menu"
                 id="menu4"
                 class="menu-btn"
                 type="button"
@@ -629,11 +847,30 @@
                 </button>
               </div>
               <div class="tools">
-                <button id="hint4" class="power" title="Pista">💡<span class="count">1</span></button>
-                <button id="last4" class="power" title="Última jugada">👁️<span class="count">1</span></button>
-                <button id="swap4" class="power" title="Cambiar una letra">
+                <button data-i18n-attr="title:common.pista" id="hint4" class="power" title="Pista">
+                  💡<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.ultima_jugada"
+                  id="last4"
+                  class="power"
+                  title="Última jugada"
+                >
+                  👁️<span class="count">1</span>
+                </button>
+                <button
+                  data-i18n-attr="title:common.cambiar_una_letra"
+                  id="swap4"
+                  class="power"
+                  title="Cambiar una letra"
+                >
                   🔄<span class="count">1</span></button
-                ><button id="sos4" class="sos-power" title="Cambiar de OSO a SOS">
+                ><button
+                  data-i18n-attr="title:common.cambiar_de_oso_a"
+                  id="sos4"
+                  class="sos-power"
+                  title="Cambiar de OSO a SOS"
+                >
                   🛟<span class="count">1</span>
                 </button>
               </div>
@@ -643,15 +880,27 @@
           <div id="menuScrim" class="menu-scrim"></div>
           <div id="sidebar" class="sidebar" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
             <div class="sidebar-head">
-              <h2 id="menuTitle">Partida</h2>
-              <button id="closeMenu" class="menu-close" type="button" aria-label="Cerrar menú">✕</button>
+              <h2 data-i18n="menuTitle" id="menuTitle">Partida</h2>
+              <button
+                data-i18n-attr="aria-label:closeMenu.label"
+                id="closeMenu"
+                class="menu-close"
+                type="button"
+                aria-label="Cerrar menú"
+              >
+                ✕
+              </button>
             </div>
-            <button id="gameHelp">❓ Reglas / Ayuda</button>
-            <button id="restartMatch">🔄 Reiniciar tablero</button>
-            <button id="newGame">🆕 Nueva partida</button>
-            <button id="soundMenu" type="button">🔊 Sonido: activado</button>
-            <button id="shareMenu" type="button">📣 Invitar a jugar</button>
-            <a id="ideasMenu" class="sidebar-link" href="mailto:hola@juegaoso.com?subject=Ideas%20para%20OSO"
+            <button data-i18n="gameHelp" id="gameHelp">❓ Reglas / Ayuda</button>
+            <button data-i18n="restartMatch" id="restartMatch">🔄 Reiniciar tablero</button>
+            <button data-i18n="newGame" id="newGame">🆕 Nueva partida</button>
+            <button data-i18n="soundMenu" id="soundMenu" type="button">🔊 Sonido: activado</button>
+            <button data-i18n="shareMenu" id="shareMenu" type="button">📣 Invitar a jugar</button>
+            <a
+              data-i18n="ideasMenu"
+              id="ideasMenu"
+              class="sidebar-link"
+              href="mailto:hola@juegaoso.com?subject=Ideas%20para%20OSO"
               >💡 Ideas y opiniones</a
             >
           </div>
@@ -667,26 +916,40 @@
           <div class="help-dialog">
             <div class="help-head">
               <div>
-                <h2 id="helpTitle" class="help-title">Cómo se juega a OSO</h2>
-                <p class="help-sub">Forma palabras, suma puntos y encadena turnos.</p>
+                <h2 data-i18n="helpTitle" id="helpTitle" class="help-title">Cómo se juega a OSO</h2>
+                <p data-i18n="helpModal.forma_palabras_suma_puntos" class="help-sub">
+                  Forma palabras, suma puntos y encadena turnos.
+                </p>
               </div>
-              <button id="helpClose" class="help-close" type="button" aria-label="Cerrar ayuda">✕</button>
+              <button
+                data-i18n-attr="aria-label:helpClose.label"
+                id="helpClose"
+                class="help-close"
+                type="button"
+                aria-label="Cerrar ayuda"
+              >
+                ✕
+              </button>
             </div>
 
             <div class="help-section">
-              <h3>Dinámica básica</h3>
+              <h3 data-i18n="helpModal.dinamica_basica">Dinámica básica</h3>
               <div class="help-steps">
                 <div class="help-step">
                   <span class="num">1</span>
-                  <div><b>Elige O o S</b> y colócala en una casilla vacía.</div>
+                  <div data-i18n-html="helpModal.b_elige_o_o">
+                    <b>Elige O o S</b> y colócala en una casilla vacía.
+                  </div>
                 </div>
                 <div class="help-step">
                   <span class="num">2</span>
-                  <div><b>Forma OSO</b> en horizontal, vertical o diagonal para sumar 1 punto.</div>
+                  <div data-i18n-html="helpModal.b_forma_oso_b">
+                    <b>Forma OSO</b> en horizontal, vertical o diagonal para sumar 1 punto.
+                  </div>
                 </div>
                 <div class="help-step">
                   <span class="num">3</span>
-                  <div>
+                  <div data-i18n-html="helpModal.b_si_formas_oso">
                     <b>Si formas OSO, vuelves a jugar</b> y recibes +<span data-config="clock.bonusSeconds"
                       >10</span
                     >
@@ -695,7 +958,7 @@
                 </div>
                 <div class="help-step">
                   <span class="num">4</span>
-                  <div>
+                  <div data-i18n-html="helpModal.b_la_partida_termina">
                     <b>La partida termina</b> cuando se llena el tablero o alguien se queda sin tiempo.
                   </div>
                 </div>
@@ -703,31 +966,31 @@
             </div>
 
             <div class="help-section">
-              <h3>Extras</h3>
+              <h3 data-i18n="helpModal.extras">Extras</h3>
               <div class="extras-list">
                 <div class="extra-line">
                   <div class="extra-icon">💡</div>
-                  <div class="extra-copy">
+                  <div data-i18n-html="helpModal.strong_pista_strong_recomienda" class="extra-copy">
                     <strong>Pista</strong>Recomienda una letra y una casilla para tu siguiente movimiento.
                   </div>
                 </div>
                 <div class="extra-line">
                   <div class="extra-icon">👁️</div>
-                  <div class="extra-copy">
+                  <div data-i18n-html="helpModal.strong_ultima_jugada_rival" class="extra-copy">
                     <strong>Última jugada rival</strong>Marca en el tablero cuál fue el último movimiento del
                     oponente.
                   </div>
                 </div>
                 <div class="extra-line">
                   <div class="extra-icon">🔄</div>
-                  <div class="extra-copy">
+                  <div data-i18n-html="helpModal.strong_cambiar_una_letra" class="extra-copy">
                     <strong>Cambiar una letra</strong>Convierte una ficha ya colocada de O a S o de S a O.
                     Después pasa el turno.
                   </div>
                 </div>
                 <div class="extra-line">
                   <div class="extra-icon">🛟</div>
-                  <div class="extra-copy">
+                  <div data-i18n-html="helpModal.strong_oso_sos_strong" class="extra-copy">
                     <strong>OSO → SOS</strong>Cambia el objetivo de toda la partida a SOS, reproduce las
                     jugadas anteriores, recalcula el marcador y continúa. No se puede deshacer.
                   </div>
@@ -736,14 +999,14 @@
             </div>
 
             <div class="help-section">
-              <h3>Contra la máquina</h3>
-              <p>
+              <h3 data-i18n="helpModal.contra_la_maquina">Contra la máquina</h3>
+              <p data-i18n-html="helpModal.strong_facil_strong_juega">
                 <strong>Fácil:</strong> juega de forma más relajada. <strong>Difícil:</strong> siempre
                 aprovecha la jugada que más puntos le da; si no hay, juega en el centro.
               </p>
             </div>
 
-            <div class="help-foot">
+            <div data-i18n="helpModal.cada_extra_puede_usarse" class="help-foot">
               Cada extra puede usarse una sola vez por jugador. El cambio OSO → SOS es global: cuando alguien
               lo activa, queda consumido para ambos.
             </div>
@@ -756,8 +1019,10 @@
               <span class="sos-hero-letter">S</span><span class="sos-hero-ring">🛟</span
               ><span class="sos-hero-letter">S</span>
             </div>
-            <div class="mode-flash-title">¡Ahora es SOS!</div>
-            <div class="mode-flash-sub">Cambio de juego: ahora cuentan los SOS. Recalculando la partida…</div>
+            <div data-i18n="modeFlash.ahora_es_sos" class="mode-flash-title">¡Ahora es SOS!</div>
+            <div data-i18n="modeFlash.cambio_de_juego_ahora" class="mode-flash-sub">
+              Cambio de juego: ahora cuentan los SOS. Recalculando la partida…
+            </div>
           </div>
         </div>
         <div
@@ -768,23 +1033,30 @@
           aria-labelledby="winnerTitle"
           aria-describedby="winnerSub"
         >
-          <button id="winnerHome" class="winner-home" type="button" aria-label="Volver al inicio">
+          <button
+            data-i18n="winnerHome"
+            data-i18n-attr="aria-label:winnerHome.label"
+            id="winnerHome"
+            class="winner-home"
+            type="button"
+            aria-label="Volver al inicio"
+          >
             🏠 Inicio
           </button>
           <div id="confetti" class="confetti"></div>
           <div>
             <div id="winnerAvatar" class="winner-avatar">🐻</div>
-            <div id="winnerTitle" class="winner-title">¡Ganador!</div>
+            <div data-i18n="winnerTitle" id="winnerTitle" class="winner-title">¡Ganador!</div>
             <div id="winnerSub" class="winner-sub"></div>
             <section id="sessionBoard" class="session-board hidden" aria-labelledby="sessionTitle">
-              <h2 id="sessionTitle">Marcador de la sesión</h2>
+              <h2 data-i18n="sessionTitle" id="sessionTitle">Marcador de la sesión</h2>
               <table>
                 <thead>
                   <tr>
                     <td class="session-crown"></td>
-                    <th scope="col" class="session-player">Jugador</th>
-                    <th scope="col">Victorias</th>
-                    <th scope="col">Puntos</th>
+                    <th data-i18n="sessionBoard.jugador" scope="col" class="session-player">Jugador</th>
+                    <th data-i18n="sessionBoard.victorias" scope="col">Victorias</th>
+                    <th data-i18n="sessionBoard.puntos" scope="col">Puntos</th>
                   </tr>
                 </thead>
                 <tbody id="sessionRows"></tbody>
@@ -792,22 +1064,46 @@
               <p id="sessionMeta" class="session-meta"></p>
             </section>
             <div class="winner-actions">
-              <button id="rematch" class="primary rematch" aria-label="Revancha, mismo tablero">
+              <button
+                data-i18n-html="rematch"
+                data-i18n-attr="aria-label:rematch.label"
+                id="rematch"
+                class="primary rematch"
+                aria-label="Revancha, mismo tablero"
+              >
                 Revancha<span class="btn-sub">mismo tablero</span>
               </button>
-              <button id="otherBoard" class="secondary">Otro tablero</button>
-              <button id="changePlayers" class="secondary">Cambiar jugadores</button>
-              <button id="shareResult" class="secondary share-result" type="button">
+              <button data-i18n="otherBoard" id="otherBoard" class="secondary">Otro tablero</button>
+              <button data-i18n="changePlayers" id="changePlayers" class="secondary">
+                Cambiar jugadores
+              </button>
+              <button data-i18n="shareResult" id="shareResult" class="secondary share-result" type="button">
                 📣 Compartir resultado
               </button>
             </div>
             <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
-              <h2 id="feedbackTitle" class="feedback-title">¿Os está gustando OSO?</h2>
+              <h2 data-i18n="feedbackTitle" id="feedbackTitle" class="feedback-title">
+                ¿Os está gustando OSO?
+              </h2>
               <div class="feedback-actions">
-                <button id="feedbackUp" type="button" class="feedback-btn" aria-label="Sí, nos gusta">
+                <button
+                  data-i18n-attr="aria-label:feedbackUp.label"
+                  id="feedbackUp"
+                  type="button"
+                  class="feedback-btn"
+                  aria-label="Sí, nos gusta"
+                >
                   👍
                 </button>
-                <button id="feedbackDown" type="button" class="feedback-btn" aria-label="No mucho">👎</button>
+                <button
+                  data-i18n-attr="aria-label:feedbackDown.label"
+                  id="feedbackDown"
+                  type="button"
+                  class="feedback-btn"
+                  aria-label="No mucho"
+                >
+                  👎
+                </button>
               </div>
             </section>
           </div>
@@ -815,26 +1111,31 @@
       </section>
       <dialog id="fourDialog" class="info-dialog" aria-labelledby="fourDialogTitle">
         <div class="info-emoji" aria-hidden="true">👨‍👩‍👧‍👦</div>
-        <h2 id="fourDialogTitle" class="step-title">Solo disponible en ordenador o tablet</h2>
-        <p class="step-lead">Con 4 jugadores el tablero necesita una pantalla más grande.</p>
+        <h2 data-i18n="fourDialogTitle" id="fourDialogTitle" class="step-title">
+          Solo disponible en ordenador o tablet
+        </h2>
+        <p data-i18n="fourDialog.con_4_jugadores_el" class="step-lead">
+          Con 4 jugadores el tablero necesita una pantalla más grande.
+        </p>
         <form method="dialog">
-          <button class="primary" type="submit" autofocus>Entendido</button>
+          <button data-i18n="fourDialog.entendido" class="primary" type="submit" autofocus>Entendido</button>
         </form>
       </dialog>
       <dialog id="thanksDialog" class="info-dialog thanks-dialog" aria-labelledby="thanksTitle">
         <div class="info-emoji" aria-hidden="true">💛</div>
-        <h2 id="thanksTitle" class="step-title">¡Gracias!</h2>
-        <p class="step-lead">
+        <h2 data-i18n="thanksTitle" id="thanksTitle" class="step-title">¡Gracias!</h2>
+        <p data-i18n="thanksDialog.tu_opinion_nos_ayuda" class="step-lead">
           Tu opinión nos ayuda a mejorar OSO. ¿Nos cuentas qué cambiarías o qué te gustaría jugar?
         </p>
         <a
+          data-i18n="feedbackMore"
           id="feedbackMore"
           class="primary info-link"
           href="mailto:hola@juegaoso.com?subject=Opini%C3%B3n%20sobre%20OSO"
           >💡 Cuéntanos más</a
         >
         <form method="dialog">
-          <button id="thanksClose" class="secondary" type="submit">Cerrar</button>
+          <button data-i18n="common.cerrar" id="thanksClose" class="secondary" type="submit">Cerrar</button>
         </form>
       </dialog>
       <dialog
@@ -844,78 +1145,103 @@
         aria-describedby="secretHow"
       >
         <div class="info-emoji" aria-hidden="true">🤫</div>
-        <h2 id="secretTitle" class="step-title">Déjame que te cuente un secreto…</h2>
+        <h2 data-i18n="secretTitle" id="secretTitle" class="step-title">Déjame que te cuente un secreto…</h2>
         <p id="secretHow" class="step-lead"></p>
         <section id="secretKnown" class="secret-known hidden" aria-labelledby="secretKnownTitle">
-          <h3 id="secretKnownTitle">Ya sabías…</h3>
+          <h3 data-i18n="secretKnownTitle" id="secretKnownTitle">Ya sabías…</h3>
           <ul id="secretList"></ul>
         </section>
         <form method="dialog">
-          <button id="secretGo" class="primary" type="submit" value="go" autofocus>¡Voy a probarlo!</button>
+          <button data-i18n="secretGo" id="secretGo" class="primary" type="submit" value="go" autofocus>
+            ¡Voy a probarlo!
+          </button>
         </form>
       </dialog>
       <dialog id="shopDialog" class="info-dialog" aria-labelledby="shopTitle" aria-describedby="shopText">
         <div class="info-emoji" aria-hidden="true">🛒</div>
-        <h2 id="shopTitle" class="step-title">Tienda secreta</h2>
+        <h2 data-i18n="shopTitle" id="shopTitle" class="step-title">Tienda secreta</h2>
         <p id="shopText" class="step-lead"></p>
         <p id="shopNote" class="step-lead"></p>
         <form method="dialog">
-          <button id="shopBuy" class="primary" type="submit">Comprar</button>
-          <button class="secondary" type="submit" autofocus>Ahora no</button>
+          <button data-i18n="shopBuy" id="shopBuy" class="primary" type="submit">Comprar</button>
+          <button data-i18n="common.ahora_no" class="secondary" type="submit" autofocus>Ahora no</button>
         </form>
       </dialog>
       <dialog id="nudgeDialog" class="info-dialog" aria-labelledby="nudgeTitle">
         <div class="info-emoji" aria-hidden="true">👀</div>
-        <h2 id="nudgeTitle" class="step-title">¿Sigues ahí?</h2>
-        <p class="step-lead">Tu rival espera tu jugada. Tu reloj sigue corriendo.</p>
-        <button id="nudgeHere" class="primary" type="button" autofocus>¡Sigo aquí!</button>
+        <h2 data-i18n="nudgeTitle" id="nudgeTitle" class="step-title">¿Sigues ahí?</h2>
+        <p data-i18n="nudgeDialog.tu_rival_espera_tu" class="step-lead">
+          Tu rival espera tu jugada. Tu reloj sigue corriendo.
+        </p>
+        <button data-i18n="nudgeHere" id="nudgeHere" class="primary" type="button" autofocus>
+          ¡Sigo aquí!
+        </button>
       </dialog>
       <dialog id="onlineDialog" class="info-dialog" aria-labelledby="onlineTitle">
         <div class="info-emoji" aria-hidden="true">🌐</div>
-        <h2 id="onlineTitle" class="step-title">No se puede jugar en línea</h2>
+        <h2 data-i18n="onlineTitle" id="onlineTitle" class="step-title">No se puede jugar en línea</h2>
         <p id="onlineStatus" class="step-lead" role="status" aria-live="polite"></p>
-        <button id="onlineCancel" class="secondary share-close" type="button">Vale</button>
+        <button data-i18n="onlineCancel" id="onlineCancel" class="secondary share-close" type="button">
+          Vale
+        </button>
       </dialog>
       <dialog id="onlineIntro" class="info-dialog" aria-labelledby="onlineIntroTitle">
         <div class="info-emoji" aria-hidden="true">🌐</div>
-        <h2 id="onlineIntroTitle" class="step-title">¡Nuevo! Juega en línea</h2>
-        <p class="step-lead">
+        <h2 data-i18n="onlineIntroTitle" id="onlineIntroTitle" class="step-title">¡Nuevo! Juega en línea</h2>
+        <p data-i18n="onlineIntro.invita_a_quien_quieras" class="step-lead">
           Invita a quien quieras con un enlace y jugad cada uno desde su móvil, aunque estéis lejos.
         </p>
-        <button id="onlineIntroGo" class="primary" type="button">Invitar a jugar</button>
-        <button id="onlineIntroClose" class="secondary share-close" type="button">Ahora no</button>
+        <button data-i18n="common.invitar_a_jugar" id="onlineIntroGo" class="primary" type="button">
+          Invitar a jugar
+        </button>
+        <button data-i18n="common.ahora_no" id="onlineIntroClose" class="secondary share-close" type="button">
+          Ahora no
+        </button>
       </dialog>
       <dialog id="shareDialog" class="info-dialog share-dialog" aria-labelledby="shareTitle">
         <div class="info-emoji" aria-hidden="true">📣</div>
-        <h2 id="shareTitle" class="step-title">Invita a jugar a OSO</h2>
+        <h2 data-i18n="shareTitle" id="shareTitle" class="step-title">Invita a jugar a OSO</h2>
         <p id="shareMessage" class="share-message"></p>
         <div class="share-actions">
-          <a id="shareWhatsapp" class="primary info-link" href="https://wa.me/" target="_blank" rel="noopener"
+          <a
+            data-i18n="common.whatsapp"
+            id="shareWhatsapp"
+            class="primary info-link"
+            href="https://wa.me/"
+            target="_blank"
+            rel="noopener"
             >💬 WhatsApp</a
           >
-          <a id="shareEmail" class="secondary info-link" href="mailto:">✉️ Email</a>
-          <button id="shareCopy" class="secondary" type="button">🔗 Copiar enlace</button>
+          <a data-i18n="shareEmail" id="shareEmail" class="secondary info-link" href="mailto:">✉️ Email</a>
+          <button data-i18n="common.copiar_enlace" id="shareCopy" class="secondary" type="button">
+            🔗 Copiar enlace
+          </button>
         </div>
         <p id="shareStatus" class="share-status" role="status" aria-live="polite"></p>
         <form method="dialog">
-          <button class="secondary share-close" type="submit">Cerrar</button>
+          <button data-i18n="common.cerrar" class="secondary share-close" type="submit">Cerrar</button>
         </form>
       </dialog>
     </main>
     <footer class="credits">
-      <span class="credits-text">made by Vilarequi with ❤️</span>
+      <span data-i18n="page.made_by_vilarequi_with" class="credits-text">made by Vilarequi with ❤️</span>
       · <span id="appVersion" class="credits-version"></span> ·
-      <button id="cookieSettings" type="button" class="cookie-settings">Cookies</button> ·
-      <a id="privacyLink" href="/privacidad" class="cookie-settings">Privacidad</a>
+      <button data-i18n="cookieSettings" id="cookieSettings" type="button" class="cookie-settings">
+        Cookies
+      </button>
+      ·
+      <a data-i18n="privacyLink" id="privacyLink" href="/privacidad" class="cookie-settings">Privacidad</a>
     </footer>
     <section id="consentBanner" class="consent hidden" aria-labelledby="consentText">
-      <p id="consentText" class="consent-text">
+      <p data-i18n-html="consentText" id="consentText" class="consent-text">
         🍪 Usamos cookies de analítica (Google Analytics y Microsoft Clarity) para saber cómo se juega y
         mejorar OSO. No hay publicidad. <a href="/privacidad">Política de privacidad</a>.
       </p>
       <div class="consent-actions">
-        <button id="consentDeny" type="button" class="consent-btn">Rechazar</button>
-        <button id="consentAccept" type="button" class="consent-btn">Aceptar</button>
+        <button data-i18n="consentDeny" id="consentDeny" type="button" class="consent-btn">Rechazar</button>
+        <button data-i18n="consentAccept" id="consentAccept" type="button" class="consent-btn">
+          Aceptar
+        </button>
       </div>
     </section>
   </body>

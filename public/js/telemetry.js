@@ -3,6 +3,7 @@
 // carry names, avatars or anything typed by the players.
 import { VERSION } from './version.js';
 import { GAME } from './config.js';
+import { t, LANG, BROWSER_LANG } from './i18n.js';
 
 // Share of games that should end because someone runs out of time; the target
 // used later to tune the clock of each board (see docs/ROADMAP.md).
@@ -15,7 +16,7 @@ export const FEEDBACK_COOLDOWN = GAME.feedback.cooldown;
 export const FEEDBACK_STREAK = GAME.feedback.streak;
 
 export const IDEAS_EMAIL = 'hola@juegaoso.com';
-export const ideasHref = (subject = 'Ideas para OSO') =>
+export const ideasHref = (subject = t('ideas.subject')) =>
   `mailto:${IDEAS_EMAIL}?subject=${encodeURIComponent(subject)}`;
 
 function consented() {
@@ -28,7 +29,12 @@ function consented() {
 
 export function track(name, params = {}) {
   if (!consented()) return false;
-  window.gtag?.('event', name, { ...params, app_version: VERSION });
+  window.gtag?.('event', name, {
+    ...params,
+    app_version: VERSION,
+    app_language: LANG,
+    browser_language: BROWSER_LANG,
+  });
   return true;
 }
 

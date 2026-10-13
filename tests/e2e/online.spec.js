@@ -28,7 +28,7 @@ test('the WhatsApp invite has one link with the room and UTM, and its own share 
   const code = await createRoom(host);
   const text = new URL(await host.locator('#onlineWhatsapp').getAttribute('href')).searchParams.get('text');
   const link = `http://localhost:4173/?sala=${code}&utm_source=whatsapp&utm_medium=share&utm_campaign=en_linea`;
-  expect(text).toBe(`¿Jugamos a OSO? 🐻 Entra en mi sala:\n\n${link}`);
+  expect(text).toBe(`Jugamos a OSO? 🐻 Entra en mi sala:\n\n${link}`);
   // The notice sits halfway between the top of the screen and the card, as tall as ← →.
   const boxes = () =>
     Promise.all(['#onlineToast', '.panel', '#stepNext'].map((s) => host.locator(s).boundingBox()));

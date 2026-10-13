@@ -6,6 +6,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 ## Ya hecho
 
 - Rediseño visual (fondo nocturno, fichas 3D, animaciones, victoria con confeti).
+- Textos en `public/locales/es.json` (clave → texto), listos para traducir; el idioma del navegador
+  va en la analítica para saber qué idiomas faltan (3.9.0). Pendiente: traducir.
 - Bugs B01–B05 corregidos (B06 se mantiene a propósito, ver abajo).
 - T4.1: nombres como texto de ejemplo («Jugador 1/2») en vez de valor precargado.
 - Arquitectura: sitio estático en `public/`, motor de reglas testeable, CSP y cabeceras de

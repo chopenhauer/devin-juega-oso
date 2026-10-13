@@ -1,6 +1,7 @@
 // Online 1 vs 1 client: talks to /api/sala and measures how well option A works
 // (docs/ONLINE.md). The server decides everything; this only sends intentions.
 import { GAME } from './config.js';
+import { t } from './i18n.js';
 
 const KEY = 'oso.online.v1';
 const ENDPOINT = '/api/sala';
@@ -116,8 +117,8 @@ export async function fetchRoom(code, rev = 0, quality = null, open = false) {
 export const NUDGE_MS = GAME.online.nudgeSeconds * 1000;
 export function cheer({ mine, theirs, free, rivalName, rivalTime }) {
   if (rivalTime <= GAME.clock.lowSeconds)
-    return `⏳ El reloj de ${rivalName} corre: le quedan ${Math.ceil(rivalTime)} s.`;
-  if (mine > theirs) return `💪 Vas ${mine}–${theirs}. ¡Aguanta!`;
-  if (mine < theirs) return `🔥 Aún quedan ${free} casillas. ¡Hay remontada!`;
-  return mine ? `🤝 Empate a ${mine}. ¡La próxima es tuya!` : '🤞 Todo por decidir. ¡Tú puedes!';
+    return t('online.cheer.clock', { name: rivalName, s: Math.ceil(rivalTime) });
+  if (mine > theirs) return t('online.cheer.ahead', { mine, theirs });
+  if (mine < theirs) return t('online.cheer.comeback', { count: free });
+  return mine ? t('online.cheer.draw', { mine }) : t('online.cheer.open');
 }

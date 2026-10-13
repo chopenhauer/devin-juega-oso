@@ -105,7 +105,7 @@ test('the end screen shares the result without names', async ({ page }) => {
   expect(btn.y + btn.height).toBeLessThanOrEqual(actions.y + actions.height + 1);
   await page.click('#shareResult');
   const message = await page.locator('#shareMessage').textContent();
-  expect(message).toMatch(/OSO 🐻.*!\n\n¿(Te atreves|Juegas conmigo)\?$/);
+  expect(message).toMatch(/OSO 🐻.*!\n\n(Te atreves|Juegas conmigo)\?$/);
   const wa = new URL(await page.locator('#shareWhatsapp').getAttribute('href')).searchParams.get('text');
   expect(wa).toMatch(/\?\n\nhttps:\/\/juegaoso\.com\//);
   const lines = await page

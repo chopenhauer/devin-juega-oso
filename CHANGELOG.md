@@ -17,6 +17,27 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.9.0] - 2026-10-13
+
+**Textos en un fichero aparte, listos para traducir**
+
+- **Todos los textos del juego en [`public/locales/es.json`](public/locales/es.json)**, con una clave
+  por texto (`"winnerHome": "🏠 Inicio"`). El HTML marca cada texto con `data-i18n` y el código usa
+  `t('clave', { variables })`, con plurales. Decidimos JSON porque es lo que leen las herramientas de
+  traducción. De momento solo hay español: no se ve nada distinto.
+- **Idioma:** el juego elige el del navegador y, si no lo tiene, usa el español. Para añadir uno basta
+  con copiar `es.json`, traducirlo y apuntarlo en `LANGS` (`public/js/i18n.js`).
+- **Pruebas que avisan** si queda un texto fuera del fichero, si falta una clave o si sobra alguna.
+- **Mensajes para otras personas con signos solo al final**, como se habla: «He ganado a la máquina 7
+  a 5 en OSO 🐻!», «Te atreves?», «Jugamos a OSO? 🐻». Vale para compartir, el email y la invitación a
+  la sala. Dentro del juego seguimos con ¿¡.
+- **Analítica:** los eventos llevan `browser_language` (`es-ES`, `en-US`…) y `app_language`, para saber
+  qué idiomas faltan. Está en `docs/ANALYTICS.md` y en la página de privacidad.
+- **Se quedan fuera:** la página de privacidad, que se traducirá entera como documento, y las
+  explicaciones de `config.js`, que son para nosotros y no para quien juega.
+- De paso: los campos de nombre de los jugadores 3 y 4 decían «Nombre del jugador 1» a los lectores de
+  pantalla.
+
 ## [3.8.1] - 2026-10-13
 
 **Textos más parejos y mensajes para compartir con aire**

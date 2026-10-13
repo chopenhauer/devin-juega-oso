@@ -26,8 +26,17 @@ responde. Si un dato no responde a ninguna pregunta, no se mide.
 | Microsoft Clarity       | Mapas de calor y grabaciones anónimas           | Panel de Clarity                                       |
 | Contadores del servidor | Embudo y uso de las salas en línea, sin cookies | `npm run online:report` (ver [`ONLINE.md`](ONLINE.md)) |
 
-Los eventos se envían con `track()` de `public/js/telemetry.js`, que añade siempre `app_version`
-para poder comparar versiones.
+Los eventos se envían con `track()` de `public/js/telemetry.js`, que añade siempre:
+
+- `app_version`, para poder comparar versiones;
+- `browser_language`: el idioma del navegador o del dispositivo (`navigator.language`: `es-ES`,
+  `en-US`…). Responde a «¿qué idiomas nos faltan?»: si llegan muchas visitas en un idioma que no
+  tenemos, es el siguiente que conviene traducir. Es el código, no dice nada de la persona;
+- `app_language`: el idioma en que se ve el juego (`es` por ahora). Comparado con
+  `browser_language` dice cuánta gente juega en un idioma que no es el suyo.
+
+GA4 ya guarda su propia dimensión «Idioma», pero solo para las páginas vistas; con estos parámetros
+el idioma va también en cada evento de partida.
 
 ## Eventos de GA4
 

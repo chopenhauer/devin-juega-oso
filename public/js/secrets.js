@@ -4,22 +4,23 @@
 // never what happens; `hint` is the short reminder shown later under «Ya sabías…». `cta` is the
 // button that takes you where it is used: `go` 'home' (the 🎨 step) or 'play' (a game with extras).
 import { GAME } from './config.js';
+import { t } from './i18n.js';
 
-const WORDS = ['cero', 'una', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez'];
-const times = (n) => `${WORDS[n] ?? n} ${n === 1 ? 'vez' : 'veces'}`;
+const WORDS = t('secrets.numbers').split(',');
+const times = (n) => t('secrets.times', { count: n, n: WORDS[n] ?? n });
 
 export const SECRETS = [
   {
     id: 'temas',
-    hint: 'El 🎨 del inicio esconde algo',
-    how: `En el inicio, pulsa el 🎨 ${times(GAME.themes.eggTaps)} seguidas, muy rápido… y mira qué pasa.`,
-    cta: { label: 'Llévame al 🎨', go: 'home' },
+    hint: t('secrets.temas.hint'),
+    how: t('secrets.temas.how', { times: times(GAME.themes.eggTaps) }),
+    cta: { label: t('secrets.temas.cta'), go: 'home' },
   },
   {
     id: 'tienda',
-    hint: 'Los extras gastados esconden algo',
-    how: `En plena partida, pulsa ${times(GAME.shop.taps)} seguidas un extra que ya hayas gastado (💡, 🔄 o 🛟)… y mira qué pasa.`,
-    cta: { label: '¡A jugar!', go: 'play' },
+    hint: t('secrets.tienda.hint'),
+    how: t('secrets.tienda.how', { times: times(GAME.shop.taps) }),
+    cta: { label: t('startGame'), go: 'play' },
   },
 ];
 export const GAMES_PER_SECRET = GAME.secrets.gamesPerSecret;
