@@ -104,7 +104,7 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 5   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                 | Alto       | Medio      | ~100/tablero |
 | 6   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md) | Alto       | Bajo       | 50 partidas  |
 | 7   | Feedback con texto libre (función de Vercel)                                       | Alto       | Medio      | Siguiente    |
-| 8   | Tablero con teclado y OSOs sin depender del color                                  | Medio      | Medio      | Siempre      |
+| 8   | Tablero con teclado y OSOs sin depender del color                                  | Bajo       | Medio      | Reserva      |
 | 9   | ~~Unificar los tamaños de letra fuera de escala~~ hecho en 3.7.3                   | Bajo       | Bajo       | Hecho        |
 | 10  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide   |
 | 11  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva      |
@@ -163,12 +163,13 @@ preguntan una a una al empezar cada fase.
    Decisión, telemetría y umbrales para revisarla en [`ONLINE.md`](ONLINE.md).
 8. **4.0.0 · Equipos 2 contra 2**, si el feedback lo pide.
 
-**Siempre, en paralelo:** accesibilidad (tablero con teclado, OSOs sin depender del color) y afinar los
-temas cuando se acerque cada fecha. La deuda de tamaños de letra quedó resuelta en la 3.7.3 (ver
+**Siempre, en paralelo:** afinar los temas cuando se acerque cada fecha. La deuda de tamaños de letra quedó resuelta en la 3.7.3 (ver
 [`DESIGN.md`](DESIGN.md)).
 
-**En reserva:** oso bailando, máquina «Experto», hall of fame global, vibración y
-reloj con la pestaña dormida. Los regalos desbloqueables siguen como idea sin planificar.
+**En reserva:** oso bailando, máquina «Experto», hall of fame global, vibración,
+reloj con la pestaña dormida y accesibilidad extra (tablero con teclado, OSOs sin depender del
+color): JoseLuis decidió que hoy no es prioritaria. Lo básico de accesibilidad (axe en los tests,
+«reducir movimiento», nombres en las casillas) se sigue cuidando en cada cambio. Los regalos desbloqueables siguen como idea sin planificar.
 
 ## Roadmap F4 (pendiente)
 
