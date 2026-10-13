@@ -22,7 +22,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 **Textos más parejos y mensajes para compartir con aire**
 
 - **«¿Dónde está tu rival?»:** los dos textos miden casi lo mismo y ocupan las mismas líneas: «Os
-  turnáis en el mismo móvil, tablet u ordenador: enfrentados o con la misma vista.» y «Cada uno en
+  turnáis en un móvil, tablet u ordenador: enfrentados o con la misma vista.» y «Cada uno en
   su móvil, tablet u ordenador: tu rival entra con un enlace especial.» («tu rival» en vez de «el
   invitado», para no dar por hecho el género).
 - **Mensajes para compartir con aire:** una línea en blanco entre el resultado, la pregunta y el

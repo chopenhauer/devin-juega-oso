@@ -368,6 +368,9 @@ test('«¿Dónde está tu rival?» explains both choices in texts of the same si
   expect(Math.abs(together.length - online.length)).toBeLessThanOrEqual(5);
   const words = (s) => s.split(/\s+/).length;
   expect(Math.abs(words(together) - words(online))).toBeLessThanOrEqual(1);
-  const [a, b] = await texts.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
-  expect(a).toBe(b);
+  for (const width of [270, 320, 360, 390, 412, 768]) {
+    await page.setViewportSize({ width, height: 860 });
+    const [a, b] = await texts.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
+    expect(Math.abs(a - b), `${width} px`).toBeLessThan(1);
+  }
 });
