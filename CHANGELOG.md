@@ -40,7 +40,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.8.1] - 2026-10-13
 
-**Textos más parejos y mensajes para compartir con aire**
+**Textos más parejos y mensajes para compartir con aire ([9abde31](https://github.com/chopenhauer/devin-juega-oso/commit/9abde31))**
 
 - **«¿Dónde está tu rival?»:** los dos textos miden casi lo mismo y ocupan las mismas líneas: «Os
   turnáis en un móvil, tablet u ordenador: enfrentados o con la misma vista.» y «Cada uno en
