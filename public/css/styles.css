@@ -964,7 +964,7 @@ select option {
   box-shadow:
     0 0.25rem 0 color-mix(in srgb, var(--p1b) 70%, var(--negro)),
     0 0 1rem var(--p1glow),
-    0 0 0.875rem 0.1875rem var(--color-score-glow);
+    0 0 1.25rem 0.25rem var(--color-score-glow);
 }
 .cell.p2 {
   background: linear-gradient(180deg, color-mix(in srgb, var(--p2) 65%, var(--blanco)), var(--p2));
@@ -972,7 +972,7 @@ select option {
   box-shadow:
     0 0.25rem 0 color-mix(in srgb, var(--p2b) 70%, var(--negro)),
     0 0 1rem var(--p2glow),
-    0 0 0.875rem 0.1875rem var(--color-score-glow);
+    0 0 1.25rem 0.25rem var(--color-score-glow);
 }
 .cell.both {
   background: linear-gradient(135deg, var(--p1) 0 48%, var(--p2) 52% 100%);
@@ -980,7 +980,7 @@ select option {
   box-shadow:
     0 0.25rem 0 var(--noche-700),
     0 0 1rem var(--noche-300-a50),
-    0 0 0.875rem 0.1875rem var(--color-score-glow);
+    0 0 1.25rem 0.25rem var(--color-score-glow);
 }
 .cell.p1 span,
 .cell.p2 span,
@@ -3130,11 +3130,11 @@ body[data-theme='halloween'] .theme-decor::after {
   0%,
   55%,
   100% {
-    height: 3rem;
+    height: 2.5rem;
   }
   70%,
   82% {
-    height: 9rem;
+    height: 4.5rem;
   }
 }
 @media (min-width: 48rem) {
