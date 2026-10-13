@@ -83,6 +83,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - El botón de cada secreto lleva a usarlo (3.6.1): «Llévame al 🎨» vuelve al inicio y vuelve a activar el easter egg, «¡A jugar!» empieza una partida con los extras brillando; en línea no te mueve. «Cuéntanos más» con la altura de los demás botones.
 - Sala con el tema del anfitrión, cada uno ve su barra abajo, intro «S🛟S» a pantalla completa (2,5 s) y temas medidos en GA4 (3.7.0).
 - Todo escala con la pantalla (rem): el juego cabe sin scroll en móviles estrechos o con «tamaño de pantalla» grande (3.7.1).
+- Pantalla final con «🏠 Inicio» arriba a la derecha y «Compartir resultado» separado de las acciones (3.8.0).
 
 ## Priorización (revisada tras la 3.4.0)
 

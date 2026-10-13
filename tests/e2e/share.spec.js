@@ -81,10 +81,7 @@ test('closing the native share sheet does nothing else', async ({ page }) => {
   expect(await shares(page)).toEqual([]);
 });
 
-test('the end screen shares the result without names', async ({ page }) => {
-  await noNativeShare(page);
-  await start(page);
-  await expect(page.locator('#shareToggle')).toBeHidden();
+async function finish(page) {
   const overlay = page.locator('#winnerOverlay');
   for (let n = 0; n < 70 && !(await overlay.isVisible()); n++) {
     const empty = await page.locator('.cell').evaluateAll((cs) => cs.findIndex((c) => !c.textContent.trim()));
@@ -94,6 +91,13 @@ test('the end screen shares the result without names', async ({ page }) => {
     await page.locator('.cell').nth(empty).click({ force: true });
   }
   await expect(overlay).toBeVisible();
+}
+
+test('the end screen shares the result without names', async ({ page }) => {
+  await noNativeShare(page);
+  await start(page);
+  await expect(page.locator('#shareToggle')).toBeHidden();
+  await finish(page);
   const actions = await page.locator('.winner-actions').boundingBox();
   const btn = await page.locator('#shareResult').boundingBox();
   expect(btn.y + btn.height).toBeLessThanOrEqual(actions.y + actions.height + 1);
@@ -102,6 +106,30 @@ test('the end screen shares the result without names', async ({ page }) => {
   await expect(page.locator('#shareMessage')).not.toContainText('Jugador');
   await page.click('#shareEmail');
   expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'email', place: 'end' })]);
+});
+
+test('the end screen leaves room above «Compartir resultado» and has «Inicio» top right', async ({
+  page,
+}) => {
+  await start(page);
+  await finish(page);
+  const above = await page.locator('#changePlayers').boundingBox();
+  const shareBtn = await page.locator('#shareResult').boundingBox();
+  const rematch = await page.locator('#rematch').boundingBox();
+  const row = await page.locator('#otherBoard').boundingBox();
+  const gap = (top, bottom) => bottom.y - (top.y + top.height);
+  expect(gap(above, shareBtn)).toBeGreaterThanOrEqual(gap(rematch, row) + 12);
+
+  const home = page.locator('#winnerHome');
+  await expect(home).toHaveText('🏠 Inicio');
+  const box = await home.boundingBox();
+  const width = page.viewportSize().width;
+  expect(box.y).toBeLessThan(40);
+  expect(box.x + box.width).toBeGreaterThan(width - 40);
+  await home.click();
+  await expect(page.locator('#winnerOverlay')).toBeHidden();
+  await expect(page.locator('#gameScreen')).toBeHidden();
+  await expect(page.locator('.step[data-step="mode"]')).not.toHaveClass(/inactive/);
 });
 
 test('the game menu invites someone to play', async ({ page }) => {

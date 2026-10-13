@@ -2184,4 +2184,9 @@ const { timeFor } = Engine;
   }
   q('otherBoard').addEventListener('click', backToSetup);
   q('changePlayers').addEventListener('click', backToSetup);
+  q('winnerHome').addEventListener('click', () => {
+    backToSetup();
+    showStep('mode');
+    syncThemeToggle();
+  });
 })();

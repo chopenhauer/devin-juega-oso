@@ -1176,6 +1176,20 @@ select option {
   overflow-y: auto;
   animation: fadeIn 0.35s ease;
 }
+.winner-home {
+  position: absolute;
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+  z-index: 1;
+  height: 2.75rem;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--blanco-a12);
+  color: var(--color-text);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+}
 .winner-avatar {
   font-size: var(--fs-hero-xl);
   line-height: 1.1;
@@ -1217,6 +1231,9 @@ select option {
 }
 .winner-actions .secondary {
   padding: 0 var(--space-3);
+}
+.winner-actions .share-result {
+  margin-top: var(--space-4);
 }
 .winner-actions .share-result,
 /* Online there is no «Otro tablero»: «Salir» takes the whole row, like the other buttons. */

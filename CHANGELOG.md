@@ -17,6 +17,15 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.8.0] - 2026-10-13
+
+**Pantalla final: «🏠 Inicio» y «Compartir resultado» aparte**
+
+- **Botón «🏠 Inicio»** arriba a la derecha de la pantalla final: vuelve al paso de modo, como «Llévame
+  al 🎨». En línea sale de la sala, igual que «Salir».
+- **«📣 Compartir resultado» más separado** de Revancha, Otro tablero y Cambiar jugadores, para que se
+  vea como otra cosa.
+
 ## [3.7.3] - 2026-10-12
 
 **Una sola escala de tamaños de letra ([34ae0b1](https://github.com/chopenhauer/devin-juega-oso/commit/34ae0b116c6ac3bfcf44dc1a1e2369cbb00f589d))**
