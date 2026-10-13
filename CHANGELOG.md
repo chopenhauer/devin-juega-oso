@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.7.3] - 2026-10-12
 
-**Una sola escala de tamaños de letra**
+**Una sola escala de tamaños de letra ([34ae0b1](https://github.com/chopenhauer/devin-juega-oso/commit/34ae0b116c6ac3bfcf44dc1a1e2369cbb00f589d))**
 
 Quedaban 28 tamaños de letra: 20 en una escala con pasos de 1 px (12, 13, 14, 15…) y 8 sueltos de
 componentes (letras del tablero, título de victoria, iconos de los extras…). Ahora hay 12.
