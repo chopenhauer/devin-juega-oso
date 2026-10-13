@@ -84,6 +84,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Sala con el tema del anfitrión, cada uno ve su barra abajo, intro «S🛟S» a pantalla completa (2,5 s) y temas medidos en GA4 (3.7.0).
 - Todo escala con la pantalla (rem): el juego cabe sin scroll en móviles estrechos o con «tamaño de pantalla» grande (3.7.1).
 - Pantalla final con «🏠 Inicio» arriba a la derecha y «Compartir resultado» separado de las acciones (3.8.0).
+- Textos de «¿Dónde está tu rival?» de la misma longitud y mensajes para compartir con líneas en blanco (3.8.1).
 
 ## Priorización (revisada tras la 3.4.0)
 

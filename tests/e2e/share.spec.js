@@ -64,7 +64,9 @@ test('with a native share sheet, 📣 uses it and skips the dialog', async ({ pa
   });
   await page.goto('/');
   await page.click('#shareToggle');
-  await expect.poll(() => page.evaluate(() => window.sharedData?.url)).toContain('utm_source=native');
+  await expect
+    .poll(() => page.evaluate(() => window.sharedData?.text))
+    .toMatch(/OSO 🐻.*\n\nhttps:\/\/juegaoso\.com\/\?utm_source=native/);
   await expect(dialog(page)).toBeHidden();
   expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'native', place: 'start' })]);
 });
@@ -102,7 +104,14 @@ test('the end screen shares the result without names', async ({ page }) => {
   const btn = await page.locator('#shareResult').boundingBox();
   expect(btn.y + btn.height).toBeLessThanOrEqual(actions.y + actions.height + 1);
   await page.click('#shareResult');
-  await expect(page.locator('#shareMessage')).toHaveText(/OSO 🐻.*¿(Te atreves|Juegas conmigo)\?/);
+  const message = await page.locator('#shareMessage').textContent();
+  expect(message).toMatch(/OSO 🐻.*!\n\n¿(Te atreves|Juegas conmigo)\?$/);
+  const wa = new URL(await page.locator('#shareWhatsapp').getAttribute('href')).searchParams.get('text');
+  expect(wa).toMatch(/\?\n\nhttps:\/\/juegaoso\.com\//);
+  const lines = await page
+    .locator('#shareMessage')
+    .evaluate((e) => e.getClientRects().length && e.offsetHeight);
+  expect(lines).toBeGreaterThan(40);
   await expect(page.locator('#shareMessage')).not.toContainText('Jugador');
   await page.click('#shareEmail');
   expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'email', place: 'end' })]);

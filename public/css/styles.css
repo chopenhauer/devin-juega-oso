@@ -3565,6 +3565,7 @@ body.legal-page {
   color: var(--muted);
   font-size: var(--fs-base);
   line-height: 1.4;
+  white-space: pre-line;
 }
 .share-actions {
   display: grid;

@@ -358,3 +358,16 @@ test('on a phone, the name being typed moves above the keyboard', async ({ page 
   await page.locator('#nickname1').blur();
   await expect.poll(keyboard).toBe('0px');
 });
+
+test('«¿Dónde está tu rival?» explains both choices in texts of the same size', async ({ page }) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#stepNext');
+  const texts = page.locator('[data-step="where"] .view-text > span');
+  const [together, online] = await texts.allTextContents();
+  expect(Math.abs(together.length - online.length)).toBeLessThanOrEqual(5);
+  const words = (s) => s.split(/\s+/).length;
+  expect(Math.abs(words(together) - words(online))).toBeLessThanOrEqual(1);
+  const [a, b] = await texts.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
+  expect(a).toBe(b);
+});

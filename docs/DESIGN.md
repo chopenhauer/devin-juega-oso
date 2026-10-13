@@ -119,6 +119,10 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 - Lenguaje inclusivo: no sabemos si quien juega es chico o chica. Usamos términos neutros
   («rival», «quien te invitó», «alguien», «… ya está aquí») en vez de «amigo», «listo» o «amig@». La
   @ y la x se leen mal con lector de pantalla.
+- Mensajes que se mandan a otras personas (compartir, email, invitación a la sala): una línea en blanco
+  entre el resultado, la pregunta y el enlace (`withLink` en `share.js`).
+- Opciones que se eligen una al lado de otra (p. ej. «Juntos» / «En línea»): descripciones de longitud
+  parecida, para que ocupen las mismas líneas.
 
 ## Reglas de accesibilidad
 

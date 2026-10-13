@@ -6,7 +6,7 @@ import { VERSION } from './version.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
-import { shareText, shareUrl, whatsappHref, emailHref } from './share.js';
+import { shareText, shareUrl, whatsappHref, emailHref, withLink } from './share.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 const { timeFor } = Engine;
@@ -1336,7 +1336,8 @@ const { timeFor } = Engine;
     const text = shareText(place === 'end' ? lastResult : null);
     if (navigator.share) {
       try {
-        await navigator.share({ title: 'OSO · el juego de Julia', text, url: shareUrl('native') });
+        // The link goes inside the text, after a blank line: with `url` apart, Android glues it on with a space.
+        await navigator.share({ title: 'OSO · el juego de Julia', text: withLink(text, shareUrl('native')) });
         track('share', { channel: 'native', place });
         return;
       } catch (e) {
