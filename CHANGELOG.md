@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.8.2] - 2026-10-13
 
-**Halloween afinado**
+**Halloween afinado ([5641c6f](https://github.com/chopenhauer/devin-juega-oso/commit/5641c6f0d38d600ff0f314eb509b8f5274c42e08))**
 
 - **Telarañas en vez de sangre:** el goteo rojo de arriba se veía cortado en el móvil (dos gotas
   sueltas, una detrás del 🎨). Ahora hay una telaraña en cada esquina y una 🕷️ que baja colgada de
