@@ -180,9 +180,9 @@ const { timeFor } = Engine;
     if (t.motion) document.body.dataset.motion = t.motion;
     else delete document.body.dataset.motion;
   }
-  function renderDecor(list) {
+  function renderDecor(list, count = 16) {
     q('themeDecor').replaceChildren(
-      ...Array.from({ length: list.length ? 16 : 0 }, (_, i) => {
+      ...Array.from({ length: list.length ? count : 0 }, (_, i) => {
         const s = document.createElement('span');
         s.textContent = list[i % list.length];
         s.style.left = `${(i * 61) % 100}%`;
@@ -210,7 +210,7 @@ const { timeFor } = Engine;
     document.body.dataset.theme = theme;
     document.querySelectorAll('.brand-bear').forEach((e) => (e.textContent = t.icon));
     paintSkin(t);
-    renderDecor(t.decor);
+    renderDecor(t.decor, t.decorCount);
     themeOptions().forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === theme)));
     syncAvatars();
     if (!save) return;

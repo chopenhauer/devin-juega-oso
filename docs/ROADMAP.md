@@ -252,10 +252,10 @@ recuerda en el dispositivo (`oso.theme.v1`). Código: `public/js/themes.js`.
 
 **Ya hechos (v1):**
 
-| Tema         | Avatares                            | Fondo y decoración                                                          |
-| ------------ | ----------------------------------- | --------------------------------------------------------------------------- |
-| 🎃 Halloween | 🎃 🧛 👻 🧙 🦇 💀 🕷️ 🧟 🐈‍⬛ 🦉 🍬 🩸 | Noche morada y naranja, gotas de sangre arriba, murciélagos y calabazas.    |
-| ⛄ Navidad   | ⛄ 🎅 🦌 🐧 🥕 ☕ 🎁 ❄️ 🎄 🍪 🧦 🐻‍❄️ | Noche azul con nieve cayendo, copos, regalos, café caliente y suelo nevado. |
+| Tema         | Avatares                            | Fondo y decoración                                                                                            |
+| ------------ | ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 🎃 Halloween | 🎃 🧛 👻 🧙 🦇 💀 🕷️ 🧟 🐈‍⬛ 🦉 🍬 🕯️ | Noche morada y naranja, telarañas en las esquinas con una 🕷️ que baja, fichas de calabaza y OSOs que brillan. |
+| ⛄ Navidad   | ⛄ 🎅 🦌 🐧 🥕 ☕ 🎁 ❄️ 🎄 🍪 🧦 🐻‍❄️ | Noche azul con nieve cayendo, copos, regalos, café caliente y suelo nevado.                                   |
 
 **Hechos en 2.1.0** (las fiestas de San Patricio a Acción de Gracias, las épocas y los lugares son ideas de los niños):
 

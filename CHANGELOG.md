@@ -17,6 +17,25 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.8.2] - 2026-10-13
+
+**Halloween afinado**
+
+- **Telarañas en vez de sangre:** el goteo rojo de arriba se veía cortado en el móvil (dos gotas
+  sueltas, una detrás del 🎨). Ahora hay una telaraña en cada esquina y una 🕷️ que baja colgada de
+  su hilo y vuelve a subir. Con «reducir movimiento», la araña se queda quieta.
+- **Fichas de calabaza:** las fichas puestas son naranjas con la letra oscura y las casillas vacías,
+  más oscuras. El borde de la casilla que se puede cambiar con 🔄 pasa a blanco, porque el naranja
+  no se veía sobre la ficha.
+- **OSOs que brillan:** las casillas de un OSO conservan el color de quien lo hizo y suman un brillo
+  verde «fosforito».
+- **Más adornos:** 24 en vez de 16 y algo más visibles (42 % en vez de 28 %), también en iPad y
+  escritorio.
+- **🩸 → 🕯️:** la gota de sangre deja de ser avatar y adorno; JoseLuis prefirió algo menos
+  sangriento para quienes juegan.
+- **Accesibilidad extra a reserva:** jugar con el teclado y los OSOs sin depender del color pasan
+  a «Reserva» en el ROADMAP, por decisión de JoseLuis («no me parece crítico o relevante»).
+
 ## [3.8.1] - 2026-10-13
 
 **Textos más parejos y mensajes para compartir con aire**
