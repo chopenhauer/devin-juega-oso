@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.9.0] - 2026-10-13
 
-**Textos en un fichero aparte, listos para traducir**
+**Textos en un fichero aparte, listos para traducir ([bdf85a8](https://github.com/chopenhauer/devin-juega-oso/commit/bdf85a83a2ffa02fede9cacfda966d4c3a2516bb))**
 
 - **Todos los textos del juego en [`public/locales/es.json`](public/locales/es.json)**, con una clave
   por texto (`"winnerHome": "🏠 Inicio"`). El HTML marca cada texto con `data-i18n` y el código usa
