@@ -14,6 +14,7 @@
   --azul-900-a30: rgba(10, 40, 90, 0.3);
   --azul-950: #06152c;
   --blanco: #fff;
+  --blanco-a00: rgba(255, 255, 255, 0);
   --blanco-a04: rgba(255, 255, 255, 0.04);
   --blanco-a06: rgba(255, 255, 255, 0.06);
   --blanco-a07: rgba(255, 255, 255, 0.07);
@@ -253,6 +254,10 @@ body {
   --color-tile-edge: var(--naranja-300-2);
   --color-tile-ink: var(--noche-800-4);
   --color-tile-relief: var(--naranja-300);
+  --color-tile-ring: var(--sol-400-2);
+  --color-cell-1: var(--blanco-a11);
+  --color-cell-2: var(--blanco-a04);
+  --color-score-glow: var(--blanco-a00);
   --color-p1: var(--cielo-500-2);
   --color-p1-strong: var(--cielo-500-3);
   --color-p1-glow: var(--cielo-500-a55);
@@ -349,6 +354,14 @@ body[data-theme='halloween'] {
   --color-bg-3: var(--naranja-950);
   --color-board-1: var(--lila-900-2);
   --color-board-2: var(--lila-950);
+  --color-tile: var(--naranja-500);
+  --color-tile-edge: var(--naranja-700-2);
+  --color-tile-relief: var(--naranja-700);
+  --color-tile-ink: var(--lila-950);
+  --color-tile-ring: var(--blanco);
+  --color-cell-1: var(--blanco-a06);
+  --color-cell-2: var(--noche-950-a50);
+  --color-score-glow: var(--menta-300-a60);
 }
 body[data-theme='christmas'] {
   --color-text-muted: var(--cielo-200);

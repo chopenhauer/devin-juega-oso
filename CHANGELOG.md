@@ -35,8 +35,29 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   qué idiomas faltan. Está en `docs/ANALYTICS.md` y en la página de privacidad.
 - **Se quedan fuera:** la página de privacidad, que se traducirá entera como documento, y las
   explicaciones de `config.js`, que son para nosotros y no para quien juega.
+- **Va después de la 3.8.2 (Halloween afinado),** que salió mientras se preparaba esta: la incluye
+  entera y el nombre de cada tema, también el de Halloween, sale ahora de `es.json`.
 - De paso: los campos de nombre de los jugadores 3 y 4 decían «Nombre del jugador 1» a los lectores de
   pantalla.
+
+## [3.8.2] - 2026-10-13
+
+**Halloween afinado ([5641c6f](https://github.com/chopenhauer/devin-juega-oso/commit/5641c6f0d38d600ff0f314eb509b8f5274c42e08))**
+
+- **Telarañas en vez de sangre:** el goteo rojo de arriba se veía cortado en el móvil (dos gotas
+  sueltas, una detrás del 🎨). Ahora hay una telaraña en cada esquina y una 🕷️ que baja colgada de
+  su hilo y vuelve a subir. Con «reducir movimiento», la araña se queda quieta.
+- **Fichas de calabaza:** las fichas puestas son naranjas con la letra oscura y las casillas vacías,
+  más oscuras. El borde de la casilla que se puede cambiar con 🔄 pasa a blanco, porque el naranja
+  no se veía sobre la ficha.
+- **OSOs que brillan:** las casillas de un OSO conservan el color de quien lo hizo y suman un brillo
+  verde «fosforito».
+- **Más adornos:** 24 en vez de 16 y algo más visibles (42 % en vez de 28 %), también en iPad y
+  escritorio.
+- **🩸 → 🕯️:** la gota de sangre deja de ser avatar y adorno; JoseLuis prefirió algo menos
+  sangriento para quienes juegan.
+- **Accesibilidad extra a reserva:** jugar con el teclado y los OSOs sin depender del color pasan
+  a «Reserva» en el ROADMAP, por decisión de JoseLuis («no me parece crítico o relevante»).
 
 ## [3.8.1] - 2026-10-13
 

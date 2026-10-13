@@ -38,7 +38,7 @@ test('the 🎨 button switches theme avatars, icon and background, and remembers
   await expect(page.locator('#themeMenu')).toBeHidden();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'halloween');
   await expect(page.locator('#brandIcon')).toHaveText('🎃');
-  await expect(page.locator('#themeDecor span')).toHaveCount(16);
+  await expect(page.locator('#themeDecor span')).toHaveCount(24);
 
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'halloween');

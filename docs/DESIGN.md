@@ -33,7 +33,12 @@ que crece con la pantalla. `tests/unit/design-system.test.js` falla si aparece u
   `body[data-theme='…']`; el resto, en `public/js/themes.js`:
   - `bg` y `board` son atajos para `--color-bg-glow-1/2`, `--color-bg-1/2/3` y `--color-board-1/2`;
   - `tokens: { '--color-accent': '#…' }` cambia cualquier otro token;
-  - `confetti` es opcional; si no lo trae, se usa `--confetti`.
+  - `confetti` es opcional; si no lo trae, se usa `--confetti`;
+  - `decor` son los adornos que flotan y `decorCount` cuántos salen (16 si no lo dice).
+- Halloween también cambia las fichas (`--color-tile*`), las casillas vacías (`--color-cell-1/2`), el
+  borde de la casilla que se puede cambiar con 🔄 (`--color-tile-ring`) y el brillo de las casillas de
+  un OSO (`--color-score-glow`, transparente en el resto de temas). Sus telarañas y la 🕷️ que baja
+  son `.theme-decor::before` y `::after` en `styles.css`; con «reducir movimiento», la araña se queda quieta.
 - `app.js` aplica esos tokens en `body` (`themeTokens()` en `themes.js`).
 
 ### Reglas (las comprueba `tests/unit/design-system.test.js`)
