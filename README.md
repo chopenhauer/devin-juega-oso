@@ -14,6 +14,7 @@ al STEM y decida el roadmap.
 - Sistema de diseño y accesibilidad: [`docs/DESIGN.md`](docs/DESIGN.md).
 - Juego en línea (decisión, arquitectura y umbrales de revisión): [`docs/ONLINE.md`](docs/ONLINE.md).
 - Analítica (qué se mide, para qué y qué no se mide nunca): [`docs/ANALYTICS.md`](docs/ANALYTICS.md).
+- Data layer (cómo viajan los datos, tipos y valores de cada parámetro): [`docs/DATALAYER.md`](docs/DATALAYER.md).
 - Parámetros del juego (tiempos, extras, salas, secretos…): [`docs/CONFIG.md`](docs/CONFIG.md), generado desde
   [`public/js/config.js`](public/js/config.js).
 

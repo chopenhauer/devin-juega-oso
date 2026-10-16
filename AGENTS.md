@@ -37,15 +37,16 @@ reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo
 
 ## Documentos
 
-| Documento                                | Para qué                                                      |
-| ---------------------------------------- | ------------------------------------------------------------- |
-| [`README.md`](README.md)                 | Estructura completa, `localStorage`, desarrollo, seguridad    |
-| [`CHANGELOG.md`](CHANGELOG.md)           | Cada versión (SemVer) con sus mejoras **y sus decisiones**    |
-| [`docs/ROADMAP.md`](docs/ROADMAP.md)     | Hecho, pendiente y priorización con datos                     |
-| [`docs/DESIGN.md`](docs/DESIGN.md)       | Sistema de diseño, accesibilidad y comportamiento visible     |
-| [`docs/ONLINE.md`](docs/ONLINE.md)       | Juego en línea: decisión, arquitectura, contadores y umbrales |
-| [`docs/ANALYTICS.md`](docs/ANALYTICS.md) | Qué se mide, para qué y qué no se mide nunca                  |
-| [`docs/CONFIG.md`](docs/CONFIG.md)       | Parámetros del juego (generado desde `config.js`, no editar)  |
+| Documento                                | Para qué                                                       |
+| ---------------------------------------- | -------------------------------------------------------------- |
+| [`README.md`](README.md)                 | Estructura completa, `localStorage`, desarrollo, seguridad     |
+| [`CHANGELOG.md`](CHANGELOG.md)           | Cada versión (SemVer) con sus mejoras **y sus decisiones**     |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md)     | Hecho, pendiente y priorización con datos                      |
+| [`docs/DESIGN.md`](docs/DESIGN.md)       | Sistema de diseño, accesibilidad y comportamiento visible      |
+| [`docs/ONLINE.md`](docs/ONLINE.md)       | Juego en línea: decisión, arquitectura, contadores y umbrales  |
+| [`docs/ANALYTICS.md`](docs/ANALYTICS.md) | Qué se mide, para qué y qué no se mide nunca                   |
+| [`docs/DATALAYER.md`](docs/DATALAYER.md) | Cómo viajan los datos: consentimiento, `dataLayer`, parámetros |
+| [`docs/CONFIG.md`](docs/CONFIG.md)       | Parámetros del juego (generado desde `config.js`, no editar)   |
 
 ## Comandos
 

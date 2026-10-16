@@ -26,6 +26,9 @@ responde. Si un dato no responde a ninguna pregunta, no se mide.
 | Microsoft Clarity       | Mapas de calor y grabaciones anónimas           | Panel de Clarity                                       |
 | Contadores del servidor | Embudo y uso de las salas en línea, sin cookies | `npm run online:report` (ver [`ONLINE.md`](ONLINE.md)) |
 
+Cómo viajan los datos (consentimiento, `dataLayer`, tipos y valores de cada parámetro, registro en
+GA4) está en [`DATALAYER.md`](DATALAYER.md).
+
 Los eventos se envían con `track()` de `public/js/telemetry.js`, que añade siempre:
 
 - `app_version`, para poder comparar versiones;
@@ -109,7 +112,8 @@ la cifra de referencia para el juego en línea; GA4 da el detalle de quien acept
 ## Añadir una medición
 
 1. Escribir aquí la pregunta que responde y la decisión que permite tomar.
-2. Enviarla con `track()` (sin datos personales) y probarla: test unitario de los parámetros y e2e
+2. Enviarla con `track()` (sin datos personales), apuntarla en el catálogo de
+   [`DATALAYER.md`](DATALAYER.md) y probarla: test unitario de los parámetros y e2e
    que mire `window.dataLayer` (ver `tests/e2e/listen.spec.js`).
 3. Registrar los parámetros nuevos como dimensiones o métricas en GA4. La configuración está como
    código en el repo privado (`ga4/config.json` y `sync.py`); sin registrar, GA4 no deja consultarlos.
