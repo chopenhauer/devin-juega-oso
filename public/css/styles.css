@@ -3888,6 +3888,7 @@ body:has(#winnerOverlay:not(.hidden)) .secret-toast {
   margin-top: var(--avatar-gap);
   padding-block: var(--space-1);
   line-height: 1.2;
+  white-space: normal;
 }
 .online-invite .online-wait-machine.hidden {
   display: none;

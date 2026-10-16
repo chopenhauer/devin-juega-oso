@@ -356,6 +356,12 @@ test('alone in the room for a minute, the host plays the machine and goes with t
   const code = await createRoom(host);
   await expect(host.locator('#waitMachine')).toBeHidden();
   await host.clock.fastForward(61_000);
+  // The offer wraps inside the rival's card, which stays on screen.
+  const [button, card] = await Promise.all(
+    ['#waitMachine', '.second-player'].map((s) => host.locator(s).boundingBox()),
+  );
+  expect(button.x + button.width).toBeLessThanOrEqual(card.x + card.width);
+  expect(card.x + card.width).toBeLessThanOrEqual(host.viewportSize().width);
   await host.click('#waitMachine');
   await expect(host.locator('#gameScreen')).toBeVisible();
   await expect(host.locator('#machineBadge')).toBeVisible();
