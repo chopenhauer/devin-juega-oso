@@ -8,7 +8,7 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Rediseño visual (fondo nocturno, fichas 3D, animaciones, victoria con confeti).
 - Textos en `public/locales/es.json` (clave → texto), listos para traducir; el idioma del navegador
   va en la analítica para saber qué idiomas faltan (3.9.0). Pendiente: traducir.
-- Bugs B01–B06 corregidos (B06, la máquina que no defiende, con el nivel «Extremo» de la 3.10.0).
+- Bugs B01–B06 corregidos (B06, la máquina que no defiende, con el nivel «Extremo» de la 3.11.0).
 - T4.1: nombres como texto de ejemplo («Jugador 1/2») en vez de valor precargado.
 - Arquitectura: sitio estático en `public/`, motor de reglas testeable, CSP y cabeceras de
   seguridad, tests unitarios y e2e, CI y Dependabot.
@@ -113,12 +113,13 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 10  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide   |
 | 11  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva      |
 | 12  | Oso bailando al ganar (T4.5)                                                       | Medio      | Medio-alto | Reserva      |
-| 13  | ~~Máquina «Experto» (B06)~~ hecho en 3.10.0 con el nivel Extremo                   | Medio      | Medio      | Hecho        |
+| 13  | ~~Máquina «Experto» (B06)~~ hecho en 3.11.0 con el nivel Extremo                   | Medio      | Medio      | Hecho        |
 | 14  | Hall of fame global                                                                | Medio      | Alto       | Reserva      |
 | 15  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
 | 16  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
 | 17  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
 | 18  | Edición papel: modo aparte, «edición superespecial»                                | Alto       | Alto       | Futuro       |
+| 19  | Revisar los valores de la máquina (Fácil 50 %, Difícil 80 %, Extremo) con GA4      | Medio      | Bajo       | Con datos    |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
@@ -526,10 +527,12 @@ dibujada a mano, sin fichas, y la S o la O se escriben con el dedo.
 
 - **Reloj con la pestaña dormida:** si se duerme la pestaña o el dispositivo, ese tiempo no se
   descuenta y funciona como una pausa gratis. Decidir si se mantiene así.
-- **B06 · la máquina en Difícil no defiende:** resuelto en la 3.10.0 con tres niveles (decisión de
+- **B06 · la máquina en Difícil no defiende:** resuelto en la 3.11.0 con tres niveles (decisión de
   JoseLuis tras el feedback «en fácil la máquina toma riesgos y es más divertido; en difícil hay empate
   y aburre»): Fácil aprovecha el 50 % de los OSO a mano, Difícil el 80 % y Extremo todos, sin dejar
-  ninguno a tiro y con trampas al final. Revisar con GA4 (`difficulty` × `result`) cuando haya datos.
+  ninguno a tiro y con trampas al final. JoseLuis aprobó el Extremo tal cual (en las simulaciones gana casi siempre a Difícil), con la
+  condición de revisar a futuro los valores (`machine.easyAim`, `hardAim`, `pool`,
+  `extremeLookahead`) con GA4 (`difficulty` × `result`) cuando haya partidas suficientes.
 - **Consentimiento de analítica:** hecho con un aviso Aceptar / Rechazar para GA y Clarity
   (`oso.consent.v1`). Revisar si hace falta una política de privacidad si el juego se abre al
   público general.
