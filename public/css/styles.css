@@ -3882,3 +3882,13 @@ body:has(#winnerOverlay:not(.hidden)) .secret-toast {
 .rival-banner .hidden {
   display: none;
 }
+.online-invite .online-wait-machine {
+  height: auto;
+  min-height: var(--avatar-row);
+  margin-top: var(--avatar-gap);
+  padding-block: var(--space-1);
+  line-height: 1.2;
+}
+.online-invite .online-wait-machine.hidden {
+  display: none;
+}
