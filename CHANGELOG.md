@@ -21,8 +21,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 **Contra la máquina mientras llega tu rival**
 
-- **Si nadie entra en tu sala en 1 minuto**, sale «🤖 Juega contra la máquina mientras llega». Decidimos
-  ofrecerlo porque en octubre 2 de las 7 salas caducaron sin rival. El minuto se ajusta en
+- **Si nadie entra en tu sala en 1 minuto**, sale «🤖 vs. máquina mientras» (texto corto que
+  eligió JoseLuis, para que el botón no ocupe tres líneas en el móvil). Decidimos ofrecerlo porque en octubre 2 de las 7 salas caducaron sin rival. El minuto se ajusta en
   `config.js` (`online.machineOfferSeconds`).
 - **La sala sigue abierta** mientras juegas: con el tablero y la dificultad que tenías, y puedes jugar
   varias seguidas.
