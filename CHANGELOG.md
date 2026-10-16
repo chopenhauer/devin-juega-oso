@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.11.0] - 2026-10-16
 
-**Tres niveles contra la máquina: Fácil, Difícil y Extremo**
+**Tres niveles contra la máquina: Fácil, Difícil y Extremo ([8b2a344](https://github.com/chopenhauer/devin-juega-oso/commit/8b2a344e8ce061dd31f0d355a435c633cb93fdb7))**
 
 - **Por qué:** quienes juegan decían que en Fácil es más divertido «porque la máquina toma riesgos»
   y que en Difícil «nadie comete errores y se vuelve aburrido». Difícil siempre hacía el OSO que tenía
