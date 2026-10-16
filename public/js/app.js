@@ -534,15 +534,17 @@ const { timeFor } = Engine;
   }
   roomForFour.addEventListener('change', syncFourAvailability);
   syncFourAvailability();
-  // The robot looks grumpier or furious depending on the difficulty.
+  // The robot looks grumpier, furious or on fire depending on the difficulty.
   function setDifficulty(level) {
     difficulty = level;
     press(q('difficultyEasy'), level === 'easy');
     press(q('difficultyHard'), level === 'hard');
+    press(q('difficultyExtreme'), level === 'extreme');
     previews[1].dataset.mood = level;
   }
   q('difficultyEasy').addEventListener('click', () => setDifficulty('easy'));
   q('difficultyHard').addEventListener('click', () => setDifficulty('hard'));
+  q('difficultyExtreme').addEventListener('click', () => setDifficulty('extreme'));
   setDifficulty(difficulty);
   function openHelp() {
     closeMenu(false);

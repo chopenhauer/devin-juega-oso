@@ -36,8 +36,10 @@ export const GAME = freeze({
   },
   machine: {
     delayMs: 650,
-    easyScoreChance: 0.7,
-    easyPool: 6,
+    easyAim: 0.5,
+    hardAim: 0.8,
+    pool: 6,
+    extremeLookahead: 16,
   },
   online: {
     closeAfterMinutes: 30,
@@ -123,10 +125,13 @@ export const HELP = {
   'shop.sosSeconds':
     'Segundos que cuesta otro 🛟 SOS. Al usarlo, la partida cambia de OSO a SOS (o vuelve) para todo el mundo.',
   'machine.delayMs': 'Lo que «piensa» la máquina antes de mover. Menos = más ágil pero menos natural.',
-  'machine.easyScoreChance':
+  'machine.easyAim':
     'En fácil, probabilidad (0 a 1) de que aproveche un OSO que tiene a mano. Más = máquina fácil más difícil.',
-  'machine.easyPool':
-    'En fácil, entre cuántas buenas jugadas elige al azar cuando no puntúa. Más = más despistada.',
+  'machine.hardAim': 'Lo mismo en difícil. En extremo siempre lo aprovecha.',
+  'machine.pool':
+    'En fácil y difícil, entre cuántas jugadas cerca del centro elige al azar cuando no puntúa. Más = más despistada.',
+  'machine.extremeLookahead':
+    'En extremo, con estas casillas seguras o menos empieza a buscar trampas (que a su rival no le quede ninguna jugada sin regalar puntos). Más = más lista pero piensa más.',
   'online.closeAfterMinutes':
     'Si la partida no empieza en estos minutos desde que se abre la sala, se cierra.',
   'online.countdownSeconds': 'Cuenta atrás «3, 2, 1…» en las dos pantallas antes de la primera jugada.',

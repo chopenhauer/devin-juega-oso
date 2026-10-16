@@ -343,7 +343,7 @@ body:has(#gameScreen:not(.hidden)) .consent {
 }
 .difficulty-choice {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
 }
 .difficulty-btn {
@@ -2243,8 +2243,25 @@ body:has(#helpModal:not(.hidden))
   max-width: none;
   margin-top: var(--space-2-5);
 }
+/* Against the machine, player 1's avatars sit in 3 rows, level with the 3 difficulty buttons.
+   Emojis, labels and corners grow with the card (cqw), so they keep their proportion. */
+.setup.solo-setup .avatars {
+  container-type: inline-size;
+  grid-template-columns: repeat(4, 1fr);
+}
 .setup.solo-setup .difficulty-wrap {
   display: block;
+  --avatar-cols: 4;
+}
+.setup.solo-setup .avatar-btn {
+  font-size: clamp(var(--fs-sm), 13cqw, var(--fs-display-sm));
+}
+.setup.solo-setup .difficulty-btn {
+  font-size: clamp(var(--fs-sm), 6.5cqw, var(--fs-2xl));
+}
+.setup.solo-setup .avatar-btn,
+.setup.solo-setup .difficulty-btn {
+  border-radius: clamp(var(--r-3xs), 4cqw, var(--r-md));
 }
 .pconfig .difficulty-choice {
   grid-template-columns: 1fr;
@@ -2272,6 +2289,10 @@ body:has(#helpModal:not(.hidden))
 .robot[data-mood='hard'] {
   background-image: url('../img/robot-hard.svg');
 }
+.robot-icon[data-mood='extreme'],
+.robot[data-mood='extreme'] {
+  background-image: url('../img/robot-extreme.svg');
+}
 .robot[data-mood] {
   background-color: var(--blanco);
   color: transparent;
@@ -2282,6 +2303,13 @@ body:has(#helpModal:not(.hidden))
     0 0 0 0.25rem var(--rojo-500),
     0 0 1.625rem var(--rojo-500-a80);
   animation: robotRage 1.8s ease-in-out infinite;
+}
+.setup .preview.robot[data-mood='extreme'],
+.avatar.robot[data-mood='extreme'] {
+  box-shadow:
+    0 0 0 0.25rem var(--noche-300-2),
+    0 0 1.625rem var(--noche-300-a50);
+  animation: robotRage 1.1s ease-in-out infinite;
 }
 @keyframes robotRage {
   0%,

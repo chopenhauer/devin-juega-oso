@@ -44,7 +44,7 @@ el idioma va también en cada evento de partida.
 ## Eventos de GA4
 
 **Parámetros de partida** (`gameParams`), en todos los eventos de partida: `board_size` (`5x5`),
-`players` (2 o 4), `mode` (`solo`, `two`, `four`, `online`), `vs_machine`, `difficulty` (o `none`),
+`players` (2 o 4), `mode` (`solo`, `two`, `four`, `online`), `vs_machine`, `difficulty` (`easy`, `hard`, `extreme` o `none`),
 `theme` y `theme_source`.
 
 ### Partidas

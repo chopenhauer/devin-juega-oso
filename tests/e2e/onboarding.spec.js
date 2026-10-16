@@ -219,8 +219,12 @@ test('against the machine, the difficulty replaces the avatars and sets the robo
   await expect(robot).toHaveAttribute('data-mood', 'easy');
   await expect(page.locator('.avatars[data-player="1"]')).toBeHidden();
   await expect(page.locator('#difficultyEasy')).toBeVisible();
+  await page.click('#difficultyExtreme');
+  await expect(robot).toHaveAttribute('data-mood', 'extreme');
+  await expect(page.locator('#difficultyExtreme')).toHaveAttribute('aria-pressed', 'true');
   await page.click('#difficultyHard');
   await expect(robot).toHaveAttribute('data-mood', 'hard');
+  await expect(page.locator('#difficultyExtreme')).toHaveAttribute('aria-pressed', 'false');
   await page.click('#stepNext');
   await page.click('#startGame');
   await expect(page.locator('#avatar2')).toHaveAttribute('data-mood', 'hard');

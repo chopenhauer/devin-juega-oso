@@ -17,6 +17,31 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.11.0] - 2026-10-16
+
+**Tres niveles contra la máquina: Fácil, Difícil y Extremo**
+
+- **Por qué:** quienes juegan decían que en Fácil es más divertido «porque la máquina toma riesgos»
+  y que en Difícil «nadie comete errores y se vuelve aburrido». Difícil siempre hacía el OSO que tenía
+  a mano y, si no, ponía una O en el centro: jugaba siempre igual, solo con O, y no defendía (B06).
+  Dos máquinas en Difícil empataban 0-0 siempre.
+- **Fácil:** aprovecha la mitad de los OSO que tiene a mano (antes, 7 de cada 10). Cuando no puntúa,
+  elige al azar entre las jugadas más centradas, con O y con S, así que a veces te deja huecos.
+- **Difícil:** igual, pero aprovecha 8 de cada 10. Ya no llena el tablero de O ni juega siempre lo
+  mismo.
+- **Extremo (nuevo):** los aprovecha todos y nunca te deja un OSO a tiro si puede evitarlo. Al final
+  de la partida busca trampas: jugadas que te dejan sin ninguna casilla segura, para que tengas que
+  regalarle puntos. Si no le queda otra que regalar, regala lo menos posible. Robot nuevo, morado y
+  con llamas.
+- **Avatares en 3 filas:** contra la máquina, los avatares del jugador 1 van en 3 filas de 4 también
+  en iPad y escritorio, a la altura de los 3 botones de nivel. Los emojis, los textos y
+  las esquinas crecen con la tarjeta: más pequeños en el móvil, más grandes en iPad y escritorio.
+- **Comprobado con miles de partidas simuladas** entre niveles: Difícil gana a Fácil el 86 % de las
+  veces en 5×5 y Extremo gana a los otros dos casi siempre. Ninguna jugada tarda más de 20 ms.
+- **Parámetros** en [`config.js`](public/js/config.js): `machine.easyAim` (0,5), `machine.hardAim`
+  (0,8), `machine.pool` y `machine.extremeLookahead`. El parámetro `difficulty` de GA4 suma el valor
+  `extreme`.
+
 ## [3.10.0] - 2026-10-16
 
 **Contra la máquina mientras llega tu rival ([65b1bda](https://github.com/chopenhauer/devin-juega-oso/commit/65b1bda163a7ad2e73beab930e4ea1a0fd96b414))**

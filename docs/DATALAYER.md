@@ -112,7 +112,7 @@ Los añade `track()` a **todos** los eventos:
 | `players`      | número   | `2` o `4`                                                                                             |
 | `mode`         | texto    | `solo` (contra la máquina), `two` (mismo dispositivo), `four`, `online`                               |
 | `vs_machine`   | booleano | `true` solo en `solo`                                                                                 |
-| `difficulty`   | texto    | `easy`, `hard`; `none` si no se juega contra la máquina                                               |
+| `difficulty`   | texto    | `easy`, `hard`, `extreme`; `none` si no se juega contra la máquina                                    |
 | `theme`        | texto    | id del tema de `public/js/themes.js` (`classic`, `halloween`…)                                        |
 | `theme_source` | texto    | `default`, `chosen` (elegido o guardado), `festival` (por fecha), `host` (en línea, el del anfitrión) |
 

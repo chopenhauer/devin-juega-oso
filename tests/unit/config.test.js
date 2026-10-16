@@ -32,11 +32,12 @@ test('boards: sizes in order, positive times that grow, default and 4-player min
 
 test('extras are whole numbers of uses; chances are between 0 and 1', () => {
   for (const [k, v] of Object.entries(GAME.extras)) assert.ok(Number.isInteger(v) && v >= 0, k);
-  for (const path of ['machine.easyScoreChance', 'telemetry.timeoutTarget', 'sound.volume']) {
+  for (const path of ['machine.easyAim', 'machine.hardAim', 'telemetry.timeoutTarget', 'sound.volume']) {
     const v = configValue(path);
     assert.ok(v >= 0 && v <= 1, path);
   }
-  assert.ok(Number.isInteger(GAME.machine.easyPool) && GAME.machine.easyPool >= 1);
+  assert.ok(Number.isInteger(GAME.machine.pool) && GAME.machine.pool >= 1);
+  assert.ok(GAME.machine.easyAim < GAME.machine.hardAim);
 });
 
 test('times, counts and limits are positive and consistent', () => {

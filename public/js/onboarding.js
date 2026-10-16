@@ -25,6 +25,12 @@ const setSetupMode = (mode) => {
   setup.classList.toggle('four-setup', mode === 'four');
   setup.classList.toggle('online-setup', mode === 'online');
 };
+const DIFFICULTIES = ['easy', 'hard', 'extreme'];
+const difficultyId = (level) => `difficulty${level[0].toUpperCase()}${level.slice(1)}`;
+const difficultyNow = () =>
+  DIFFICULTIES.find((level) => $(difficultyId(level)).classList.contains('selected')) ?? 'easy';
+const levelText = (level) =>
+  ({ easy: t('summary.easy'), hard: t('summary.hard'), extreme: t('summary.extreme') })[level];
 const viewButtons = [$('viewFacing'), $('viewSame')];
 const VIEWS = viewButtons.map((b) => b.dataset.view);
 // Facing (player 2's panel upside down) suits a phone or tablet flat on the table.
@@ -65,7 +71,7 @@ function applyPrefs(prefs) {
   if (prefs.mode === 'solo') $('modeSolo').click();
   else if (prefs.mode === 'four' && !fourLocked()) $('modeFour').click();
   else if (prefs.mode === 'online') $('whereOnline').click();
-  if (prefs.difficulty === 'hard') $('difficultyHard').click();
+  if (DIFFICULTIES.includes(prefs.difficulty)) $(difficultyId(prefs.difficulty)).click();
   if (VIEWS.includes(prefs.view)) setView(prefs.view);
   const size = $('sizeSelect');
   if ([...size.options].some((o) => o.value === String(prefs.size) && !o.disabled))
@@ -80,7 +86,7 @@ function currentPrefs() {
   return {
     seenIntro: true,
     mode: modeNow(),
-    difficulty: $('difficultyHard').classList.contains('selected') ? 'hard' : 'easy',
+    difficulty: difficultyNow(),
     avatars: Array.from({ length: count }, (_, i) => selectedAvatar(i)),
     names: nameInputs.slice(0, count).map((i) => i.value.trim()),
     size: Number($('sizeSelect').value),
@@ -90,14 +96,13 @@ function currentPrefs() {
 
 function summary() {
   const name = (i) => nameInputs[i].value.trim() || nameInputs[i].placeholder;
-  const hard = $('difficultyHard').classList.contains('selected');
   const players = isFour()
     ? t('summary.four', { first: [0, 1, 2].map(name).join(', '), last: name(3) })
     : t('summary.two', { a: name(0), b: name(1) });
   const versus = isOnline()
     ? t('summary.online')
     : isSolo()
-      ? t('summary.solo', { name: name(0), level: t(hard ? 'summary.hard' : 'summary.easy') })
+      ? t('summary.solo', { name: name(0), level: levelText(difficultyNow()) })
       : t('summary.view', { players, view: t(currentView() === 'same' ? 'summary.same' : 'summary.facing') });
   return t('summary.board', { versus, board: $('sizeSelect').selectedOptions[0].textContent });
 }

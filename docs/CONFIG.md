@@ -60,8 +60,10 @@ Cómo cambiar uno:
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
 | `machine.delayMs` | 650 | Lo que «piensa» la máquina antes de mover. Menos = más ágil pero menos natural. |
-| `machine.easyScoreChance` | 0.7 | En fácil, probabilidad (0 a 1) de que aproveche un OSO que tiene a mano. Más = máquina fácil más difícil. |
-| `machine.easyPool` | 6 | En fácil, entre cuántas buenas jugadas elige al azar cuando no puntúa. Más = más despistada. |
+| `machine.easyAim` | 0.5 | En fácil, probabilidad (0 a 1) de que aproveche un OSO que tiene a mano. Más = máquina fácil más difícil. |
+| `machine.hardAim` | 0.8 | Lo mismo en difícil. En extremo siempre lo aprovecha. |
+| `machine.pool` | 6 | En fácil y difícil, entre cuántas jugadas cerca del centro elige al azar cuando no puntúa. Más = más despistada. |
+| `machine.extremeLookahead` | 16 | En extremo, con estas casillas seguras o menos empieza a buscar trampas (que a su rival no le quede ninguna jugada sin regalar puntos). Más = más lista pero piensa más. |
 
 ## En línea
 

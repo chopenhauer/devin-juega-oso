@@ -6,8 +6,10 @@ import {
   bestHint,
   chooseMachineMove,
   replayHistory,
+  replayMove,
   timeFor,
 } from '../../public/js/engine.js';
+import { GAME } from '../../public/js/config.js';
 
 const parse = (rows) =>
   rows
@@ -75,27 +77,91 @@ test('bestHint suggests a scoring move, otherwise the central cell with the fall
   assert.equal(bestHint(Array(16).fill('O'), 4, new Map(), 'OSO', 'O'), null);
 });
 
-test('hard machine takes the scoring move, else the centre; it never mutates the board', () => {
+const dice = (value) => () => value;
+// Whether, after `move`, the rival has an OSO within reach.
+const gives = (board, size, move) => {
+  const next = [...board];
+  next[move.index] = move.letter;
+  return next.some(
+    (cell, i) =>
+      !cell &&
+      ['O', 'S'].some((letter) => {
+        const trial = [...next];
+        trial[i] = letter;
+        return findNew(trial, size, new Map(), i, 'OSO').length > 0;
+      }),
+  );
+};
+const bestHintScores = (state) => {
+  const hint = bestHint(state.board, state.size, state.scored, 'OSO', 'O');
+  if (!hint) return false;
+  const trial = [...state.board];
+  trial[hint.index] = hint.letter;
+  return findNew(trial, state.size, state.scored, hint.index, 'OSO').length > 0;
+};
+const seeded = (seed) => () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+
+test('easy and hard take an OSO within reach as often as GAME.machine.easyAim / hardAim say', () => {
   const board = parse(['OS..', '....', '....', '....']);
   const copy = [...board];
-  assert.deepEqual(chooseMachineMove(board, 4, new Map(), 'OSO', 'hard'), { index: 2, letter: 'O' });
+  for (const [level, aim] of [
+    ['easy', GAME.machine.easyAim],
+    ['hard', GAME.machine.hardAim],
+  ]) {
+    assert.deepEqual(chooseMachineMove(board, 4, new Map(), 'OSO', level, dice(aim - 0.01)), {
+      index: 2,
+      letter: 'O',
+    });
+    const miss = chooseMachineMove(board, 4, new Map(), 'OSO', level, dice(aim));
+    assert.equal(board[miss.index], '');
+    assert.equal(
+      findNew(Object.assign([...board], { [miss.index]: miss.letter }), 4, new Map(), miss.index, 'OSO')
+        .length,
+      0,
+    );
+  }
   assert.deepEqual(board, copy);
-  assert.deepEqual(chooseMachineMove(Array(25).fill(''), 5, new Map(), 'OSO', 'hard'), {
-    index: 12,
-    letter: 'O',
-  });
+  assert.equal(chooseMachineMove(Array(16).fill('S'), 4, new Map(), 'OSO', 'easy'), null);
 });
 
-test('easy machine scores when the dice allow it and always returns a legal move', () => {
+test('extreme always scores, then never leaves an OSO within reach when it can avoid it', () => {
   const board = parse(['OS..', '....', '....', '....']);
-  assert.deepEqual(
-    chooseMachineMove(board, 4, new Map(), 'OSO', 'easy', () => 0),
-    { index: 2, letter: 'O' },
-  );
-  const move = chooseMachineMove(board, 4, new Map(), 'OSO', 'easy', () => 0.99);
-  assert.equal(board[move.index], '');
-  assert.ok(['O', 'S'].includes(move.letter));
-  assert.equal(chooseMachineMove(Array(16).fill('S'), 4, new Map(), 'OSO', 'easy'), null);
+  assert.deepEqual(chooseMachineMove(board, 4, new Map(), 'OSO', 'extreme', dice(0.99)), {
+    index: 2,
+    letter: 'O',
+  });
+  for (const rows of [
+    ['O...', '....', '....', '....'],
+    ['.....', '..S..', '.....', '..O..', '.....'],
+  ]) {
+    const b = parse(rows);
+    for (const r of [0, 0.5, 0.99])
+      assert.equal(
+        gives(b, rows.length, chooseMachineMove(b, rows.length, new Map(), 'OSO', 'extreme', dice(r))),
+        false,
+      );
+  }
+});
+
+test('extreme never leaves an OSO within reach while it has a safe move (games vs easy)', () => {
+  const random = seeded(7);
+  for (let game = 0; game < 20; game++) {
+    let state = { size: 5, board: Array(25).fill(''), scored: new Map(), scores: [0, 0] };
+    let player = game % 2;
+    while (state.board.some((cell) => !cell)) {
+      const level = player ? 'extreme' : 'easy';
+      const move = chooseMachineMove(state.board, 5, state.scored, 'OSO', level, random);
+      const scores = state.scores[player];
+      if (level === 'extreme' && !bestHintScores(state)) {
+        const safeExists = state.board.some(
+          (cell, i) => !cell && ['O', 'S'].some((letter) => !gives(state.board, 5, { index: i, letter })),
+        );
+        if (safeExists) assert.equal(gives(state.board, 5, move), false);
+      }
+      state = replayMove(state, { player, ...move }, 'OSO');
+      if (state.scores[player] === scores) player = 1 - player;
+    }
+  }
 });
 
 test('rebuildScores and replayHistory support four players', () => {
