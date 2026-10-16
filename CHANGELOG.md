@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.10.0] - 2026-10-16
 
-**Contra la máquina mientras llega tu rival**
+**Contra la máquina mientras llega tu rival ([65b1bda](https://github.com/chopenhauer/devin-juega-oso/commit/65b1bda163a7ad2e73beab930e4ea1a0fd96b414))**
 
 - **Si nadie entra en tu sala en 1 minuto**, sale «🤖 vs. máquina mientras» (texto corto que
   eligió JoseLuis, para que el botón no ocupe tres líneas en el móvil). Decidimos ofrecerlo porque en octubre 2 de las 7 salas caducaron sin rival. El minuto se ajusta en
