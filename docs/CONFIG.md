@@ -70,6 +70,7 @@ Cómo cambiar uno:
 | `online.closeAfterMinutes` | 30 | Si la partida no empieza en estos minutos desde que se abre la sala, se cierra. |
 | `online.countdownSeconds` | 3 | Cuenta atrás «3, 2, 1…» en las dos pantallas antes de la primera jugada. |
 | `online.nudgeSeconds` | 20 | Sin mover este tiempo, sale «¿Sigues ahí?» y se anima a quien espera. |
+| `online.machineOfferSeconds` | 60 | Si nadie entra en la sala en este tiempo, se ofrece jugar contra la máquina mientras llega tu rival. |
 | `online.pollMs` | 1000 | Cada cuánto pregunta el juego al servidor. Menos = más rápido pero más peticiones. |
 | `online.roomsPerConnection` | 20 | Salas que puede abrir una misma conexión en la ventana de abajo (anti-abuso). |
 | `online.roomsWindowMinutes` | 10 | Ventana del límite anterior. |

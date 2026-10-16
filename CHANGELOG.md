@@ -17,6 +17,24 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.10.0] - 2026-10-16
+
+**Contra la máquina mientras llega tu rival**
+
+- **Si nadie entra en tu sala en 1 minuto**, sale «🤖 Juega contra la máquina mientras llega». Decidimos
+  ofrecerlo porque en octubre 2 de las 7 salas caducaron sin rival. El minuto se ajusta en
+  `config.js` (`online.machineOfferSeconds`).
+- **La sala sigue abierta** mientras juegas: con el tablero y la dificultad que tenías, y puedes jugar
+  varias seguidas.
+- **Cuando llega tu rival** suena el aviso y sale «✅ Ha llegado {nombre}» con el botón «Ir con
+  {nombre}». Decidimos avisar y dejar que elijas, en vez de cortar la partida o cerrar la sala: al
+  pulsarlo se deja la partida contra la máquina y se pasa a elegir el tablero con tu rival, que
+  mientras tanto ve «{nombre} está eligiendo el tablero».
+- **Salir de la partida** (🏠 Inicio, Otro tablero, Cambiar jugadores o Nueva partida) cierra la sala.
+  Si la sala caduca sola (30 min), la partida sigue y se avisa.
+- **Analítica:** evento `online_machine` con `action` (`offered`, `accepted`, `rival_arrived`,
+  `switched`), para saber si sirve.
+
 ## [3.9.0] - 2026-10-13
 
 **Textos en un fichero aparte, listos para traducir ([bdf85a8](https://github.com/chopenhauer/devin-juega-oso/commit/bdf85a83a2ffa02fede9cacfda966d4c3a2516bb))**

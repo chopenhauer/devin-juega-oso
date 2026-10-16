@@ -1883,6 +1883,12 @@ const { timeFor } = Engine;
       q('onlineCode').textContent = online.code;
       q('onlineWhatsapp').href = whatsappHref(t('share.room'), Online.inviteUrl(online.code, 'whatsapp'));
     }
+    const offer = on && host && !!online?.offerReady && !ready;
+    q('waitMachine').classList.toggle('hidden', !offer);
+    if (offer && !online.offerTracked) {
+      online.offerTracked = true;
+      track('online_machine', { action: 'offered' });
+    }
     const rival = seats[1 - me]?.name;
     document.title = on && host && online && ready ? t('online.arrived_title', { name: rival }) : baseTitle;
     const seatNews = !on
@@ -1924,6 +1930,80 @@ const { timeFor } = Engine;
     play('join');
     if (setupStep === 'players' && !setup.classList.contains('hidden')) q('stepNext').click();
   }
+
+  // Host alone in the room: plays the machine while the room stays open, and is told when the
+  // rival comes in, with a button to leave that game and go and play them.
+  let parked = null;
+  let parkTimeout;
+  q('waitMachine').addEventListener('click', () => {
+    track('online_machine', { action: 'accepted' });
+    parked = online;
+    online = null;
+    clearTimeout(pollTimeout);
+    setGameMode('solo');
+    startLocalGame();
+    game.classList.remove('same-view');
+    parkPoll();
+  });
+  function parkPoll() {
+    clearTimeout(parkTimeout);
+    if (parked) parkTimeout = setTimeout(pollParked, Online.POLL_MS * 2);
+  }
+  async function pollParked() {
+    const o = parked;
+    if (!o) return;
+    const v = await Online.fetchRoom(o.code, o.rev, o.quality);
+    if (o !== parked) return;
+    if (v.http === 404 || (v.ok && v.status === 'closed')) return dropParked(true);
+    if (v.ok && !v.same) {
+      o.rev = v.rev;
+      o.seats = v.seats;
+      o.status = v.status;
+      if (v.seats.length === 2 && !o.rivalShown) {
+        o.rivalShown = true;
+        const name = v.seats[1].name;
+        rivalBanner(t('online.machine_arrived', { name }), t('online.machine_go', { name }));
+        play('join');
+        track('online_machine', { action: 'rival_arrived' });
+      }
+    }
+    parkPoll();
+  }
+  function rivalBanner(text, go = '') {
+    q('rivalBannerText').textContent = text;
+    q('rivalGo').textContent = go;
+    q('rivalGo').classList.toggle('hidden', !go);
+    q('rivalBanner').classList.toggle('hidden', !text);
+  }
+  // Leaving the machine game closes the room; if the room closed by itself, says so.
+  function dropParked(closed = false) {
+    if (!closed) rivalBanner('');
+    if (!parked) return;
+    const { code, token } = parked;
+    parked = null;
+    clearTimeout(parkTimeout);
+    if (closed) rivalBanner(t('online.machine_closed', { min: GAME.online.closeAfterMinutes }));
+    else Online.send({ action: 'leave', code, token });
+    Online.clearSeat();
+  }
+  q('rivalGo').addEventListener('click', () => {
+    const o = parked;
+    if (!o) return;
+    track('online_machine', { action: 'switched' });
+    parked = null;
+    clearTimeout(parkTimeout);
+    rivalBanner('');
+    abandon();
+    stopGame();
+    q('winnerOverlay').classList.add('hidden');
+    game.classList.add('hidden');
+    setup.classList.remove('hidden');
+    setSeaTheme(false);
+    online = o;
+    setGameMode('online');
+    showStep('board');
+    schedulePoll(0);
+  });
   function toast(text) {
     const el = q('onlineToast');
     if (el.textContent !== text) el.textContent = text;
@@ -1960,6 +2040,11 @@ const { timeFor } = Engine;
     if (!r.ok) return onlineFail(r.error);
     closedNews = null;
     connect(r, 0);
+    const room = online;
+    setTimeout(() => {
+      room.offerReady = true;
+      if (room === online) renderLobby();
+    }, GAME.online.machineOfferSeconds * 1000);
     track('online_create');
     renderLobby();
     schedulePoll();
@@ -2114,6 +2199,9 @@ const { timeFor } = Engine;
 
   q('startGame').addEventListener('click', () => {
     if (gameMode === 'online') return void startOnline();
+    startLocalGame();
+  });
+  function startLocalGame() {
     names = namesIn.map((input, i) => input.value.trim() || t('player.n', { n: i + 1 }));
     if (gameMode === 'solo') names[1] = t('machineBadge');
 
@@ -2130,7 +2218,7 @@ const { timeFor } = Engine;
     setup.classList.add('hidden');
     game.classList.remove('hidden');
     reset();
-  });
+  }
 
   const sidebar = q('sidebar'),
     menuScrim = q('menuScrim'),
@@ -2180,6 +2268,7 @@ const { timeFor } = Engine;
   q('newGame').addEventListener('click', () => {
     abandon();
     leaveOnline();
+    dropParked();
     stopGame();
     over = true;
     closeMenu(false);
@@ -2193,6 +2282,7 @@ const { timeFor } = Engine;
   function backToSetup() {
     abandon();
     leaveOnline();
+    dropParked();
     stopGame();
     q('winnerOverlay').classList.add('hidden');
     game.classList.add('hidden');

@@ -79,6 +79,10 @@
       🌐
     </button>
     <p id="onlineToast" class="online-toast hidden" role="status" aria-live="polite"></p>
+    <div id="rivalBanner" class="rival-banner hidden" role="status" aria-live="polite">
+      <p id="rivalBannerText"></p>
+      <button id="rivalGo" class="primary" type="button"></button>
+    </div>
     <div id="secretToast" class="secret-toast hidden" role="status" aria-live="polite">
       <span data-i18n="secretToast.tienes_un_premio">🎁 ¡Tienes un premio!</span>
       <button data-i18n="secretOpen" id="secretOpen" type="button">Ábrelo</button>
@@ -434,6 +438,9 @@
                         🔗 Copiar enlace
                       </button>
                     </div>
+                    <button data-i18n="waitMachine" id="waitMachine" class="hidden" type="button">
+                      🤖 Juega contra la máquina mientras llega
+                    </button>
                   </div>
                   <div id="difficultyWrap" class="difficulty-wrap">
                     <div

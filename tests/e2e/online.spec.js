@@ -346,3 +346,48 @@ test("the guest wears the host's theme, each sees their own panel at the bottom 
   expect(await guest.evaluate(() => localStorage.getItem('oso.theme.v1'))).toBeNull();
   expect(errors).toEqual([]);
 });
+
+test('alone in the room for a minute, the host plays the machine and goes with the rival when they arrive', async ({
+  browser,
+}) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  await host.clock.install();
+  const code = await createRoom(host);
+  await expect(host.locator('#waitMachine')).toBeHidden();
+  await host.clock.fastForward(61_000);
+  await host.click('#waitMachine');
+  await expect(host.locator('#gameScreen')).toBeVisible();
+  await expect(host.locator('#machineBadge')).toBeVisible();
+  await expect(host.locator('#rivalBanner')).toBeHidden();
+
+  await guest.goto(`/?sala=${code}`);
+  await guest.fill('#nickname2', 'Leo');
+  await guest.click('#stepNext');
+  await expect(guest.locator('#onlineToast')).toContainText('está eligiendo el tablero');
+  await expect(host.locator('#rivalBanner')).toContainText('✅ Ha llegado Leo');
+  await host.click('#rivalGo');
+  await expect(host.locator('#rivalBanner')).toBeHidden();
+  await expect(host.locator('#onlineToast')).toContainText('Leo ya está aquí');
+  await host.click('#startGame');
+  await expect(guest.locator('#gameScreen')).toBeVisible();
+  await expect(host.locator('#gameScreen')).toBeVisible();
+  await expect(host.locator('#machineBadge')).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
+test('if the room closes while the host plays the machine, the game goes on and says so', async ({
+  browser,
+}) => {
+  const errors = [];
+  const host = await player(browser, errors);
+  await host.clock.install();
+  await createRoom(host);
+  await host.clock.fastForward(61_000);
+  await host.click('#waitMachine');
+  await expireRoom(host);
+  await expect(host.locator('#rivalBanner')).toHaveText('⌛ Sala cerrada: tu rival no llegó en 30 min.');
+  await expect(host.locator('#rivalGo')).toBeHidden();
+  await expect(host.locator('#gameScreen')).toBeVisible();
+  expect(errors).toEqual([]);
+});

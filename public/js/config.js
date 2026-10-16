@@ -43,6 +43,7 @@ export const GAME = freeze({
     closeAfterMinutes: 30,
     countdownSeconds: 3,
     nudgeSeconds: 20,
+    machineOfferSeconds: 60,
     pollMs: 1000,
     roomsPerConnection: 20,
     roomsWindowMinutes: 10,
@@ -130,6 +131,8 @@ export const HELP = {
     'Si la partida no empieza en estos minutos desde que se abre la sala, se cierra.',
   'online.countdownSeconds': 'Cuenta atrás «3, 2, 1…» en las dos pantallas antes de la primera jugada.',
   'online.nudgeSeconds': 'Sin mover este tiempo, sale «¿Sigues ahí?» y se anima a quien espera.',
+  'online.machineOfferSeconds':
+    'Si nadie entra en la sala en este tiempo, se ofrece jugar contra la máquina mientras llega tu rival.',
   'online.pollMs': 'Cada cuánto pregunta el juego al servidor. Menos = más rápido pero más peticiones.',
   'online.roomsPerConnection':
     'Salas que puede abrir una misma conexión en la ventana de abajo (anti-abuso).',
