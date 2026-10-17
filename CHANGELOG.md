@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.15.2] - 2026-10-17
 
-**Sin conexión también en móviles lentos**
+**Sin conexión también en móviles lentos ([188d6b7](https://github.com/chopenhauer/devin-juega-oso/commit/188d6b7c17dfbd348dd06f588250860cbaa2ba74))**
 
 - **El fallo:** el mismo de la 3.15.1, pero con el service worker. `install.js` lo registraba al
   terminar de cargar la página (`load`), y si los textos tardaban, `install.js` arrancaba después de
