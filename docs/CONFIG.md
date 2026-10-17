@@ -45,6 +45,12 @@ Cómo cambiar uno:
 | `sos.pauseMs` | 220 | Pausa entre el aviso y la repetición. |
 | `sos.moveMs` | 260 | Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir. |
 
+## ▶️ Ver la partida
+
+| Parámetro | Valor | Qué hace |
+| --- | --- | --- |
+| `replay.stepMs` | 900 | Lo que dura cada jugada en «Ver la partida» al reproducirla. Más = más lenta. |
+
 ## 🛒 Tienda secreta (comprar extras gastados)
 
 | Parámetro | Valor | Qué hace |

@@ -24,6 +24,7 @@ reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo
 | `public/js/config.js`             | **Todos los parámetros ajustables** (tiempos, extras, tienda, salas, secretos…)                |
 | `public/js/onboarding.js`         | Pasos del inicio: `welcome`, `rules`, `mode`, `where`, `players`, `view`, `board`              |
 | `public/js/challenge.js`          | Enlaces de reto contra la máquina (`?reto=5-hard-9-4&tema=…`) y cuándo se supera               |
+| `public/js/replay.js`             | «Ver la partida»: cada jugada de la última partida, sus OSO y los que deja a tiro              |
 | `public/js/online.js`             | Cliente de las salas en línea                                                                  |
 | `public/js/secrets.js`            | Secretos (easter eggs): 🎨 temas y 🛒 tienda. El n.º 3 está reservado para Julia               |
 | `public/js/telemetry.js`          | Eventos anónimos de GA4 (solo con permiso) y cuándo pedir 👍/👎                                |

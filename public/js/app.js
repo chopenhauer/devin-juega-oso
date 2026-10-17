@@ -10,6 +10,7 @@ import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecr
 import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
 import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
 import { drawScorecard } from './scorecard.js';
+import { replaySteps } from './replay.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 const { timeFor } = Engine;
@@ -1313,6 +1314,7 @@ const { timeFor } = Engine;
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
+    q('replayOpen').classList.toggle('hidden', !history.length);
     showChallenge();
     const st = recordSession(w);
     prepareScorecard(st, showSession(st));
@@ -1339,6 +1341,105 @@ const { timeFor } = Engine;
     });
   }
   q('thanksDialog').addEventListener('close', () => q('rematch').focus({ preventScroll: true }));
+
+  // «Ver la partida»: the last game again, move by move, with each OSO made and each one left ready.
+  let replay = null;
+  function replayShow(n) {
+    const r = replay;
+    r.at = Math.max(0, Math.min(n, r.steps.length));
+    r.seen = Math.max(r.seen, r.at);
+    const step = r.steps[r.at - 1];
+    const cells = step?.board ?? Array(r.size * r.size).fill('');
+    const own = cells.map(() => new Set());
+    for (const [k, p] of step?.scored ?? []) k.split('-').forEach((i) => own[i].add(p));
+    const made = new Set(step?.made.flatMap((k) => k.split('-').map(Number)));
+    const el = q('replayBoard');
+    el.style.gridTemplateColumns = `repeat(${r.size},minmax(0,1fr))`;
+    el.style.setProperty('--n', r.size);
+    el.replaceChildren(
+      ...cells.map((v, i) => {
+        const c = document.createElement('div');
+        c.className = 'cell';
+        if (v) c.classList.add('filled');
+        if (own[i].size > 1) c.classList.add('both');
+        else if (own[i].size) c.classList.add(`p${[...own[i]][0] + 1}`);
+        if (made.has(i)) c.classList.add('replay-made');
+        if (step && i === step.move.index) c.classList.add(step.gift ? 'replay-gift' : 'last');
+        const s = document.createElement('span');
+        s.textContent = v;
+        c.append(s);
+        return c;
+      }),
+    );
+    const points = step?.scores ?? Array(r.players).fill(0);
+    q('replayScore').textContent = points.map((p, i) => `${avatars[i]} ${p}`).join(' – ');
+    const total = r.steps.length;
+    let caption = t('replay.start', { total });
+    if (step) {
+      const { player, index, power } = step.move;
+      const who = `${avatars[player]} ${names[player]}`;
+      const parts = [
+        t(power === 'swap' ? 'replay.swap' : 'replay.move', {
+          n: r.at,
+          total,
+          who,
+          letter: step.board[index],
+        }),
+      ];
+      if (step.made.length) parts.push(t('replay.made', { count: step.made.length, word: r.word }));
+      if (step.gift) parts.push(t('replay.gift', { word: r.word }));
+      caption = parts.join(' · ');
+    }
+    q('replayCaption').textContent = caption;
+    q('replayFirst').disabled = q('replayPrev').disabled = r.at === 0;
+    q('replayNext').disabled = q('replayLast').disabled = r.at === total;
+  }
+  function replayPlay(on) {
+    clearInterval(replay.timer);
+    replay.timer = on
+      ? setInterval(() => {
+          if (replay.at >= replay.steps.length) replayPlay(false);
+          else replayShow(replay.at + 1);
+        }, GAME.replay.stepMs)
+      : null;
+    q('replayPlay').textContent = on ? '⏸' : '▶️';
+    q('replayPlay').setAttribute('aria-label', t(on ? 'replay.pause' : 'replay.play'));
+  }
+  q('replayOpen').addEventListener('click', () => {
+    const players = playerCount();
+    replay = {
+      steps: replaySteps(size, history, targetWord, players),
+      size,
+      players,
+      word: targetWord,
+      at: 0,
+      seen: 0,
+    };
+    replayShow(0);
+    q('replayDialog').showModal();
+    replayPlay(true);
+  });
+  for (const [id, to] of [
+    ['replayFirst', () => 0],
+    ['replayPrev', () => replay.at - 1],
+    ['replayNext', () => replay.at + 1],
+    ['replayLast', () => replay.steps.length],
+  ]) {
+    q(id).addEventListener('click', () => {
+      replayPlay(false);
+      replayShow(to());
+    });
+  }
+  q('replayPlay').addEventListener('click', () => {
+    if (replay.timer) return replayPlay(false);
+    if (replay.at >= replay.steps.length) replayShow(0);
+    replayPlay(true);
+  });
+  q('replayDialog').addEventListener('close', () => {
+    replayPlay(false);
+    track('replay_view', { ...modeParams(), replay_seen: replay.seen, replay_moves: replay.steps.length });
+    q('replayOpen').focus({ preventScroll: true });
+  });
 
   // Word of mouth: the phone's own share sheet when there is one, otherwise WhatsApp, email or copy.
   let shareChallenge = null;

@@ -17,6 +17,24 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.14.0] - 2026-10-17
+
+**«Ver la partida»: la última partida, jugada a jugada**
+
+- **Por qué:** es la segunda de las ideas que eligió JoseLuis. Repasar la partida sirve para aprender
+  estrategia: ver dónde se hizo cada OSO y dónde se dejó uno a tiro, sobre todo contra el Extremo.
+- **En la pantalla final,** el botón «▶️ Ver la partida» abre el tablero vacío y lo va llenando solo.
+  Con ⏮ ◀ ⏯ ▶ ⏭ se para, se avanza o se retrocede jugada a jugada. Cada OSO se resalta en la jugada en
+  que se hizo, con el marcador de ese momento.
+- **Regalos:** la jugada que deja un OSO a tiro del rival sale con un borde rojo discontinuo y
+  «⚠️ deja un OSO a tiro del rival». Solo cuentan las jugadas que no puntúan, porque al puntuar se
+  sigue jugando.
+- **Modos:** contra la máquina, en Juntos, con 4 jugadores y en línea. Si se usó el 🛟 SOS, la
+  repetición cuenta con la palabra final, igual que el SOS.
+- **Sin guardar nada:** solo se puede ver la última partida, mientras sigue abierta la pantalla final.
+- **Medición:** evento `replay_view` al cerrar, con `replay_seen` y `replay_moves`. El ritmo de la
+  reproducción está en `config.js` (`replay.stepMs`).
+
 ## [3.13.1] - 2026-10-17
 
 **Sabemos cuántas visitas no ve GA4 ([832913b](https://github.com/chopenhauer/devin-juega-oso/commit/832913ba14c71324a42af3d83b961b6e99da4fbe))**

@@ -127,13 +127,15 @@ test('invite a friend, play turns remotely, resume after reload and win when the
   await expect(host.locator('#winnerSub')).toContainText('Bea ha salido');
   await expect(host.locator('#rematch')).toBeDisabled();
   await expect(host.locator('#changePlayers')).toHaveText('Salir');
-  const boxes = await Promise.all(
-    ['#rematch', '#changePlayers', '#shareResult'].map((id) => host.locator(id).boundingBox()),
+  const [rematch, leave, replay, share] = await Promise.all(
+    ['#rematch', '#changePlayers', '#replayOpen', '#shareResult'].map((id) => host.locator(id).boundingBox()),
   );
-  for (const box of boxes) {
-    expect(box.x).toBeCloseTo(boxes[0].x, 0);
-    expect(box.width).toBeCloseTo(boxes[0].width, 0);
-  }
+  expect(leave.x).toBeCloseTo(rematch.x, 0);
+  expect(leave.width).toBeCloseTo(rematch.width, 0);
+  // «Ver la partida» and «Compartir resultado» share the last row.
+  expect(replay.x).toBeCloseTo(rematch.x, 0);
+  expect(share.x + share.width).toBeCloseTo(rematch.x + rematch.width, 0);
+  expect(share.y).toBeCloseTo(replay.y, 0);
   expect(errors).toEqual([]);
 });
 

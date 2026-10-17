@@ -1241,10 +1241,11 @@ select option {
 .winner-actions .secondary {
   padding: 0 var(--space-3);
 }
-.winner-actions .share-result {
+.winner-actions .share-result,
+.winner-actions .replay-open {
   margin-top: var(--space-4);
 }
-.winner-actions .share-result,
+.winner-actions .replay-open.hidden + .share-result,
 /* Online there is no «Otro tablero»: «Salir» takes the whole row, like the other buttons. */
 .winner-actions #otherBoard.hidden + #changePlayers {
   grid-column: 1 / -1;
@@ -3941,4 +3942,52 @@ body:has(#winnerOverlay:not(.hidden)) .secret-toast {
 }
 .online-invite .online-wait-machine.hidden {
   display: none;
+}
+
+/* «Ver la partida»: the last game again, move by move. */
+.replay-dialog {
+  width: min(calc(100% - 1.5rem), 26rem);
+  padding-inline: var(--space-4);
+}
+.replay-dialog[open] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.replay-score {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+}
+.replay-board {
+  gap: var(--space-1);
+}
+.replay-board .cell.replay-made {
+  outline: 0.1875rem solid var(--accent);
+  outline-offset: -0.1875rem;
+}
+.replay-board .cell.replay-gift {
+  outline: 0.25rem dashed var(--color-danger);
+  outline-offset: -0.25rem;
+}
+.replay-caption {
+  min-height: 2.5em;
+  margin: 0;
+  line-height: 1.25;
+}
+.replay-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+}
+.info-dialog .replay-controls button {
+  flex: 1;
+  min-width: 0;
+  max-width: 4rem;
+  margin: 0;
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  font-size: var(--fs-lg);
+}
+.info-dialog .replay-controls .primary {
+  flex: 1.6;
+  max-width: 6rem;
 }

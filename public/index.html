@@ -1102,6 +1102,9 @@
               <button data-i18n="changePlayers" id="changePlayers" class="secondary">
                 Cambiar jugadores
               </button>
+              <button data-i18n="replayOpen" id="replayOpen" class="secondary replay-open" type="button">
+                ▶️ Ver la partida
+              </button>
               <button data-i18n="shareResult" id="shareResult" class="secondary share-result" type="button">
                 📣 Compartir resultado
               </button>
@@ -1222,6 +1225,62 @@
         <button data-i18n="common.ahora_no" id="onlineIntroClose" class="secondary share-close" type="button">
           Ahora no
         </button>
+      </dialog>
+      <dialog id="replayDialog" class="info-dialog replay-dialog" aria-labelledby="replayTitle">
+        <h2 data-i18n="replayTitle" id="replayTitle" class="step-title">▶️ La partida, jugada a jugada</h2>
+        <p id="replayScore" class="replay-score"></p>
+        <div id="replayBoard" class="board replay-board" aria-hidden="true"></div>
+        <p id="replayCaption" class="replay-caption" role="status" aria-live="polite"></p>
+        <div class="replay-controls">
+          <button
+            data-i18n-attr="aria-label:replay.first"
+            id="replayFirst"
+            class="secondary"
+            type="button"
+            aria-label="Primera jugada"
+          >
+            ⏮
+          </button>
+          <button
+            data-i18n-attr="aria-label:replay.prev"
+            id="replayPrev"
+            class="secondary"
+            type="button"
+            aria-label="Jugada anterior"
+          >
+            ◀
+          </button>
+          <button
+            data-i18n-attr="aria-label:replay.play"
+            id="replayPlay"
+            class="primary"
+            type="button"
+            aria-label="Reproducir"
+          >
+            ▶️
+          </button>
+          <button
+            data-i18n-attr="aria-label:replay.next"
+            id="replayNext"
+            class="secondary"
+            type="button"
+            aria-label="Jugada siguiente"
+          >
+            ▶
+          </button>
+          <button
+            data-i18n-attr="aria-label:replay.last"
+            id="replayLast"
+            class="secondary"
+            type="button"
+            aria-label="Última jugada"
+          >
+            ⏭
+          </button>
+        </div>
+        <form method="dialog">
+          <button data-i18n="common.cerrar" class="secondary share-close" type="submit">Cerrar</button>
+        </form>
       </dialog>
       <dialog id="shareDialog" class="info-dialog share-dialog" aria-labelledby="shareTitle">
         <div class="info-emoji" aria-hidden="true">📣</div>

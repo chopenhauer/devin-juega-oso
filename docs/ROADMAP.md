@@ -123,7 +123,7 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 18  | Edición papel: modo aparte, «edición superespecial»                                | Alto       | Alto       | Futuro         |
 | 19  | Revisar los valores de la máquina (Fácil 50 %, Difícil 80 %, Extremo) con GA4      | Medio      | Bajo       | Con datos      |
 | 20  | ~~Enlace de reto: abre la partida ya preparada («bate mi 9–4»)~~ hecho en 3.13.0   | Alto       | Bajo-medio | Hecho          |
-| 21  | Repetición de la partida jugada a jugada                                           | Medio-alto | Medio      | Ahora (2.º)    |
+| 21  | ~~Repetición de la partida jugada a jugada~~ hecho en 3.14.0                       | Medio-alto | Medio      | Hecho          |
 | 22  | Instalable en la pantalla de inicio (manifest y service worker), sin tiendas       | Medio      | Bajo       | Ahora (3.º)    |
 | 23  | Reto del día: el mismo tablero de salida para todos cada día                       | Alto       | Medio      | Explorar       |
 | 24  | Decidir qué hacemos con el reloj (bajar el 5×5 o bajar el objetivo del 50 %)       | Medio      | Bajo       | Decidir        |

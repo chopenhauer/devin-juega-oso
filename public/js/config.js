@@ -27,6 +27,9 @@ export const GAME = freeze({
     pauseMs: 220,
     moveMs: 260,
   },
+  replay: {
+    stepMs: 900,
+  },
   shop: {
     taps: 3,
     tapGapMs: 700,
@@ -88,6 +91,7 @@ export const SECTIONS = {
   clock: 'Reloj',
   extras: 'Extras (usos por jugador y partida)',
   sos: '🛟 SOS',
+  replay: '▶️ Ver la partida',
   shop: '🛒 Tienda secreta (comprar extras gastados)',
   machine: 'Máquina',
   online: 'En línea',
@@ -114,6 +118,7 @@ export const HELP = {
   'extras.swap': '🔄 Cambiar una O por una S (o al revés), por jugador y partida. 0 = desactivado.',
   'sos.flashMs':
     'Lo que dura la intro a pantalla completa «S🛟S» antes de repetir la partida (2-3 s). El reloj espera mientras tanto.',
+  'replay.stepMs': 'Lo que dura cada jugada en «Ver la partida» al reproducirla. Más = más lenta.',
   'sos.pauseMs': 'Pausa entre el aviso y la repetición.',
   'sos.moveMs': 'Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir.',
   'shop.taps':
