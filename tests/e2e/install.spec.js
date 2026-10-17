@@ -83,6 +83,23 @@ test('after a game, «Instalar» opens the browser prompt', async ({ page }) => 
   expect(offers[0].display_mode).toBe('browser');
 });
 
+test('if the browser says it can install after the game, the offer still shows', async ({ page }) => {
+  test.slow();
+  await finish(page);
+  await expect(page.locator('#installAsk')).toBeHidden();
+  await page.evaluate(() => {
+    const e = new Event('beforeinstallprompt', { cancelable: true });
+    e.prompt = () => (window.__prompted = 1);
+    e.userChoice = Promise.resolve({ outcome: 'dismissed' });
+    window.dispatchEvent(e);
+  });
+  await expect(page.locator('#installAsk')).toBeVisible();
+  await page.click('#installYes');
+  await expect
+    .poll(() => events(page, 'install_prompt'))
+    .toEqual([expect.objectContaining({ outcome: 'dismissed' })]);
+});
+
 test('«No, gracias» hides it for good on this device', async ({ page }) => {
   test.slow();
   await browserCanInstall(page);

@@ -11,6 +11,8 @@ export const isIos = ({ userAgent, platform, maxTouchPoints } = navigator) =>
   /iPad|iPhone|iPod/.test(userAgent) || (platform === 'MacIntel' && maxTouchPoints > 1);
 
 let prompt = null;
+// The end screen could offer it, but the browser had not said yet that it can install.
+let waiting = false;
 let kind = null;
 
 function dismissed() {
@@ -42,16 +44,19 @@ export function showInstall(quiet = false) {
         canPrompt: !!prompt,
         ios: isIos(),
       });
+  waiting = !quiet && !kind;
   q('installAsk').classList.toggle('hidden', !kind);
   if (kind) track('install_offer', { action: 'shown', platform: kind });
 }
 
 // Only in the page: tests/unit/pwa.test.js imports the pure helpers above.
 if (typeof document !== 'undefined') {
+  prompt = window.osoInstallPrompt ?? null;
   window.addEventListener('beforeinstallprompt', (e) => {
     // No mini-infobar from the browser: we only offer it after a game.
     e.preventDefault();
     prompt = e;
+    if (waiting && !q('winnerOverlay').classList.contains('hidden')) showInstall();
   });
   window.addEventListener('appinstalled', () => {
     prompt = null;

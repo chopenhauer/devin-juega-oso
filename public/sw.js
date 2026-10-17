@@ -27,6 +27,7 @@ const SHELL = [
   '/js/engine.js',
   '/js/ga.js',
   '/js/i18n.js',
+  '/js/install-early.js',
   '/js/install.js',
   '/js/leaderboard.js',
   '/js/match.js',

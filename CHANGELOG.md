@@ -17,6 +17,18 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.15.1] - 2026-10-17
+
+**«📲 Instalar» ya no se pierde si el navegador avisa pronto (o tarde)**
+
+- **El fallo:** `i18n.js` espera a cargar los textos antes de arrancar el resto de módulos. Si
+  Chrome avisaba de que OSO se puede instalar (`beforeinstallprompt`) en ese rato, `install.js`
+  aún no escuchaba y la oferta no salía nunca en esa visita. Lo destapó un E2E que falló en el CI
+  justo después de publicar la 3.15.0.
+- **El arreglo:** un script pequeño, `install-early.js`, recoge ese aviso antes que los módulos.
+  Y si el aviso llega con la pantalla final ya abierta, la oferta aparece en ese momento.
+- **Nada más cambia:** sigue saliendo solo al acabar una partida, con «No, gracias».
+
 ## [3.15.0] - 2026-10-17
 
 **«📲 Instalar»: OSO en la pantalla de inicio, también sin conexión ([c7e1b57](https://github.com/chopenhauer/devin-juega-oso/commit/c7e1b57af67de663373ba2185c147e9c070cecff))**
