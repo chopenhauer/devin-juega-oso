@@ -117,6 +117,65 @@ test('the end screen shares the result without names', async ({ page }) => {
   expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'email', place: 'end' })]);
 });
 
+test('«Compartir» and «Replay» replace the long labels when they do not fit on one line', async ({
+  page,
+}) => {
+  await start(page);
+  await finish(page);
+  const buttons = [
+    ['#shareResult', '📣 Compartir resultado', '📣 Compartir', 'Compartir resultado'],
+    ['#replayOpen', '▶️ Ver la partida', '▶️ Replay', 'Ver la partida (replay)'],
+  ];
+  for (const [sel, , , label] of buttons) {
+    await expect(page.locator(sel)).toHaveAttribute('aria-label', label);
+  }
+  const fit = (sel, long) =>
+    page.locator(sel).evaluate((el, longText) => {
+      const lines = (node) => {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        return new Set([...range.getClientRects()].map((r) => Math.round(r.bottom))).size;
+      };
+      // Same button, same width, with the long text: does it wrap?
+      const probe = el.cloneNode();
+      probe.removeAttribute('id');
+      probe.textContent = longText;
+      Object.assign(probe.style, {
+        position: 'absolute',
+        width: `${el.offsetWidth}px`,
+        visibility: 'hidden',
+      });
+      el.after(probe);
+      const longFits = lines(probe) === 1;
+      probe.remove();
+      return { label: el.textContent.trim(), lines: lines(el), longFits };
+    }, long);
+  const seen = {};
+  for (const width of [270, 360, 412, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const [sel, long, short] of buttons) {
+      await expect
+        .poll(async () => {
+          const { label, lines, longFits } = await fit(sel, long);
+          return lines === 1 && label === (longFits ? long : short);
+        }, `${sel} at ${width}px`)
+        .toBe(true);
+      seen[`${sel}@${width}`] = (await fit(sel, long)).label;
+    }
+  }
+  expect(seen['#shareResult@360']).toBe('📣 Compartir');
+  expect(seen['#replayOpen@1280']).toBe('▶️ Ver la partida');
+  // With a bigger system font (Android accessibility) «Ver la partida» wraps too.
+  await page.setViewportSize({ width: 360, height: 900 });
+  await page.evaluate(() => (document.documentElement.style.fontSize = '130%'));
+  await expect(page.locator('#replayOpen')).toHaveText('▶️ Replay');
+  expect((await fit('#replayOpen', '▶️ Ver la partida')).lines).toBe(1);
+  await page.evaluate(() => (document.documentElement.style.fontSize = ''));
+  // Without «Ver la partida» (online) «Compartir» takes the whole row and the long text fits.
+  await page.locator('#replayOpen').evaluate((el) => el.classList.add('hidden'));
+  await expect(page.locator('#shareResult')).toHaveText('📣 Compartir resultado');
+});
+
 test('the end screen leaves room above «Compartir resultado» and has «Inicio» top right', async ({
   page,
 }) => {

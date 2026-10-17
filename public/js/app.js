@@ -1316,6 +1316,7 @@ const { timeFor } = Engine;
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
     q('replayOpen').classList.toggle('hidden', !history.length);
+    fitEndLabels();
     showChallenge();
     const st = recordSession(w);
     prepareScorecard(st, showSession(st));
@@ -1498,6 +1499,30 @@ const { timeFor } = Engine;
   });
   shareToggle.addEventListener('click', () => share('start'));
   q('shareResult').addEventListener('click', () => share('end'));
+  // «Compartir resultado» and «Ver la partida» get their short label when too narrow for one line.
+  const SHORT_LABELS = {
+    shareResult: () => t('shareResult.short'),
+    replayOpen: () => t('replayOpen.short'),
+  };
+  function fitLabel(id) {
+    const btn = q(id);
+    btn.textContent = t(id);
+    const range = document.createRange();
+    range.selectNodeContents(btn);
+    const lines = new Set([...range.getClientRects()].map((r) => Math.round(r.bottom))).size;
+    if (lines > 1) btn.textContent = SHORT_LABELS[id]();
+  }
+  const fitEndLabels = () => Object.keys(SHORT_LABELS).forEach(fitLabel);
+  // Their width comes from the grid, not from the text, so changing the text can't loop.
+  for (const id of Object.keys(SHORT_LABELS)) {
+    let width = 0;
+    new ResizeObserver(([entry]) => {
+      const w = entry.contentRect.width;
+      if (!w || w === width) return;
+      width = w;
+      fitLabel(id);
+    }).observe(q(id));
+  }
   q('shareMenu').addEventListener('click', () => {
     closeMenu();
     share('menu');

@@ -17,6 +17,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.15.3] - 2026-10-17
+
+**«📣 Compartir» y «▶️ Replay» cuando el texto largo no cabe en una línea**
+
+- **Por qué:** en un móvil de unos 412 px, «📣 Compartir resultado» se partía en dos líneas
+  («📣 Compartir» / «resultado») y quedaba más alto que «▶️ Ver la partida», que va a su lado.
+  JoseLuis pidió que dijera solo «Compartir» en ese caso, y lo mismo con «Ver la partida», que pasa a
+  «Replay».
+- **Cómo:** el juego mide cada botón con el texto largo y, si ocupa más de una línea, pone el corto
+  (`shareResult.short` y `replayOpen.short` en `es.json`). No depende de un ancho fijo de pantalla,
+  sino de lo que mide el botón, así que también funciona con la letra del sistema más grande. Se
+  vuelve a medir al girar el móvil o cambiar el tamaño de la ventana. Cuando «Compartir» ocupa toda
+  la fila (en línea, sin «Ver la partida»), sigue diciendo «Compartir resultado».
+- **Accesibilidad:** el lector de pantalla siempre dice «Compartir resultado» y «Ver la partida
+  (replay)» (`aria-label`). Los dos contienen el texto visible, también el corto, para quien maneja
+  el móvil con la voz.
+
 ## [3.15.2] - 2026-10-17
 
 **Sin conexión también en móviles lentos ([188d6b7](https://github.com/chopenhauer/devin-juega-oso/commit/188d6b7c17dfbd348dd06f588250860cbaa2ba74))**
