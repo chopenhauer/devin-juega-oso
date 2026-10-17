@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.13.1] - 2026-10-17
 
-**Sabemos cuántas visitas no ve GA4**
+**Sabemos cuántas visitas no ve GA4 ([832913b](https://github.com/chopenhauer/devin-juega-oso/commit/832913ba14c71324a42af3d83b961b6e99da4fbe))**
 
 - **Por qué:** JoseLuis quería saber cuántas personas no aceptan las cookies y qué porcentaje de
   visitas queda oculto. GA4 solo ve a quien acepta, y no había ninguna cifra de las demás.
