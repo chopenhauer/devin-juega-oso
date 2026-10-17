@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.15.4] - 2026-10-17
 
-**Si ni «📣 Compartir» cabe, los dos botones ponen el emoji arriba y el texto abajo**
+**Si ni «📣 Compartir» cabe, los dos botones ponen el emoji arriba y el texto abajo ([effc740](https://github.com/chopenhauer/devin-juega-oso/commit/effc740b7daa1a1e0adad493c21eb54c823d0dd0))**
 
 - **Por qué:** con la letra del sistema grande (130 % en un Android de 360 px), «📣 Compartir» se
   partía con el 📣 solo en la primera línea. JoseLuis pidió que, en ese caso, los dos botones vayan
