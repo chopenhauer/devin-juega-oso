@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.17.0] - 2026-10-17
 
-**Medimos la bienvenida: en qué pantalla se va quien no llega a jugar**
+**Medimos la bienvenida: en qué pantalla se va quien no llega a jugar ([0393735](https://github.com/chopenhauer/devin-juega-oso/commit/039373527d7c8ab6733e4499ae083c16344052ab))**
 
 - **Por qué:** en GA4, solo 30 de los 52 usuarios de los últimos 28 días empezaron una partida, y
   no sabíamos en qué pantalla se iban los demás. Es la idea 30 del roadmap
