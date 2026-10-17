@@ -91,6 +91,10 @@ fallen solo en el CI:
    commit.
 3. `main` está protegida: sin force-push, y solo acepta commits cuyo job `check` del CI ya ha
    pasado. Cada push a `main` se publica en Vercel. Al acabar se borra la rama.
+   - **CI** (`.github/workflows/ci.yml`): en cada push a una rama corren a la vez lint y unitarios,
+     y los E2E repartidos en 4 máquinas (`--shard`). El job `check` lo resume. Si la rama solo
+     cambia documentos (`*.md`, `docs/`) respecto a `main`, se saltan los E2E. El push a `main`
+     no repite el CI. Si un E2E falla, sus trazas quedan 7 días como artefacto del run.
 4. Commits con el email noreply de GitHub de chopenhauer
    (`13889217+chopenhauer@users.noreply.github.com`), nunca con el del trabajo.
 
