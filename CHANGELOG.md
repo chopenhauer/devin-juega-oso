@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.15.1] - 2026-10-17
 
-**«📲 Instalar» ya no se pierde si el navegador avisa pronto (o tarde)**
+**«📲 Instalar» ya no se pierde si el navegador avisa pronto (o tarde) ([7d0dd20](https://github.com/chopenhauer/devin-juega-oso/commit/7d0dd20f20fb9346092f26cb380e7cf124b8bdfe))**
 
 - **El fallo:** `i18n.js` espera a cargar los textos antes de arrancar el resto de módulos. Si
   Chrome avisaba de que OSO se puede instalar (`beforeinstallprompt`) en ese rato, `install.js`
