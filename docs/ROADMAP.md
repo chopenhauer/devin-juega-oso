@@ -129,6 +129,8 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 24  | Decidir qué hacemos con el reloj (bajar el 5×5 o bajar el objetivo del 50 %)       | Medio      | Bajo       | Decidir        |
 | 25  | Laboratorio de Julia: cambiar los valores de la máquina y simular partidas         | Medio      | Medio      | Siguiente      |
 | 26  | Versión en inglés                                                                  | Medio      | Medio      | Cuando se diga |
+| 27  | Puntos extra por racha de OSO (fijos o crecientes)                                 | Medio-alto | Medio      | Futuro         |
+| 28  | Hándicap y categorías: jugar con ventaja según tu nivel                            | Medio      | Medio-alto | Futuro         |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
@@ -554,6 +556,32 @@ día. Cada una va en su rama con su preview.
    desde la pantalla de inicio y, con un service worker, funciona sin conexión (salvo en línea).
 7. **Versión en inglés (26):** los textos ya están en `public/locales/es.json`. Ampliaría el público,
    pero no se traduce hasta que JoseLuis lo diga.
+
+### Ideas de JoseLuis tras la 3.14.0 (18-10-2026)
+
+Apuntadas como ideas a futuro, sin fecha ni decisión.
+
+1. **Puntos extra por racha (27):** premiar que se insista en puntuar. Hacer OSO ya da otro turno;
+   la idea es que cada OSO seguido valga más que el anterior y así se vayan bonificando las
+   partidas. Dos opciones, sin decidir:
+   - **Bonificación fija:** a partir del segundo OSO de la racha, cada uno vale 1 punto más (1, 2,
+     2, 2…).
+   - **Bonificación creciente:** cada OSO de la racha vale 1 más que el anterior (1, 2, 3, 4…).
+     Ojo: esto crece de forma lineal; exponencial sería duplicar (1, 2, 4, 8…). Buen experimento
+     para el Laboratorio de Julia (25): simular partidas con cada opción y ver cuál las hace más
+     reñidas.
+   - **Por decidir:** qué es una racha (OSOs seguidos en el mismo turno o en turnos seguidos), si
+     un movimiento que hace dos OSO a la vez cuenta como racha, si es opcional al elegir tablero y
+     cómo se ve en el marcador y en «Ver la partida». Toca `engine.js` y `match.js`, el servidor en
+     línea, la máquina (que tendría que valorar las rachas) y la telemetría.
+2. **Hándicap y categorías (28):** poder jugar «dentro de tu categoría». El juego te asigna una
+   categoría según cómo juegas y, si juegan dos de categorías distintas, el más fuerte da ventaja,
+   como el hándicap del golf.
+   - **Posibles ventajas:** puntos de salida, más tiempo en el reloj, extras gratis o una máquina
+     que se ajusta sola a tu categoría.
+   - **Por decidir:** cómo se calcula la categoría sin cuentas ni datos personales (solo en el
+     dispositivo, a partir de partidas y resultados, como el hall of fame local (3)), cuántas
+     categorías hay y cómo se comparte en línea y en los enlaces de reto (20).
 
 ## Otras ideas y decisiones abiertas
 
