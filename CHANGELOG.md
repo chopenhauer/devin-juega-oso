@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.15.3] - 2026-10-17
 
-**«📣 Compartir» y «▶️ Replay» cuando el texto largo no cabe en una línea**
+**«📣 Compartir» y «▶️ Replay» cuando el texto largo no cabe en una línea ([a016779](https://github.com/chopenhauer/devin-juega-oso/commit/a016779b9175565843d4ec7f3650c979bd1cddb0))**
 
 - **Por qué:** en un móvil de unos 412 px, «📣 Compartir resultado» se partía en dos líneas
   («📣 Compartir» / «resultado») y quedaba más alto que «▶️ Ver la partida», que va a su lado.
