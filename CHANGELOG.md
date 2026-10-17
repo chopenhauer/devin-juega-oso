@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.12.0] - 2026-10-17
 
-**El resultado se comparte con una imagen del marcador**
+**El resultado se comparte con una imagen del marcador ([f773bc2](https://github.com/chopenhauer/devin-juega-oso/commit/f773bc2a4390a2bbace9f65991aa32e31bbef047))**
 
 - **Por qué:** JoseLuis pidió que «Revancha» diga el tamaño del tablero y que, al compartir el
   resultado, vaya una captura con el marcador de la sesión.
