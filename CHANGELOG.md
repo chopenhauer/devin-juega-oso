@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.14.0] - 2026-10-17
 
-**«Ver la partida»: la última partida, jugada a jugada**
+**«Ver la partida»: la última partida, jugada a jugada ([ea4a998](https://github.com/chopenhauer/devin-juega-oso/commit/ea4a99830d0a89572b9240de7ba67b2d4b13b79e))**
 
 - **Por qué:** es la segunda de las ideas que eligió JoseLuis. Repasar la partida sirve para aprender
   estrategia: ver dónde se hizo cada OSO y dónde se dejó uno a tiro, sobre todo contra el Extremo.
