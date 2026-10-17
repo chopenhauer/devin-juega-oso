@@ -101,27 +101,34 @@ móvil (23 de 33). En línea se abrieron 11 salas y solo hubo 2 uniones (más 2 
 caducada). Solo 2 de 31 partidas acabaron por tiempo (6 %, el objetivo es 50 %). Son pocos datos y
 muchos de pruebas de casa: sirven para orientar, no para decidir.
 
-| #   | Idea                                                                               | Valor      | Esfuerzo   | Cuándo       |
-| --- | ---------------------------------------------------------------------------------- | ---------- | ---------- | ------------ |
-| 1   | Barra de juego en línea: reacciones o frases y 🍅 tomatada                         | Medio-alto | Medio      | Ahora        |
-| 2   | Secreto n.º 3, inventado por Julia                                                 | Medio      | Bajo       | Ahora        |
-| 3   | Hall of fame local                                                                 | Alto       | Medio      | Siguiente    |
-| 4   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo      | Medio      | Medio      | Decidir      |
-| 5   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                 | Alto       | Medio      | ~100/tablero |
-| 6   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md) | Alto       | Bajo       | 50 partidas  |
-| 7   | Feedback con texto libre (función de Vercel)                                       | Alto       | Medio      | Siguiente    |
-| 8   | Tablero con teclado y OSOs sin depender del color                                  | Bajo       | Medio      | Reserva      |
-| 9   | ~~Unificar los tamaños de letra fuera de escala~~ hecho en 3.7.3                   | Bajo       | Bajo       | Hecho        |
-| 10  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide   |
-| 11  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva      |
-| 12  | Oso bailando al ganar (T4.5)                                                       | Medio      | Medio-alto | Reserva      |
-| 13  | ~~Máquina «Experto» (B06)~~ hecho en 3.11.0 con el nivel Extremo                   | Medio      | Medio      | Hecho        |
-| 14  | Hall of fame global                                                                | Medio      | Alto       | Reserva      |
-| 15  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva      |
-| 16  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir      |
-| 17  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan     |
-| 18  | Edición papel: modo aparte, «edición superespecial»                                | Alto       | Alto       | Futuro       |
-| 19  | Revisar los valores de la máquina (Fácil 50 %, Difícil 80 %, Extremo) con GA4      | Medio      | Bajo       | Con datos    |
+| #   | Idea                                                                               | Valor      | Esfuerzo   | Cuándo         |
+| --- | ---------------------------------------------------------------------------------- | ---------- | ---------- | -------------- |
+| 1   | Barra de juego en línea: reacciones o frases y 🍅 tomatada                         | Medio-alto | Medio      | Ahora          |
+| 2   | Secreto n.º 3, inventado por Julia                                                 | Medio      | Bajo       | Ahora          |
+| 3   | Hall of fame local                                                                 | Alto       | Medio      | Siguiente      |
+| 4   | En línea: volver a jugar con la misma persona otro día sin pedir enlace nuevo      | Medio      | Medio      | Decidir        |
+| 5   | Ajustar los tiempos con datos reales (pasos 2 y 3)                                 | Alto       | Medio      | ~100/tablero   |
+| 6   | Revisar la decisión del modo en línea con los umbrales de [`ONLINE.md`](ONLINE.md) | Alto       | Bajo       | 50 partidas    |
+| 7   | Feedback con texto libre (función de Vercel)                                       | Alto       | Medio      | Siguiente      |
+| 8   | Tablero con teclado y OSOs sin depender del color                                  | Bajo       | Medio      | Reserva        |
+| 9   | ~~Unificar los tamaños de letra fuera de escala~~ hecho en 3.7.3                   | Bajo       | Bajo       | Hecho          |
+| 10  | Equipos 2 contra 2                                                                 | Medio      | Medio      | Si se pide     |
+| 11  | En línea con 4 jugadores o espectadores (necesita la opción C de `ONLINE.md`)      | Medio      | Alto       | Reserva        |
+| 12  | Oso bailando al ganar (T4.5)                                                       | Medio      | Medio-alto | Reserva        |
+| 13  | ~~Máquina «Experto» (B06)~~ hecho en 3.11.0 con el nivel Extremo                   | Medio      | Medio      | Hecho          |
+| 14  | Hall of fame global                                                                | Medio      | Alto       | Reserva        |
+| 15  | Vibración (T4.4)                                                                   | Bajo       | Bajo       | Reserva        |
+| 16  | Reloj con la pestaña dormida                                                       | Bajo       | Bajo       | Decidir        |
+| 17  | Regalos desbloqueables                                                             | —          | Medio      | Sin plan       |
+| 18  | Edición papel: modo aparte, «edición superespecial»                                | Alto       | Alto       | Futuro         |
+| 19  | Revisar los valores de la máquina (Fácil 50 %, Difícil 80 %, Extremo) con GA4      | Medio      | Bajo       | Con datos      |
+| 20  | Enlace de reto: abre la partida ya preparada («bate mi 9–4»)                       | Alto       | Bajo-medio | Ahora (1.º)    |
+| 21  | Repetición de la partida jugada a jugada                                           | Medio-alto | Medio      | Ahora (2.º)    |
+| 22  | Instalable en la pantalla de inicio (manifest y service worker), sin tiendas       | Medio      | Bajo       | Ahora (3.º)    |
+| 23  | Reto del día: el mismo tablero de salida para todos cada día                       | Alto       | Medio      | Explorar       |
+| 24  | Decidir qué hacemos con el reloj (bajar el 5×5 o bajar el objetivo del 50 %)       | Medio      | Bajo       | Decidir        |
+| 25  | Laboratorio de Julia: cambiar los valores de la máquina y simular partidas         | Medio      | Medio      | Siguiente      |
+| 26  | Versión en inglés                                                                  | Medio      | Medio      | Cuando se diga |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
@@ -444,8 +451,8 @@ Que corra la voz: que quien juega lo comparta fácilmente con familia y amigos.
   el oso.
 - **Medir:** evento de GA `share` con el canal y enlaces con `utm_source` (`whatsapp`, `email`…)
   para saber cuántas visitas llegan por boca a boca.
-- **Más adelante:** un enlace de reto («juega este tablero y este tema») o un código QR para
-  enseñarlo en la tablet.
+- **Siguiente:** un enlace de reto («juega este tablero y este tema»), ver la idea 20 en la
+  priorización. Más adelante, un código QR para enseñarlo en la tablet.
 - **Decisiones abiertas:** si el texto incluye los nombres de los jugadores (por defecto no) y
   dónde sale el botón.
 
@@ -524,6 +531,29 @@ dibujada a mano, sin fichas, y la S o la O se escriben con el dedo.
   propio o de otra forma por decidir. Es una idea loca, para más adelante.
 - **Por decidir:** cómo se llega a ella y si en línea el rival ve tu letra tal cual o ya pasada a
   limpio.
+
+### Ideas de Devin tras la 3.12.0 (17-10-2026)
+
+Propuestas cruzando el ROADMAP con GA4 y los contadores del servidor. JoseLuis las apuntó todas y
+eligió empezar por el enlace de reto, la repetición y el instalable, y después explorar el reto del
+día. Cada una va en su rama con su preview.
+
+1. **Enlace de reto (20):** «Te reto: 5×5 contra la máquina en Difícil, bate mi 9–4». El enlace abre
+   la partida ya preparada (tablero, modo, dificultad y tema). Aprovecha lo que mejor funciona, que
+   es compartir: 43 de 112 sesiones llegan por enlaces compartidos.
+2. **Reto del día (23):** el mismo tablero de salida para todo el mundo cada día, como Wordle, y al
+   acabar se comparte la imagen del marcador. Da un motivo para volver y para compartir.
+3. **El reloj (24):** solo 6 de 69 partidas acaban por tiempo (9 %) y el objetivo es el 50 %. O se
+   baja ya el 5×5 a 1:15, o se acepta que en familia gusta jugar sin prisa y se baja el objetivo.
+4. **Laboratorio de Julia (25):** una página o un script para cambiar los valores de la máquina
+   (el 50 %, el 80 %…), simular cientos de partidas y ver en una gráfica cuánto gana cada nivel.
+   Hipótesis, experimento y datos; también sirve para revisar los niveles (19).
+5. **Repetición de la partida (21):** al final, ver jugada a jugada dónde estaba cada OSO y dónde se
+   dejó uno a tiro. Sirve para aprender estrategia, sobre todo contra el Extremo.
+6. **Instalable (22):** sigue siendo web, sin tiendas de apps. Con un manifest se abre como una app
+   desde la pantalla de inicio y, con un service worker, funciona sin conexión (salvo en línea).
+7. **Versión en inglés (26):** los textos ya están en `public/locales/es.json`. Ampliaría el público,
+   pero no se traduce hasta que JoseLuis lo diga.
 
 ## Otras ideas y decisiones abiertas
 
