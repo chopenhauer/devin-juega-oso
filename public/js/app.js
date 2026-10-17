@@ -7,7 +7,8 @@ import { t, translateDom } from './i18n.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
-import { shareText, shareUrl, whatsappHref, emailHref, withLink } from './share.js';
+import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
+import { drawScorecard } from './scorecard.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 const { timeFor } = Engine;
@@ -1284,6 +1285,8 @@ const { timeFor } = Engine;
     updateControls();
     q('winnerOverlay').classList.remove('hidden');
     q('rematch').disabled = false;
+    q('rematch').innerHTML = t('rematch.sized', { size });
+    q('rematch').setAttribute('aria-label', t('rematch.sized_label', { size }));
     q('otherBoard').classList.toggle('hidden', !!online);
     q('changePlayers').textContent = online ? 'Salir' : t('changePlayers');
     q('rematch').focus({ preventScroll: true });
@@ -1310,7 +1313,7 @@ const { timeFor } = Engine;
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     lastResult = { mode: gameMode, winner: w, scores: [...scores] };
     const st = recordSession(w);
-    showSession(st);
+    prepareScorecard(st, showSession(st));
     countGame();
     const secret = dueSecret();
     syncSecretGift();
@@ -1340,13 +1343,13 @@ const { timeFor } = Engine;
     sharePlace = null;
   async function share(place) {
     const text = shareText(place === 'end' ? lastResult : null);
+    const card = place === 'end' ? await shareCard : null;
     if (navigator.share) {
       try {
         // The link goes inside the text, after a blank line: with `url` apart, Android glues it on with a space.
-        await navigator.share({
-          title: t('common.oso_el_juego_de'),
-          text: withLink(text, shareUrl('native')),
-        });
+        const data = { title: t('common.oso_el_juego_de'), text: withLink(text, shareUrl('native')) };
+        if (card && navigator.canShare?.({ files: [card] })) data.files = [card];
+        await navigator.share(data);
         track('share', { channel: 'native', place });
         return;
       } catch (e) {
@@ -1358,8 +1361,13 @@ const { timeFor } = Engine;
     q('shareWhatsapp').href = whatsappHref(text);
     q('shareEmail').href = emailHref(text);
     q('shareStatus').textContent = '';
+    const image = q('shareImage');
+    if (image.href.startsWith('blob:')) URL.revokeObjectURL(image.href);
+    image.href = card ? URL.createObjectURL(card) : '#';
+    image.classList.toggle('hidden', !card);
     q('shareDialog').showModal();
   }
+  q('shareImage').addEventListener('click', () => track('share', { channel: 'image', place: sharePlace }));
   q('shareWhatsapp').addEventListener('click', () =>
     track('share', { channel: 'whatsapp', place: sharePlace }),
   );
@@ -1404,15 +1412,17 @@ const { timeFor } = Engine;
     }
     return standings(session);
   }
+  const sessionMetaText = (st) =>
+    `${t('session.games', { count: st.games })}${st.draws ? t('session.draws', { count: st.draws }) : ''}`;
   function showSession(st) {
-    // Against the machine it shows from the first game; between people, from the second one.
-    const hidden = st.games < (gameMode === 'solo' ? 1 : 2);
-    q('sessionBoard').classList.toggle('hidden', hidden);
-    if (hidden) return;
     const order = st.wins
       .map((_, i) => i)
       .sort((a, b) => st.wins[b] - st.wins[a] || st.points[b] - st.points[a]);
     const leader = st.wins[order[0]] > st.wins[order[1]] ? order[0] : null;
+    // Against the machine it shows from the first game; between people, from the second one.
+    const hidden = st.games < (gameMode === 'solo' ? 1 : 2);
+    q('sessionBoard').classList.toggle('hidden', hidden);
+    if (hidden) return { order, leader };
     q('sessionRows').replaceChildren(
       ...order.map((p) => {
         const row = document.createElement('tr');
@@ -1438,9 +1448,28 @@ const { timeFor } = Engine;
         return row;
       }),
     );
-    const draws = st.draws ? t('session.draws', { count: st.draws }) : '';
-    const games = t('session.games', { count: st.games });
-    q('sessionMeta').textContent = `${games}${draws}`;
+    q('sessionMeta').textContent = sessionMetaText(st);
+    return { order, leader };
+  }
+  // The picture is drawn as the game ends: the share sheet must open right on the tap.
+  let shareCard = Promise.resolve(null);
+  function prepareScorecard(st, { order, leader }) {
+    shareCard = drawScorecard({
+      brand: t('common.oso_el_juego_de'),
+      avatar: q('winnerAvatar').textContent,
+      title: q('winnerTitle').textContent,
+      subtitle: `${q('winnerSub').textContent} · ${t('scorecard.board', { size })}`,
+      heading: t('sessionTitle'),
+      columns: [t('sessionBoard.jugador'), t('sessionBoard.victorias'), t('sessionBoard.puntos')],
+      rows: order.map((p) => ({
+        who: `${avatars[p]} ${names[p]}`,
+        wins: st.wins[p],
+        points: st.points[p],
+        leader: p === leader,
+      })),
+      meta: sessionMetaText(st),
+      site: new URL(SITE_URL).host,
+    }).catch(() => null);
   }
   function confetti() {
     const h = q('confetti');

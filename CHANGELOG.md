@@ -17,6 +17,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.12.0] - 2026-10-17
+
+**El resultado se comparte con una imagen del marcador**
+
+- **Por qué:** JoseLuis pidió que «Revancha» diga el tamaño del tablero y que, al compartir el
+  resultado, vaya una captura con el marcador de la sesión.
+- **«Revancha»:** debajo pone «mismo tablero (4×4)», con el tamaño de la partida que acaba de terminar.
+- **Imagen del marcador:** al terminar se dibuja una imagen de 1080 px de ancho con los colores del
+  tema: quién gana, el resultado, el tablero y el marcador de la sesión (avatares, nombres, victorias y
+  puntos), con juegaoso.com debajo. «Compartir resultado» la adjunta al texto en los móviles que
+  dejan compartir ficheros; si no, el cuadro de compartir ofrece «🖼️ Descargar imagen».
+- **Decisión:** la imagen lleva los nombres, como la pantalla; el texto sigue sin nombres.
+- **Analítica:** el evento `share` tiene un canal nuevo, `image`, cuando se descarga la imagen.
+
 ## [3.11.0] - 2026-10-16
 
 **Tres niveles contra la máquina: Fácil, Difícil y Extremo ([8b2a344](https://github.com/chopenhauer/devin-juega-oso/commit/8b2a344e8ce061dd31f0d355a435c633cb93fdb7))**

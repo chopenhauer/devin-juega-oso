@@ -8,6 +8,8 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
 - Rediseño visual (fondo nocturno, fichas 3D, animaciones, victoria con confeti).
 - Textos en `public/locales/es.json` (clave → texto), listos para traducir; el idioma del navegador
   va en la analítica para saber qué idiomas faltan (3.9.0). Pendiente: traducir.
+- Al terminar, «Revancha» dice el tablero («mismo tablero (4×4)») y «Compartir resultado» adjunta
+  una imagen con el marcador de la sesión (3.12.0).
 - Bugs B01–B06 corregidos (B06, la máquina que no defiende, con el nivel «Extremo» de la 3.11.0).
 - T4.1: nombres como texto de ejemplo («Jugador 1/2») en vez de valor precargado.
 - Arquitectura: sitio estático en `public/`, motor de reglas testeable, CSP y cabeceras de

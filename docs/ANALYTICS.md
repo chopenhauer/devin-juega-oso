@@ -88,7 +88,7 @@ extra comprado se cuenta como `extra_used` cuando se pulsa.
 | Evento     | Cuándo               | Parámetros                                                            | Para qué                                       |
 | ---------- | -------------------- | --------------------------------------------------------------------- | ---------------------------------------------- |
 | `feedback` | Se contesta 👍/👎    | `rating`, `moment` (`first_game`, `beat_machine`, `streak`) + partida | Si gusta, y en qué momento conviene preguntar. |
-| `share`    | Se comparte el juego | `channel` (`native`, `whatsapp`, `email`, `copy`), `place`            | Qué canal funciona para el boca-oreja.         |
+| `share`    | Se comparte el juego | `channel` (`native`, `whatsapp`, `email`, `copy`, `image`), `place`   | Qué canal funciona para el boca-oreja.         |
 
 ## Contadores del servidor (en línea, sin cookies)
 

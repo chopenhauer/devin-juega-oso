@@ -66,7 +66,7 @@ test('with a native share sheet, 📣 uses it and skips the dialog', async ({ pa
   await page.click('#shareToggle');
   await expect
     .poll(() => page.evaluate(() => window.sharedData?.text))
-    .toMatch(/OSO 🐻.*\n\nhttps:\/\/juegaoso\.com\/\?utm_source=native/);
+    .toMatch(/OSO 🐻[\s\S]*\n\nhttps:\/\/juegaoso\.com\/\?utm_source=native/);
   await expect(dialog(page)).toBeHidden();
   expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'native', place: 'start' })]);
 });
@@ -163,4 +163,58 @@ test('the link shows a card with the bear', async ({ page, request }) => {
   expect(img.status()).toBe(200);
   const png = await img.body();
   expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630]);
+});
+
+test('«Revancha» tells the board size', async ({ page }) => {
+  await start(page);
+  await finish(page);
+  const size = await page
+    .locator('.cell')
+    .count()
+    .then((n) => Math.sqrt(n));
+  await expect(page.locator('#rematch .btn-sub')).toHaveText(`mismo tablero (${size}×${size})`);
+  await expect(page.locator('#rematch')).toHaveAttribute(
+    'aria-label',
+    `Revancha, mismo tablero de ${size} por ${size}`,
+  );
+});
+
+test('the native share of the result attaches a picture of the session scoreboard', async ({ page }) => {
+  await page.addInitScript(() => {
+    navigator.canShare = (data) => !!data;
+    navigator.share = async (data) => {
+      const file = data.files?.[0];
+      const bitmap = file && (await createImageBitmap(file));
+      window.sharedData = { text: data.text, name: file?.name, type: file?.type, width: bitmap?.width };
+    };
+  });
+  await start(page);
+  await finish(page);
+  await page.click('#shareResult');
+  await expect.poll(() => page.evaluate(() => window.sharedData?.type)).toBe('image/png');
+  const shared = await page.evaluate(() => window.sharedData);
+  expect(shared).toMatchObject({ name: 'oso-marcador.png', width: 1080 });
+  expect(shared.text).toMatch(/OSO 🐻[\s\S]*\n\nhttps:\/\/juegaoso\.com\/\?utm_source=native/);
+  expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'native', place: 'end' })]);
+});
+
+test('without a native share sheet, the result dialog offers the picture to download', async ({ page }) => {
+  await noNativeShare(page);
+  await page.goto('/');
+  await page.click('#shareToggle');
+  await expect(page.locator('#shareImage')).toBeHidden();
+  await page.keyboard.press('Escape');
+  await page.click('#introSkip');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
+  await page.click('#startGame');
+  await finish(page);
+  await page.click('#shareResult');
+  const image = page.locator('#shareImage');
+  await expect(image).toBeVisible();
+  await expect(image).toHaveAttribute('download', 'oso-marcador.png');
+  await expect(image).toHaveAttribute('href', /^blob:/);
+  const download = page.waitForEvent('download');
+  await image.click();
+  expect((await download).suggestedFilename()).toBe('oso-marcador.png');
+  expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'image', place: 'end' })]);
 });
