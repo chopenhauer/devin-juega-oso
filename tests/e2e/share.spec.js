@@ -104,8 +104,8 @@ test('the end screen shares the result without names', async ({ page }) => {
   const btn = await page.locator('#shareResult').boundingBox();
   expect(btn.y + btn.height).toBeLessThanOrEqual(actions.y + actions.height + 1);
   await page.click('#shareResult');
-  const message = await page.locator('#shareMessage').textContent();
-  expect(message).toMatch(/OSO 🐻.*!\n\n(Te atreves|Juegas conmigo)\?$/);
+  // The text shows once the scoreboard picture is ready, so wait for it instead of reading it at once.
+  await expect(page.locator('#shareMessage')).toHaveText(/OSO 🐻.*!\n\n(Te atreves|Juegas conmigo)\?$/);
   const wa = new URL(await page.locator('#shareWhatsapp').getAttribute('href')).searchParams.get('text');
   expect(wa).toMatch(/\?\n\nhttps:\/\/juegaoso\.com\//);
   const lines = await page
