@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.13.0] - 2026-10-17
 
-**Enlace de reto contra la máquina**
+**Enlace de reto contra la máquina ([f46cef3](https://github.com/chopenhauer/devin-juega-oso/commit/f46cef3c6776e350c05202fc7ba8930b83de0312))**
 
 - **Por qué:** es la primera de las ideas que eligió JoseLuis tras la 3.12.0. Compartir es lo que más
   visitas trae, y un reto da un motivo para jugar en cuanto llega el enlace.
