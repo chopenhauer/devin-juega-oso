@@ -11,7 +11,8 @@ export default defineConfig({
   timeout: process.env.CI ? 60_000 : 30_000,
   expect: { timeout: process.env.CI ? 10_000 : 5_000 },
   reporter: process.env.CI ? 'github' : 'list',
-  use: { baseURL: `http://localhost:${port}`, trace: 'retain-on-failure' },
+  // sw.js would answer instead of page.route(); tests/e2e/install.spec.js allows it.
+  use: { baseURL: `http://localhost:${port}`, trace: 'retain-on-failure', serviceWorkers: 'block' },
   projects: [
     { name: 'mobile', use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } } },
     { name: 'desktop', use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 900 } } },

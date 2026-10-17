@@ -77,6 +77,7 @@ Lo que se guarda en el dispositivo (`localStorage`), sin datos fuera del navegad
 | `oso.session.v1`  | Marcador de la sesión                                                    |
 | `oso.consent.v1`  | Respuesta al aviso de cookies                                            |
 | `oso.feedback.v1` | Partidas jugadas y si ya se contestó 👍/👎 (para no preguntar demasiado) |
+| `oso.install.v1`  | `dismissed` si se pulsó «No, gracias» en «📲 Instalar»                   |
 | `oso.secretos.v1` | Secretos ya contados, partidas contadas y día del último secreto         |
 | `oso.online.v1`   | Sala en línea y token del asiento, para volver tras recargar             |
 

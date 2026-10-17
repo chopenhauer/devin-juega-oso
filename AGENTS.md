@@ -25,6 +25,7 @@ reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo
 | `public/js/onboarding.js`         | Pasos del inicio: `welcome`, `rules`, `mode`, `where`, `players`, `view`, `board`              |
 | `public/js/challenge.js`          | Enlaces de reto contra la máquina (`?reto=5-hard-9-4&tema=…`) y cuándo se supera               |
 | `public/js/replay.js`             | «Ver la partida»: cada jugada de la última partida, sus OSO y los que deja a tiro              |
+| `public/js/install.js`            | «📲 Instalar» al acabar una partida y registro de `public/sw.js` (funciona sin conexión)       |
 | `public/js/online.js`             | Cliente de las salas en línea                                                                  |
 | `public/js/secrets.js`            | Secretos (easter eggs): 🎨 temas y 🛒 tienda. El n.º 3 está reservado para Julia               |
 | `public/js/telemetry.js`          | Eventos anónimos de GA4 (solo con permiso) y cuándo pedir 👍/👎                                |
@@ -62,6 +63,7 @@ npm run test:e2e       # Playwright (npx playwright install chromium la primera 
 npm run check          # todo lo anterior
 npm run config         # regenera docs/CONFIG.md tras tocar config.js
 npm run tokens         # regenera docs/tokens.json tras tocar tokens.css
+npm run icons          # regenera public/icons/ tras tocar scripts/icon-card.html
 npm run online:report  # embudo y extras del juego en línea del mes (necesita Upstash)
 ```
 
@@ -103,6 +105,8 @@ fallen solo en el CI:
   personas (compartir, invitar) llevan solo ? y ! al final; los del juego, ¿¡.
 - **Parámetros en `config.js`**, nunca números sueltos en el código; después `npm run config`.
 - **Colores y medidas solo desde `tokens.css`** (un test prohíbe colores sueltos).
+- **Sin conexión**: `public/sw.js` guarda en caché lo que lista `SHELL`. Un archivo nuevo en
+  `public/js`, `css`, `img`, `icons` o `locales` va también a `SHELL` (un test lo comprueba).
 - **CSP estricta**: nada de scripts ni estilos inline; los textos de los jugadores con
   `textContent`.
 - **Privacidad**: juegan niños. Sin datos personales en la analítica, todo con consentimiento; ver

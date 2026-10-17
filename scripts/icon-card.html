@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>OSO · icono de la app</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+      }
+      body {
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at 25% 20%, #4b1c7a 0, transparent 60%),
+          radial-gradient(circle at 80% 90%, #2b1366 0, transparent 65%), #120c38;
+      }
+      .bear {
+        /* icon-card.html?maskable keeps the bear inside the safe circle Android may crop to. */
+        font-size: var(--bear, 64vh);
+        line-height: 1;
+        filter: drop-shadow(0 3vh 6vh rgba(0, 0, 0, 0.45));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bear">🐻</div>
+    <script>
+      if (location.search.includes('maskable')) document.body.style.setProperty('--bear', '50vh');
+    </script>
+  </body>
+</html>

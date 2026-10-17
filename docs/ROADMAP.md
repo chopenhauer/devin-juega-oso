@@ -10,6 +10,9 @@ decide, se hace en una rama con preview de Vercel y se publica en `main` cuando 
   va en la analítica para saber qué idiomas faltan (3.9.0). Pendiente: traducir.
 - Al terminar, «Revancha» dice el tablero («mismo tablero (4×4)») y «Compartir resultado» adjunta
   una imagen con el marcador de la sesión (3.12.0).
+- Instalable en la pantalla de inicio, sin tiendas de apps (3.15.0): se ofrece solo al terminar
+  una partida, con «No, gracias», y funciona sin conexión salvo en línea. El icono es el 🐻; Julia
+  puede dibujar uno propio más adelante (29).
 - Bugs B01–B06 corregidos (B06, la máquina que no defiende, con el nivel «Extremo» de la 3.11.0).
 - T4.1: nombres como texto de ejemplo («Jugador 1/2») en vez de valor precargado.
 - Arquitectura: sitio estático en `public/`, motor de reglas testeable, CSP y cabeceras de
@@ -124,13 +127,14 @@ muchos de pruebas de casa: sirven para orientar, no para decidir.
 | 19  | Revisar los valores de la máquina (Fácil 50 %, Difícil 80 %, Extremo) con GA4      | Medio      | Bajo       | Con datos      |
 | 20  | ~~Enlace de reto: abre la partida ya preparada («bate mi 9–4»)~~ hecho en 3.13.0   | Alto       | Bajo-medio | Hecho          |
 | 21  | ~~Repetición de la partida jugada a jugada~~ hecho en 3.14.0                       | Medio-alto | Medio      | Hecho          |
-| 22  | Instalable en la pantalla de inicio (manifest y service worker), sin tiendas       | Medio      | Bajo       | Ahora (3.º)    |
+| 22  | ~~Instalable en la pantalla de inicio, sin tiendas~~ hecho en 3.15.0               | Medio      | Bajo       | Hecho          |
 | 23  | Reto del día: el mismo tablero de salida para todos cada día                       | Alto       | Medio      | Explorar       |
 | 24  | Decidir qué hacemos con el reloj (bajar el 5×5 o bajar el objetivo del 50 %)       | Medio      | Bajo       | Decidir        |
 | 25  | Laboratorio de Julia: cambiar los valores de la máquina y simular partidas         | Medio      | Medio      | Siguiente      |
 | 26  | Versión en inglés                                                                  | Medio      | Medio      | Cuando se diga |
 | 27  | Puntos extra por racha de OSO (fijos o crecientes)                                 | Medio-alto | Medio      | Futuro         |
 | 28  | Hándicap y categorías: jugar con ventaja según tu nivel                            | Medio      | Medio-alto | Futuro         |
+| 29  | Icono de la app dibujado por Julia (hoy es el 🐻 sobre fondo morado)               | Bajo       | Bajo       | Cuando quiera  |
 
 Ya hechos desde la revisión anterior: privacidad, telemetría y 👍/👎 (2.4.0), reglas animadas
 (2.3.0), compartir (2.6.0), jugar en línea (3.0.0), secretos (3.3.0) y la tienda secreta (3.4.0),
@@ -557,7 +561,7 @@ día. Cada una va en su rama con su preview.
 7. **Versión en inglés (26):** los textos ya están en `public/locales/es.json`. Ampliaría el público,
    pero no se traduce hasta que JoseLuis lo diga.
 
-### Ideas de JoseLuis tras la 3.14.0 (18-10-2026)
+### Ideas de JoseLuis tras la 3.14.0 (17-10-2026)
 
 Apuntadas como ideas a futuro, sin fecha ni decisión.
 

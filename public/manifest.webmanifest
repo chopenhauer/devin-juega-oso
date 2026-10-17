@@ -1,0 +1,19 @@
+{
+  "name": "OSO · el juego de Julia",
+  "short_name": "OSO",
+  "description": "Un juego de letras para jugar en familia: coloca O y S y forma la palabra OSO más veces que tu rival.",
+  "lang": "es",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#120c38",
+  "theme_color": "#1b1145",
+  "categories": ["games", "education", "kids"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

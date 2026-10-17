@@ -27,6 +27,13 @@ function consented() {
   }
 }
 
+// 'standalone' when OSO was opened from the home screen icon, 'browser' otherwise.
+export function displayMode() {
+  const installed =
+    window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true;
+  return installed ? 'standalone' : 'browser';
+}
+
 export function track(name, params = {}) {
   if (!consented()) return false;
   window.gtag?.('event', name, {
@@ -34,6 +41,7 @@ export function track(name, params = {}) {
     app_version: VERSION,
     app_language: LANG,
     browser_language: BROWSER_LANG,
+    display_mode: displayMode(),
   });
   return true;
 }

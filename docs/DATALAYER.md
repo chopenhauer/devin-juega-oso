@@ -97,11 +97,12 @@ partida de dos en el mismo móvil:
 
 Los añade `track()` a **todos** los eventos:
 
-| Parámetro          | Tipo  | Valores                                                                    |
-| ------------------ | ----- | -------------------------------------------------------------------------- |
-| `app_version`      | texto | La versión de `public/js/version.js` (`3.10.0`)                            |
-| `app_language`     | texto | El idioma en que se ve el juego (`es`; ver `LANGS` en `public/js/i18n.js`) |
-| `browser_language` | texto | `navigator.language` (`es-ES`, `en-US`…), o `und` si no lo hay             |
+| Parámetro          | Tipo  | Valores                                                                          |
+| ------------------ | ----- | -------------------------------------------------------------------------------- |
+| `app_version`      | texto | La versión de `public/js/version.js` (`3.10.0`)                                  |
+| `app_language`     | texto | El idioma en que se ve el juego (`es`; ver `LANGS` en `public/js/i18n.js`)       |
+| `browser_language` | texto | `navigator.language` (`es-ES`, `en-US`…), o `und` si no lo hay                   |
+| `display_mode`     | texto | `standalone` (abierto desde el icono instalado) o `browser` (desde el navegador) |
 
 **Parámetros de partida** (`gameParams()` de `telemetry.js`), en `game_start`, `game_end`,
 `game_abandon`, `extra_used` y `feedback`:
@@ -143,6 +144,9 @@ Todos se envían desde `public/js/app.js`. «Partida» = los parámetros de part
 | `challenge_open`     | `board_size`, `difficulty`                                                                                                                                                                                                                                                           |
 | `challenge_end`      | Los de partida + `beaten` (booleano), `missing` (número)                                                                                                                                                                                                                             |
 | `replay_view`        | Los de partida + `replay_seen` (número, la jugada más avanzada que se vio), `replay_moves` (número de jugadas)                                                                                                                                                                       |
+| `install_offer`      | `action` (`shown`, `install`, `no_thanks`), `platform` (`prompt`, `ios`)                                                                                                                                                                                                             |
+| `install_prompt`     | `outcome` (`accepted`, `dismissed`)                                                                                                                                                                                                                                                  |
+| `app_installed`      | —                                                                                                                                                                                                                                                                                    |
 | `share`              | `channel` (`native`, `whatsapp`, `email`, `copy`, `image`), `place` (`start`, `end`, `menu`)                                                                                                                                                                                         |
 
 ## Registro en GA4
@@ -152,9 +156,9 @@ El registro está como código en el repo privado `chopenhauer/oso-privado` (`ga
 `python3 sync.py plan|apply`):
 
 - **Dimensiones** (texto o categoría): `action`, `answered`, `app_language`, `app_version`,
-  `board_size`, `browser_language`, `channel`, `difficulty`, `end_reason`, `extra`, `mode`,
-  `moment`, `place`, `players`, `rating`, `reason`, `result`, `role`, `secret`, `theme`,
-  `theme_from`, `theme_source`, `told`, `vs_machine`.
+  `board_size`, `browser_language`, `channel`, `difficulty`, `display_mode`, `end_reason`, `extra`,
+  `mode`, `moment`, `outcome`, `place`, `platform`, `players`, `rating`, `reason`, `result`, `role`,
+  `secret`, `theme`, `theme_from`, `theme_source`, `told`, `vs_machine`.
 - **Métricas** (números que se suman o se promedian): `answer_ms`, `cells_filled`, `cells_total`,
   `conflicts`, `extras_hint`, `extras_last`, `extras_sos`, `extras_swap`, `move_rtt_p50_ms`,
   `move_rtt_p95_ms`, `poll_errors`, `polls`, `reconnects`, `score_total`, `sync_p50_ms`,

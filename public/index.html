@@ -37,6 +37,9 @@
     />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="OSO" />
     <link rel="preload" href="/fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/tokens.css" />
     <link rel="stylesheet" href="/css/styles.css" />
@@ -1134,6 +1137,22 @@
                 </button>
               </div>
             </section>
+            <section id="installAsk" class="install-ask hidden" aria-labelledby="installTitle">
+              <h2 data-i18n="installTitle" id="installTitle" class="feedback-title">
+                📲 ¿Quieres OSO en tu pantalla de inicio?
+              </h2>
+              <p data-i18n="installText" class="install-text">
+                Se abre como una app y funciona sin conexión.
+              </p>
+              <div class="feedback-actions">
+                <button data-i18n="installYes" id="installYes" type="button" class="secondary install-yes">
+                  Instalar
+                </button>
+                <button data-i18n="installNo" id="installNo" type="button" class="install-no">
+                  No, gracias
+                </button>
+              </div>
+            </section>
           </div>
         </div>
       </section>
@@ -1147,6 +1166,24 @@
         </p>
         <form method="dialog">
           <button data-i18n="fourDialog.entendido" class="primary" type="submit" autofocus>Entendido</button>
+        </form>
+      </dialog>
+      <dialog id="installIosDialog" class="info-dialog" aria-labelledby="installIosTitle">
+        <div class="info-emoji" aria-hidden="true">📲</div>
+        <h2 data-i18n="installIosTitle" id="installIosTitle" class="step-title">
+          OSO en tu pantalla de inicio
+        </h2>
+        <ol class="install-steps">
+          <li data-i18n-html="installIos.step1">
+            Pulsa <strong>Compartir</strong> ⬆️ en la barra del navegador.
+          </li>
+          <li data-i18n-html="installIos.step2">Elige <strong>Añadir a pantalla de inicio</strong> ➕.</li>
+          <li data-i18n-html="installIos.step3">
+            Pulsa <strong>Añadir</strong>. ¡Ya tienes el 🐻 con tus apps!
+          </li>
+        </ol>
+        <form method="dialog">
+          <button data-i18n="common.cerrar" class="primary" type="submit" autofocus>Cerrar</button>
         </form>
       </dialog>
       <dialog id="thanksDialog" class="info-dialog thanks-dialog" aria-labelledby="thanksTitle">

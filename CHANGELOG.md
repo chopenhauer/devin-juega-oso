@@ -17,6 +17,29 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.15.0] - 2026-10-17
+
+**«📲 Instalar»: OSO en la pantalla de inicio, también sin conexión**
+
+- **Por qué:** es la tercera de las ideas que eligió JoseLuis. Sigue siendo web, sin tiendas de
+  apps: con un manifest y un service worker se abre desde un icono, como una app, y funciona sin
+  conexión.
+- **Nada intrusivo (decisión de JoseLuis):** solo se ofrece en la pantalla final, después de jugar,
+  nunca en la bienvenida ni a mitad de partida y sin ventanas emergentes. No sale si ya está
+  instalado, si el navegador no lo permite o si en esa pantalla ya se pregunta 👍/👎 o se cuenta
+  un secreto. «No, gracias» lo esconde para siempre en ese dispositivo (`oso.install.v1`).
+- **Cómo se instala:** en Android, Chrome y Edge, «Instalar» abre el aviso del navegador. En iPhone y
+  iPad no existe ese aviso, así que explica los pasos: Compartir ⬆️ → «Añadir a pantalla de inicio».
+- **Sin conexión:** `public/sw.js` pide siempre primero la red, así que con conexión se juega la
+  última versión, y guarda lo que descarga para cuando no la hay. Sin conexión funcionan contra la
+  máquina, Juntos y 4 jugadores; en línea avisa de que hace falta conexión. La API de salas y la
+  analítica nunca pasan por la caché.
+- **Icono:** el 🐻 sobre el fondo morado del juego, generado con `npm run icons`. Julia no lo
+  dibuja ahora; queda en el ROADMAP por si quiere hacer uno más adelante.
+- **GA4:** eventos nuevos `install_offer`, `install_prompt` y `app_installed`, y `display_mode` en
+  todos los eventos para saber cuántas partidas se juegan con OSO instalado.
+- **Privacidad:** la política explica la copia del juego para jugar sin conexión y la nueva clave.
+
 ## [3.14.0] - 2026-10-17
 
 **«Ver la partida»: la última partida, jugada a jugada ([ea4a998](https://github.com/chopenhauer/devin-juega-oso/commit/ea4a99830d0a89572b9240de7ba67b2d4b13b79e))**

@@ -11,6 +11,7 @@ import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from
 import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
 import { drawScorecard } from './scorecard.js';
 import { replaySteps } from './replay.js';
+import { showInstall } from './install.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 const { timeFor } = Engine;
@@ -1322,6 +1323,7 @@ const { timeFor } = Engine;
     const secret = dueSecret();
     syncSecretGift();
     showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret }));
+    showInstall(!!secret || !!feedbackMomentNow);
   }
 
   let feedbackMomentNow = null;

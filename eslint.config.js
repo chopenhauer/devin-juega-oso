@@ -9,6 +9,10 @@ export default [
     languageOptions: { sourceType: 'module', globals: globals.browser },
   },
   {
+    files: ['public/sw.js'],
+    languageOptions: { sourceType: 'script', globals: globals.serviceworker },
+  },
+  {
     files: ['api/**/*.js', 'scripts/**/*.js', 'tests/**/*.js', '*.config.js', 'middleware.js'],
     languageOptions: { sourceType: 'module', globals: globals.node },
   },

@@ -1,7 +1,7 @@
 {
   "name": "devin-juega-oso",
   "private": true,
-  "version": "3.14.0",
+  "version": "3.15.0",
   "license": "MIT",
   "description": "OSO, el juego de Julia: juego web estático de O y S.",
   "type": "module",
@@ -16,6 +16,7 @@
     "test:e2e": "playwright test",
     "check": "npm run lint && npm test && npm run test:e2e",
     "og": "node scripts/og-image.js",
+    "icons": "node scripts/icon-image.js",
     "tokens": "node scripts/tokens.js",
     "config": "node scripts/config-doc.js",
     "online:report": "node scripts/online-report.js"
