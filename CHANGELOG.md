@@ -17,6 +17,25 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.13.0] - 2026-10-17
+
+**Enlace de reto contra la máquina**
+
+- **Por qué:** es la primera de las ideas que eligió JoseLuis tras la 3.12.0. Compartir es lo que más
+  visitas trae, y un reto da un motivo para jugar en cuanto llega el enlace.
+- **Al compartir el resultado contra la máquina,** el texto reta: «Te reto en OSO 🐻: 5×5 contra la
+  máquina en difícil. Yo gané 9 a 4. ¿Lo superas?», con un enlace `?reto=5-hard-9-4` (y `&tema=` si el
+  tema no es el clásico) y la campaña `utm_campaign=reto`.
+- **Al abrir el enlace,** el juego va directo a elegir avatar con el modo, el nivel, el tablero y el
+  tema del reto, y un aviso dice qué hay que superar. Las preferencias guardadas solo cambian si se
+  juega.
+- **Superar el reto es ganar por más diferencia** (la máquina tiene azar, así que es más justo que
+  contar solo los puntos); si quien reta perdió, basta con ganar. Al acabar sale «🏆 ¡Reto superado!» o
+  cuánto faltó, y se puede devolver el reto.
+- **Medición:** eventos `challenge_open` y `challenge_end` (`beaten`, `missing`) y el valor
+  `challenge` en `theme_source`.
+- **Decisión:** de momento solo contra la máquina; en «Juntos» y en línea no cambia nada.
+
 ## [3.12.0] - 2026-10-17
 
 **El resultado se comparte con una imagen del marcador ([f773bc2](https://github.com/chopenhauer/devin-juega-oso/commit/f773bc2a4390a2bbace9f65991aa32e31bbef047))**

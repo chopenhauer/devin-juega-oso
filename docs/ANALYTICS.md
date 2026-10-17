@@ -85,10 +85,12 @@ extra comprado se cuenta como `extra_used` cuando se pulsa.
 
 ### Opinión y difusión
 
-| Evento     | Cuándo               | Parámetros                                                            | Para qué                                       |
-| ---------- | -------------------- | --------------------------------------------------------------------- | ---------------------------------------------- |
-| `feedback` | Se contesta 👍/👎    | `rating`, `moment` (`first_game`, `beat_machine`, `streak`) + partida | Si gusta, y en qué momento conviene preguntar. |
-| `share`    | Se comparte el juego | `channel` (`native`, `whatsapp`, `email`, `copy`, `image`), `place`   | Qué canal funciona para el boca-oreja.         |
+| Evento           | Cuándo                               | Parámetros                                                            | Para qué                                       |
+| ---------------- | ------------------------------------ | --------------------------------------------------------------------- | ---------------------------------------------- |
+| `feedback`       | Se contesta 👍/👎                    | `rating`, `moment` (`first_game`, `beat_machine`, `streak`) + partida | Si gusta, y en qué momento conviene preguntar. |
+| `share`          | Se comparte el juego                 | `channel` (`native`, `whatsapp`, `email`, `copy`, `image`), `place`   | Qué canal funciona para el boca-oreja.         |
+| `challenge_open` | Se abre un enlace de reto (`?reto=`) | `board_size`, `difficulty`                                            | Cuántos retos se aceptan.                      |
+| `challenge_end`  | Termina una partida del reto         | `beaten`, `missing` (puntos de diferencia que faltaron) + partida     | Si los retos se superan o son demasiado duros. |
 
 ## Contadores del servidor (en línea, sin cookies)
 

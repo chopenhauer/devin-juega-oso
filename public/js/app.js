@@ -8,6 +8,7 @@ import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
 import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
+import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
 import { drawScorecard } from './scorecard.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
@@ -1311,7 +1312,8 @@ const { timeFor } = Engine;
     }
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
-    lastResult = { mode: gameMode, winner: w, scores: [...scores] };
+    lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
+    showChallenge();
     const st = recordSession(w);
     prepareScorecard(st, showSession(st));
     countGame();
@@ -1339,15 +1341,24 @@ const { timeFor } = Engine;
   q('thanksDialog').addEventListener('close', () => q('rematch').focus({ preventScroll: true }));
 
   // Word of mouth: the phone's own share sheet when there is one, otherwise WhatsApp, email or copy.
+  let shareChallenge = null;
   let lastResult = null,
     sharePlace = null;
   async function share(place) {
-    const text = shareText(place === 'end' ? lastResult : null);
+    const result = place === 'end' ? lastResult : null;
+    shareChallenge =
+      result?.mode === 'solo'
+        ? `reto=${challengeParam({ ...result, mine: result.scores[0], theirs: result.scores[1] })}${theme === 'classic' ? '' : `&tema=${theme}`}`
+        : null;
+    const text = shareText(result);
     const card = place === 'end' ? await shareCard : null;
     if (navigator.share) {
       try {
         // The link goes inside the text, after a blank line: with `url` apart, Android glues it on with a space.
-        const data = { title: t('common.oso_el_juego_de'), text: withLink(text, shareUrl('native')) };
+        const data = {
+          title: t('common.oso_el_juego_de'),
+          text: withLink(text, shareUrl('native', shareChallenge)),
+        };
         if (card && navigator.canShare?.({ files: [card] })) data.files = [card];
         await navigator.share(data);
         track('share', { channel: 'native', place });
@@ -1358,8 +1369,8 @@ const { timeFor } = Engine;
     }
     sharePlace = place;
     q('shareMessage').textContent = text;
-    q('shareWhatsapp').href = whatsappHref(text);
-    q('shareEmail').href = emailHref(text);
+    q('shareWhatsapp').href = whatsappHref(text, shareUrl('whatsapp', shareChallenge));
+    q('shareEmail').href = emailHref(text, shareUrl('email', shareChallenge));
     q('shareStatus').textContent = '';
     const image = q('shareImage');
     if (image.href.startsWith('blob:')) URL.revokeObjectURL(image.href);
@@ -1373,7 +1384,7 @@ const { timeFor } = Engine;
   );
   q('shareEmail').addEventListener('click', () => track('share', { channel: 'email', place: sharePlace }));
   q('shareCopy').addEventListener('click', async () => {
-    const url = shareUrl('copy');
+    const url = shareUrl('copy', shareChallenge);
     try {
       await navigator.clipboard.writeText(url);
       q('shareStatus').textContent = t('share.copied');
@@ -2227,6 +2238,50 @@ const { timeFor } = Engine;
     if (code) offerJoin(code);
   }
   bootOnline();
+
+  // A challenge link (challenge.js): onboarding.js sets the game up; here go its theme, note and result.
+  const challenge = parseChallenge(location.search);
+  const challenged = () =>
+    !!challenge && gameMode === 'solo' && size === challenge.size && difficulty === challenge.difficulty;
+  if (challenge) {
+    if (challenge.theme) applyTheme(challenge.theme, false, 'challenge');
+    const level = t(`summary.${challenge.difficulty}`);
+    q('challengeNote').textContent =
+      challenge.mine > challenge.theirs
+        ? t('challenge.note', { size: challenge.size, level, target: challengeTarget(challenge) })
+        : t('challenge.note_win', { size: challenge.size, level });
+    track('challenge_open', {
+      board_size: `${challenge.size}x${challenge.size}`,
+      difficulty: challenge.difficulty,
+    });
+  }
+  const syncChallengeNote = () =>
+    q('challengeNote').classList.toggle(
+      'hidden',
+      !challenge ||
+        gameMode !== 'solo' ||
+        +q('sizeSelect').value !== challenge.size ||
+        difficulty !== challenge.difficulty,
+    );
+  document.addEventListener('oso:step', syncChallengeNote);
+  q('sizeSelect').addEventListener('change', syncChallengeNote);
+  ['modeTwo', 'modeSolo', 'modeFour', 'difficultyEasy', 'difficultyHard', 'difficultyExtreme'].forEach((id) =>
+    q(id).addEventListener('click', syncChallengeNote),
+  );
+  syncChallengeNote();
+  function showChallenge() {
+    const on = challenged();
+    q('challengeResult').classList.toggle('hidden', !on);
+    if (!on) return;
+    const { beaten, missing } = challengeOutcome(challenge, scores);
+    const diff = scores[0] - scores[1];
+    q('challengeResult').textContent = beaten
+      ? t('challenge.beaten')
+      : diff > 0
+        ? t('challenge.short', { target: challengeTarget(challenge), diff })
+        : t('challenge.lost');
+    track('challenge_end', { ...modeParams(), beaten, missing });
+  }
 
   q('startGame').addEventListener('click', () => {
     if (gameMode === 'online') return void startOnline();

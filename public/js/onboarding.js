@@ -2,6 +2,7 @@
 // on the first visit; later visits start at "mode" with the last choices restored.
 import { GAME } from './config.js';
 import { t } from './i18n.js';
+import { parseChallenge } from './challenge.js';
 
 const STORAGE_KEY = 'oso.prefs.v1';
 const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
@@ -248,4 +249,11 @@ document.fonts?.ready.then(equalizeHeight);
 setView(defaultView());
 const prefs = loadPrefs();
 applyPrefs(prefs);
-show(prefs.seenIntro ? 'mode' : 'welcome');
+// A challenge link comes with the game already set: only the player's avatar and name are left.
+const challenge = parseChallenge(location.search);
+if (challenge) {
+  $('modeSolo').click();
+  $(difficultyId(challenge.difficulty)).click();
+  $('sizeSelect').value = String(challenge.size);
+  show('players');
+} else show(prefs.seenIntro ? 'mode' : 'welcome');

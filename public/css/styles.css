@@ -1222,6 +1222,12 @@ select option {
   font-weight: var(--fw-semibold);
   margin-top: var(--space-1-5);
 }
+.challenge-result {
+  margin: var(--space-2) 0 0;
+  color: var(--accent);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+}
 .winner-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2174,6 +2180,21 @@ body:has(#helpModal:not(.hidden))
   font-weight: var(--fw-bold);
   font-variant-numeric: tabular-nums;
   animation: demoPop 2.4s ease-in-out infinite;
+}
+.challenge-note {
+  margin: 0 auto var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  max-width: 27.5rem;
+  border: 2px solid var(--accent);
+  border-radius: var(--r-md);
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  text-align: center;
+}
+.challenge-note.hidden,
+.challenge-result.hidden {
+  display: none;
 }
 .setup-summary {
   margin: 0;

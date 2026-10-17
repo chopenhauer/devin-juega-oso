@@ -55,3 +55,14 @@ test('messages for other people only use the closing ? and ! (spoken Spanish)', 
     assert.doesNotMatch(text, /[¿¡]/, text);
   }
 });
+
+test('a game against the machine with its board shares a challenge', () => {
+  assert.equal(
+    shareText({ mode: 'solo', winner: 0, scores: [9, 4], size: 5, difficulty: 'hard' }),
+    'Te reto en OSO 🐻: 5×5 contra la máquina en difícil. Yo gané 9 a 4.\n\n¿Lo superas?',
+  );
+  assert.equal(
+    shareUrl('whatsapp', 'reto=5-hard-9-4'),
+    'https://juegaoso.com/?reto=5-hard-9-4&utm_source=whatsapp&utm_medium=share&utm_campaign=reto',
+  );
+});

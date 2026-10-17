@@ -106,15 +106,15 @@ Los añade `track()` a **todos** los eventos:
 **Parámetros de partida** (`gameParams()` de `telemetry.js`), en `game_start`, `game_end`,
 `game_abandon`, `extra_used` y `feedback`:
 
-| Parámetro      | Tipo     | Valores                                                                                               |
-| -------------- | -------- | ----------------------------------------------------------------------------------------------------- |
-| `board_size`   | texto    | `{n}x{n}` (`5x5`, `6x6`…)                                                                             |
-| `players`      | número   | `2` o `4`                                                                                             |
-| `mode`         | texto    | `solo` (contra la máquina), `two` (mismo dispositivo), `four`, `online`                               |
-| `vs_machine`   | booleano | `true` solo en `solo`                                                                                 |
-| `difficulty`   | texto    | `easy`, `hard`, `extreme`; `none` si no se juega contra la máquina                                    |
-| `theme`        | texto    | id del tema de `public/js/themes.js` (`classic`, `halloween`…)                                        |
-| `theme_source` | texto    | `default`, `chosen` (elegido o guardado), `festival` (por fecha), `host` (en línea, el del anfitrión) |
+| Parámetro      | Tipo     | Valores                                                                                                                                      |
+| -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `board_size`   | texto    | `{n}x{n}` (`5x5`, `6x6`…)                                                                                                                    |
+| `players`      | número   | `2` o `4`                                                                                                                                    |
+| `mode`         | texto    | `solo` (contra la máquina), `two` (mismo dispositivo), `four`, `online`                                                                      |
+| `vs_machine`   | booleano | `true` solo en `solo`                                                                                                                        |
+| `difficulty`   | texto    | `easy`, `hard`, `extreme`; `none` si no se juega contra la máquina                                                                           |
+| `theme`        | texto    | id del tema de `public/js/themes.js` (`classic`, `halloween`…)                                                                               |
+| `theme_source` | texto    | `default`, `chosen` (elegido o guardado), `festival` (por fecha), `host` (en línea, el del anfitrión), `challenge` (el de un enlace de reto) |
 
 ## Catálogo de eventos
 
@@ -140,6 +140,8 @@ Todos se envían desde `public/js/app.js`. «Partida» = los parámetros de part
 | `online_machine`     | `action` (`offered`, `accepted`, `rival_arrived`, `switched`)                                                                                                                                                                                                                        |
 | `online_quality`     | `board_size` + `move_rtt_p50_ms`, `move_rtt_p95_ms`, `sync_p50_ms`, `sync_p95_ms` (ms), `polls`, `poll_errors`, `reconnects`, `conflicts` (veces); de `qualityParams()` en `public/js/online.js`                                                                                     |
 | `feedback`           | partida + `rating` (`up`, `down`), `moment` (`first_game`, `beat_machine`, `streak`)                                                                                                                                                                                                 |
+| `challenge_open`     | `board_size`, `difficulty`                                                                                                                                                                                                                                                           |
+| `challenge_end`      | Los de partida + `beaten` (booleano), `missing` (número)                                                                                                                                                                                                                             |
 | `share`              | `channel` (`native`, `whatsapp`, `email`, `copy`, `image`), `place` (`start`, `end`, `menu`)                                                                                                                                                                                         |
 
 ## Registro en GA4
