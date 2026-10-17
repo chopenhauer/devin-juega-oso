@@ -11,9 +11,9 @@ Lo ya publicado, versión a versión y con sus decisiones, está en el [CHANGELO
 ## Ahora (orden del 17-10-2026)
 
 1. **[Fácil más fácil](ideas/niveles-maquina.md) (19):** en Fácil la máquina gana el 74 % de las
-   partidas.
+   partidas. Espera unos días más de datos (JoseLuis, 17-10-2026).
 2. **[Que la gente llegue a jugar](ideas/llegar-a-jugar.md) (30):** medir cada paso de la
-   bienvenida y probar «Jugar ya».
+   bienvenida (en la 3.17.0) y, según los datos, probar «Jugar ya».
 3. **[Reto del día](ideas/reto-del-dia.md) (23):** un motivo para volver cada día y para compartir.
 4. **[Decidir el reloj](ideas/reloj.md) (24):** bajar el objetivo del 50 % a un 20-25 % o bajar el
    5×5.
@@ -56,7 +56,7 @@ confirme. Los números entre paréntesis son los de siempre de cada idea.
 
 | #   | Idea                                                          | Estado          |
 | --- | ------------------------------------------------------------- | --------------- |
-| 19  | [Fácil más fácil y revisar Difícil](ideas/niveles-maquina.md) | **Ahora (1.º)** |
+| 19  | [Fácil más fácil y revisar Difícil](ideas/niveles-maquina.md) | Esperando datos |
 | 25  | [Laboratorio de Julia](ideas/laboratorio-de-julia.md)         | Siguiente       |
 | 13  | [Nivel Extremo](ideas/niveles-maquina.md)                     | Hecho en 3.11.0 |
 
@@ -93,7 +93,7 @@ Sirve para todos los tipos de partida.
 
 | #   | Idea                                                              | Estado                  |
 | --- | ----------------------------------------------------------------- | ----------------------- |
-| 30  | [Que la gente llegue a jugar](ideas/llegar-a-jugar.md)            | **Ahora (2.º)**         |
+| 30  | [Que la gente llegue a jugar](ideas/llegar-a-jugar.md)            | Midiendo (3.17.0)       |
 | 23  | [Reto del día](ideas/reto-del-dia.md)                             | **Ahora (3.º)**         |
 | 3   | [Hall of fame local](ideas/hall-of-fame.md)                       | Siguiente               |
 | 14  | [Hall of fame global](ideas/hall-of-fame.md)                      | Reserva                 |

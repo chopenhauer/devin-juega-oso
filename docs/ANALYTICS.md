@@ -52,6 +52,15 @@ el idioma va también en cada evento de partida.
 `players` (2 o 4), `mode` (`solo`, `two`, `four`, `online`), `vs_machine`, `difficulty` (`easy`, `hard`, `extreme` o `none`),
 `theme` y `theme_source`.
 
+### Bienvenida
+
+| Evento       | Cuándo                                                                         | Parámetros                                                                                                                                                             | Para qué                                                                                     |
+| ------------ | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `setup_step` | Se ve una pantalla del inicio antes de la primera partida (una vez por visita) | `step` (`welcome`, `rules_1`…`rules_4`, `mode`, `where`, `players`, `view`, `board`, `start`), `entry` (`first`, `return`, `challenge`), `mode` (el elegido hasta ahí) | **En qué pantalla se va quien no llega a jugar** (idea 30). Decide si hace falta «Jugar ya». |
+
+Las pantallas vistas antes de contestar el aviso de cookies se mandan si después se acepta. El mismo
+embudo, de todas las visitas y sin cookies, está en los contadores del servidor (ver abajo).
+
 ### Partidas
 
 | Evento         | Cuándo                              | Parámetros además de los de partida                                                                                                                                                                                                                            | Para qué                                                                                                                                             |
@@ -126,6 +135,10 @@ en línea. No guarda IP ni nada del navegador.
   contestado al aviso (GA4 solo recibe los avisos sin cookies de Consent Mode, que no salen en los
   informes hasta que hay mucho tráfico).
 - **Rechazo en el aviso** = `consent_denied / (consent_granted + consent_denied)`.
+- **Embudo de la bienvenida** (desde la 3.17.0): `public/js/funnel.js` manda también cada pantalla
+  del inicio vista antes de la primera partida, una vez por visita, como
+  `setup_{entrada}_{pantalla}` (`setup_first_welcome`, `setup_return_mode`, `setup_first_start`…).
+  `npm run online:report` lo enseña por tipo de entrada, con el porcentaje sobre la primera pantalla.
 - Son cargas, no personas: recargar cuenta otra vez. Se comparan con las páginas vistas de GA4, no
   con sus usuarios. Quien bloquea scripts no se cuenta en ninguno de los dos.
 - Vercel Web Analytics (`public/js/vercel-analytics.js`, solo en producción) da otra cifra de

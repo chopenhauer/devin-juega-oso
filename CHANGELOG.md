@@ -17,6 +17,28 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.17.0] - 2026-10-17
+
+**Medimos la bienvenida: en qué pantalla se va quien no llega a jugar**
+
+- **Por qué:** en GA4, solo 30 de los 52 usuarios de los últimos 28 días empezaron una partida, y
+  no sabíamos en qué pantalla se iban los demás. Es la idea 30 del roadmap
+  ([`llegar-a-jugar.md`](docs/ideas/llegar-a-jugar.md)); JoseLuis eligió medir antes de cambiar nada.
+- **Qué se mide:** cada pantalla del inicio que se ve antes de la primera partida, una vez por
+  visita: la bienvenida, cada tarjeta de las reglas (`rules_1`…`rules_4`), el modo, dónde está tu
+  rival, los jugadores, la vista, el tablero y «Empezar» (`start`). También cómo llegó la visita:
+  primera vez, vuelve (empieza en el modo) o enlace de reto. Sin nombres ni nada que se escriba.
+- **Dos sitios, como decidió JoseLuis:**
+  - **Nuestro servidor**, sin cookies, cuenta las pantallas de todas las visitas (también de quien
+    rechaza las cookies), en el mismo contador mensual que las visitas (`setup_{entrada}_{pantalla}`).
+    `npm run online:report` enseña el embudo.
+  - **GA4**, solo con las cookies aceptadas, recibe el evento `setup_step` (`step`, `entry`, `mode`)
+    para cruzarlo con el resto. Como el aviso de cookies sale encima de la bienvenida, las pantallas
+    vistas antes de contestar se guardan en memoria y se mandan solo si luego se acepta; si se rechaza,
+    se tiran.
+- **La 19 espera:** JoseLuis prefiere esperar unos días más de datos antes de hacer el Fácil más fácil.
+- La política de privacidad lo cuenta en «Visitas, sin cookies» y en la lista de Google Analytics.
+
 ## [3.16.0] - 2026-10-17
 
 **Sin conexión, «🤖 Contra la máquina» ([4a5d668](https://github.com/chopenhauer/devin-juega-oso/commit/4a5d668a1280b2939f87eec4691ee510491baf57))**

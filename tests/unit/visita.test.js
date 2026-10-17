@@ -33,3 +33,27 @@ test('ignores anything else and only accepts POST', async () => {
   assert.equal(get.status, 405);
   assert.deepEqual(await s.counters(), {});
 });
+
+test('counts each setup screen by how the visit came in', async () => {
+  const s = setup();
+  for (const step of ['welcome', 'rules_1', 'mode', 'start'])
+    assert.equal(await s.post({ step, entry: 'first' }), 204);
+  assert.equal(await s.post({ step: 'mode', entry: 'return' }), 204);
+  assert.equal(await s.post({ step: 'players', entry: 'challenge' }), 204);
+  assert.deepEqual(await s.counters(), {
+    setup_first_welcome: 1,
+    setup_first_rules_1: 1,
+    setup_first_mode: 1,
+    setup_first_start: 1,
+    setup_return_mode: 1,
+    setup_challenge_players: 1,
+    redis_cmds: 6,
+  });
+  for (const bad of [
+    { step: 'mode' },
+    { step: 'Jugador 1', entry: 'first' },
+    { step: 'rules_10', entry: 'first' },
+    { step: 'mode', entry: 'other' },
+  ])
+    assert.equal(await s.post(bad), 400);
+});

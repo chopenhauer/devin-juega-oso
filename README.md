@@ -33,6 +33,7 @@ public/               Sitio estático que publica Vercel (sin build)
   js/online.js        Cliente de las salas en línea (crear, unirse, consultar al servidor)
   js/secrets.js       Lista de secretos (easter eggs) y cuándo toca contar uno
   js/onboarding.js    Inicio por pasos (bienvenida, reglas, modo, jugadores, vista, tablero)
+  js/funnel.js        Qué pantallas del inicio se ven antes de jugar (servidor sin cookies y GA4)
   js/themes.js        Temas (skins) y qué temas salen en el menú 🎨 según la fecha
   js/sound.js         Sonidos generados con Web Audio y silencio recordado
   js/leaderboard.js   Marcador de la sesión (partidas seguidas entre los mismos jugadores)

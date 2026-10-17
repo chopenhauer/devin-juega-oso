@@ -1,6 +1,6 @@
 # Niveles de la máquina (13, 19)
 
-- **Estado:** Extremo hecho en 3.11.0 · Fácil más fácil (19): **ahora (1.º)**
+- **Estado:** Extremo hecho en 3.11.0 · Fácil más fácil (19): esperando más datos
 - **Grupo:** [Contra la máquina](../ROADMAP.md#1-contra-la-máquina)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Bajo
 
@@ -20,3 +20,6 @@ condición de revisar a futuro los valores (`machine.easyAim`, `hardAim`, `pool`
   [`config.js`](../../public/js/config.js) y revisar Difícil. El Laboratorio de Julia
   ([25](laboratorio-de-julia.md)) puede simular antes cuánto gana cada valor.
 - **Objetivo por decidir:** por ejemplo, que en Fácil la persona gane la mitad de las partidas.
+- **Espera (17-10-2026):** JoseLuis prefiere esperar unos días más para tener más datos antes de
+  tocar el Fácil (31 partidas son pocas). Propuesta de Devin: revisarlo con unas 60 partidas en Fácil
+  o dentro de dos semanas, lo que llegue antes.

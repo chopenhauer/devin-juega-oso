@@ -22,8 +22,11 @@ test.afterEach(async ({}, testInfo) => {
 });
 
 const overlay = (page) => page.locator('#winnerOverlay');
+// The setup funnel has its own spec (funnel.spec.js).
 const events = (page) =>
-  page.evaluate(() => window.dataLayer.filter((e) => e[0] === 'event').map((e) => [e[1], e[2]]));
+  page.evaluate(() =>
+    window.dataLayer.filter((e) => e[0] === 'event' && e[1] !== 'setup_step').map((e) => [e[1], e[2]]),
+  );
 
 async function start(page) {
   await page.goto('/');

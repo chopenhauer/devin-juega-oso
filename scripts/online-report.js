@@ -47,3 +47,31 @@ for (const [label, value, extra] of [
   ],
 ])
   console.log(`${label.padEnd(36)} ${String(value).padStart(5)}  ${extra}`);
+
+// Setup funnel (docs/ideas/llegar-a-jugar.md): screens seen before the first game, since 3.17.0.
+const STEPS = [
+  'welcome',
+  'rules_1',
+  'rules_2',
+  'rules_3',
+  'rules_4',
+  'mode',
+  'where',
+  'players',
+  'view',
+  'board',
+  'start',
+];
+const ENTRIES = [
+  ['first', 'Primera visita (con la bienvenida)'],
+  ['return', 'Vuelve (empieza en el modo)'],
+  ['challenge', 'Enlace de reto'],
+];
+for (const [entry, title] of ENTRIES) {
+  const counts = STEPS.map((step) => [step, n(`setup_${entry}_${step}`)]).filter(([, v]) => v);
+  if (!counts.length) continue;
+  const top = Math.max(...counts.map(([, v]) => v));
+  console.log(`\nBienvenida · ${title}\n`);
+  for (const [step, value] of counts)
+    console.log(`${step.padEnd(36)} ${String(value).padStart(5)}  ${pct(value, top)}`);
+}

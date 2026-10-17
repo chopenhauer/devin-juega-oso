@@ -3,6 +3,7 @@
 import { GAME } from './config.js';
 import { t } from './i18n.js';
 import { parseChallenge } from './challenge.js';
+import { setupStep, startFunnel } from './funnel.js';
 
 const STORAGE_KEY = 'oso.prefs.v1';
 const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
@@ -137,6 +138,7 @@ function setSlide(index) {
   slides[slide].classList.add('playing');
   dots.forEach((d, i) => d.setAttribute('aria-current', String(i === slide)));
   setup.dataset.slide = String(slide);
+  if (setup.dataset.step === 'rules') setupStep(`rules_${slide + 1}`, modeNow());
 }
 
 function show(step, slideIndex = 0) {
@@ -154,6 +156,7 @@ function show(step, slideIndex = 0) {
   if (step === 'rules') setSlide(slideIndex);
   if (step === 'board') $('setupSummary').textContent = summary();
   equalizeHeight();
+  if (step !== 'rules') setupStep(step, modeNow());
   document.dispatchEvent(new CustomEvent('oso:step', { detail: step }));
 }
 
@@ -215,6 +218,7 @@ viewButtons.forEach((b) => b.addEventListener('click', () => setView(b.dataset.v
 $('startGame').addEventListener('click', () => {
   $('gameScreen').classList.toggle('same-view', currentView() === 'same');
   savePrefs(currentPrefs());
+  setupStep('start', modeNow());
 });
 $('newGame').addEventListener('click', () => show('mode'));
 $('changePlayers').addEventListener('click', () => show('players'));
@@ -251,6 +255,7 @@ const prefs = loadPrefs();
 applyPrefs(prefs);
 // A challenge link comes with the game already set: only the player's avatar and name are left.
 const challenge = parseChallenge(location.search);
+startFunnel(challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
 if (challenge) {
   $('modeSolo').click();
   $(difficultyId(challenge.difficulty)).click();

@@ -25,6 +25,7 @@ const SHELL = [
   '/js/config.js',
   '/js/consent.js',
   '/js/engine.js',
+  '/js/funnel.js',
   '/js/ga.js',
   '/js/i18n.js',
   '/js/install-early.js',
