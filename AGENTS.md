@@ -15,26 +15,27 @@ reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo
 
 ## Mapa del repo
 
-| Dónde                         | Qué                                                                                           |
-| ----------------------------- | --------------------------------------------------------------------------------------------- |
-| `public/index.html`           | La página del juego (`sala.html` se genera al publicar con `scripts/invite-page.js`)          |
-| `public/js/engine.js`         | Reglas puras: OSO/SOS, puntuación, pistas, IA. Sin DOM                                        |
-| `public/js/match.js`          | Estado de una partida (jugadas, relojes, extras, compras); lo usan el navegador y el servidor |
-| `public/js/app.js`            | Interfaz y flujo de la partida                                                                |
-| `public/js/config.js`         | **Todos los parámetros ajustables** (tiempos, extras, tienda, salas, secretos…)               |
-| `public/js/onboarding.js`     | Pasos del inicio: `welcome`, `rules`, `mode`, `where`, `players`, `view`, `board`             |
-| `public/js/challenge.js`      | Enlaces de reto contra la máquina (`?reto=5-hard-9-4&tema=…`) y cuándo se supera              |
-| `public/js/online.js`         | Cliente de las salas en línea                                                                 |
-| `public/js/secrets.js`        | Secretos (easter eggs): 🎨 temas y 🛒 tienda. El n.º 3 está reservado para Julia              |
-| `public/js/telemetry.js`      | Eventos anónimos de GA4 (solo con permiso) y cuándo pedir 👍/👎                               |
-| `public/js/themes.js`         | Temas y en qué fechas salen                                                                   |
-| `public/css/tokens.css`       | Sistema de diseño: única fuente de colores, letra, espacios…                                  |
-| `api/sala.js`, `api/_sala.js` | Salas en línea (`/api/sala`): árbitro con `match.js`, relojes y contadores anónimos           |
-| `api/_store.js`               | Upstash Redis por REST (en memoria en local y en tests)                                       |
-| `scripts/`                    | Servidor local, generadores (`CONFIG.md`, tokens, og, `sala.html`) y `online-report.js`       |
-| `tests/unit/`                 | `node:test`: motor, partida, servidor, configuración, telemetría…                             |
-| `tests/e2e/`                  | Playwright, proyectos `mobile` y `desktop`, con chequeos de accesibilidad                     |
-| `old-references/`             | Versiones históricas (no se publican)                                                         |
+| Dónde                             | Qué                                                                                            |
+| --------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `public/index.html`               | La página del juego (`sala.html` se genera al publicar con `scripts/invite-page.js`)           |
+| `public/js/engine.js`             | Reglas puras: OSO/SOS, puntuación, pistas, IA. Sin DOM                                         |
+| `public/js/match.js`              | Estado de una partida (jugadas, relojes, extras, compras); lo usan el navegador y el servidor  |
+| `public/js/app.js`                | Interfaz y flujo de la partida                                                                 |
+| `public/js/config.js`             | **Todos los parámetros ajustables** (tiempos, extras, tienda, salas, secretos…)                |
+| `public/js/onboarding.js`         | Pasos del inicio: `welcome`, `rules`, `mode`, `where`, `players`, `view`, `board`              |
+| `public/js/challenge.js`          | Enlaces de reto contra la máquina (`?reto=5-hard-9-4&tema=…`) y cuándo se supera               |
+| `public/js/online.js`             | Cliente de las salas en línea                                                                  |
+| `public/js/secrets.js`            | Secretos (easter eggs): 🎨 temas y 🛒 tienda. El n.º 3 está reservado para Julia               |
+| `public/js/telemetry.js`          | Eventos anónimos de GA4 (solo con permiso) y cuándo pedir 👍/👎                                |
+| `public/js/themes.js`             | Temas y en qué fechas salen                                                                    |
+| `public/css/tokens.css`           | Sistema de diseño: única fuente de colores, letra, espacios…                                   |
+| `api/sala.js`, `api/_sala.js`     | Salas en línea (`/api/sala`): árbitro con `match.js`, relojes y contadores anónimos            |
+| `api/visita.js`, `api/_visita.js` | Contador de visitas sin cookies (`/api/visita`): cargas por consentimiento y clics en el aviso |
+| `api/_store.js`                   | Upstash Redis por REST (en memoria en local y en tests)                                        |
+| `scripts/`                        | Servidor local, generadores (`CONFIG.md`, tokens, og, `sala.html`) y `online-report.js`        |
+| `tests/unit/`                     | `node:test`: motor, partida, servidor, configuración, telemetría…                              |
+| `tests/e2e/`                      | Playwright, proyectos `mobile` y `desktop`, con chequeos de accesibilidad                      |
+| `old-references/`                 | Versiones históricas (no se publican)                                                          |
 
 ## Documentos
 

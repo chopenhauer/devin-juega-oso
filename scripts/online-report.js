@@ -29,3 +29,21 @@ const ms = n('timed') ? Math.round(n('ms') / n('timed')) : 0;
 console.log(
   `\nErrores 5xx: ${n('e5xx')} de ${n('requests')} peticiones (${pct(n('e5xx'), n('requests'))}) · función media ${ms} ms`,
 );
+
+const seen = n('visits');
+const hidden = n('visit_denied') + n('visit_unset');
+const chosen = n('consent_granted') + n('consent_denied');
+console.log(`\nVisitas al juego (sin cookies, desde la 3.13.1)\n`);
+for (const [label, value, extra] of [
+  ['Cargas de la página', seen, ''],
+  ['Con la analítica aceptada', n('visit_granted'), pct(n('visit_granted'), seen)],
+  ['Con la analítica rechazada', n('visit_denied'), pct(n('visit_denied'), seen)],
+  ['Sin decidir todavía', n('visit_unset'), pct(n('visit_unset'), seen)],
+  ['Ocultas para GA4', hidden, pct(hidden, seen)],
+  [
+    'Aviso: Aceptar / Rechazar',
+    chosen,
+    `${n('consent_granted')} / ${n('consent_denied')}, rechaza ${pct(n('consent_denied'), chosen)}`,
+  ],
+])
+  console.log(`${label.padEnd(36)} ${String(value).padStart(5)}  ${extra}`);

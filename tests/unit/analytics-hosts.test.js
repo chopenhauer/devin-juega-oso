@@ -20,7 +20,7 @@ function run(file, hostname) {
   return added;
 }
 
-for (const file of ['public/js/ga.js', 'public/js/clarity.js']) {
+for (const file of ['public/js/ga.js', 'public/js/clarity.js', 'public/js/vercel-analytics.js']) {
   test(`${file} loads on production hosts`, () => {
     for (const host of ['juegaoso.com', 'www.juegaoso.com', 'devin-juega-oso.vercel.app']) {
       assert.equal(run(file, host).length, 1, host);

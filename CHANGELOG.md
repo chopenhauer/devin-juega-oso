@@ -17,6 +17,21 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.13.1] - 2026-10-17
+
+**Sabemos cuántas visitas no ve GA4**
+
+- **Por qué:** JoseLuis quería saber cuántas personas no aceptan las cookies y qué porcentaje de
+  visitas queda oculto. GA4 solo ve a quien acepta, y no había ninguna cifra de las demás.
+- **Contador propio:** cada vez que se abre el juego, el servidor suma 1 visita con la elección
+  guardada (aceptada, rechazada o sin decidir), y otro 1 cada vez que se pulsa Aceptar o Rechazar.
+  Sin cookies, sin IP y sin nada que identifique a nadie. Sale al final de `npm run online:report` y
+  en el resumen diario.
+- **Vercel Web Analytics:** activado en producción. Cuenta páginas vistas sin cookies, para tener
+  una segunda cifra con la que comparar.
+- **Decisión:** se cuentan cargas de página, no personas, para no tener que guardar nada en el
+  dispositivo de quien rechaza. La política de privacidad lo explica en «Visitas, sin cookies».
+
 ## [3.13.0] - 2026-10-17
 
 **Enlace de reto contra la máquina ([f46cef3](https://github.com/chopenhauer/devin-juega-oso/commit/f46cef3c6776e350c05202fc7ba8930b83de0312))**

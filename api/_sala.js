@@ -23,7 +23,7 @@ const OPEN_TTL = OPEN_MS / 1000 + 3600;
 const CLOSED_TTL = GAME.online.closedRoomHours * 3600;
 // «3, 2, 1…» on both screens before the first clock starts.
 export const COUNTDOWN_MS = GAME.online.countdownSeconds * 1000;
-const STATS_TTL = 400 * 24 * 3600;
+export const STATS_TTL = 400 * 24 * 3600;
 const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const CODE_RE = new RegExp(`^[${CODE_CHARS}]{5}$`);
 const INVITE_CHANNELS = ['whatsapp', 'copy'];
@@ -38,7 +38,7 @@ const MOVES = {
 
 const hash = (s) => createHash('sha256').update(s).digest('hex');
 const newCode = () => Array.from({ length: 5 }, () => CODE_CHARS[randomInt(CODE_CHARS.length)]).join('');
-const month = (now) => `stats:${new Date(now).toISOString().slice(0, 7)}`;
+export const month = (now) => `stats:${new Date(now).toISOString().slice(0, 7)}`;
 
 // Nicknames are shown to the rival: plain text, no control characters, 16 max.
 const cleanName = (s, fallback) =>

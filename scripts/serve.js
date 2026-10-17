@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve } from 'node:path';
 import { createHandler } from '../api/_sala.js';
 import { memoryStore } from '../api/_store.js';
+import { createVisitHandler } from '../api/_visita.js';
 import { writeInvitePage } from './invite-page.js';
 import middleware, { config as middlewareConfig } from '../middleware.js';
 
@@ -27,12 +28,13 @@ const headersFor = (path) =>
     .filter(({ source }) => new RegExp(`^${source.replace('(.*)', '.*')}$`).test(path))
     .flatMap(({ headers }) => headers);
 
-// /api/sala runs locally with rooms in memory (Redis only on Vercel).
-const sala = createHandler(memoryStore());
-async function api(req, res) {
+// /api/sala and /api/visita run locally with rooms and counters in memory (Redis only on Vercel).
+const store = memoryStore();
+const handlers = { '/api/sala': createHandler(store), '/api/visita': createVisitHandler(store) };
+async function api(req, res, handle) {
   const chunks = [];
   for await (const c of req) chunks.push(c);
-  const response = await sala(
+  const response = await handle(
     new Request(new URL(req.url, `http://${req.headers.host}`), {
       method: req.method,
       headers: req.headers,
@@ -51,7 +53,7 @@ function route(url) {
 
 createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
-  if (url.pathname === '/api/sala') return api(req, res);
+  if (handlers[url.pathname]) return api(req, res, handlers[url.pathname]);
   const path = decodeURIComponent(route(url));
   const file = normalize(join(root, path === '/' ? 'index.html' : path));
   if (!file.startsWith(root)) {

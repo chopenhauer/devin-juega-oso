@@ -13,18 +13,23 @@ responde. Si un dato no responde a ninguna pregunta, no se mide.
   permiso, la analítica queda denegada; la publicidad está siempre denegada.
 - **Solo producción.** `ga.js` y `clarity.js` solo envían desde `juegaoso.com` y
   `devin-juega-oso.vercel.app`; las previews de Vercel no envían nada y los tests sustituyen la red.
-- **El servidor cuenta sin cookies.** Las salas en línea suman contadores anónimos por mes, sin
-  nadie identificable, para no depender de quien acepta las cookies.
+- **El servidor cuenta sin cookies.** Las salas en línea y las visitas suman contadores anónimos por
+  mes, sin nadie identificable, para no depender de quien acepta las cookies.
+- **Las visitas ocultas se miden.** GA4 solo ve a quien acepta. Desde la 3.13.1, `api/_visita.js`
+  cuenta cada carga del juego con la elección guardada y cada clic en el aviso, y Vercel Web
+  Analytics cuenta páginas vistas sin cookies. Así se sabe qué parte de las visitas no llega a GA4.
 - Lo que se cuenta a quien juega está en la [política de privacidad](../public/privacidad.html):
   si se añade un dato de otro tipo, se actualiza también.
 
 ## Herramientas
 
-| Herramienta             | Qué ve                                          | Dónde se mira                                          |
-| ----------------------- | ----------------------------------------------- | ------------------------------------------------------ |
-| Google Analytics 4      | Páginas y eventos del juego (con permiso)       | Paneles de GA4 (enlaces en el repo privado)            |
-| Microsoft Clarity       | Mapas de calor y grabaciones anónimas           | Panel de Clarity                                       |
-| Contadores del servidor | Embudo y uso de las salas en línea, sin cookies | `npm run online:report` (ver [`ONLINE.md`](ONLINE.md)) |
+| Herramienta             | Qué ve                                                               | Dónde se mira                                                                              |
+| ----------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Google Analytics 4      | Páginas y eventos del juego (con permiso)                            | Paneles de GA4 (enlaces en el repo privado)                                                |
+| Microsoft Clarity       | Mapas de calor y grabaciones anónimas                                | Panel de Clarity                                                                           |
+| Contadores del servidor | Embudo y uso de las salas en línea, sin cookies                      | `npm run online:report` (ver [`ONLINE.md`](ONLINE.md))                                     |
+| Contador de visitas     | Cargas del juego por consentimiento y clics en el aviso, sin cookies | `npm run online:report` (al final)                                                         |
+| Vercel Web Analytics    | Páginas vistas, visitantes, país y dispositivo, sin cookies          | Panel Analytics del proyecto en Vercel (1 mes de historia, 50.000 eventos al mes en Hobby) |
 
 Cómo viajan los datos (consentimiento, `dataLayer`, tipos y valores de cada parámetro, registro en
 GA4) está en [`DATALAYER.md`](DATALAYER.md).
@@ -102,6 +107,22 @@ errores, conflictos, tiempo de respuesta y comandos de Redis (para no pasar del 
 
 `npm run online:report` enseña el embudo y los extras del mes. Como no dependen de las cookies, son
 la cifra de referencia para el juego en línea; GA4 da el detalle de quien acepta.
+
+## Visitas ocultas (sin cookies)
+
+`public/js/visit.js` manda con `sendBeacon` a `/api/visita` una señal por carga del juego con la
+elección guardada (`visits` y `visit_granted`, `visit_denied` o `visit_unset`) y otra por clic en
+el aviso (`consent_granted`, `consent_denied`). Se suman en el mismo hash mensual que los contadores
+en línea. No guarda IP ni nada del navegador.
+
+- **Ocultas para GA4** = `(visit_denied + visit_unset) / visits`: quien rechaza y quien aún no ha
+  contestado al aviso (GA4 solo recibe los avisos sin cookies de Consent Mode, que no salen en los
+  informes hasta que hay mucho tráfico).
+- **Rechazo en el aviso** = `consent_denied / (consent_granted + consent_denied)`.
+- Son cargas, no personas: recargar cuenta otra vez. Se comparan con las páginas vistas de GA4, no
+  con sus usuarios. Quien bloquea scripts no se cuenta en ninguno de los dos.
+- Vercel Web Analytics (`public/js/vercel-analytics.js`, solo en producción) da otra cifra de
+  visitantes sin cookies para contrastar. Lo consulta la API `/v1/query/web-analytics/visits`.
 
 ## Limitaciones
 

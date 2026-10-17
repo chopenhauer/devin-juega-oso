@@ -23,6 +23,21 @@ test.afterEach(async ({}, testInfo) => {
   expect(testInfo.errors, 'no JS or CSP errors').toEqual([]);
 });
 
+test('the server counts each load and each banner choice, without cookies', async ({ page }) => {
+  const beacon = (body) =>
+    page.waitForRequest((r) => r.url().endsWith('/api/visita') && r.postData() === JSON.stringify(body));
+  let sent = beacon({ consent: 'unset' });
+  await page.goto('/');
+  await sent;
+  sent = beacon({ choice: 'denied' });
+  await page.click('#consentDeny');
+  await sent;
+  sent = beacon({ consent: 'denied' });
+  await page.reload();
+  await sent;
+  expect(await page.evaluate(() => document.cookie)).toBe('');
+});
+
 test('accepting cookies grants GA analytics and loads Clarity', async ({ page }, testInfo) => {
   await page.goto('/');
   const banner = page.locator('#consentBanner');
