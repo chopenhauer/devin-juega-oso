@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.16.0] - 2026-10-17
 
-**Sin conexión, «🤖 Contra la máquina»**
+**Sin conexión, «🤖 Contra la máquina» ([4a5d668](https://github.com/chopenhauer/devin-juega-oso/commit/4a5d668a1280b2939f87eec4691ee510491baf57))**
 
 - **Por qué:** JoseLuis probó el juego en modo avión. Al abrir una sala salía «No se puede jugar en
   línea» con un único «Vale», y te quedabas sin saber qué hacer. Pidió que, si no hay conexión, el
