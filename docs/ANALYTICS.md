@@ -136,7 +136,7 @@ en línea. No guarda IP ni nada del navegador.
 - Solo llega a GA4 lo de quien acepta las cookies, y muchas partidas son pruebas de casa: con pocos
   datos, orientan pero no deciden.
 - Cada decisión que depende de datos tiene su umbral escrito: tiempos por tablero hacia las 100
-  partidas por tablero ([`ROADMAP.md`](ROADMAP.md)), y el modo en línea a las 50 partidas o a los
+  partidas por tablero ([`ideas/reloj.md`](ideas/reloj.md)), y el modo en línea a las 50 partidas o a los
   2 meses ([`ONLINE.md`](ONLINE.md)).
 
 ## Añadir una medición

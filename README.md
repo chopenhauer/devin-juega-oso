@@ -8,7 +8,7 @@ al STEM y decida el roadmap.
   publica solo).
 - Cada rama y PR genera una preview en Vercel.
 - Guía rápida para agentes (inventario y reglas): [`AGENTS.md`](AGENTS.md).
-- Roadmap e ideas de mejora: [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- Roadmap: [`docs/ROADMAP.md`](docs/ROADMAP.md), con el detalle de cada idea en [`docs/ideas/`](docs/ideas/README.md).
 - Versiones, mejoras y decisiones: [`CHANGELOG.md`](CHANGELOG.md). La versión del pie sale de
   `public/js/version.js`.
 - Sistema de diseño y accesibilidad: [`docs/DESIGN.md`](docs/DESIGN.md).

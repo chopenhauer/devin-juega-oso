@@ -1,4 +1,4 @@
-// Secrets: hidden features told one by one as a reward for coming back to play (docs/ROADMAP.md).
+// Secrets: hidden features told one by one as a reward for coming back to play (docs/ideas/secretos-y-regalos.md).
 // Every GAMES_PER_SECRET finished games (any mode, any result) one more is due, at most one a day.
 // They are told in the order of SECRETS, so new ones go at the end. `how` says how to trigger it,
 // never what happens; `hint` is the short reminder shown later under «Ya sabías…». `cta` is the

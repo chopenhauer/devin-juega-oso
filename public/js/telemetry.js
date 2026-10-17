@@ -6,7 +6,7 @@ import { GAME } from './config.js';
 import { t, LANG, BROWSER_LANG } from './i18n.js';
 
 // Share of games that should end because someone runs out of time; the target
-// used later to tune the clock of each board (see docs/ROADMAP.md).
+// used later to tune the clock of each board (see docs/ideas/reloj.md).
 export const TIMEOUT_TARGET = GAME.telemetry.timeoutTarget;
 
 const CONSENT_KEY = 'oso.consent.v1';
