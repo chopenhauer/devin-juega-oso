@@ -17,6 +17,19 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.16.0] - 2026-10-17
+
+**Sin conexión, «🤖 Contra la máquina»**
+
+- **Por qué:** JoseLuis probó el juego en modo avión. Al abrir una sala salía «No se puede jugar en
+  línea» con un único «Vale», y te quedabas sin saber qué hacer. Pidió que, si no hay conexión, el
+  aviso invite a jugar contra la máquina.
+- **Cómo:** debajo de «Vale» sale «🤖 Contra la máquina» (más corto que «Jugar contra la máquina»,
+  que en el móvil ocupaba dos líneas). Te lleva a «¿Quién juega?» con la
+  máquina ya elegida, y desde ahí empiezas la partida, que funciona sin conexión.
+- **Cuándo no sale:** con los demás avisos del juego en línea (sala caducada, llena o con un código
+  que no existe), porque en esos casos sí hay conexión y se puede probar otra sala.
+
 ## [3.15.4] - 2026-10-17
 
 **Si ni «📣 Compartir» cabe, los dos botones ponen el emoji arriba y el texto abajo ([effc740](https://github.com/chopenhauer/devin-juega-oso/commit/effc740b7daa1a1e0adad493c21eb54c823d0dd0))**

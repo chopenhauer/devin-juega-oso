@@ -399,3 +399,33 @@ test('if the room closes while the host plays the machine, the game goes on and 
   await expect(host.locator('#gameScreen')).toBeVisible();
   expect(errors).toEqual([]);
 });
+
+test('without connection, the online notice offers a game against the machine', async ({ browser }) => {
+  const errors = [];
+  const page = await player(browser, errors);
+  await page.route('**/api/sala**', (route) => route.abort('internetdisconnected'));
+  await page.goto('/');
+  await page.click('#introSkip');
+  await page.click('#modeTwo');
+  await page.click('#stepNext');
+  await page.click('#whereOnline');
+  await page.click('#stepNext');
+  await page.click('#openRoom');
+  await expect(page.locator('#onlineStatus')).toHaveText(
+    'No hay conexión. Revisa internet y vuelve a probar.',
+  );
+  await page.click('#onlineMachine');
+  await expect(page.locator('#onlineDialog')).toBeHidden();
+  await expect(page.locator('#modeSolo')).toHaveClass(/selected/);
+  await expect(page.locator('#nickname2')).toHaveValue('Máquina');
+  await page.click('#stepNext');
+  await page.click('#startGame');
+  await expect(page.locator('#gameScreen')).toBeVisible();
+
+  // With connection (a room that does not exist), only «Vale».
+  const other = await player(browser, errors);
+  await other.goto('/?sala=ZZZZZ');
+  await expect(other.locator('#onlineDialog')).toBeVisible();
+  await expect(other.locator('#onlineMachine')).toBeHidden();
+  expect(errors.filter((e) => !/ERR_INTERNET_DISCONNECTED/.test(e))).toEqual([]);
+});

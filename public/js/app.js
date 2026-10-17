@@ -2029,6 +2029,7 @@ const { timeFor } = Engine;
   const showStep = (step) => document.dispatchEvent(new CustomEvent('oso:show', { detail: step }));
   function onlineFail(error) {
     setOnlineStatus(onlineError(error));
+    q('onlineMachine').classList.toggle('hidden', error !== 'network');
     if (!onlineDialog.open) onlineDialog.showModal();
   }
   // A guest who opened an invite link but hasn't joined yet: { code, room }.
@@ -2349,6 +2350,12 @@ const { timeFor } = Engine;
     }
   });
   q('onlineCancel').addEventListener('click', () => onlineDialog.close());
+  // Without connection, the machine still plays (the game works offline).
+  q('onlineMachine').addEventListener('click', () => {
+    onlineDialog.close();
+    q('modeSolo').click();
+    showStep('players');
+  });
   q('onlineToggle').addEventListener('click', () => q('onlineIntro').showModal());
   q('onlineIntroClose').addEventListener('click', () => q('onlineIntro').close());
   q('onlineIntroGo').addEventListener('click', () => {
