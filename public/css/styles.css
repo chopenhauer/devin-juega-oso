@@ -1245,6 +1245,13 @@ select option {
 .winner-actions .replay-open {
   margin-top: var(--space-4);
 }
+.winner-actions.stack-labels .share-result,
+.winner-actions.stack-labels .replay-open {
+  padding-block: var(--space-2);
+}
+.btn-emoji {
+  display: block;
+}
 .winner-actions .replay-open.hidden + .share-result,
 /* Online there is no «Otro tablero»: «Salir» takes the whole row, like the other buttons. */
 .winner-actions #otherBoard.hidden + #changePlayers {

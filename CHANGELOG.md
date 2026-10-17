@@ -17,6 +17,19 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.15.4] - 2026-10-17
+
+**Si ni «📣 Compartir» cabe, los dos botones ponen el emoji arriba y el texto abajo**
+
+- **Por qué:** con la letra del sistema grande (130 % en un Android de 360 px), «📣 Compartir» se
+  partía con el 📣 solo en la primera línea. JoseLuis pidió que, en ese caso, los dos botones vayan
+  en dos líneas, con el emoji arriba y el texto abajo.
+- **Cómo:** el juego prueba el texto largo, luego el corto y, si el corto tampoco cabe en una línea,
+  pone los dos botones («📣 Compartir» y «▶️ Replay») con el emoji encima. Van los dos a la vez
+  para que se vean iguales y tengan la misma altura. Con la letra normal no cambia nada.
+- **Accesibilidad:** el lector de pantalla sigue diciendo «Compartir resultado» y «Ver la partida
+  (replay)».
+
 ## [3.15.3] - 2026-10-17
 
 **«📣 Compartir» y «▶️ Replay» cuando el texto largo no cabe en una línea ([a016779](https://github.com/chopenhauer/devin-juega-oso/commit/a016779b9175565843d4ec7f3650c979bd1cddb0))**

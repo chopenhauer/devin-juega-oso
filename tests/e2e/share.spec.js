@@ -165,12 +165,37 @@ test('«Compartir» and «Replay» replace the long labels when they do not fit 
   }
   expect(seen['#shareResult@360']).toBe('📣 Compartir');
   expect(seen['#replayOpen@1280']).toBe('▶️ Ver la partida');
-  // With a bigger system font (Android accessibility) «Ver la partida» wraps too.
+  // With a bigger system font (Android accessibility) «Ver la partida» wraps too…
   await page.setViewportSize({ width: 360, height: 900 });
   await page.evaluate(() => (document.documentElement.style.fontSize = '130%'));
-  await expect(page.locator('#replayOpen')).toHaveText('▶️ Replay');
-  expect((await fit('#replayOpen', '▶️ Ver la partida')).lines).toBe(1);
+  // …and even «Compartir» does not fit: both put the emoji above and the text below, on one line.
+  const heights = [];
+  for (const [sel, , short] of buttons) {
+    const btn = page.locator(sel);
+    await expect(btn).toHaveText(short);
+    await expect(btn.locator('.btn-emoji')).toHaveText(short.split(' ')[0]);
+    const box = await btn.evaluate((el) => {
+      const text = el.lastChild;
+      const range = document.createRange();
+      range.setStart(text, 1);
+      range.setEnd(text, text.length);
+      const rects = [...range.getClientRects()];
+      return {
+        emojiBottom: el.querySelector('.btn-emoji').getBoundingClientRect().bottom,
+        textTop: Math.min(...rects.map((r) => r.top)),
+        textLines: new Set(rects.map((r) => Math.round(r.bottom))).size,
+        height: el.offsetHeight,
+      };
+    });
+    expect(box.textLines, sel).toBe(1);
+    expect(box.textTop, sel).toBeGreaterThanOrEqual(box.emojiBottom - 1);
+    heights.push(box.height);
+  }
+  expect(heights[0]).toBe(heights[1]);
   await page.evaluate(() => (document.documentElement.style.fontSize = ''));
+  await expect(page.locator('.winner-actions .btn-emoji')).toHaveCount(0);
+  await expect(page.locator('#shareResult')).toHaveText('📣 Compartir');
+  await expect(page.locator('#replayOpen')).toHaveText('▶️ Ver la partida');
   // Without «Ver la partida» (online) «Compartir» takes the whole row and the long text fits.
   await page.locator('#replayOpen').evaluate((el) => el.classList.add('hidden'));
   await expect(page.locator('#shareResult')).toHaveText('📣 Compartir resultado');

@@ -1499,20 +1499,37 @@ const { timeFor } = Engine;
   });
   shareToggle.addEventListener('click', () => share('start'));
   q('shareResult').addEventListener('click', () => share('end'));
-  // «Compartir resultado» and «Ver la partida» get their short label when too narrow for one line.
+  // «Compartir resultado» and «Ver la partida» go long → short → emoji above the text, so they
+  // never wrap mid-label. If one needs the emoji above, both get it, so they look the same.
   const SHORT_LABELS = {
     shareResult: () => t('shareResult.short'),
     replayOpen: () => t('replayOpen.short'),
   };
-  function fitLabel(id) {
-    const btn = q(id);
-    btn.textContent = t(id);
+  const wraps = (el) => {
     const range = document.createRange();
-    range.selectNodeContents(btn);
-    const lines = new Set([...range.getClientRects()].map((r) => Math.round(r.bottom))).size;
-    if (lines > 1) btn.textContent = SHORT_LABELS[id]();
+    range.selectNodeContents(el);
+    return new Set([...range.getClientRects()].map((r) => Math.round(r.bottom))).size > 1;
+  };
+  function fitEndLabels() {
+    const ids = Object.keys(SHORT_LABELS);
+    let stack = false;
+    for (const id of ids) {
+      const btn = q(id);
+      btn.textContent = t(id);
+      if (!wraps(btn)) continue;
+      btn.textContent = SHORT_LABELS[id]();
+      if (wraps(btn)) stack = true;
+    }
+    q('shareResult').parentElement.classList.toggle('stack-labels', stack);
+    if (!stack) return;
+    for (const id of ids) {
+      const [emoji, ...words] = SHORT_LABELS[id]().split(' ');
+      const icon = document.createElement('span');
+      icon.className = 'btn-emoji';
+      icon.textContent = emoji;
+      q(id).replaceChildren(icon, ` ${words.join(' ')}`);
+    }
   }
-  const fitEndLabels = () => Object.keys(SHORT_LABELS).forEach(fitLabel);
   // Their width comes from the grid, not from the text, so changing the text can't loop.
   for (const id of Object.keys(SHORT_LABELS)) {
     let width = 0;
@@ -1520,7 +1537,7 @@ const { timeFor } = Engine;
       const w = entry.contentRect.width;
       if (!w || w === width) return;
       width = w;
-      fitLabel(id);
+      fitEndLabels();
     }).observe(q(id));
   }
   q('shareMenu').addEventListener('click', () => {
