@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.15.0] - 2026-10-17
 
-**«📲 Instalar»: OSO en la pantalla de inicio, también sin conexión**
+**«📲 Instalar»: OSO en la pantalla de inicio, también sin conexión ([c7e1b57](https://github.com/chopenhauer/devin-juega-oso/commit/c7e1b57af67de663373ba2185c147e9c070cecff))**
 
 - **Por qué:** es la tercera de las ideas que eligió JoseLuis. Sigue siendo web, sin tiendas de
   apps: con un manifest y un service worker se abre desde un icono, como una app, y funciona sin
