@@ -163,6 +163,15 @@ test('on iPhone and iPad it explains the steps', async ({ page }) => {
 test.describe('without connection', () => {
   test.use({ serviceWorkers: 'allow' });
 
+  test('the service worker registers even when the texts load late', async ({ page }) => {
+    await page.route('**/locales/es.json', async (route) => {
+      await new Promise((r) => setTimeout(r, 1500));
+      await route.continue();
+    });
+    await page.goto('/');
+    await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
+  });
+
   test('the game opens and can be played offline once visited', async ({ page, context }) => {
     test.slow();
     await page.goto('/');

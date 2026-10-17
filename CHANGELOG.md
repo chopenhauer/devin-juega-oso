@@ -17,6 +17,19 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.15.2] - 2026-10-17
+
+**Sin conexión también en móviles lentos**
+
+- **El fallo:** el mismo de la 3.15.1, pero con el service worker. `install.js` lo registraba al
+  terminar de cargar la página (`load`), y si los textos tardaban, `install.js` arrancaba después de
+  `load` y no lo registraba nunca: esa visita no dejaba el juego guardado para jugar sin conexión.
+  Lo destapó el E2E sin conexión en el CI nuevo, que ahora guarda las trazas de los fallos.
+- **El arreglo:** el registro pasa a `install-early.js`, que se carga antes que los módulos. Un E2E
+  nuevo retrasa los textos y comprueba que el service worker se registra igual.
+- **CI más rápido:** los E2E se reparten en 4 máquinas a la vez, se saltan si la rama solo cambia
+  documentos y el push a `main` ya no repite el CI. Pasa de unos 12 minutos a unos 4.
+
 ## [3.15.1] - 2026-10-17
 
 **«📲 Instalar» ya no se pierde si el navegador avisa pronto (o tarde) ([7d0dd20](https://github.com/chopenhauer/devin-juega-oso/commit/7d0dd20f20fb9346092f26cb380e7cf124b8bdfe))**
