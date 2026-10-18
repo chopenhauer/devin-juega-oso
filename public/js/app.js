@@ -1327,11 +1327,22 @@ const { timeFor } = Engine;
   // Points, longest streak and number of streaks of each player: what breaks a tie.
   function showEndStats(w) {
     const stats = Match.streaks(m);
+    const won = [w].flat();
+    const rank = (p) => [won.includes(p) ? 1 : 0, scores[p], stats[p].longest, stats[p].count];
+    const order = stats
+      .map((_, p) => p)
+      .sort((a, b) => {
+        const ra = rank(a);
+        const rb = rank(b);
+        const k = ra.findIndex((v, i) => v !== rb[i]);
+        return k < 0 ? 0 : rb[k] - ra[k];
+      });
     q('endStats').classList.toggle('hidden', !history.length);
     q('endStatsRows').replaceChildren(
-      ...stats.map((s, p) => {
+      ...order.map((p) => {
+        const s = stats[p];
         const row = document.createElement('tr');
-        row.classList.toggle('leader', [w].flat().includes(p));
+        row.classList.toggle('leader', won.includes(p));
         const who = document.createElement('th');
         who.scope = 'row';
         who.className = 'session-player';

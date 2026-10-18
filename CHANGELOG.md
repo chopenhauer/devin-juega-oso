@@ -33,8 +33,9 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Lo que no cambia:** quedarse sin tiempo o abandonar decide la partida como antes, y la máquina
   juega igual. Para superar un reto sigue haciendo falta la diferencia de puntos que pide. Una
   victoria por desempate cuenta como victoria en el marcador de la sesión.
-- **Pantalla final:** la tabla «Esta partida» muestra los puntos, la racha más larga y las rachas de
-  cada jugador, en todas las partidas. Si se desempata, el resultado lo dice («Desempate: racha más
+- **Pantalla final:** la tabla «Esta partida» muestra «Total puntos», «Racha larga» y «Num rachas»
+  de cada jugador, en todas las partidas. Quien gana va primero y las cifras van centradas
+  (ajustes de JoseLuis sobre la preview). Si se desempata, el resultado lo dice («Desempate: racha más
   larga» o «Desempate: más rachas»), y un empate completo dice «Mismas rachas». Al compartir, el
   mensaje cuenta que se ganó por rachas.
 - **Reglas y ayuda:** explican el desempate.

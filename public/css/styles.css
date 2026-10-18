@@ -1362,6 +1362,10 @@ select option {
   width: 40%;
   max-width: none;
 }
+.end-stats th:not(.session-player),
+.end-stats td {
+  text-align: center;
+}
 /* The crown gets its own column so every avatar and name lines up under «Jugador». */
 .session-board .session-crown {
   width: 1.5em;

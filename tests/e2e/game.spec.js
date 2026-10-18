@@ -126,7 +126,8 @@ test('a full game against the machine ends with a winner screen', async ({ page 
   const rows = page.locator('#endStatsRows tr');
   await expect(page.locator('#endStats')).toBeVisible();
   await expect(rows).toHaveCount(2);
-  await expect(rows.nth(1).locator('th')).toContainText('Máquina');
+  await expect(page.locator('#endStatsRows th', { hasText: 'Máquina' })).toHaveCount(1);
+  await expect(rows.first()).toHaveClass(/leader/);
   for (const row of await rows.all()) await expect(row.locator('td')).toHaveText([/^\d+$/, /^\d+$/, /^\d+$/]);
 });
 
@@ -169,9 +170,18 @@ test('a tie on points is broken by the longest streak', async ({ page }) => {
   await expect(page.locator('#winnerTitle')).toHaveText('¡Gana Jugador 2!');
   await expect(page.locator('#winnerSub')).toHaveText('Resultado final: 4 – 4 · Desempate: racha más larga');
   const rows = page.locator('#endStatsRows tr');
-  await expect(rows.nth(0).locator('td')).toHaveText(['4', '1', '3']);
-  await expect(rows.nth(1).locator('td')).toHaveText(['4', '2', '2']);
-  await expect(rows.nth(1)).toHaveClass(/leader/);
+  // Whoever wins goes first.
+  await expect(page.locator('#endStats thead th')).toHaveText([
+    'Jugador',
+    'Total puntos',
+    'Racha larga',
+    'Num rachas',
+  ]);
+  await expect(rows.nth(0).locator('th')).toContainText('Jugador 2');
+  await expect(rows.nth(0)).toHaveClass(/leader/);
+  await expect(rows.nth(0).locator('td')).toHaveText(['4', '2', '2']);
+  await expect(rows.nth(1).locator('td')).toHaveText(['4', '1', '3']);
+  await expect(rows.nth(0).locator('td').first()).toHaveCSS('text-align', 'center');
 });
 
 test('loads the Microsoft Clarity tag without CSP errors', async ({ page }) => {
