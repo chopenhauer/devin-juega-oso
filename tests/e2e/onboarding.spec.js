@@ -192,6 +192,11 @@ test('the heart in the credits opens the story with a link to the public repo', 
     'href',
     'https://github.com/chopenhauer/devin-juega-oso/blob/main/CHANGELOG.md',
   );
+  await expect(story).toContainText('María José, la madre de Martina, una amiga de Julia');
+  await expect(story.getByRole('link', { name: 'juego tradicional' })).toHaveAttribute(
+    'href',
+    'https://es.wikipedia.org/wiki/Oso_(juego)',
+  );
   await story.getByRole('button', { name: 'Cerrar' }).click();
   await expect(story).toBeHidden();
 });

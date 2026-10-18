@@ -17,6 +17,18 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.21.1] - 2026-10-18
+
+**❤️ La historia cuenta cómo llegó OSO a casa**
+
+- **Por qué:** Julia y JoseLuis contaron el origen del juego y pidieron que la historia lo recogiera.
+- **El origen:** OSO es un juego tradicional de papel y boli (enlazado a su página de Wikipedia). Se
+  lo enseñó María José, la madre de Martina, una amiga de Julia, esperando a que acabara la natación
+  en el Club Esportiu Mediterrani. Como no siempre tenían papel y boli, Julia y su padre lo
+  convirtieron en esta app.
+- **«Sigue creciendo…»** se acorta para que la ventana no crezca demasiado.
+- El evento `story` suma `action: wikipedia`.
+
 ## [3.21.0] - 2026-10-18
 
 **📲 La historia de OSO invita a instalarlo y jugar sin conexión ([f1dedea](https://github.com/chopenhauer/devin-juega-oso/commit/f1dedeabb32daa014c39a0108d8f8e71d87c2da9))**
