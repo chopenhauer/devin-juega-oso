@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.21.1] - 2026-10-18
 
-**❤️ La historia cuenta cómo llegó OSO a casa**
+**❤️ La historia cuenta cómo llegó OSO a casa ([9570f15](https://github.com/chopenhauer/devin-juega-oso/commit/9570f159173809d78a26202b36cb9e2f5250388a))**
 
 - **Por qué:** Julia y JoseLuis contaron el origen del juego y pidieron que la historia lo recogiera.
 - **El origen:** OSO es un juego tradicional de papel y boli (enlazado a su página de Wikipedia). Se
