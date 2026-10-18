@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.20.0] - 2026-10-18
 
-**Los secretos se descubren manteniendo pulsado, no con toques seguidos**
+**Los secretos se descubren manteniendo pulsado, no con toques seguidos ([ea11f76](https://github.com/chopenhauer/devin-juega-oso/commit/ea11f767f9269a1e7e477f4d843fa8e6e1dcb81e))**
 
 - **Por qué:** JoseLuis pidió que los easter eggs salgan al mantener pulsado unos 3 segundos en vez
   de pulsar muchas veces seguidas.
