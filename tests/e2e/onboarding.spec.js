@@ -200,7 +200,7 @@ test('the story offers to install the app only when the browser can', async ({ p
   await page.goto('/');
   const heart = page.getByRole('button', { name: 'La historia de OSO' });
   const story = page.locator('#storyDialog');
-  const install = story.getByRole('button', { name: 'instalarlo como una app' });
+  const install = story.getByRole('button', { name: '📲 Instala como una app' });
   await heart.click();
   await expect(install).toBeHidden();
   await story.getByRole('button', { name: 'Cerrar' }).click();
@@ -212,6 +212,10 @@ test('the story offers to install the app only when the browser can', async ({ p
   });
   await heart.click();
   await expect(story).toContainText('jugar sin conexión');
+  const order = await story
+    .locator('#storyRepo, #storyInstallBtn, form button')
+    .evaluateAll((els) => els.map((e) => e.id || e.textContent.trim()));
+  expect(order).toEqual(['storyRepo', 'storyInstallBtn', 'Cerrar']);
   await install.click();
   await expect.poll(() => page.evaluate(() => window.prompted)).toBe(true);
   await expect(install).toBeHidden();

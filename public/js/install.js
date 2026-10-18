@@ -97,7 +97,9 @@ if (typeof document !== 'undefined') {
       canPrompt: !!prompt,
       ios: isIos(),
     });
-  q('storyOpen')?.addEventListener('click', () => q('storyInstall').classList.toggle('hidden', !storyKind()));
+  const storyOffer = (on) =>
+    ['storyInstall', 'storyInstallBtn'].forEach((id) => q(id).classList.toggle('hidden', !on));
+  q('storyOpen')?.addEventListener('click', () => storyOffer(storyKind()));
   q('storyDialog')?.addEventListener('click', async (e) => {
     if (!e.target.closest('[data-install]')) return;
     const how = storyKind();
@@ -110,7 +112,7 @@ if (typeof document !== 'undefined') {
     }
     const event = prompt;
     prompt = null;
-    q('storyInstall').classList.add('hidden');
+    storyOffer(false);
     if (!event) return;
     event.prompt();
     const { outcome } = await event.userChoice;

@@ -127,16 +127,6 @@ body:has(#gameScreen:not(.hidden)) .credits {
   pointer-events: auto;
 }
 
-.story-install {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-weight: var(--fw-bold);
-  text-decoration: underline;
-  cursor: pointer;
-}
 .credits-heart {
   min-width: 1.5rem;
   min-height: 1.5rem;
