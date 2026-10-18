@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.21.0] - 2026-10-18
 
-**📲 La historia de OSO invita a instalarlo y jugar sin conexión**
+**📲 La historia de OSO invita a instalarlo y jugar sin conexión ([f1dedea](https://github.com/chopenhauer/devin-juega-oso/commit/f1dedeabb32daa014c39a0108d8f8e71d87c2da9))**
 
 - **Por qué:** JoseLuis pidió que la ventana del ❤️ cuente que OSO se puede instalar como app y
   jugar sin conexión, con el enlace ahí mismo.
