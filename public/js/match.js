@@ -3,7 +3,7 @@
 // returns what happened so the caller can animate it. Times are milliseconds
 // from any clock: performance.now() locally, Date.now() on the server.
 import { GAME } from './config.js';
-import { LETTERS, findNew, rebuildScores, replayHistory, timeFor } from './engine.js';
+import { LETTERS, findNew, rebuildScores, replayHistory, replayMove, timeFor } from './engine.js';
 
 export const BONUS = GAME.clock.bonusSeconds;
 export const POWERS = ['hint', 'last'];
@@ -32,6 +32,8 @@ export function newMatch({ size, players = 2, first = 0, now = 0 }) {
     winner: null,
     reason: null,
     timedOut: false,
+    // What broke a tie on points when the board filled up (see standing()).
+    tiebreak: null,
     // When the clock of the player on turn last started; null while paused.
     since: now,
     version: 0,
@@ -52,13 +54,61 @@ export function nextPlayer(m, from = m.current) {
   return from;
 }
 
-// Players with the top score; `out` (who ran out of time) can't win.
-export function leaders(m, out = null) {
-  const ids = m.scores.map((_, i) => i).filter((i) => i !== out);
-  const top = Math.max(...ids.map((i) => m.scores[i]));
-  const best = ids.filter((i) => m.scores[i] === top);
-  return best.length === 1 ? best[0] : best;
+// A streak (racha) is a run of moves by the same player that each make at least one OSO (or
+// SOS): scoring keeps the turn, so it lasts until that player places without scoring. A move
+// that makes two OSO at once is still one move. Replayed from the history with the current word,
+// so it always matches the scores after 🔄 and 🛟; a 🔄 never scores a streak and ends it.
+export function streaks(m) {
+  const stats = Array.from({ length: m.players }, () => ({ longest: 0, count: 0 }));
+  let state = {
+    size: m.size,
+    board: Array(m.size * m.size).fill(''),
+    scored: new Map(),
+    scores: Array(m.players).fill(0),
+  };
+  let run = 0;
+  let last = null;
+  for (const move of m.history) {
+    const before = state.scores[move.player];
+    state = replayMove(state, move, m.word);
+    if (move.power || state.scores[move.player] <= before) {
+      last = null;
+      continue;
+    }
+    const s = stats[move.player];
+    if (last === move.player) run++;
+    else {
+      run = 1;
+      s.count++;
+    }
+    last = move.player;
+    s.longest = Math.max(s.longest, run);
+  }
+  return stats;
 }
+
+// Tiebreakers after the points, in order (`tiebreak` in the match and in `game_end`).
+export const TIEBREAKS = ['streak', 'streaks'];
+
+// Who is on top: most points, then the longest streak, then the most streaks. `out` (who ran out
+// of time) can't win. `tiebreak`: 'none' if the points decide, the tiebreaker that decided, or
+// 'draw' if still tied after all of them.
+export function standing(m, out = null) {
+  const stats = streaks(m);
+  const keys = [(i) => m.scores[i], (i) => stats[i].longest, (i) => stats[i].count];
+  let best = m.scores.map((_, i) => i).filter((i) => i !== out);
+  let decided = 'none';
+  keys.forEach((key, k) => {
+    const top = Math.max(...best.map(key));
+    const next = best.filter((i) => key(i) === top);
+    if (k > 0 && next.length < best.length) decided = TIEBREAKS[k - 1];
+    best = next;
+  });
+  const winner = best.length === 1 ? best[0] : best;
+  return { winner, tiebreak: best.length > 1 ? 'draw' : decided, stats };
+}
+
+export const leaders = (m, out = null) => standing(m, out).winner;
 
 function end(m, winner, reason, timedOut = reason === 'tiempo') {
   Object.assign(m, { over: true, winner, reason, timedOut, since: null });
@@ -68,8 +118,9 @@ function end(m, winner, reason, timedOut = reason === 'tiempo') {
 
 // `timedOut`: with 4 players, the game ends when only one has time left.
 export function endByScore(m, timedOut = false) {
-  const top = [leaders(m)].flat();
-  return end(m, top.length === m.scores.length ? null : leaders(m), 'puntos', timedOut);
+  const { winner, tiebreak } = standing(m);
+  m.tiebreak = tiebreak;
+  return end(m, [winner].flat().length === m.scores.length ? null : winner, 'puntos', timedOut);
 }
 
 // Seconds left on each clock at `now`, without changing the match.

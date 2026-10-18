@@ -14,8 +14,35 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## Próximamente
 
-- **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
+- **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
+
+## [4.0.0] - 2026-10-18
+
+**🔥 Los empates a puntos se desempatan con las rachas**
+
+- **Por qué:** JoseLuis y Julia querían que un empate a puntos no se quedara siempre en 🤝, y
+  empezar a medir las rachas de OSO.
+- **Qué es una racha:** como hacer OSO te deja volver a jugar, una racha son las jugadas seguidas de
+  un mismo turno que hacen OSO. Una jugada que hace 2 OSO a la vez es una sola jugada de la racha. Un
+  🔄 nunca cuenta y la corta. Con 🛟 se recalculan con el historial, igual que los puntos.
+- **Orden del desempate:** 1) puntos (cada OSO sigue valiendo 1), 2) racha más larga (más jugadas
+  seguidas haciendo OSO), 3) número de rachas (turnos con al menos un OSO). Si todo coincide, es
+  empate. Con 4 jugadores se desempata entre los que empatan en cabeza.
+- **Decisión:** se quitó «más OSO en una sola racha». Se parecía demasiado a la racha más larga.
+- **Lo que no cambia:** quedarse sin tiempo o abandonar decide la partida como antes, y la máquina
+  juega igual. Para superar un reto sigue haciendo falta la diferencia de puntos que pide. Una
+  victoria por desempate cuenta como victoria en el marcador de la sesión.
+- **Pantalla final:** la tabla «Esta partida» muestra los puntos, la racha más larga y las rachas de
+  cada jugador, en todas las partidas. Si se desempata, el resultado lo dice («Desempate: racha más
+  larga» o «Desempate: más rachas»), y un empate completo dice «Mismas rachas». Al compartir, el
+  mensaje cuenta que se ganó por rachas.
+- **Reglas y ayuda:** explican el desempate.
+- **En línea:** el servidor desempata con las mismas reglas, porque está en `match.js`
+  (`streaks()` y `standing()`), y guarda `tiebreak` en la partida.
+- **GA4:** `game_end` lleva `tiebreak` (`none`, `streak`, `streaks` o `draw`).
+- Es la 4.0.0 porque cambia una regla. La idea de los equipos con 4 jugadores pasa a «versión mayor»,
+  sin número.
 
 ## [3.21.1] - 2026-10-18
 

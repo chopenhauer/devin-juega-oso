@@ -50,6 +50,9 @@ test('messages for other people only use the closing ? and ! (spoken Spanish)', 
     { mode: 'four', winner: 0, scores: [5, 4, 3, 2] },
     { mode: 'two', winner: null, scores: [4, 4] },
     { mode: 'two', winner: 1, scores: [3, 6] },
+    { mode: 'two', winner: 1, scores: [4, 4] },
+    { mode: 'solo', winner: 0, scores: [4, 4] },
+    { mode: 'solo', winner: 1, scores: [4, 4] },
   ];
   for (const text of [...results.map(shareText), SHARE_SUBJECT, t('share.room')]) {
     assert.doesNotMatch(text, /[¿¡]/, text);
@@ -64,5 +67,17 @@ test('a game against the machine with its board shares a challenge', () => {
   assert.equal(
     shareUrl('whatsapp', 'reto=5-hard-9-4'),
     'https://juegaoso.com/?reto=5-hard-9-4&utm_source=whatsapp&utm_medium=share&utm_campaign=reto',
+  );
+});
+
+test('a win with the same points says the streaks broke the tie', () => {
+  assert.equal(
+    shareText({ mode: 'two', winner: 1, scores: [4, 4] }),
+    'Partidazo de OSO 🐻: empate a 4 y desempate por rachas!\n\nJuegas conmigo?',
+  );
+  assert.match(shareText({ mode: 'solo', winner: 0, scores: [4, 4] }), /le gané por rachas/);
+  assert.match(
+    shareText({ mode: 'solo', winner: 1, scores: [4, 4], size: 5, difficulty: 'hard' }),
+    /me ganó por rachas/,
   );
 });

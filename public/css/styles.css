@@ -1354,6 +1354,14 @@ select option {
 .session-board tr.leader > * {
   color: var(--accent);
 }
+/* «Esta partida» never grows wider than the end card: long names get the ellipsis instead. */
+.end-stats table {
+  table-layout: fixed;
+}
+.end-stats .session-player {
+  width: 40%;
+  max-width: none;
+}
 /* The crown gets its own column so every avatar and name lines up under «Jugador». */
 .session-board .session-crown {
   width: 1.5em;

@@ -31,6 +31,7 @@ test('game_end describes the game without personal data', () => {
     theme_source: 'default',
     end_reason: 'timeout',
     result: 'machine',
+    tiebreak: 'none',
     time_available: 120,
     time_used_max: 120,
     time_left_min: 0,

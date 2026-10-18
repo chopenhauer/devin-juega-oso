@@ -122,6 +122,56 @@ test('a full game against the machine ends with a winner screen', async ({ page 
   }
   await expect(overlay).toBeVisible({ timeout: 5000 });
   await expect(page.locator('#winnerTitle')).not.toBeEmpty();
+  // Points, longest streak and streaks of each player: what breaks a tie on points.
+  const rows = page.locator('#endStatsRows tr');
+  await expect(page.locator('#endStats')).toBeVisible();
+  await expect(rows).toHaveCount(2);
+  await expect(rows.nth(1).locator('th')).toContainText('Máquina');
+  for (const row of await rows.all()) await expect(row.locator('td')).toHaveText([/^\d+$/, /^\d+$/, /^\d+$/]);
+});
+
+// A 5×5 game in Juntos that ends 4 – 4: Jugador 2 wins with a streak of 2 moves against 1.
+const TIED_GAME = [
+  [0, 6, 'S'],
+  [1, 10, 'O'],
+  [0, 3, 'O'],
+  [1, 18, 'S'],
+  [0, 17, 'O'],
+  [1, 7, 'O'],
+  [0, 20, 'O'],
+  [1, 15, 'O'],
+  [0, 5, 'O'],
+  [0, 13, 'O'],
+  [1, 21, 'O'],
+  [0, 8, 'O'],
+  [1, 14, 'O'],
+  [0, 23, 'S'],
+  [1, 4, 'O'],
+  [0, 2, 'S'],
+  [1, 9, 'S'],
+  [1, 19, 'S'],
+  [0, 24, 'O'],
+  [0, 1, 'S'],
+  [1, 16, 'O'],
+  [0, 22, 'O'],
+  [0, 0, 'O'],
+  [1, 12, 'S'],
+  [1, 11, 'O'],
+];
+
+test('a tie on points is broken by the longest streak', async ({ page }) => {
+  await startGame(page);
+  for (const [p, i, letter] of TIED_GAME) {
+    await page.click(`.letter[data-player="${p}"][data-letter="${letter}"]`);
+    await cell(page, i).click({ force: true });
+  }
+  await expect(page.locator('#winnerOverlay')).toBeVisible();
+  await expect(page.locator('#winnerTitle')).toHaveText('¡Gana Jugador 2!');
+  await expect(page.locator('#winnerSub')).toHaveText('Resultado final: 4 – 4 · Desempate: racha más larga');
+  const rows = page.locator('#endStatsRows tr');
+  await expect(rows.nth(0).locator('td')).toHaveText(['4', '1', '3']);
+  await expect(rows.nth(1).locator('td')).toHaveText(['4', '2', '2']);
+  await expect(rows.nth(1)).toHaveClass(/leader/);
 });
 
 test('loads the Microsoft Clarity tag without CSP errors', async ({ page }) => {

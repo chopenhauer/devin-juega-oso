@@ -12,6 +12,9 @@ import {
   resume,
   leave,
   clocks,
+  endByScore,
+  standing,
+  streaks,
   sosReplayMs,
   toJSON,
   fromJSON,
@@ -198,4 +201,124 @@ test('🛒 a bought 🛟 switches the whole game back (SOS ↔ OSO) for everybod
   assert.deepEqual(m.scores, [1, 0]);
   assert.deepEqual(m.sosCredits, [0, 0]);
   assert.equal(sos(m, 0, m.since).error, 'used');
+});
+
+// 5×5 boards using only rows 0, 2 and 4: no vertical or diagonal OSO can appear by accident.
+const play = (m, moves) => moves.forEach(([cell, letter]) => place(m, m.current, cell, letter, 0));
+
+test('a streak is the moves in a row that score; the longest one breaks a tie on points', () => {
+  const m = newMatch({ size: 5 });
+  play(m, [
+    [0, 'O'],
+    [1, 'S'],
+    [10, 'O'],
+    [11, 'S'],
+    [2, 'O'],
+    [12, 'O'],
+    [20, 'O'],
+  ]);
+  play(m, [
+    [3, 'S'],
+    [21, 'S'],
+    [4, 'O'],
+    [24, 'S'],
+    [23, 'S'],
+    [22, 'O'],
+    [14, 'O'],
+  ]);
+  assert.deepEqual(m.scores, [2, 2]);
+  assert.deepEqual(streaks(m), [
+    { longest: 2, count: 1 },
+    { longest: 1, count: 2 },
+  ]);
+  assert.deepEqual(endByScore(m), { type: 'end', winner: 0, reason: 'puntos', timedOut: false });
+  assert.equal(m.tiebreak, 'streak');
+  assert.equal(fromJSON(JSON.parse(JSON.stringify(toJSON(m)))).tiebreak, 'streak');
+});
+
+test('two OSO in one move are one move of the streak; then the number of streaks decides', () => {
+  const m = newMatch({ size: 5 });
+  play(m, [
+    [0, 'O'],
+    [1, 'S'],
+    [4, 'O'],
+    [3, 'S'],
+    [10, 'O'],
+    [11, 'S'],
+    [12, 'O'],
+    [20, 'O'],
+  ]);
+  const r = place(m, 1, 2, 'O', 0);
+  assert.equal(r.events[0].made.length, 2);
+  play(m, [
+    [21, 'S'],
+    [22, 'O'],
+    [14, 'O'],
+  ]);
+  assert.deepEqual(m.scores, [2, 2]);
+  assert.deepEqual(streaks(m), [
+    { longest: 1, count: 2 },
+    { longest: 1, count: 1 },
+  ]);
+  assert.deepEqual(standing(m).winner, 0);
+  assert.equal(standing(m).tiebreak, 'streaks');
+});
+
+test('same points and same streaks is still a draw', () => {
+  const m = newMatch({ size: 5 });
+  play(m, [
+    [0, 'O'],
+    [1, 'S'],
+    [2, 'O'],
+    [10, 'O'],
+    [20, 'O'],
+    [11, 'S'],
+    [12, 'O'],
+    [24, 'O'],
+  ]);
+  assert.deepEqual(m.scores, [1, 1]);
+  assert.equal(endByScore(m).winner, null);
+  assert.equal(m.tiebreak, 'draw');
+});
+
+test('points decide first; a 🔄 never starts a streak; 🛟 recounts them as SOS', () => {
+  const m = newMatch({ size: 5 });
+  play(m, [
+    [0, 'O'],
+    [1, 'O'],
+    [2, 'O'],
+  ]);
+  swap(m, 1, 1, 0);
+  assert.deepEqual(m.scores, [0, 1]);
+  assert.deepEqual(streaks(m)[1], { longest: 0, count: 0 });
+  assert.deepEqual(standing(m), { winner: 1, tiebreak: 'none', stats: streaks(m) });
+  const s = newMatch({ size: 5 });
+  play(s, [
+    [0, 'S'],
+    [1, 'O'],
+    [10, 'S'],
+    [11, 'O'],
+  ]);
+  sos(s, 0, 0);
+  place(s, 0, 2, 'S', 0);
+  place(s, 0, 12, 'S', 0);
+  assert.deepEqual(s.scores, [2, 0]);
+  assert.deepEqual(streaks(s)[0], { longest: 2, count: 1 });
+});
+
+test('with 4 players the tie is broken among the leaders only', () => {
+  const m = newMatch({ size: 5, players: 4 });
+  play(m, [
+    [0, 'O'],
+    [1, 'S'],
+    [2, 'O'],
+    [10, 'O'],
+    [11, 'S'],
+    [12, 'O'],
+    [20, 'O'],
+    [21, 'S'],
+  ]);
+  assert.deepEqual(m.scores, [1, 0, 1, 0]);
+  assert.deepEqual(endByScore(m).winner, [0, 2]);
+  assert.equal(m.tiebreak, 'draw');
 });

@@ -1266,6 +1266,7 @@ const { timeFor } = Engine;
         themeSource,
         reason: timedOut ? 'tiempo' : reason,
         winner: w,
+        tiebreak: reason === 'puntos' ? m.tiebreak : null,
         scores,
         available: timeFor(size),
         times,
@@ -1286,6 +1287,7 @@ const { timeFor } = Engine;
     q('rematch').focus({ preventScroll: true });
 
     const result = scores.join(' – ');
+    const tiebreak = reason === 'puntos' ? m.tiebreak : null;
     const timeout = gameMode === 'four' ? t('end.timeout', { name: names[current] }) : t('end.rival_timeout');
     if (Array.isArray(w)) {
       q('winnerAvatar').textContent = w.map((i) => avatars[i]).join('');
@@ -1295,16 +1297,20 @@ const { timeFor } = Engine;
     } else if (w === null) {
       q('winnerAvatar').textContent = '🤝';
       q('winnerTitle').textContent = t('end.draw');
-      q('winnerSub').textContent = `${scores.join(' – ')}`;
+      q('winnerSub').textContent = tiebreak === 'draw' ? `${result} · ${t('end.same_streaks')}` : result;
     } else {
       q('winnerAvatar').textContent = avatars[w];
       q('winnerTitle').textContent = t('end.winner', { name: names[w] });
+      const decided = { streak: t('end.tiebreak_streak'), streaks: t('end.tiebreak_streaks') }[tiebreak];
       q('winnerSub').textContent =
-        reason === 'tiempo' ? `${timeout} · ${result}` : t('end.final', { scores: scores.join(' – ') });
+        reason === 'tiempo'
+          ? `${timeout} · ${result}`
+          : [t('end.final', { scores: result }), decided].filter(Boolean).join(' · ');
       confetti();
     }
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
+    showEndStats(w);
     lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
     q('replayOpen').classList.toggle('hidden', !history.length);
     fitEndLabels();
@@ -1316,6 +1322,29 @@ const { timeFor } = Engine;
     syncSecretGift();
     showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret }));
     showInstall(!!secret || !!feedbackMomentNow);
+  }
+
+  // Points, longest streak and number of streaks of each player: what breaks a tie.
+  function showEndStats(w) {
+    const stats = Match.streaks(m);
+    q('endStats').classList.toggle('hidden', !history.length);
+    q('endStatsRows').replaceChildren(
+      ...stats.map((s, p) => {
+        const row = document.createElement('tr');
+        row.classList.toggle('leader', [w].flat().includes(p));
+        const who = document.createElement('th');
+        who.scope = 'row';
+        who.className = 'session-player';
+        who.textContent = `${avatars[p]} ${names[p]}`;
+        const cells = [scores[p], s.longest, s.count].map((n) => {
+          const td = document.createElement('td');
+          td.textContent = n;
+          return td;
+        });
+        row.append(who, ...cells);
+        return row;
+      }),
+    );
   }
 
   let feedbackMomentNow = null;

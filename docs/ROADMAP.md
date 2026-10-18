@@ -118,7 +118,7 @@ Cambian cómo se juega, así que tocan el motor, la máquina y el servidor en l�
 | 24  | [Decidir el objetivo del reloj](ideas/reloj.md)            | **Ahora (4.º)**           |
 | 5   | [Ajustar cada tablero con datos](ideas/reloj.md)           | ~100 partidas por tablero |
 | 16  | [Reloj con la pestaña dormida](ideas/reloj.md)             | Decidir                   |
-| 27  | [Puntos extra por racha](ideas/rachas.md)                  | Futuro                    |
+| 27  | [Puntos extra por racha](ideas/rachas.md)                  | Futuro (desempate: 4.0.0) |
 | 28  | [Hándicap y categorías](ideas/handicap.md)                 | Futuro                    |
 | 18  | [Edición papel](ideas/edicion-papel.md)                    | Futuro                    |
 | —   | [Tienda secreta y Modo Mercado](ideas/tienda-y-mercado.md) | Versión sencilla en 3.4.0 |

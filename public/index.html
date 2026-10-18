@@ -257,7 +257,7 @@
                     </div>
                     <p data-i18n="ruleSlides.cada_jugador_tiene_su" class="step-lead">
                       Cada jugador tiene su propio tiempo. Si se te acaba, pierdes. Cuando el tablero se
-                      llena, gana quien tenga más puntos.
+                      llena, gana quien tenga más puntos. Si empatáis, gana la racha más larga.
                     </p>
                   </div>
                 </div>
@@ -986,7 +986,9 @@
                 <div class="help-step">
                   <span class="num">4</span>
                   <div data-i18n-html="helpModal.b_la_partida_termina">
-                    <b>La partida termina</b> cuando se llena el tablero o alguien se queda sin tiempo.
+                    <b>La partida termina</b> cuando se llena el tablero o alguien se queda sin tiempo. Gana
+                    quien tenga más puntos. <b>Si hay empate</b>, gana la racha más larga (más jugadas
+                    seguidas haciendo OSO en un mismo turno) y, si sigue, quien haya hecho más rachas.
                   </div>
                 </div>
               </div>
@@ -1077,6 +1079,20 @@
             <div data-i18n="winnerTitle" id="winnerTitle" class="winner-title">¡Ganador!</div>
             <div id="winnerSub" class="winner-sub"></div>
             <p id="challengeResult" class="challenge-result hidden" role="status"></p>
+            <section id="endStats" class="session-board end-stats hidden" aria-labelledby="endStatsTitle">
+              <h2 data-i18n="endStatsTitle" id="endStatsTitle">Esta partida</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th data-i18n="endStats.jugador" scope="col" class="session-player">Jugador</th>
+                    <th data-i18n="endStats.puntos" scope="col">Puntos</th>
+                    <th data-i18n="endStats.racha" scope="col">Racha más larga</th>
+                    <th data-i18n="endStats.rachas" scope="col">Rachas</th>
+                  </tr>
+                </thead>
+                <tbody id="endStatsRows"></tbody>
+              </table>
+            </section>
             <section id="sessionBoard" class="session-board hidden" aria-labelledby="sessionTitle">
               <h2 data-i18n="sessionTitle" id="sessionTitle">Marcador de la sesión</h2>
               <table>
