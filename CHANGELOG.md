@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.19.0] - 2026-10-18
 
-**❤️ La historia de OSO, en el corazón del pie, y un título más neutro**
+**❤️ La historia de OSO, en el corazón del pie, y un título más neutro ([0e9f22b](https://github.com/chopenhauer/devin-juega-oso/commit/0e9f22b290a62f334cc4e9ffc26bdbe7a19276ec))**
 
 - En la bienvenida y en las pantallas de antes de jugar, el ❤️ de «made by Vilarequi with ❤️» abre
   una ventana con la historia del juego y un botón «🐙 Ver el código en GitHub» que lleva al
