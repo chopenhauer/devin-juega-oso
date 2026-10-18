@@ -196,6 +196,27 @@ test('the heart in the credits opens the story with a link to the public repo', 
   await expect(story).toBeHidden();
 });
 
+test('the story offers to install the app only when the browser can', async ({ page }) => {
+  await page.goto('/');
+  const heart = page.getByRole('button', { name: 'La historia de OSO' });
+  const story = page.locator('#storyDialog');
+  const install = story.getByRole('button', { name: 'instalarlo como una app' });
+  await heart.click();
+  await expect(install).toBeHidden();
+  await story.getByRole('button', { name: 'Cerrar' }).click();
+  await page.evaluate(() => {
+    const e = new Event('beforeinstallprompt', { cancelable: true });
+    e.prompt = () => (window.prompted = true);
+    e.userChoice = Promise.resolve({ outcome: 'dismissed' });
+    window.dispatchEvent(e);
+  });
+  await heart.click();
+  await expect(story).toContainText('jugar sin conexión');
+  await install.click();
+  await expect.poll(() => page.evaluate(() => window.prompted)).toBe(true);
+  await expect(install).toBeHidden();
+});
+
 test('credits show on the setup screens and hide during the game', async ({ page }) => {
   await page.goto('/');
   const credits = page.locator('.credits-text');

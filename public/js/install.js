@@ -1,7 +1,7 @@
 // «📲 Instalar»: offers to add OSO to the home screen, only on the end screen after a game and
 // never on its own. Chrome/Android/desktop use the browser's own prompt; iPhone and iPad have none,
 // so they get the steps. «No, gracias» hides it for good on this device. Also registers sw.js,
-// which lets the game open without connection.
+// which lets the game open without connection. The ❤️ story also offers it, when asked for.
 import { track, displayMode } from './telemetry.js';
 
 const KEY = 'oso.install.v1';
@@ -88,5 +88,36 @@ if (typeof document !== 'undefined') {
     hide();
     q('rematch')?.focus({ preventScroll: true });
   });
-  q('installIosDialog')?.addEventListener('close', () => q('installYes').focus({ preventScroll: true }));
+  // The story offers it even after «No, gracias»: there the person is the one asking.
+  let opener = null;
+  const storyKind = () =>
+    installKind({
+      installed: displayMode() === 'standalone',
+      declined: false,
+      canPrompt: !!prompt,
+      ios: isIos(),
+    });
+  q('storyOpen')?.addEventListener('click', () => q('storyInstall').classList.toggle('hidden', !storyKind()));
+  q('storyDialog')?.addEventListener('click', async (e) => {
+    if (!e.target.closest('[data-install]')) return;
+    const how = storyKind();
+    track('story', { action: 'install' });
+    if (how === 'ios') {
+      opener = q('storyOpen');
+      q('storyDialog').close();
+      q('installIosDialog').showModal();
+      return;
+    }
+    const event = prompt;
+    prompt = null;
+    q('storyInstall').classList.add('hidden');
+    if (!event) return;
+    event.prompt();
+    const { outcome } = await event.userChoice;
+    track('install_prompt', { outcome });
+  });
+  q('installIosDialog')?.addEventListener('close', () => {
+    (opener ?? q('installYes')).focus({ preventScroll: true });
+    opener = null;
+  });
 }

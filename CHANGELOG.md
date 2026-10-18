@@ -17,6 +17,18 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.21.0] - 2026-10-18
+
+**📲 La historia de OSO invita a instalarlo y jugar sin conexión**
+
+- **Por qué:** JoseLuis pidió que la ventana del ❤️ cuente que OSO se puede instalar como app y
+  jugar sin conexión, con el enlace ahí mismo.
+- **Cómo funciona:** «Si quieres, puedes instalarlo como una app y jugar sin conexión». El enlace usa
+  la misma instalación que «📲 Instalar» del final de partida: el aviso del navegador o, en iPhone y
+  iPad, los pasos. Sale aunque se dijera «No, gracias» al final de una partida, porque aquí lo pide la
+  persona. No sale si ya está instalado o si el navegador no permite instalarlo.
+- El evento `story` suma `action: install`.
+
 ## [3.20.1] - 2026-10-18
 
 **Los secretos se descubren con 1,5 segundos de pulsación ([741d3c2](https://github.com/chopenhauer/devin-juega-oso/commit/741d3c211c3135213ede0123e95b9e8f3772c720))**
