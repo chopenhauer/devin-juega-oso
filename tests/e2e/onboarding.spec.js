@@ -177,6 +177,21 @@ test('two players choose the orientation; solo skips that step', async ({ page }
   expect(await step(page)).toBe('players');
 });
 
+test('the heart in the credits opens the story with a link to the public repo', async ({ page }) => {
+  await page.goto('/');
+  const heart = page.getByRole('button', { name: 'La historia de OSO' });
+  await expect(heart).toBeVisible();
+  await heart.click();
+  const story = page.locator('#storyDialog');
+  await expect(story).toBeVisible();
+  await expect(story.getByRole('heading')).toHaveText('La historia de OSO');
+  const repo = story.getByRole('link', { name: /Ver el código en GitHub/ });
+  await expect(repo).toHaveAttribute('href', 'https://github.com/chopenhauer/devin-juega-oso');
+  await expect(repo).toHaveAttribute('target', '_blank');
+  await story.getByRole('button', { name: 'Cerrar' }).click();
+  await expect(story).toBeHidden();
+});
+
 test('credits show on the setup screens and hide during the game', async ({ page }) => {
   await page.goto('/');
   const credits = page.locator('.credits-text');

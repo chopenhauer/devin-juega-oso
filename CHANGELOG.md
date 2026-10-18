@@ -17,6 +17,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.19.0] - 2026-10-18
+
+**❤️ La historia de OSO, en el corazón del pie**
+
+- En la bienvenida y en las pantallas de antes de jugar, el ❤️ de «made by Vilarequi with ❤️» abre
+  una ventana con la historia del juego y un botón «🐙 Ver el código en GitHub» que lleva al
+  repositorio público. Durante la partida el pie no se ve, como hasta ahora.
+- Evento nuevo `story` (`action`: `open`, `repo`) para saber si la historia interesa y cuántos van a
+  ver el código. Solo con las cookies aceptadas.
+
 ## [3.18.0] - 2026-10-18
 
 **🧪 Laboratorio de Julia: cambia la máquina y el reloj, simula y guárdalo para todos ([640d648](https://github.com/chopenhauer/devin-juega-oso/commit/640d648c72a2796839c3ff665c8f5f8450033e35))**

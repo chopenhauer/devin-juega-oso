@@ -2357,6 +2357,11 @@ const { timeFor } = Engine;
     showStep('players');
   });
   q('onlineToggle').addEventListener('click', () => q('onlineIntro').showModal());
+  q('storyOpen').addEventListener('click', () => {
+    q('storyDialog').showModal();
+    track('story', { action: 'open' });
+  });
+  q('storyRepo').addEventListener('click', () => track('story', { action: 'repo' }));
   q('onlineIntroClose').addEventListener('click', () => q('onlineIntro').close());
   q('onlineIntroGo').addEventListener('click', () => {
     q('onlineIntro').close();
