@@ -3657,7 +3657,8 @@ body[data-motion='rise'] .theme-decor span {
   min-width: 10rem;
   min-height: 2.75rem;
 }
-.consent-text a {
+.consent-text a,
+.info-dialog .step-lead a {
   color: inherit;
   font-weight: var(--fw-bold);
 }

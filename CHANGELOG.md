@@ -23,9 +23,10 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 - En la bienvenida y en las pantallas de antes de jugar, el ❤️ de «made by Vilarequi with ❤️» abre
   una ventana con la historia del juego y un botón «🐙 Ver el código en GitHub» que lleva al
-  repositorio público; «todas sus versiones» enlaza a este CHANGELOG. Durante la partida el pie no se ve, como hasta ahora.
-- Evento nuevo `story` (`action`: `open`, `repo`, `changelog`) para saber si la historia interesa y cuántos van a
-  ver el código. Solo con las cookies aceptadas.
+  repositorio público; «todas sus versiones» enlaza a este CHANGELOG. Durante la partida el pie no se
+  ve, como hasta ahora.
+- Evento nuevo `story` (`action`: `open`, `repo`, `changelog`) para saber si la historia interesa y
+  cuántos van a ver el código. Solo con las cookies aceptadas.
 
 ## [3.18.0] - 2026-10-18
 
