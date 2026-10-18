@@ -240,7 +240,7 @@ test('the game menu invites someone to play', async ({ page }) => {
 test('the link shows a card with the bear', async ({ page, request }) => {
   await page.goto('/');
   const og = (p) => page.locator(`meta[property="og:${p}"]`).getAttribute('content');
-  expect(await og('title')).toBe('OSO · el juego de Julia');
+  expect(await og('title')).toBe('OSO · El juego de la O y la S');
   expect(await og('image')).toBe('https://juegaoso.com/og.png');
   expect(await page.locator('meta[name="description"]').getAttribute('content')).toContain('OSO');
   const img = await request.get('/og.png');

@@ -272,7 +272,7 @@ test('the guest sees whose card is whose; the host hears them arrive and goes on
   expect(await host.evaluate(() => window.sounds)).toContain('join');
   await host.click('#startGame');
   await expect(host.locator('#gameScreen')).toBeVisible();
-  await expect(host).toHaveTitle('OSO · el juego de Julia');
+  await expect(host).toHaveTitle('OSO · El juego de la O y la S');
   expect(errors).toEqual([]);
 });
 
