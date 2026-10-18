@@ -84,7 +84,10 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   que ha hecho el otro: 💡 pista, 👁️ última jugada, 🔄 cambio de letra, 🛟 SOS y 🛒 compras de la
   tienda secreta (decidido: así el rival descubre el secreto, boca-oreja).
 - **Revancha:** en la misma sala, alternando quién empieza.
-- **Privacidad:** sin cuentas. Solo se guardan apodo (máx. 16 caracteres), avatar y jugadas, y la
+- **Medallas (4.1.0):** cada dispositivo manda con el perfil sus puntos de rango y su medalla, y
+  solo puntúa a su jugador con los puntos del rival. Como no dan ventaja, el servidor no los
+  comprueba: solo los limita (0–4000 y 0–3).
+- **Privacidad:** sin cuentas. Solo se guardan apodo (máx. 16 caracteres), avatar, medalla y jugadas, y la
   sala se borra sola: a la hora y media si no llega a empezar y a las 24 h si hubo partida. Límite de salas por IP para evitar abusos (la IP no se guarda).
 
 ## Cómo sabremos si funciona

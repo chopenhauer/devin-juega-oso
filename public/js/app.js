@@ -1,6 +1,7 @@
 import * as Engine from './engine.js';
 import * as Match from './match.js';
 import { sessionKey, recordGame, standings } from './leaderboard.js';
+import { medal, entry, rankId, machineRating, recordRanks } from './rank.js';
 import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
 import { t, translateDom } from './i18n.js';
@@ -126,6 +127,34 @@ const { timeFor } = Engine;
   };
   const firstFreeAvatar = (taken) => avatarChoices.find((a) => a !== taken);
 
+  // 🥉 🥈 🥇 on the avatar's corner (rank.js). Stored per name on this device only.
+  const RANK_KEY = 'oso.rango.v1';
+  let ranks = null;
+  try {
+    ranks = JSON.parse(localStorage.getItem(RANK_KEY));
+  } catch {
+    /* unreadable or unavailable: nobody has a medal yet */
+  }
+  const tierName = (tier) => [null, t('rank.bronze'), t('rank.silver'), t('rank.gold')][tier];
+  const medalText = (tier) =>
+    [null, t('rank.medal_bronze'), t('rank.medal_silver'), t('rank.medal_gold')][tier];
+  function showMedal(el, tier, avatar) {
+    if (tier) {
+      el.dataset.medal = medalText(tier);
+      el.setAttribute('role', 'img');
+      el.setAttribute('aria-label', t('rank.avatar', { avatar, tier: tierName(tier) }));
+    } else {
+      delete el.dataset.medal;
+      el.removeAttribute('role');
+      el.removeAttribute('aria-label');
+    }
+  }
+  const isMachine = (p) => gameMode === 'solo' && p === 1;
+  const localMedal = (p) => (isMachine(p) ? 0 : medal(ranks, namesIn[p].value));
+  namesIn.forEach((input, p) =>
+    input.addEventListener('input', () => showMedal(previews[p], localMedal(p), avatars[p])),
+  );
+
   // Each player must have a different avatar: the other players' picks are disabled.
   function syncAvatars() {
     avatarGrids.forEach((grid) => {
@@ -138,6 +167,7 @@ const { timeFor } = Engine;
         b.title = taken ? t('avatar.taken') : '';
       });
       previews[p].textContent = avatars[p];
+      showMedal(previews[p], localMedal(p), avatars[p]);
     });
   }
 
@@ -1310,6 +1340,7 @@ const { timeFor } = Engine;
     }
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
+    showRankUp(recordRank(w, reason));
     showEndStats(w);
     lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
     q('replayOpen').classList.toggle('hidden', !history.length);
@@ -1346,7 +1377,7 @@ const { timeFor } = Engine;
         const who = document.createElement('th');
         who.scope = 'row';
         who.className = 'session-player';
-        who.textContent = `${avatars[p]} ${names[p]}`;
+        who.textContent = `${avatars[p]}${medalText(currentMedal(p)) ?? ''} ${names[p]}`;
         const cells = [scores[p], s.longest, s.count].map((n) => {
           const td = document.createElement('td');
           td.textContent = n;
@@ -1575,6 +1606,39 @@ const { timeFor } = Engine;
     closeMenu();
     share('menu');
   });
+
+  // Online, each device only ranks its own player; the rival's points come with the room.
+  const ownRank = (p) =>
+    rankId(namesIn[p].value) ? { rating: entry(ranks, namesIn[p].value).rating, medal: localMedal(p) } : {};
+  const currentMedal = (p) => (remote(p) ? (online.seats?.[p]?.medal ?? 0) : localMedal(p));
+  // A finished game moves the rank points; leaving halfway or a game with no moves does not.
+  function recordRank(w, reason) {
+    if (reason === 'abandono' || !history.length) return [];
+    const players = scores.map((_, i) =>
+      isMachine(i)
+        ? { rating: machineRating(difficulty) }
+        : remote(i)
+          ? { rating: online.seats?.[i]?.rating ?? GAME.rank.start }
+          : { name: namesIn[i].value },
+    );
+    const r = recordRanks(ranks, players, w);
+    ranks = r.store;
+    try {
+      localStorage.setItem(RANK_KEY, JSON.stringify(ranks));
+    } catch {
+      /* ignore */
+    }
+    r.ups.forEach(({ player }) => showMedal(avatarsEl[player], localMedal(player), avatars[player]));
+    return r.ups;
+  }
+  function showRankUp(ups) {
+    q('rankUp').textContent = ups
+      .map(({ player, tier }) =>
+        t('rank.up', { name: names[player], tier: tierName(tier), medal: medalText(tier) }),
+      )
+      .join(' ');
+    q('rankUp').classList.toggle('hidden', !ups.length);
+  }
 
   const SESSION_KEY = 'oso.session.v1';
   function recordSession(winner) {
@@ -1811,6 +1875,7 @@ const { timeFor } = Engine;
       avatars[i] = s.avatar;
       namesEl[i].textContent = s.name;
       avatarsEl[i].textContent = s.avatar;
+      showMedal(avatarsEl[i], i === o.seat ? localMedal(i) : s.medal, s.avatar);
     });
     const rival = 1 - o.seat;
     const news = before ? rivalNews(before, rival) : [];
@@ -2078,6 +2143,7 @@ const { timeFor } = Engine;
       card.querySelector('.avatars').inert = !!other;
       if (other) {
         card.querySelector('.online-seat-avatar').textContent = other.avatar;
+        showMedal(card.querySelector('.online-seat-avatar'), other.medal, other.avatar);
         card.querySelector('.online-seat-name').textContent = other.name;
         avatars[i] = other.avatar;
       }
@@ -2253,6 +2319,7 @@ const { timeFor } = Engine;
       action: 'create',
       name: namesIn[0].value.trim() || t('common.jugador_1'),
       avatar: avatars[0],
+      ...ownRank(0),
       theme,
     });
     btn.disabled = false;
@@ -2274,7 +2341,11 @@ const { timeFor } = Engine;
   document.addEventListener('oso:online-next', async (e) => {
     e.preventDefault();
     const me = online ? online.seat : invite ? 1 : 0;
-    const body = { name: namesIn[me].value.trim() || t('player.n', { n: me + 1 }), avatar: avatars[me] };
+    const body = {
+      name: namesIn[me].value.trim() || t('player.n', { n: me + 1 }),
+      avatar: avatars[me],
+      ...ownRank(me),
+    };
     if (invite) {
       const r = await Online.send({ action: 'join', code: invite.code, ...body });
       if (!r.ok) {
@@ -2488,7 +2559,10 @@ const { timeFor } = Engine;
     size = +q('sizeSelect').value;
 
     namesEl.forEach((e, i) => (e.textContent = names[i]));
-    avatarsEl.forEach((e, i) => (e.textContent = avatars[i]));
+    avatarsEl.forEach((e, i) => {
+      e.textContent = avatars[i];
+      showMedal(e, localMedal(i), avatars[i]);
+    });
     avatarsEl[1].classList.toggle('robot', gameMode === 'solo');
     avatarsEl[1].dataset.mood = difficulty;
     q('machineBadge').classList.toggle('hidden', gameMode !== 'solo');

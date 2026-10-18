@@ -364,3 +364,25 @@ test("the host's theme travels with the room; unknown themes fall back to classi
   const none = await s.call({ action: 'create', name: 'Eva', avatar: '🐻' }, '5.6.7.9');
   assert.equal(none.theme, 'classic');
 });
+
+test('rank points and medal only travel with the profile, kept within range', async () => {
+  const s = setup();
+  const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻', rating: 1234.6, medal: 2 });
+  const guest = await s.call({
+    action: 'join',
+    code: host.code,
+    name: 'Leo',
+    avatar: '🐼',
+    rating: 'x',
+    medal: 9,
+  });
+  assert.deepEqual(
+    guest.seats.map(({ rating, medal }) => ({ rating, medal })),
+    [
+      { rating: 1235, medal: 2 },
+      { rating: null, medal: 0 },
+    ],
+  );
+  const p = await s.call({ action: 'profile', code: host.code, token: guest.token, rating: 99999, medal: 1 });
+  assert.deepEqual([p.seats[1].rating, p.seats[1].medal], [4000, 1]);
+});

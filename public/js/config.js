@@ -60,6 +60,17 @@ export const GAME = freeze({
     holdRingMs: 1000,
     holdSlopPx: 10,
   },
+  rank: {
+    start: 900,
+    k: 32,
+    provisionalGames: 5,
+    bronze: 1000,
+    silver: 1200,
+    gold: 1400,
+    machineEasy: 800,
+    machineHard: 1200,
+    machineExtreme: 1600,
+  },
   themes: {
     eggPartyMs: 3600,
     festivalDays: 31,
@@ -94,6 +105,7 @@ export const SECTIONS = {
   machine: 'Máquina',
   online: 'En línea',
   secrets: 'Secretos',
+  rank: '🥉 Categorías (puntos de rango y medallas)',
   themes: 'Temas y easter egg del 🎨',
   feedback: 'Encuesta «¿Os está gustando OSO?»',
   telemetry: 'Medición',
@@ -154,6 +166,18 @@ export const HELP = {
     'Al mantener pulsado el 🎨 o un extra gastado, a partir de estos milisegundos sale un círculo que se va llenando hasta que se descubre el secreto. Antes no, para que un toque normal no lo enseñe.',
   'secrets.holdSlopPx':
     'Píxeles que puede moverse el dedo mientras mantiene pulsado un secreto. Si se mueve más (por ejemplo, para hacer scroll), se cancela.',
+  'rank.start':
+    'Puntos de rango con los que empieza cada jugador que escribe su nombre (como el Elo del ajedrez). Solo se guardan en el dispositivo.',
+  'rank.k':
+    'Cuánto se mueven los puntos en cada partida: ganar a alguien de tu mismo rango da la mitad. Más = se sube y se baja más deprisa.',
+  'rank.provisionalGames': 'Partidas que hay que jugar antes de poder ganar la primera medalla.',
+  'rank.bronze':
+    'Puntos de rango para la medalla 🥉 Bronce. Las medallas nunca se pierden, aunque bajen los puntos.',
+  'rank.silver': 'Puntos de rango para la medalla 🥈 Plata.',
+  'rank.gold': 'Puntos de rango para la medalla 🥇 Oro.',
+  'rank.machineEasy': 'Rango fijo de la máquina en fácil: sirve de vara de medir y nunca cambia.',
+  'rank.machineHard': 'Rango fijo de la máquina en difícil.',
+  'rank.machineExtreme': 'Rango fijo de la máquina en extremo.',
   'themes.eggPartyMs': 'Lo que dura la lluvia de huevos al descubrirlo.',
   'themes.festivalDays': 'Días antes y después de una fiesta en que su tema sale en el menú 🎨.',
   'themes.menuMax': 'Temas como máximo en el menú 🎨 (contando el clásico).',

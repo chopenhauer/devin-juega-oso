@@ -17,6 +17,29 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.1.0] - 2026-10-18
+
+**🥉🥈🥇 Medallas de categoría en el avatar**
+
+- **Por qué:** JoseLuis y Julia querían un rango o categoría que se viera en el avatar. Primer paso
+  del hándicap (28), de momento **solo status, sin ventajas** en la partida.
+- **Cómo se calcula:** puntos de rango como el Elo del ajedrez, solo en el dispositivo y por nombre
+  («Julia» y «julia» son la misma persona; sin nombre o con dos nombres iguales no se cuenta). Se
+  empieza con 900. Ganar a alguien más fuerte da muchos puntos y a alguien más débil, pocos; perder,
+  al revés. La máquina tiene un rango fijo: fácil 800, difícil 1200 y extremo 1600. Con 4 jugadores
+  cada uno se compara con los otros tres. Abandonar o una partida sin jugadas no cuenta.
+- **Medallas:** 🥉 Bronce desde 1000, 🥈 Plata desde 1200 y 🥇 Oro desde 1400, a partir de la 5.ª
+  partida. Todo está en `config.js` (`rank.*`).
+- **Decisiones:** medalla en la esquina del avatar (opción C del boceto) y no el borde, que ya indica
+  el color de cada jugador y el humor de la máquina. **La medalla nunca baja**, para no frustrar a
+  nadie; los puntos sí bajan. Sin ventajas por ahora: el hándicap jugable queda para más adelante.
+- **Dónde se ve:** en «¿Quién juega?» al escribir el nombre, en el panel de la partida y en la tabla
+  «Esta partida». Al ganar una medalla, la pantalla final dice «¡Julia sube a Plata! 🥈».
+- **En línea:** cada dispositivo puntúa solo a su jugador. Los puntos y la medalla viajan con el
+  perfil de la sala para que el rival vea tu medalla; el servidor solo los limita a valores
+  válidos, porque no dan ninguna ventaja.
+- **Privacidad:** se guarda en `oso.rango.v1`, solo en el navegador. No se manda a la analítica.
+
 ## [4.0.0] - 2026-10-18
 
 **🔥 Los empates a puntos se desempatan con las rachas ([5fda7df](https://github.com/chopenhauer/devin-juega-oso/commit/5fda7df49d37ceaf6b4cb7d67d241c5c5217cb86))**

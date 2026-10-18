@@ -47,6 +47,11 @@ const cleanName = (s, fallback) =>
   (typeof s === 'string' ? s.replace(/[\p{C}<>]/gu, '').trim() : '').slice(0, 16) || fallback;
 const cleanAvatar = (s, fallback) =>
   typeof s === 'string' && s.length > 0 && s.length <= 16 && !/[\p{L}\p{N}<>]/u.test(s) ? s : fallback;
+// Rank points and medal (0 none … 3 gold) only decorate the avatar: no advantage, so they are
+// trusted as sent, just kept within range.
+const cleanRating = (n) => (Number.isFinite(n) ? Math.round(Math.min(Math.max(n, 0), 4000)) : null);
+const cleanMedal = (n) => (Number.isInteger(n) && n >= 0 && n <= 3 ? n : 0);
+const rankOf = (body) => ({ rating: cleanRating(body.rating), medal: cleanMedal(body.medal) });
 // The host's theme (skin) travels with the room so the guest sees the same one.
 const cleanTheme = (s) => (typeof s === 'string' && Object.hasOwn(THEMES, s) ? s : 'classic');
 
@@ -71,11 +76,13 @@ export function publicView(room, now) {
     updated: room.updated,
     game: room.game,
     theme: room.theme ?? 'classic',
-    seats: room.seats.map(({ name, avatar, rematch, left, here }) => ({
+    seats: room.seats.map(({ name, avatar, rating, medal, rematch, left, here }) => ({
       left: !!left,
       here: here ?? 0,
       name,
       avatar,
+      rating: rating ?? null,
+      medal: medal ?? 0,
       rematch: !!rematch,
     })),
     match: m && {
@@ -156,6 +163,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
       hash: hash(token),
       name: cleanName(body.name, 'Jugador 1'),
       avatar: cleanAvatar(body.avatar, '🐻'),
+      ...rankOf(body),
     };
     for (let tries = 0; tries < 5; tries++) {
       const room = {
@@ -186,7 +194,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     if (avatar === room.seats[0].avatar) throw new HttpError(409, 'avatar_taken', room);
     const token = randomBytes(16).toString('base64url');
     const expected = room.rev;
-    room.seats.push({ hash: hash(token), name: cleanName(body.name, 'Jugador 2'), avatar });
+    room.seats.push({ hash: hash(token), name: cleanName(body.name, 'Jugador 2'), avatar, ...rankOf(body) });
     room.status = 'lobby';
     await save(room, expected);
     stats.joined = 1;
@@ -214,7 +222,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     if (room.seats.some((x, i) => i !== seat && x.avatar === avatar))
       throw new HttpError(409, 'avatar_taken', room);
     const expected = room.rev;
-    Object.assign(s, { name: cleanName(body.name, s.name), avatar });
+    Object.assign(s, { name: cleanName(body.name, s.name), avatar, ...rankOf(body) });
     await save(room, expected);
     return { seat, room };
   }

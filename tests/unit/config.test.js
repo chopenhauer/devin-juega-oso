@@ -48,6 +48,10 @@ test('times, counts and limits are positive and consistent', () => {
   assert.ok(GAME.online.nudgeSeconds * 1000 > GAME.online.pollMs);
   assert.ok(GAME.themes.menuMax <= GAME.themes.listMax);
   assert.ok(GAME.secrets.holdRingMs < GAME.secrets.holdMs, 'ring before the secret');
+  const r = GAME.rank;
+  assert.ok(r.bronze < r.silver && r.silver < r.gold, 'medals in order');
+  assert.ok(r.machineEasy < r.machineHard && r.machineHard < r.machineExtreme, 'machine levels in order');
+  assert.ok(Number.isInteger(r.provisionalGames), 'provisionalGames');
   for (const k of ['hintSeconds', 'swapSeconds', 'sosSeconds'])
     assert.ok(GAME.shop[k] < GAME.board.seconds[BOARD_SIZES[0]], `shop.${k} must be affordable`);
   for (const k of ['streak', 'cooldown', 'gamesPerSecret'])

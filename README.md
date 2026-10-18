@@ -39,6 +39,7 @@ public/               Sitio estático que publica Vercel (sin build)
   js/themes.js        Temas (skins) y qué temas salen en el menú 🎨 según la fecha
   js/sound.js         Sonidos generados con Web Audio y silencio recordado
   js/leaderboard.js   Marcador de la sesión (partidas seguidas entre los mismos jugadores)
+  js/rank.js          Puntos de rango y medallas 🥉🥈🥇 de cada nombre (solo en el dispositivo)
   js/version.js       Versión que sale en el pie (la misma que package.json)
   js/consent.js       Aviso de cookies; ga.js y clarity.js cargan la analítica según el permiso
   js/share.js         Textos y enlaces para compartir (WhatsApp, email, UTM), sin SDKs
@@ -85,6 +86,7 @@ Lo que se guarda en el dispositivo (`localStorage`), sin datos fuera del navegad
 | `oso.install.v1`  | `dismissed` si se pulsó «No, gracias» en «📲 Instalar»                   |
 | `oso.secretos.v1` | Secretos ya contados, partidas contadas y día del último secreto         |
 | `oso.online.v1`   | Sala en línea y token del asiento, para volver tras recargar             |
+| `oso.rango.v1`    | Puntos de rango, partidas y medalla de cada nombre                       |
 
 ## Desarrollo
 

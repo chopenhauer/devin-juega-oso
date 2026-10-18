@@ -123,7 +123,7 @@ Cambian cómo se juega, así que tocan el motor, la máquina y el servidor en l�
 | 16  | [Reloj con la pestaña dormida](ideas/reloj.md)             | Decidir                   |
 | 27  | [Puntos extra por racha](ideas/rachas.md)                  | Futuro                    |
 | —   | [Desempate por rachas](ideas/rachas.md)                    | Hecho en 4.0.0            |
-| 28  | [Hándicap y categorías](ideas/handicap.md)                 | Futuro                    |
+| 28  | [Hándicap y categorías](ideas/handicap.md)                 | Medallas en 4.1.0         |
 | 18  | [Edición papel](ideas/edicion-papel.md)                    | Futuro                    |
 | —   | [Tienda secreta y Modo Mercado](ideas/tienda-y-mercado.md) | Versión sencilla en 3.4.0 |
 

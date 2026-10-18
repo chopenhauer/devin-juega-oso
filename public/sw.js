@@ -33,6 +33,7 @@ const SHELL = [
   '/js/install-early.js',
   '/js/install.js',
   '/js/leaderboard.js',
+  '/js/rank.js',
   '/js/match.js',
   '/js/onboarding.js',
   '/js/online.js',

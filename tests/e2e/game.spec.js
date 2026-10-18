@@ -184,6 +184,42 @@ test('a tie on points is broken by the longest streak', async ({ page }) => {
   await expect(rows.nth(0).locator('td').first()).toHaveCSS('text-align', 'center');
 });
 
+test('a medal on the avatar: earned with rank points, shown in setup, game and end screen', async ({
+  page,
+}) => {
+  await page.evaluate(() =>
+    localStorage.setItem(
+      'oso.rango.v1',
+      JSON.stringify({
+        players: { julia: { rating: 995, games: 9, tier: 0 }, papá: { rating: 1250, games: 20, tier: 2 } },
+      }),
+    ),
+  );
+  await page.reload();
+  const name = (id, value) =>
+    page.locator(id).evaluate((el, v) => {
+      el.value = v;
+      el.dispatchEvent(new Event('input'));
+    }, value);
+  await name('#nickname1', 'Papá');
+  await name('#nickname2', 'Julia');
+  await expect(page.locator('#preview1')).toHaveAttribute('data-medal', '🥈');
+  await expect(page.locator('#preview2')).not.toHaveAttribute('data-medal');
+  await startGame(page);
+  await expect(page.locator('#avatar1')).toHaveAttribute('aria-label', '🐻, medalla de Plata');
+  for (const [p, i, letter] of TIED_GAME) {
+    await page.click(`.letter[data-player="${p}"][data-letter="${letter}"]`);
+    await cell(page, i).click({ force: true });
+  }
+  await expect(page.locator('#winnerTitle')).toHaveText('¡Gana Julia!');
+  await expect(page.locator('#rankUp')).toHaveText('¡Julia sube a Bronce! 🥉');
+  await expect(page.locator('#avatar2')).toHaveAttribute('data-medal', '🥉');
+  await expect(page.locator('#endStatsRows th').first()).toHaveText('🐼🥉 Julia');
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.rango.v1')).players);
+  expect(saved.julia.tier).toBe(1);
+  expect(saved['papá'].tier).toBe(2);
+});
+
 test('loads the Microsoft Clarity tag without CSP errors', async ({ page }) => {
   await page.evaluate(() => localStorage.setItem('oso.consent.v1', 'granted'));
   const tag = page.waitForRequest(/www\.clarity\.ms\/tag\/yuj6hlg34s/);

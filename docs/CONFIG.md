@@ -93,6 +93,20 @@ Cómo cambiar uno:
 | `secrets.holdRingMs` | 1000 | Al mantener pulsado el 🎨 o un extra gastado, a partir de estos milisegundos sale un círculo que se va llenando hasta que se descubre el secreto. Antes no, para que un toque normal no lo enseñe. |
 | `secrets.holdSlopPx` | 10 | Píxeles que puede moverse el dedo mientras mantiene pulsado un secreto. Si se mueve más (por ejemplo, para hacer scroll), se cancela. |
 
+## 🥉 Categorías (puntos de rango y medallas)
+
+| Parámetro | Valor | Qué hace |
+| --- | --- | --- |
+| `rank.start` | 900 | Puntos de rango con los que empieza cada jugador que escribe su nombre (como el Elo del ajedrez). Solo se guardan en el dispositivo. |
+| `rank.k` | 32 | Cuánto se mueven los puntos en cada partida: ganar a alguien de tu mismo rango da la mitad. Más = se sube y se baja más deprisa. |
+| `rank.provisionalGames` | 5 | Partidas que hay que jugar antes de poder ganar la primera medalla. |
+| `rank.bronze` | 1000 | Puntos de rango para la medalla 🥉 Bronce. Las medallas nunca se pierden, aunque bajen los puntos. |
+| `rank.silver` | 1200 | Puntos de rango para la medalla 🥈 Plata. |
+| `rank.gold` | 1400 | Puntos de rango para la medalla 🥇 Oro. |
+| `rank.machineEasy` | 800 | Rango fijo de la máquina en fácil: sirve de vara de medir y nunca cambia. |
+| `rank.machineHard` | 1200 | Rango fijo de la máquina en difícil. |
+| `rank.machineExtreme` | 1600 | Rango fijo de la máquina en extremo. |
+
 ## Temas y easter egg del 🎨
 
 | Parámetro | Valor | Qué hace |

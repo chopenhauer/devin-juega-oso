@@ -141,6 +141,9 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 - Objetivos táctiles de 24 px como mínimo (WCAG 2.2 AA); los extras amplían su zona táctil con `::after` hasta unos 44 px.
 - Un `h1` (oculto visualmente) por página y títulos en orden.
 - Nunca depender solo del color: cada jugador tiene también avatar, nombre y posición.
+- La medalla de categoría (🥉🥈🥇) va en la esquina del avatar con `data-medal` y `::after`, sin tocar el
+  borde (color del jugador y humor de la máquina). El avatar pasa a `role="img"` con su `aria-label`
+  («🐻, medalla de Plata»), y las medallas llevan el número, así que no dependen del color.
 - Todas las animaciones se paran con `prefers-reduced-motion: reduce`.
 - Todo sonido tiene su aviso visual y se puede silenciar (🔊 / 🔇), y el silencio se recuerda.
 - `tests/e2e/a11y.spec.js` pasa axe-core (WCAG 2.2 AA) en el inicio, el tablero, la partida y la política de privacidad; falla si hay errores graves.
