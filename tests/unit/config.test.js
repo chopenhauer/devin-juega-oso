@@ -47,10 +47,7 @@ test('times, counts and limits are positive and consistent', () => {
   assert.ok(GAME.online.closeAfterMinutes * 60 < GAME.online.roomHours * 3600);
   assert.ok(GAME.online.nudgeSeconds * 1000 > GAME.online.pollMs);
   assert.ok(GAME.themes.menuMax <= GAME.themes.listMax);
-  assert.ok(
-    GAME.secrets.holdRingMs < Math.min(GAME.themes.eggHoldMs, GAME.shop.holdMs),
-    'ring before the secret',
-  );
+  assert.ok(GAME.secrets.holdRingMs < GAME.secrets.holdMs, 'ring before the secret');
   for (const k of ['hintSeconds', 'swapSeconds', 'sosSeconds'])
     assert.ok(GAME.shop[k] < GAME.board.seconds[BOARD_SIZES[0]], `shop.${k} must be affordable`);
   for (const k of ['streak', 'cooldown', 'gamesPerSecret'])
@@ -64,6 +61,6 @@ test('texts follow the parameters: HTML defaults, the 🎨 secret and docs/CONFI
   for (const [, path, text] of spans) assert.equal(text, String(configValue(path)), path);
   assert.doesNotMatch(html, /<option value="\d"/, 'board options are generated from config.js');
   const temas = SECRETS.find((s) => s.id === 'temas');
-  assert.match(temas.how, GAME.themes.eggHoldMs === 3000 ? /durante 3 segundos/ : /segundo/);
+  assert.match(temas.how, GAME.secrets.holdMs === 1500 ? /durante 1,5 segundos/ : /segundo/);
   assert.equal(readFileSync(out, 'utf8'), buildConfigDoc(), 'docs/CONFIG.md is stale: run `npm run config`');
 });

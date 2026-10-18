@@ -12,13 +12,13 @@ export const SECRETS = [
   {
     id: 'temas',
     hint: t('secrets.temas.hint'),
-    how: t('secrets.temas.how', { seconds: seconds(GAME.themes.eggHoldMs) }),
+    how: t('secrets.temas.how', { seconds: seconds(GAME.secrets.holdMs) }),
     cta: { label: t('secrets.temas.cta'), go: 'home' },
   },
   {
     id: 'tienda',
     hint: t('secrets.tienda.hint'),
-    how: t('secrets.tienda.how', { seconds: seconds(GAME.shop.holdMs) }),
+    how: t('secrets.tienda.how', { seconds: seconds(GAME.secrets.holdMs) }),
     cta: { label: t('startGame'), go: 'play' },
   },
 ];

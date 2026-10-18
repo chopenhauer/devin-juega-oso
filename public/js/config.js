@@ -31,7 +31,6 @@ export const GAME = freeze({
     stepMs: 900,
   },
   shop: {
-    holdMs: 2000,
     hintSeconds: 10,
     swapSeconds: 10,
     sosSeconds: 30,
@@ -57,11 +56,11 @@ export const GAME = freeze({
   secrets: {
     gamesPerSecret: 2,
     spotlightMs: 3000,
+    holdMs: 1500,
     holdRingMs: 1000,
     holdSlopPx: 10,
   },
   themes: {
-    eggHoldMs: 3000,
     eggPartyMs: 3600,
     festivalDays: 31,
     menuMax: 5,
@@ -120,8 +119,6 @@ export const HELP = {
   'replay.stepMs': 'Lo que dura cada jugada en «Ver la partida» al reproducirla. Más = más lenta.',
   'sos.pauseMs': 'Pausa entre el aviso y la repetición.',
   'sos.moveMs': 'Lo que tarda en repetirse cada jugada. Más = repetición más lenta y fácil de seguir.',
-  'shop.holdMs':
-    'Milisegundos que hay que mantener pulsado un 💡, 🔄 o 🛟 ya gastado para abrir la tienda. El reloj sigue corriendo mientras tanto: por eso es más corto que el del 🎨 (el texto del secreto se ajusta solo).',
   'shop.hintSeconds':
     'Segundos del propio reloj que cuesta otra 💡 pista. Se puede comprar mientras queden segundos.',
   'shop.swapSeconds': 'Segundos que cuesta otro 🔄 cambio de letra.',
@@ -151,12 +148,12 @@ export const HELP = {
     'Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día.',
   'secrets.spotlightMs':
     'Milisegundos que brilla lo que hay que pulsar (🎨, «¡A jugar!», extras) al ir desde el botón del secreto.',
+  'secrets.holdMs':
+    'Milisegundos que hay que mantener pulsado el 🎨 (descubre todos los temas) o un 💡, 🔄 o 🛟 ya gastado (abre la tienda). En la tienda el reloj sigue corriendo mientras tanto (el texto de los secretos se ajusta solo).',
   'secrets.holdRingMs':
     'Al mantener pulsado el 🎨 o un extra gastado, a partir de estos milisegundos sale un círculo que se va llenando hasta que se descubre el secreto. Antes no, para que un toque normal no lo enseñe.',
   'secrets.holdSlopPx':
     'Píxeles que puede moverse el dedo mientras mantiene pulsado un secreto. Si se mueve más (por ejemplo, para hacer scroll), se cancela.',
-  'themes.eggHoldMs':
-    'Milisegundos que hay que mantener pulsado el 🎨 para descubrir todos los temas (el texto del secreto se ajusta solo).',
   'themes.eggPartyMs': 'Lo que dura la lluvia de huevos al descubrirlo.',
   'themes.festivalDays': 'Días antes y después de una fiesta en que su tema sale en el menú 🎨.',
   'themes.menuMax': 'Temas como máximo en el menú 🎨 (contando el clásico).',

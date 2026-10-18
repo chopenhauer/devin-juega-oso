@@ -135,7 +135,7 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   const width = (await page.locator('#themeMenu').boundingBox()).width;
   await page.keyboard.press('Escape');
   await expect(page.locator('#themeMenu')).toBeHidden();
-  // Quick taps no longer do anything special: only holding the 🎨 (`themes.eggHoldMs`).
+  // Quick taps no longer do anything special: only holding the 🎨 (`secrets.holdMs`).
   await toggle.click({ clickCount: 6 });
   await expect(page.locator('#eggParty')).toBeEmpty();
   await page.keyboard.press('Escape');

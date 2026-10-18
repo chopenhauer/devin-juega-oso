@@ -395,7 +395,7 @@ const { timeFor } = Engine;
     attributeFilter: ['data-step'],
   });
   syncThemeToggle();
-  // Easter egg: holding 🎨 for GAME.themes.eggHoldMs shows every theme until a reload.
+  // Easter egg: holding 🎨 for GAME.secrets.holdMs shows every theme until a reload.
   const eggParty = q('eggParty');
   let eggTimer;
   function celebrateEgg() {
@@ -417,7 +417,7 @@ const { timeFor } = Engine;
   }
   themeToggle.addEventListener('click', () => toggleThemeMenu(themeMenu.classList.contains('hidden')));
   onLongPress(themeToggle, {
-    ms: GAME.themes.eggHoldMs,
+    ms: GAME.secrets.holdMs,
     ringMs: GAME.secrets.holdRingMs,
     when: () => !allThemes,
     onHold: () => {
@@ -1078,7 +1078,7 @@ const { timeFor } = Engine;
   const shopHold = (btns, power, spent) =>
     btns.forEach((b, p) =>
       onLongPress(b, {
-        ms: GAME.shop.holdMs,
+        ms: GAME.secrets.holdMs,
         ringMs: GAME.secrets.holdRingMs,
         when: () => !b.disabled && p === current && !over && !replaying && spent(p),
         onHold: () => settle() || openShop(p, power),

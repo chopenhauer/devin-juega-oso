@@ -55,7 +55,6 @@ Cómo cambiar uno:
 
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
-| `shop.holdMs` | 2000 | Milisegundos que hay que mantener pulsado un 💡, 🔄 o 🛟 ya gastado para abrir la tienda. El reloj sigue corriendo mientras tanto: por eso es más corto que el del 🎨 (el texto del secreto se ajusta solo). |
 | `shop.hintSeconds` | 10 | Segundos del propio reloj que cuesta otra 💡 pista. Se puede comprar mientras queden segundos. |
 | `shop.swapSeconds` | 10 | Segundos que cuesta otro 🔄 cambio de letra. |
 | `shop.sosSeconds` | 30 | Segundos que cuesta otro 🛟 SOS. Al usarlo, la partida cambia de OSO a SOS (o vuelve) para todo el mundo. |
@@ -90,6 +89,7 @@ Cómo cambiar uno:
 | --- | --- | --- |
 | `secrets.gamesPerSecret` | 2 | Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día. |
 | `secrets.spotlightMs` | 3000 | Milisegundos que brilla lo que hay que pulsar (🎨, «¡A jugar!», extras) al ir desde el botón del secreto. |
+| `secrets.holdMs` | 1500 | Milisegundos que hay que mantener pulsado el 🎨 (descubre todos los temas) o un 💡, 🔄 o 🛟 ya gastado (abre la tienda). En la tienda el reloj sigue corriendo mientras tanto (el texto de los secretos se ajusta solo). |
 | `secrets.holdRingMs` | 1000 | Al mantener pulsado el 🎨 o un extra gastado, a partir de estos milisegundos sale un círculo que se va llenando hasta que se descubre el secreto. Antes no, para que un toque normal no lo enseñe. |
 | `secrets.holdSlopPx` | 10 | Píxeles que puede moverse el dedo mientras mantiene pulsado un secreto. Si se mueve más (por ejemplo, para hacer scroll), se cancela. |
 
@@ -97,7 +97,6 @@ Cómo cambiar uno:
 
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
-| `themes.eggHoldMs` | 3000 | Milisegundos que hay que mantener pulsado el 🎨 para descubrir todos los temas (el texto del secreto se ajusta solo). |
 | `themes.eggPartyMs` | 3600 | Lo que dura la lluvia de huevos al descubrirlo. |
 | `themes.festivalDays` | 31 | Días antes y después de una fiesta en que su tema sale en el menú 🎨. |
 | `themes.menuMax` | 5 | Temas como máximo en el menú 🎨 (contando el clásico). |

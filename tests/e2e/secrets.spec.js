@@ -67,7 +67,7 @@ test('after the 2nd game the end screen has a 🎁 that tells a secret, once a d
   const dialog = page.locator('#secretDialog');
   await expect(dialog).toBeVisible();
   await expect(page.locator('#secretTitle')).toHaveText('Déjame que te cuente un secreto…');
-  await expect(page.locator('#secretHow')).toContainText('mantén pulsado el 🎨 durante 3 segundos');
+  await expect(page.locator('#secretHow')).toContainText('mantén pulsado el 🎨 durante 1,5 segundos');
   await expect(page.locator('#secretKnown')).toBeHidden();
   await page.getByRole('button', { name: 'Llévame al 🎨' }).click();
   await expect(dialog).toBeHidden();

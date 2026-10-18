@@ -17,6 +17,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.20.1] - 2026-10-18
+
+**Los secretos se descubren con 1,5 segundos de pulsación**
+
+- **Por qué:** JoseLuis pidió bajar el tiempo de mantener pulsado a 1,5 s.
+- **Un solo parámetro:** `secrets.holdMs` (1500) vale para el 🎨 y para la tienda. Sustituye a
+  `themes.eggHoldMs` (3 s) y `shop.holdMs` (2 s).
+- **El círculo** sigue saliendo a partir del primer segundo (`secrets.holdRingMs`), así que ahora se
+  llena en medio segundo.
+
 ## [3.20.0] - 2026-10-18
 
 **Los secretos se descubren manteniendo pulsado, no con toques seguidos ([ea11f76](https://github.com/chopenhauer/devin-juega-oso/commit/ea11f767f9269a1e7e477f4d843fa8e6e1dcb81e))**
