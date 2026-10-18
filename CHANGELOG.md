@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.20.1] - 2026-10-18
 
-**Los secretos se descubren con 1,5 segundos de pulsación**
+**Los secretos se descubren con 1,5 segundos de pulsación ([741d3c2](https://github.com/chopenhauer/devin-juega-oso/commit/741d3c211c3135213ede0123e95b9e8f3772c720))**
 
 - **Por qué:** JoseLuis pidió bajar el tiempo de mantener pulsado a 1,5 s.
 - **Un solo parámetro:** `secrets.holdMs` (1500) vale para el 🎨 y para la tienda. Sustituye a
