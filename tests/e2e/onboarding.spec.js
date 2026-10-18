@@ -185,7 +185,7 @@ test('the heart in the credits opens the story with a link to the public repo', 
   const story = page.locator('#storyDialog');
   await expect(story).toBeVisible();
   await expect(story.getByRole('heading')).toHaveText('La historia de OSO');
-  const repo = story.getByRole('link', { name: /Ver el código en GitHub/ });
+  const repo = story.getByRole('link', { name: '🐙 Ver el código' });
   await expect(repo).toHaveAttribute('href', 'https://github.com/chopenhauer/devin-juega-oso');
   await expect(repo).toHaveAttribute('target', '_blank');
   await expect(story.getByRole('link', { name: 'todas sus versiones' })).toHaveAttribute(

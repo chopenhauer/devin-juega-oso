@@ -163,7 +163,7 @@
   "storyDialog.codigo_abierto": "Su código es abierto: puedes ver cómo está hecho, <a href=\"https://github.com/chopenhauer/devin-juega-oso/blob/main/CHANGELOG.md\" target=\"_blank\" rel=\"noopener\">todas sus versiones</a> y las ideas que vienen.",
   "storyDialog.instalar": "Si quieres, puedes instalarlo como una app y jugar sin conexión.",
   "storyInstallBtn": "📲 Instala como una app",
-  "storyRepo": "🐙 Ver el código en GitHub",
+  "storyRepo": "🐙 Ver el código",
   "fourDialogTitle": "Solo disponible en ordenador o tablet",
   "fourDialog.con_4_jugadores_el": "Con 4 jugadores el tablero necesita una pantalla más grande.",
   "fourDialog.entendido": "Entendido",

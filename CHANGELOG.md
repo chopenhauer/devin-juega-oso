@@ -24,10 +24,11 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Por qué:** JoseLuis pidió que la ventana del ❤️ cuente que OSO se puede instalar como app y
   jugar sin conexión, con el enlace ahí mismo.
 - **Cómo funciona:** la frase «Si quieres, puedes instalarlo como una app y jugar sin conexión» y un
-  botón secundario «📲 Instala como una app», entre «Ver el código en GitHub» y «Cerrar». Usa la
+  botón secundario «📲 Instala como una app», entre «Ver el código» y «Cerrar». Usa la
   misma instalación que «📲 Instalar» del final de partida: el aviso del navegador o, en iPhone y
   iPad, los pasos. Sale aunque se dijera «No, gracias» al final de una partida, porque aquí lo pide la
   persona. No sale si ya está instalado o si el navegador no permite instalarlo.
+- **«🐙 Ver el código»:** el botón del repositorio ya no dice «en GitHub», para que sea más corto.
 - El evento `story` suma `action: install`.
 
 ## [3.20.1] - 2026-10-18
