@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.0.0] - 2026-10-18
 
-**🔥 Los empates a puntos se desempatan con las rachas**
+**🔥 Los empates a puntos se desempatan con las rachas ([5fda7df](https://github.com/chopenhauer/devin-juega-oso/commit/5fda7df49d37ceaf6b4cb7d67d241c5c5217cb86))**
 
 - **Por qué:** JoseLuis y Julia querían que un empate a puntos no se quedara siempre en 🤝, y
   empezar a medir las rachas de OSO.
