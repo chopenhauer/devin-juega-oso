@@ -17,6 +17,25 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.20.0] - 2026-10-18
+
+**Los secretos se descubren manteniendo pulsado, no con toques seguidos**
+
+- **Por qué:** JoseLuis pidió que los easter eggs salgan al mantener pulsado unos 3 segundos en vez
+  de pulsar muchas veces seguidas.
+- **🎨 temas:** mantener pulsado el 🎨 3 s (`themes.eggHoldMs`) descubre todos los temas. Un toque
+  normal sigue abriendo el menú.
+- **🛒 tienda:** mantener pulsado 2 s (`shop.holdMs`) un 💡, 🔄 o 🛟 gastado abre la tienda. Es más
+  corto que el del 🎨 porque el reloj sigue corriendo mientras pulsas (decisión de JoseLuis).
+- **Se quitan los toques seguidos** para que haya una sola forma de activar cada secreto.
+- **Círculo de progreso:** a partir del primer segundo (`secrets.holdRingMs`) se llena un círculo
+  alrededor del botón, y el extra gastado se ilumina. Antes no sale, para que un toque normal no
+  enseñe el secreto (decisión de JoseLuis). Con «reducir movimiento» sale entero, sin animar.
+- **Móvil y teclado:** se bloquean el menú y la selección de texto que iPhone y Android sacan al
+  mantener pulsado. Si mueves el dedo, se cancela. Con teclado vale mantener Espacio o Intro.
+- **Textos de los secretos:** «mantén pulsado el 🎨 durante 3 segundos» y «mantén pulsado durante 2
+  segundos un extra que ya hayas gastado». Se ajustan solos a `config.js`.
+
 ## [3.19.0] - 2026-10-18
 
 **❤️ La historia de OSO, en el corazón del pie, y un título más neutro ([0e9f22b](https://github.com/chopenhauer/devin-juega-oso/commit/0e9f22b290a62f334cc4e9ffc26bdbe7a19276ec))**

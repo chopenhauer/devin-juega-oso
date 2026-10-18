@@ -75,8 +75,8 @@ salas antiguo: ciérralo antes de lanzar los tests.
 así que allí cada prueba tiene 60 s y cada `expect` 10 s (`playwright.config.js`). Para que no
 fallen solo en el CI:
 
-- Los toques seguidos (easter egg del 🎨, tienda secreta) se mandan como una ráfaga con
-  `click({ clickCount: n })`, nunca con clics sueltos en un bucle.
+- Los secretos (easter egg del 🎨, tienda secreta) se activan manteniendo pulsado: usa `hold()` de
+  `tests/e2e/helpers.js`, que suelta cuando sale el resultado, nunca una espera fija.
 - Una prueba que juega varias partidas enteras lleva `test.slow()`.
 - Contra la máquina, se juega solo en el turno de la persona y se para cuando sale el final.
 - En línea, cada jugador lleva su `x-real-ip` (límite de salas) y se espera a que el invitado

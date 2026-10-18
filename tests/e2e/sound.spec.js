@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { hold } from './helpers.js';
 
 test.beforeEach(async ({ page }, testInfo) => {
   await page.addInitScript(() => {
@@ -75,8 +76,7 @@ test('the mute button on the intro and in the ☰ menu silences every sound and 
   await expect(toggle).toHaveAttribute('aria-pressed', 'true');
   await expect(toggle).toHaveText('🔇');
 
-  // One burst: the 🎨 egg needs quick taps (`themes.eggTapGapMs`), and a slow CI runner spaces clicks out.
-  await page.locator('#themeToggle').click({ clickCount: 6 });
+  await hold(page, page.locator('#themeToggle'), page.locator('#eggParty p'));
   await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
   expect(await sounds(page)).toEqual([]);
 

@@ -14,6 +14,7 @@ import { replaySteps } from './replay.js';
 import { showInstall } from './install.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
+import { onLongPress } from './hold.js';
 const { timeFor } = Engine;
 (() => {
   const { BONUS } = Match;
@@ -175,7 +176,6 @@ const { timeFor } = Engine;
   let ownTheme = null;
   let allThemes = false;
   let lowWarned = new Set();
-  const themeTaps = [];
   let skinTokens = [];
   function paintSkin(t) {
     const tokens = themeTokens(t);
@@ -270,10 +270,7 @@ const { timeFor } = Engine;
   function toggleThemeMenu(open) {
     themeMenu.classList.toggle('hidden', !open);
     themeToggle.setAttribute('aria-expanded', String(open));
-    if (!open) {
-      themeTaps.length = 0;
-      return;
-    }
+    if (!open) return;
     renderThemeMenu();
     themeOptions()
       .find((b) => b.dataset.theme === theme)
@@ -398,8 +395,7 @@ const { timeFor } = Engine;
     attributeFilter: ['data-step'],
   });
   syncThemeToggle();
-  // Easter egg: GAME.themes.eggTaps quick taps on 🎨 in a row shows every theme until a reload.
-  // Quick repeated taps keep the menu as it is instead of opening and closing it.
+  // Easter egg: holding 🎨 for GAME.themes.eggHoldMs shows every theme until a reload.
   const eggParty = q('eggParty');
   let eggTimer;
   function celebrateEgg() {
@@ -419,24 +415,17 @@ const { timeFor } = Engine;
     eggTimer = setTimeout(() => eggParty.replaceChildren(), GAME.themes.eggPartyMs);
     play('egg');
   }
-  themeToggle.addEventListener('click', (e) => {
-    const now = e.timeStamp;
-    const repeat = themeTaps.length > 0 && now - themeTaps[themeTaps.length - 1] < GAME.themes.eggTapGapMs;
-    if (!repeat) themeTaps.length = 0;
-    themeTaps.push(now);
-    if (
-      !allThemes &&
-      themeTaps.length >= GAME.themes.eggTaps &&
-      now - themeTaps[0] < GAME.themes.eggWindowMs
-    ) {
+  themeToggle.addEventListener('click', () => toggleThemeMenu(themeMenu.classList.contains('hidden')));
+  onLongPress(themeToggle, {
+    ms: GAME.themes.eggHoldMs,
+    ringMs: GAME.secrets.holdRingMs,
+    when: () => !allThemes,
+    onHold: () => {
       allThemes = true;
-      themeTaps.length = 0;
       toggleThemeMenu(true);
       celebrateEgg();
       track('secret_found', { secret: 'temas', told: readSecrets().told.includes('temas') });
-      return;
-    }
-    if (!repeat) toggleThemeMenu(themeMenu.classList.contains('hidden'));
+    },
   });
   themeMenu.addEventListener('click', (e) => {
     const b = e.target.closest('.theme-option');
@@ -743,7 +732,7 @@ const { timeFor } = Engine;
       const hintUsed = !extras[i].hint;
       const lastUsed = !extras[i].last;
       const swapUsed = !extras[i].swap;
-      // Spent 💡, 🔄 and 🛟 stay tappable on one's turn: quick taps open the secret shop (GAME.shop).
+      // Spent 💡, 🔄 and 🛟 stay pressable on one's turn: holding them opens the secret shop (GAME.shop).
       hintBtns[i].disabled = !humanCanAct;
       hintBtns[i].classList.toggle('used', hintUsed);
 
@@ -1015,7 +1004,7 @@ const { timeFor } = Engine;
   hintBtns.forEach((b, p) =>
     b.addEventListener('click', async () => {
       if (b.disabled || p !== current || over || replaying || settle()) return;
-      if (!extras[p].hint) return shopTap(p, 'hint');
+      if (!extras[p].hint) return;
 
       const h = bestHint();
       if (!h) return;
@@ -1067,7 +1056,7 @@ const { timeFor } = Engine;
   swapBtns.forEach((b, p) =>
     b.addEventListener('click', () => {
       if (b.disabled || p !== current || over || replaying || settle()) return;
-      if (!extras[p].swap) return shopTap(p, 'swap');
+      if (!extras[p].swap) return;
 
       swapMode = swapMode === p ? null : p;
       if (swapMode === p) play('swap');
@@ -1079,23 +1068,25 @@ const { timeFor } = Engine;
     }),
   );
 
-  // 🛒 Secret shop: quick taps on a spent 💡, 🔄 or 🛟 offer to buy it back with seconds (GAME.shop).
+  // 🛒 Secret shop: holding a spent 💡, 🔄 or 🛟 offers to buy it back with seconds (GAME.shop).
   const SHOP_ITEMS = {
     hint: { name: t('shop.hint.name'), icon: '💡', bought: t('shop.hint.bought') },
     swap: { name: t('shop.swap.name'), icon: '🔄', bought: t('shop.swap.bought') },
     sos: { name: t('shop.sos.name'), icon: '🛟', bought: t('shop.sos.bought') },
   };
-  let shopTaps = [],
-    shopOffer = null;
-  function shopTap(p, power) {
-    const now = performance.now();
-    const last = shopTaps.at(-1);
-    if (!last || last.p !== p || last.power !== power || now - last.at > GAME.shop.tapGapMs) shopTaps = [];
-    shopTaps.push({ p, power, at: now });
-    if (shopTaps.length < GAME.shop.taps) return;
-    shopTaps = [];
-    openShop(p, power);
-  }
+  let shopOffer = null;
+  const shopHold = (btns, power, spent) =>
+    btns.forEach((b, p) =>
+      onLongPress(b, {
+        ms: GAME.shop.holdMs,
+        ringMs: GAME.secrets.holdRingMs,
+        when: () => !b.disabled && p === current && !over && !replaying && spent(p),
+        onHold: () => settle() || openShop(p, power),
+      }),
+    );
+  shopHold(hintBtns, 'hint', (p) => !extras[p].hint);
+  shopHold(swapBtns, 'swap', (p) => !extras[p].swap);
+  shopHold(sosBtns, 'sos', (p) => !sosReady(p));
   function openShop(p, power) {
     const cost = Match.price(power);
     const item = SHOP_ITEMS[power];
@@ -1248,7 +1239,7 @@ const { timeFor } = Engine;
   sosBtns.forEach((btn, p) =>
     btn.addEventListener('click', () => {
       if (btn.disabled || over || replaying || p !== current) return;
-      if (!sosReady(p)) return shopTap(p, 'sos');
+      if (!sosReady(p)) return;
       if (online) return void onlineMove({ type: 'sos' }).then((ok) => ok && usedExtra('sos'));
       activateSOS(p);
     }),

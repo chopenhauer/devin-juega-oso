@@ -886,10 +886,50 @@ select option {
   cursor: default;
   box-shadow: none;
 }
-/* Spent extras stay tappable on one's turn: they open the secret shop. */
+/* Spent extras stay pressable on one's turn: holding them opens the secret shop. */
 .power:disabled,
 .sos-power:disabled {
   pointer-events: none;
+}
+/* Long press on a secret (hold.js): from the first second a ring fills up until it fires. */
+@property --hold-fill {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+.theme-toggle,
+.power,
+.sos-power {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.power.used.holding,
+.sos-power.used.holding {
+  opacity: 1;
+  filter: none;
+}
+.holding::before {
+  content: '';
+  position: absolute;
+  inset: -0.3125rem;
+  border-radius: 50%;
+  background: conic-gradient(var(--accent) var(--hold-fill), transparent 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 0.25rem), black calc(100% - 0.25rem));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 0.25rem), black calc(100% - 0.25rem));
+  animation: holdFill var(--hold-ms, 2s) linear forwards;
+  pointer-events: none;
+}
+@keyframes holdFill {
+  to {
+    --hold-fill: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .holding::before {
+    animation: none;
+    --hold-fill: 100%;
+  }
 }
 .power.mode {
   outline: 3px solid var(--accent);

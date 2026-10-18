@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { hold } from './helpers.js';
 
 const cell = (page, i) => page.locator('.cell').nth(i);
 const boardText = (page) =>
@@ -144,14 +145,15 @@ const clockSeconds = async (page, id) => {
   return +mm * 60 + +ss;
 };
 
-test('B05: tienda secreta: tres toques en un 💡 gastado lo venden por segundos y luego se usa', async ({
+test('B05: tienda secreta: mantener pulsado un 💡 gastado lo venden por segundos y luego se usa', async ({
   page,
 }) => {
   await startGame(page);
   await page.click('#hint1');
   await expect(page.locator('#hint1 .count')).toHaveText('0');
   await page.locator('#hint1').click({ clickCount: 3 });
-  await expect(page.locator('#shopDialog')).toBeVisible();
+  await expect(page.locator('#shopDialog'), 'quick taps do not open it').toBeHidden();
+  await hold(page, page.locator('#hint1'), page.locator('#shopDialog'));
   await expect(page.locator('#shopText')).toContainText('otra 💡 pista por 10 segundos');
   const before = await clockSeconds(page, '#timer1');
   await page.click('#shopBuy');
@@ -168,7 +170,7 @@ test('B06: tienda secreta: un 🛟 comprado devuelve la partida a OSO para todo 
   await startGame(page);
   await page.click('#sos1');
   await expect(page.locator('#message')).toContainText('Ahora se puntúa SOS', { timeout: 6000 });
-  await page.locator('#sos1').click({ clickCount: 3 });
+  await hold(page, page.locator('#sos1'), page.locator('#shopDialog'));
   await expect(page.locator('#shopText')).toContainText('otro 🛟 SOS por 30 segundos');
   await expect(page.locator('#shopNote')).toContainText('puntuar OSO');
   await page.click('#shopBuy');
@@ -184,7 +186,7 @@ test('B06: tienda secreta: un 🛟 comprado devuelve la partida a OSO para todo 
 test('B07: tienda secreta: «Ahora no» no compra nada y el extra sigue gastado', async ({ page }) => {
   await startGame(page);
   await page.click('#hint1');
-  await page.locator('#hint1').click({ clickCount: 3 });
+  await hold(page, page.locator('#hint1'), page.locator('#shopDialog'));
   await page.click('#shopDialog button.secondary');
   await expect(page.locator('#shopDialog')).toBeHidden();
   await expect(page.locator('#hint1 .count')).toHaveText('0');
@@ -201,7 +203,7 @@ test('B08: tienda secreta: un 🔄 comprado espera a que lo pulses y luego elija
   await cell(page, 0).click();
   await expect(page.locator('#swap1 .count')).toHaveText('0');
   await cell(page, 2).click();
-  await page.locator('#swap1').click({ clickCount: 3 });
+  await hold(page, page.locator('#swap1'), page.locator('#shopDialog'));
   await expect(page.locator('#shopText')).toContainText('otro 🔄 cambio de letra por 10 segundos');
   const before = await boardText(page);
   await page.click('#shopBuy');

@@ -209,16 +209,15 @@
   "share.draw": "Empate {a} a {b} en OSO 🐻!\n\nJuegas conmigo?",
   "share.won": "Partidazo de OSO 🐻: {hi} a {lo}!\n\nJuegas conmigo?",
   "share.room": "Jugamos a OSO? 🐻 Entra en mi sala:",
-  "secrets.numbers": "cero,una,dos,tres,cuatro,cinco,seis,siete,ocho,nueve,diez",
-  "secrets.times": {
-    "one": "{n} vez",
-    "other": "{n} veces"
+  "secrets.seconds": {
+    "one": "{n} segundo",
+    "other": "{n} segundos"
   },
   "secrets.temas.hint": "El 🎨 del inicio esconde algo",
-  "secrets.temas.how": "En el inicio, pulsa el 🎨 {times} seguidas, muy rápido… y mira qué pasa.",
+  "secrets.temas.how": "En el inicio, mantén pulsado el 🎨 durante {seconds}… y mira qué pasa.",
   "secrets.temas.cta": "Llévame al 🎨",
   "secrets.tienda.hint": "Los extras gastados esconden algo",
-  "secrets.tienda.how": "En plena partida, pulsa {times} seguidas un extra que ya hayas gastado (💡, 🔄 o 🛟)… y mira qué pasa.",
+  "secrets.tienda.how": "En plena partida, mantén pulsado durante {seconds} un extra que ya hayas gastado (💡, 🔄 o 🛟)… y mira qué pasa.",
   "online.cheer.clock": "⏳ El reloj de {name} corre: le quedan {s} s.",
   "online.cheer.ahead": "💪 Vas {mine}–{theirs}. ¡Aguanta!",
   "online.cheer.comeback": {

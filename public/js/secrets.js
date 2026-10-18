@@ -6,20 +6,19 @@
 import { GAME } from './config.js';
 import { t } from './i18n.js';
 
-const WORDS = t('secrets.numbers').split(',');
-const times = (n) => t('secrets.times', { count: n, n: WORDS[n] ?? n });
+const seconds = (ms) => t('secrets.seconds', { count: ms / 1000, n: (ms / 1000).toLocaleString('es') });
 
 export const SECRETS = [
   {
     id: 'temas',
     hint: t('secrets.temas.hint'),
-    how: t('secrets.temas.how', { times: times(GAME.themes.eggTaps) }),
+    how: t('secrets.temas.how', { seconds: seconds(GAME.themes.eggHoldMs) }),
     cta: { label: t('secrets.temas.cta'), go: 'home' },
   },
   {
     id: 'tienda',
     hint: t('secrets.tienda.hint'),
-    how: t('secrets.tienda.how', { times: times(GAME.shop.taps) }),
+    how: t('secrets.tienda.how', { seconds: seconds(GAME.shop.holdMs) }),
     cta: { label: t('startGame'), go: 'play' },
   },
 ];

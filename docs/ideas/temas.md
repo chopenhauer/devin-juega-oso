@@ -52,13 +52,14 @@ Con tantos temas, el menú 🎨 no puede enseñarlos todos. Hecho en 2.1.0:
   Valentín el 14 de febrero, San Fermín el 7 de julio).
 - **«Ver otros»:** despliega más temas, hasta 10 en total contando los del menú. El resto del año
   los temas de fiesta quedan ahí.
-- **Easter egg:** pulsar el 🎨 más de 5 veces seguidas enseña todos los temas, aunque sean más de 10.
+- **Easter egg:** mantener pulsado el 🎨 3 segundos enseña todos los temas, aunque sean más de 10.
 - **Tipos de tema:** fiestas (con día), épocas del año (con periodo) y lugares (todo el año).
 - **Decisiones:**
   - El tema de la fiesta solo dura ese día y después vuelve el elegido.
   - Las épocas salen en el menú mientras duran.
   - «Ver otros» empieza por Cumpleaños y alterna lugares y próximas fiestas.
-  - El easter egg son 6 pulsaciones seguidas (menos de 0,7 s entre una y otra) y dura hasta recargar.
+  - El easter egg era de 6 pulsaciones seguidas; desde la 3.20.0 es mantener pulsado 3 s
+    (`themes.eggHoldMs`), a petición de JoseLuis. Dura hasta recargar.
 
 - **Pendiente:** fichas y tablero con decoración propia de cada tema, y que el tema marino del SOS
   sustituya o se mezcle con el de temporada (hoy lo sustituye mientras dura).

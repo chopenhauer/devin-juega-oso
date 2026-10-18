@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { hold } from './helpers.js';
 
 // Two independent browsers play through scripts/serve.js, which serves /api/sala from memory.
 async function player(browser, errors) {
@@ -284,7 +285,7 @@ test('the rival is told about the extras used and bought in the secret shop', as
   const news = guest.locator('#message');
   await host.click('#hint1');
   await expect(news).toContainText('💡 🐻 Ana ha usado una pista.');
-  await host.locator('#hint1').click({ clickCount: 3 });
+  await hold(host, host.locator('#hint1'), host.locator('#shopDialog'));
   await host.click('#shopBuy');
   await expect(news).toContainText('🛒 🐻 Ana ha comprado una 💡 pista en la tienda secreta (−10 s).');
   await cell(host, 0).click();

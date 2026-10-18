@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-// The 🎨 egg needs quick taps (`themes.eggTapGapMs`); a slow CI runner can space out separate
-// clicks, so send them as one burst.
-const tapTheme = (page, n) => page.locator('#themeToggle').click({ clickCount: n });
+import { hold } from './helpers.js';
+
+const holdTheme = (page) => hold(page, page.locator('#themeToggle'), page.locator('#eggParty p'));
 
 test.beforeEach(async ({ page }, testInfo) => {
   await page.route(
@@ -67,7 +67,7 @@ test('after the 2nd game the end screen has a 🎁 that tells a secret, once a d
   const dialog = page.locator('#secretDialog');
   await expect(dialog).toBeVisible();
   await expect(page.locator('#secretTitle')).toHaveText('Déjame que te cuente un secreto…');
-  await expect(page.locator('#secretHow')).toContainText('pulsa el 🎨 seis veces seguidas');
+  await expect(page.locator('#secretHow')).toContainText('mantén pulsado el 🎨 durante 3 segundos');
   await expect(page.locator('#secretKnown')).toBeHidden();
   await page.getByRole('button', { name: 'Llévame al 🎨' }).click();
   await expect(dialog).toBeHidden();
@@ -107,7 +107,7 @@ test('coming back with games already played, the 🎁 waits on the first screen'
   await expect(gift).toBeHidden();
   expect(await told(page)).toMatchObject({ played: 5, told: ['temas'] });
 
-  await tapTheme(page, 6);
+  await holdTheme(page);
   await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
   const sent = (await events(page)).filter(([name]) => name.startsWith('secret_'));
   expect(sent).toEqual([
@@ -123,7 +123,7 @@ test('coming back with games already played, the 🎁 waits on the first screen'
 test('the 🎨 secret re-arms the egg, so it shows again without reloading', async ({ page }) => {
   await seed(page, { 'oso.consent.v1': 'denied', 'oso.secretos.v1': { played: 1, told: [], day: null } });
   await page.goto('/');
-  await tapTheme(page, 6);
+  await holdTheme(page);
   await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
   await expect(page.locator('#eggParty')).toBeEmpty({ timeout: 6000 });
   await page.keyboard.press('Escape');
@@ -134,7 +134,7 @@ test('the 🎨 secret re-arms the egg, so it shows again without reloading', asy
   await page.locator('#secretToast').getByRole('button', { name: 'Ábrelo' }).click();
   await page.getByRole('button', { name: 'Llévame al 🎨' }).click();
   await expect(page.locator('#themeMenu')).toBeHidden();
-  await tapTheme(page, 6);
+  await holdTheme(page);
   await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
 });
 

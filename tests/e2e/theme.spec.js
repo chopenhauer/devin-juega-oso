@@ -133,13 +133,24 @@ test('the menu offers nearby dates, «Ver otros» up to 10 and the easter egg sh
   await page.reload();
   await toggle.click();
   const width = (await page.locator('#themeMenu').boundingBox()).width;
-  // Closing the menu forgets that tap; then one burst of six, because the 🎨 egg needs quick taps
-  // (`themes.eggTapGapMs`) and a slow CI runner spaces separate clicks out.
   await page.keyboard.press('Escape');
   await expect(page.locator('#themeMenu')).toBeHidden();
+  // Quick taps no longer do anything special: only holding the 🎨 (`themes.eggHoldMs`).
   await toggle.click({ clickCount: 6 });
-  await expect(page.locator('#themeMenu')).toBeVisible();
+  await expect(page.locator('#eggParty')).toBeEmpty();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#themeMenu')).toBeHidden();
+  const box = await toggle.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.waitForTimeout(300);
+  await expect(toggle, 'no ring during the first second').not.toHaveClass(/holding/);
+  await expect(toggle).toHaveClass(/holding/);
   const party = page.locator('#eggParty');
+  await expect(party).toContainText('¡Tienes más temas disponibles!');
+  await page.mouse.up();
+  await expect(toggle).not.toHaveClass(/holding/);
+  await expect(page.locator('#themeMenu'), 'letting go does not close the menu').toBeVisible();
   await expect(party).toContainText('¡Tienes más temas disponibles!');
   expect(await party.locator('span').count()).toBeGreaterThan(10);
   const backdrop = () => party.evaluate((e) => getComputedStyle(e).backgroundColor);
@@ -182,4 +193,26 @@ test('on a festival day its theme shows by itself, and the next day the chosen o
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'classic');
   await expect(page.locator('body')).not.toHaveClass(/skin/);
+});
+
+test('the 🎨 egg also works holding Space, and a short Enter or Space just opens the menu', async ({
+  page,
+}) => {
+  await page.goto('/');
+  const toggle = page.locator('#themeToggle');
+  await toggle.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#themeMenu')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await toggle.focus();
+  await page.keyboard.press(' ');
+  await expect(page.locator('#themeMenu')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#themeMenu')).toBeHidden();
+  await toggle.focus();
+  await page.keyboard.down(' ');
+  await expect(page.locator('#eggParty')).toContainText('¡Tienes más temas disponibles!');
+  await page.keyboard.up(' ');
+  await expect(page.locator('#themeMenu')).toBeVisible();
+  await expect(page.locator('#themeMenu .theme-option')).toHaveCount(24);
 });
