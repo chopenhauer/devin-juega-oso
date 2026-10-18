@@ -6,6 +6,8 @@ import { extname, join, normalize, resolve } from 'node:path';
 import { createHandler } from '../api/_sala.js';
 import { memoryStore } from '../api/_store.js';
 import { createVisitHandler } from '../api/_visita.js';
+import { createLabDataHandler } from '../api/_labdata.js';
+import { createConfigHandler, createLabHandler } from '../api/_lab.js';
 import { writeInvitePage } from './invite-page.js';
 import middleware, { config as middlewareConfig } from '../middleware.js';
 
@@ -32,7 +34,16 @@ const headersFor = (path) =>
 
 // /api/sala and /api/visita run locally with rooms and counters in memory (Redis only on Vercel).
 const store = memoryStore();
-const handlers = { '/api/sala': createHandler(store), '/api/visita': createVisitHandler(store) };
+const handlers = {
+  '/api/sala': createHandler(store),
+  '/api/visita': createVisitHandler(store),
+  '/api/config': createConfigHandler(store),
+  '/api/lab': createLabHandler(store, { password: process.env.LAB_PASSWORD ?? 'osolab-local' }),
+  '/api/lab-data': createLabDataHandler({
+    password: process.env.LAB_PASSWORD ?? 'osolab-local',
+    account: process.env.GA4_SERVICE_ACCOUNT_JSON ? JSON.parse(process.env.GA4_SERVICE_ACCOUNT_JSON) : null,
+  }),
+};
 async function api(req, res, handle) {
   const chunks = [];
   for await (const c of req) chunks.push(c);

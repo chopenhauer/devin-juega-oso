@@ -17,6 +17,26 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **4.0.0 · Equipos con 4 jugadores** (idea): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [3.18.0] - 2026-10-18
+
+**🧪 Laboratorio de Julia: cambia la máquina y el reloj, simula y guárdalo para todos**
+
+- **Por qué:** idea 25 del roadmap. JoseLuis quiere que Julia ajuste parámetros con datos y apunte
+  en un cuaderno cada cambio (hipótesis, experimento y datos).
+- **Qué hay:** una página oculta en `/lab` (sin enlaces, `noindex`) protegida con contraseña
+  (`LAB_PASSWORD` en Vercel, cookie de 30 días, intentos limitados). Deja cambiar cuánto aprovecha la
+  máquina los OSO en Fácil y en Difícil, entre cuántas jugadas elige y el reloj de cada tablero, con un
+  simulador que juega partidas contra jugadores de práctica y lo dibuja en una gráfica.
+- **Al momento, para todo el mundo** (decisión de JoseLuis): lo guardado se aplica en el juego, en la
+  máquina y en el árbitro en línea (`public/js/tuning.js`, `/api/config`). Con límites por parámetro,
+  «Volver al valor anterior», «Valores de fábrica» y, si el servidor falla, los valores de `config.js`.
+- **Cuaderno:** cada cambio con su fecha, qué cambió y la nota de Julia.
+- **Medición:** todos los eventos de GA4 llevan `lab_version` (0 = valores de fábrica).
+- **Partidas de verdad:** una tabla por versión del laboratorio con quién gana en cada dificultad y
+  cuántas partidas acaban por tiempo, sacada de GA4 (últimos 90 días) por `/api/lab-data`, que pide
+  la misma contraseña. La clave de la cuenta de servicio está cifrada en Vercel
+  (`GA4_SERVICE_ACCOUNT_JSON`, solo lectura de informes).
+
 ## [3.17.0] - 2026-10-17
 
 **Medimos la bienvenida: en qué pantalla se va quien no llega a jugar ([0393735](https://github.com/chopenhauer/devin-juega-oso/commit/039373527d7c8ab6733e4499ae083c16344052ab))**

@@ -16,7 +16,8 @@ test('sw.js keeps everything the game needs to start offline, and nothing else',
       .replace(/'/g, '"')
       .replace(/,\s*\]/, ']'),
   );
-  const preview = ['/js/design.js', '/css/design.css'];
+  // The /design guide and Julia's lab are online-only tools.
+  const preview = ['/js/design.js', '/css/design.css', '/js/lab.js', '/css/lab.css'];
   const needed = [
     '/',
     '/privacidad',

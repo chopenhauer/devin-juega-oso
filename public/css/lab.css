@@ -1,0 +1,86 @@
+/* Julia's lab (/lab). Only tokens from tokens.css. */
+.lab-login,
+.lab-params,
+.lab-actions {
+  display: grid;
+  gap: var(--space-3);
+}
+.lab-login {
+  max-width: 20rem;
+}
+.lab input,
+.lab textarea {
+  font: inherit;
+  padding: var(--space-2-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--blanco-a10);
+  color: var(--color-text);
+}
+.lab textarea {
+  width: 100%;
+}
+.lab-param {
+  display: grid;
+  gap: var(--space-2-5);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+.lab-param output {
+  font-weight: var(--fw-semibold);
+}
+.lab-param input[type='range'] {
+  width: 100%;
+  padding: 0;
+}
+.lab-help,
+.lab-param small,
+.lab-notes small {
+  font-size: var(--fs-sm);
+  opacity: 0.8;
+}
+.lab-chart svg {
+  width: 100%;
+  height: auto;
+}
+.lab-chart .now {
+  fill: var(--blanco-a10);
+}
+.lab-chart .try {
+  fill: var(--accent);
+}
+.lab-chart text {
+  fill: var(--color-text);
+  font-size: var(--fs-2xs);
+}
+.lab-actions {
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  margin-top: var(--space-3);
+}
+.lab-notes li {
+  margin-bottom: var(--space-3);
+}
+.lab-error {
+  min-height: 1.5em;
+}
+
+.lab-data table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.lab-data caption {
+  text-align: start;
+  font-weight: var(--fw-semibold);
+  padding-block: var(--space-2);
+}
+.lab-data th,
+.lab-data td {
+  text-align: start;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--line);
+}
+.lab-data p {
+  margin-block: var(--space-2) var(--space-4);
+}

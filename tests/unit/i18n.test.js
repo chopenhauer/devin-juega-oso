@@ -8,8 +8,9 @@ import { THEMES } from '../../public/js/themes.js';
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 const es = JSON.parse(read('public/locales/es.json'));
 const html = read('public/index.html');
-// config.js only documents the parameters (CONFIG.md), design.js is the /design guide, i18n.js loads the texts.
-const NOT_GAME_TEXT = new Set(['config.js', 'design.js', 'i18n.js']);
+// config.js only documents the parameters (CONFIG.md), design.js is the /design guide, lab.js is
+// Julia's internal lab (/lab), i18n.js loads the texts.
+const NOT_GAME_TEXT = new Set(['config.js', 'design.js', 'i18n.js', 'lab.js']);
 const modules = readdirSync(new URL('../../public/js/', import.meta.url)).filter(
   (f) => f.endsWith('.js') && !NOT_GAME_TEXT.has(f),
 );

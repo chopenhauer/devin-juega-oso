@@ -33,6 +33,8 @@ public/               Sitio estático que publica Vercel (sin build)
   js/online.js        Cliente de las salas en línea (crear, unirse, consultar al servidor)
   js/secrets.js       Lista de secretos (easter eggs) y cuándo toca contar uno
   js/onboarding.js    Inicio por pasos (bienvenida, reglas, modo, jugadores, vista, tablero)
+  js/tuning.js        Valores en vivo del laboratorio de Julia sobre config.js (/api/config)
+  js/lab.js           Laboratorio de Julia (/lab): simulador (lab-sim.js) y cuaderno
   js/funnel.js        Qué pantallas del inicio se ven antes de jugar (servidor sin cookies y GA4)
   js/themes.js        Temas (skins) y qué temas salen en el menú 🎨 según la fecha
   js/sound.js         Sonidos generados con Web Audio y silencio recordado
@@ -49,6 +51,8 @@ public/               Sitio estático que publica Vercel (sin build)
   og.png              Tarjeta del enlace (Open Graph, 1200×630)
 api/sala.js           Función de Vercel de las salas en línea (/api/sala)
 api/_sala.js          Árbitro: valida las jugadas con match.js y lleva los relojes y los contadores
+api/lab.js            Laboratorio de Julia: contraseña, valores en vivo y cuaderno (/api/lab, /api/config)
+api/lab-data.js       Laboratorio: partidas de verdad desde GA4, por versión (/api/lab-data)
 api/_store.js         Upstash Redis por REST (en local y en tests, en memoria)
 middleware.js         Sirve sala.html cuando el enlace lleva ?sala= (tarjeta de WhatsApp)
 tests/unit/           Tests del motor, partida, servidor, configuración, temas, secretos… (node:test)

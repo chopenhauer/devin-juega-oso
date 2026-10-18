@@ -57,7 +57,7 @@ confirme. Los números entre paréntesis son los de siempre de cada idea.
 | #   | Idea                                                          | Estado          |
 | --- | ------------------------------------------------------------- | --------------- |
 | 19  | [Fácil más fácil y revisar Difícil](ideas/niveles-maquina.md) | Esperando datos |
-| 25  | [Laboratorio de Julia](ideas/laboratorio-de-julia.md)         | Siguiente       |
+| 25  | [Laboratorio de Julia](ideas/lab-de-julia.md)                 | Hecho en 3.18.0 |
 | 13  | [Nivel Extremo](ideas/niveles-maquina.md)                     | Hecho en 3.11.0 |
 
 ### 2. Juntos en un dispositivo (2 y 4 jugadores)

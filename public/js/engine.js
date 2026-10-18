@@ -2,6 +2,7 @@
 // with size*size cells; a sequence key is "a-b-c" (three cell indices).
 
 import { GAME } from './config.js';
+import { tuned } from './tuning.js';
 
 export const LETTERS = ['O', 'S'];
 const DIRECTIONS = [
@@ -11,8 +12,8 @@ const DIRECTIONS = [
   [1, -1],
 ];
 
-// Seconds on each player's clock for an n×n board (GAME.board.seconds).
-export const timeFor = (n) => GAME.board.seconds[n];
+// Seconds on each player's clock for an n×n board (config.js, or the lab's live value).
+export const timeFor = (n) => tuned(`board.seconds.${n}`);
 
 const emptyCells = (board) => board.flatMap((v, i) => (v ? [] : [i]));
 
@@ -182,18 +183,30 @@ function extremeQuiet(work, size, scored, word, random) {
   return best;
 }
 
-// easy / hard: takes an OSO within reach with probability GAME.machine.easyAim / hardAim (the
-// biggest one); otherwise a random move among the GAME.machine.pool most central ones that don't
+// easy / hard: takes an OSO within reach with probability machine.easyAim / hardAim (the
+// biggest one); otherwise a random move among the machine.pool most central ones that don't
 // score, so it can leave OSOs for the rival.
 // extreme: always takes the biggest OSO; otherwise a move that leaves nothing to score and, near
 // the end, traps the rival into having to give points away.
-export function chooseMachineMove(board, size, scored, word, difficulty, random = Math.random) {
+export function chooseMachineMove(
+  board,
+  size,
+  scored,
+  word,
+  difficulty,
+  random = Math.random,
+  machine = {
+    easyAim: tuned('machine.easyAim'),
+    hardAim: tuned('machine.hardAim'),
+    pool: tuned('machine.pool'),
+  },
+) {
   const work = [...board];
   const empties = emptyCells(work);
   if (!empties.length) return null;
 
   const scoring = scoringMoves(work, size, scored, word).sort((a, b) => b.gain - a.gain);
-  const aim = { easy: GAME.machine.easyAim, hard: GAME.machine.hardAim }[difficulty] ?? 1;
+  const aim = { easy: machine.easyAim, hard: machine.hardAim }[difficulty] ?? 1;
   if (scoring.length && (aim >= 1 || random() < aim)) {
     const { index, letter } = scoring[0];
     return { index, letter };
@@ -212,7 +225,7 @@ export function chooseMachineMove(board, size, scored, word, difficulty, random 
     return { index, letter };
   }
   quiet.sort((a, b) => b.score - a.score);
-  const pool = quiet.slice(0, Math.min(GAME.machine.pool, quiet.length));
+  const pool = quiet.slice(0, Math.min(machine.pool, quiet.length));
   const { index, letter } = pool[Math.floor(random() * pool.length)];
   return { index, letter };
 }

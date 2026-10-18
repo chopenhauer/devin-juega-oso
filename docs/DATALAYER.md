@@ -97,12 +97,13 @@ partida de dos en el mismo móvil:
 
 Los añade `track()` a **todos** los eventos:
 
-| Parámetro          | Tipo  | Valores                                                                          |
-| ------------------ | ----- | -------------------------------------------------------------------------------- |
-| `app_version`      | texto | La versión de `public/js/version.js` (`3.10.0`)                                  |
-| `app_language`     | texto | El idioma en que se ve el juego (`es`; ver `LANGS` en `public/js/i18n.js`)       |
-| `browser_language` | texto | `navigator.language` (`es-ES`, `en-US`…), o `und` si no lo hay                   |
-| `display_mode`     | texto | `standalone` (abierto desde el icono instalado) o `browser` (desde el navegador) |
+| Parámetro          | Tipo   | Valores                                                                          |
+| ------------------ | ------ | -------------------------------------------------------------------------------- |
+| `app_version`      | texto  | La versión de `public/js/version.js` (`3.10.0`)                                  |
+| `app_language`     | texto  | El idioma en que se ve el juego (`es`; ver `LANGS` en `public/js/i18n.js`)       |
+| `browser_language` | texto  | `navigator.language` (`es-ES`, `en-US`…), o `und` si no lo hay                   |
+| `lab_version`      | número | Versión de los valores del laboratorio de Julia (`0` = los de `config.js`)       |
+| `display_mode`     | texto  | `standalone` (abierto desde el icono instalado) o `browser` (desde el navegador) |
 
 **Parámetros de partida** (`gameParams()` de `telemetry.js`), en `game_start`, `game_end`,
 `game_abandon`, `extra_used` y `feedback`:

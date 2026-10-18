@@ -11,6 +11,8 @@ import { createHash, randomBytes, randomInt } from 'node:crypto';
 import * as Match from '../public/js/match.js';
 import { GAME, BOARD_SIZES } from '../public/js/config.js';
 import { THEMES } from '../public/js/themes.js';
+import { applyTuning } from '../public/js/tuning.js';
+import { LAB_KEY } from './_lab.js';
 
 // Every number below comes from the game parameters (public/js/config.js).
 export const SIZES = BOARD_SIZES;
@@ -304,7 +306,13 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
 
   const ACTIONS = { create, invite, join, profile, start, move, rematch, leave, ping };
 
+  // The lab's live values (clock of each board), read at most every 30 s.
+  let labAt = -Infinity;
   return async function handle(request) {
+    if (clock() - labAt > 30_000) {
+      labAt = clock();
+      applyTuning(await store.get(LAB_KEY).catch(() => null));
+    }
     const started = clock();
     const commandsBefore = store.commands();
     const now = started;

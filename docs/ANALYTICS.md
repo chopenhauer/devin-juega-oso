@@ -161,3 +161,10 @@ en línea. No guarda IP ni nada del navegador.
 3. Registrar los parámetros nuevos como dimensiones o métricas en GA4. La configuración está como
    código en el repo privado (`ga4/config.json` y `sync.py`); sin registrar, GA4 no deja consultarlos.
 4. Si es un dato de otro tipo, actualizar la política de privacidad.
+
+## Laboratorio de Julia (`lab_version`)
+
+Desde la 3.18.0 todos los eventos llevan `lab_version`: la versión de los valores que Julia guarda en
+`/lab` (0 = los de `config.js`). Sirve para comparar el antes y el después de cada cambio del
+cuaderno (por ejemplo, victorias en Fácil con `lab_version` 0 frente a 1). Hay que registrarla en
+GA4 como dimensión personalizada de evento.

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Laboratorio de Julia · OSO</title>
+    <meta name="theme-color" content="#1b1145" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/lab.css" />
+    <script type="module" src="/js/lab.js"></script>
+  </head>
+  <body class="legal-page lab-page">
+    <main class="legal lab">
+      <a class="legal-back" href="/">← Volver al juego</a>
+      <h1>🧪 Laboratorio de Julia</h1>
+      <form id="labLogin" class="lab-login">
+        <label for="labPassword">Contraseña</label>
+        <input id="labPassword" type="password" autocomplete="current-password" required />
+        <button class="primary" type="submit">Entrar</button>
+        <p id="labLoginError" class="lab-error" role="alert"></p>
+      </form>
+      <section id="labPanel" class="hidden">
+        <p class="lab-intro">
+          Cambia un valor, simula partidas y, si te convence, guárdalo con una nota: se aplica al momento en
+          el juego de todo el mundo. Siempre puedes volver atrás.
+        </p>
+        <div id="labParams" class="lab-params"></div>
+        <h2>Simulador</h2>
+        <p class="lab-help">
+          Partidas en 5×5 contra la máquina en Fácil, con jugadores de práctica que ven el 20 %, el 50 % o el
+          80 % de los OSO. La barra apagada es el valor de ahora; la amarilla, el que estás probando.
+        </p>
+        <button id="labSimulate" class="secondary" type="button">▶️ Simular</button>
+        <div id="labChart" class="lab-chart" aria-live="polite"></div>
+        <h2>Partidas de verdad</h2>
+        <p class="lab-help">
+          Datos de Google Analytics de los últimos 90 días (solo de quien acepta las cookies). Cada guardado
+          tiene su número: así se ve qué pasó antes y después de cada cambio.
+        </p>
+        <div id="labData" class="lab-data" aria-live="polite">Cargando…</div>
+        <h2>Guardar para todos</h2>
+        <label for="labNote">Tu nota: ¿qué esperas que pase?</label>
+        <textarea id="labNote" maxlength="500" rows="3"></textarea>
+        <div class="lab-actions">
+          <button id="labSave" class="primary" type="button">💾 Guardar para todos</button>
+          <button id="labReset" class="secondary" type="button">↩️ Valores de fábrica</button>
+        </div>
+        <p id="labStatus" class="lab-status" role="status"></p>
+        <h2>Cuaderno</h2>
+        <ol id="labNotes" class="lab-notes" reversed></ol>
+      </section>
+    </main>
+  </body>
+</html>

@@ -4,6 +4,7 @@
 import { VERSION } from './version.js';
 import { GAME } from './config.js';
 import { t, LANG, BROWSER_LANG } from './i18n.js';
+import { labVersion } from './tuning.js';
 
 // Share of games that should end because someone runs out of time; the target
 // used later to tune the clock of each board (see docs/ideas/reloj.md).
@@ -42,6 +43,7 @@ export function track(name, params = {}) {
     app_language: LANG,
     browser_language: BROWSER_LANG,
     display_mode: displayMode(),
+    lab_version: labVersion(),
   });
   return true;
 }
