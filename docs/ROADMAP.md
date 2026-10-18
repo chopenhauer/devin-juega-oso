@@ -8,7 +8,7 @@ cuando se aprueba. Julia decide el orden final.
 
 Lo ya publicado, versión a versión y con sus decisiones, está en el [CHANGELOG](../CHANGELOG.md).
 
-## Ahora (orden del 17-10-2026)
+## Ahora (orden del 17-10-2026, revisado el 18-10-2026)
 
 1. **[Fácil más fácil](ideas/niveles-maquina.md) (19):** en Fácil la máquina gana el 74 % de las
    partidas. Espera unos días más de datos (JoseLuis, 17-10-2026).
@@ -26,21 +26,24 @@ bajando. El reloj es solo una decisión.
 
 ## Datos de hoy
 
-GA4, 28 días hasta el 17-10-2026, solo de quien acepta las cookies: 52 usuarios, 115 sesiones y 73
+GA4, 28 días hasta el 18-10-2026, solo de quien acepta las cookies: 58 usuarios, 130 sesiones y 83
 partidas terminadas. Son pocos datos y algunos de pruebas de casa: sirven para orientar, no para
 decidir.
 
 | Tipo de partida          | Partidas terminadas | Personas |
 | ------------------------ | ------------------- | -------- |
-| Contra la máquina        | 39 (53 %)           | 19       |
-| En línea                 | 23 (32 %)           | 4        |
-| Juntos en un dispositivo | 10 (14 %)           | 5        |
+| Contra la máquina        | 46 (55 %)           | 23       |
+| En línea                 | 25 (30 %)           | 5        |
+| Juntos en un dispositivo | 11 (13 %)           | 6        |
 | 4 jugadores              | 0                   | 0        |
 
-- 30 de los 52 usuarios (58 %) empiezan una partida.
-- 7 de 73 partidas (10 %) acaban por tiempo.
-- El uso baja: de 8 usuarios al día (11 y 13 de octubre) a entre 1 y 5 desde el 14.
-- Lo de la 3.13–3.15 (reto, «Ver la partida», instalable) aún no tiene eventos.
+- 36 de los 58 usuarios (62 %) empiezan una partida.
+- 8 de 83 partidas (10 %) acaban por tiempo.
+- El uso sigue bajo: entre 1 y 5 usuarios al día desde el 14 de octubre, con un pico de 9 el 17.
+- Ya llegan los primeros eventos de la 3.13–3.15: 5 veces se ha compartido, 3 se ha visto la partida
+  y hay 3 ofertas de instalar y 2 instalaciones.
+- La bienvenida (`setup_step`, 3.17.0) y el desempate (`tiebreak`, 4.0.0) acaban de empezar a
+  medirse: aún no hay datos para sacar conclusiones.
 
 ## Grupos de ideas
 
@@ -52,18 +55,18 @@ confirme. Los números entre paréntesis son los de siempre de cada idea.
 
 - **Señal:** es el modo más jugado; se invierte aquí mientras pase del 40 % de las partidas. Calidad:
   que en Fácil la persona gane la mitad de las veces.
-- **Hoy:** 53 % de las partidas; en Fácil la persona gana 8 de 31 (26 %).
+- **Hoy:** 55 % de las partidas; en Fácil la persona gana 11 de 35 (31 %).
 
 | #   | Idea                                                          | Estado          |
 | --- | ------------------------------------------------------------- | --------------- |
 | 19  | [Fácil más fácil y revisar Difícil](ideas/niveles-maquina.md) | Esperando datos |
-| 25  | [Laboratorio de Julia](ideas/lab-de-julia.md)                 | Hecho en 3.18.0 |
+| 25  | [Laboratorio de Julia](ideas/laboratorio-de-julia.md)         | Hecho en 3.18.0 |
 | 13  | [Nivel Extremo](ideas/niveles-maquina.md)                     | Hecho en 3.11.0 |
 
 ### 2. Juntos en un dispositivo (2 y 4 jugadores)
 
 - **Señal:** que «Juntos» y 4 jugadores pasen del 25 % de las partidas, o que alguien pida equipos.
-- **Hoy:** 14 % de las partidas y ninguna de 4 jugadores en 28 días.
+- **Hoy:** 13 % de las partidas y ninguna de 4 jugadores en 28 días.
 
 | #   | Idea                                            | Estado         |
 | --- | ----------------------------------------------- | -------------- |
@@ -74,7 +77,7 @@ confirme. Los números entre paréntesis son los de siempre de cada idea.
 
 - **Señal:** los umbrales de [`ONLINE.md`](ONLINE.md) (50 partidas o 2 meses) y que lo usen al menos
   10 personas al mes.
-- **Hoy:** 23 partidas, pero de solo 4 personas; 14 salas creadas y 4 uniones.
+- **Hoy:** 25 partidas, pero de solo 5 personas; 16 salas creadas y 5 uniones.
 
 | #   | Idea                                                                         | Estado      |
 | --- | ---------------------------------------------------------------------------- | ----------- |
@@ -89,7 +92,7 @@ Sirve para todos los tipos de partida.
 
 - **Señal:** el porcentaje de usuarios que empiezan una partida, los que vuelven y las visitas que
   llegan por un enlace compartido.
-- **Hoy:** el 58 % empieza una partida y 43 de 112 sesiones llegaron por un enlace compartido.
+- **Hoy:** el 62 % empieza una partida y 50 de 130 sesiones llegaron por un enlace compartido.
 
 | #   | Idea                                                              | Estado                  |
 | --- | ----------------------------------------------------------------- | ----------------------- |
@@ -103,7 +106,7 @@ Sirve para todos los tipos de partida.
 | 29  | [Icono de la app dibujado por Julia](ideas/instalable.md)         | Cuando quiera           |
 | 20  | [Compartir y enlace de reto](ideas/compartir.md)                  | Hecho en 2.6.0–3.13.0   |
 | 21  | [Ver la partida](ideas/ver-la-partida.md)                         | Hecho en 3.14.0         |
-| 22  | [Instalable](ideas/instalable.md)                                 | Hecho en 3.15.0         |
+| 22  | [Instalable y sin conexión](ideas/instalable.md)                  | Hecho en 3.15.0–3.16.0  |
 
 ### 5. Reglas y reloj
 
@@ -118,7 +121,8 @@ Cambian cómo se juega, así que tocan el motor, la máquina y el servidor en l�
 | 24  | [Decidir el objetivo del reloj](ideas/reloj.md)            | **Ahora (4.º)**           |
 | 5   | [Ajustar cada tablero con datos](ideas/reloj.md)           | ~100 partidas por tablero |
 | 16  | [Reloj con la pestaña dormida](ideas/reloj.md)             | Decidir                   |
-| 27  | [Puntos extra por racha](ideas/rachas.md)                  | Futuro (desempate: 4.0.0) |
+| 27  | [Puntos extra por racha](ideas/rachas.md)                  | Futuro                    |
+| —   | [Desempate por rachas](ideas/rachas.md)                    | Hecho en 4.0.0            |
 | 28  | [Hándicap y categorías](ideas/handicap.md)                 | Futuro                    |
 | 18  | [Edición papel](ideas/edicion-papel.md)                    | Futuro                    |
 | —   | [Tienda secreta y Modo Mercado](ideas/tienda-y-mercado.md) | Versión sencilla en 3.4.0 |
@@ -126,7 +130,7 @@ Cambian cómo se juega, así que tocan el motor, la máquina y el servidor en l�
 ### 6. Temas, sonido y celebración
 
 - **Señal:** los cambios de tema (`theme_change`) y las fechas de cada fiesta.
-- **Hoy:** 26 cambios de tema, de 4 personas.
+- **Hoy:** 29 cambios de tema.
 
 | #   | Idea                                            | Estado                      |
 | --- | ----------------------------------------------- | --------------------------- |
@@ -150,8 +154,10 @@ Cambian cómo se juega, así que tocan el motor, la máquina y el servidor en l�
 Del juego en un solo HTML (v12) a un proyecto con tests y CI: arquitectura y accesibilidad (1.x), modo
 4 jugadores y temas (2.0–2.1), sonidos, reglas animadas y analítica con permiso (2.2–2.4),
 compartir y sistema de diseño (2.6), juego en línea (3.0–3.10), niveles de la máquina (3.11) y
-compartir con imagen, enlace de reto, «Ver la partida» e instalable (3.12–3.15). El detalle está en
-el [CHANGELOG](../CHANGELOG.md).
+compartir con imagen, enlace de reto, «Ver la partida» e instalable (3.12–3.16), medir la
+bienvenida (3.17), laboratorio de Julia (3.18), la historia de OSO (3.19 y 3.21), secretos al
+mantener pulsado (3.20) y desempate por rachas (4.0). El detalle está en el
+[CHANGELOG](../CHANGELOG.md).
 
 ## Cómo añadir una idea
 
