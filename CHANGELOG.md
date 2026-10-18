@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [3.18.0] - 2026-10-18
 
-**🧪 Laboratorio de Julia: cambia la máquina y el reloj, simula y guárdalo para todos**
+**🧪 Laboratorio de Julia: cambia la máquina y el reloj, simula y guárdalo para todos ([640d648](https://github.com/chopenhauer/devin-juega-oso/commit/640d648c72a2796839c3ff665c8f5f8450033e35))**
 
 - **Por qué:** idea 25 del roadmap. JoseLuis quiere que Julia ajuste parámetros con datos y apunte
   en un cuaderno cada cambio (hipótesis, experimento y datos).
