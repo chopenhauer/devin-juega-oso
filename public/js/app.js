@@ -2362,6 +2362,9 @@ const { timeFor } = Engine;
     track('story', { action: 'open' });
   });
   q('storyRepo').addEventListener('click', () => track('story', { action: 'repo' }));
+  q('storyDialog').addEventListener('click', (e) => {
+    if (e.target.closest('a[href$="CHANGELOG.md"]')) track('story', { action: 'changelog' });
+  });
   q('onlineIntroClose').addEventListener('click', () => q('onlineIntro').close());
   q('onlineIntroGo').addEventListener('click', () => {
     q('onlineIntro').close();

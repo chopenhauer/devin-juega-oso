@@ -188,6 +188,10 @@ test('the heart in the credits opens the story with a link to the public repo', 
   const repo = story.getByRole('link', { name: /Ver el código en GitHub/ });
   await expect(repo).toHaveAttribute('href', 'https://github.com/chopenhauer/devin-juega-oso');
   await expect(repo).toHaveAttribute('target', '_blank');
+  await expect(story.getByRole('link', { name: 'todas sus versiones' })).toHaveAttribute(
+    'href',
+    'https://github.com/chopenhauer/devin-juega-oso/blob/main/CHANGELOG.md',
+  );
   await story.getByRole('button', { name: 'Cerrar' }).click();
   await expect(story).toBeHidden();
 });
