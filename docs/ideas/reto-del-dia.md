@@ -1,6 +1,6 @@
 # Reto del día (23)
 
-- **Estado:** Idea · **ahora (3.º)**
+- **Estado:** Idea · **ahora (2.º)**
 - **Grupo:** [Llegar, volver y compartir](../ROADMAP.md#4-llegar-volver-y-compartir)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Medio
 

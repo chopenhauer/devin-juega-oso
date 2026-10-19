@@ -26,7 +26,7 @@ Cómo cambiar uno:
 
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
-| `clock.bonusSeconds` | 10 | Segundos que gana quien forma un OSO (por cada uno). Más = partidas más largas y premia más puntuar. |
+| `clock.bonusSeconds` | 5 | Segundos que gana quien forma un OSO (por cada uno). Más = partidas más largas y premia más puntuar. |
 | `clock.lowSeconds` | 20 | Con este tiempo o menos el reloj se pone en aviso y suena, el fondo se va tiñendo de rojo y late (tensión), y en línea se anima a quien espera. |
 
 ## Extras (usos por jugador y partida)

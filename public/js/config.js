@@ -14,7 +14,7 @@ export const GAME = freeze({
     fourPlayersMinSize: 6,
   },
   clock: {
-    bonusSeconds: 10,
+    bonusSeconds: 5,
     lowSeconds: 20,
   },
   extras: {

@@ -1,6 +1,6 @@
 # El reloj de cada tablero (5, 16, 24)
 
-- **Estado:** Decidir el objetivo (24): **ahora (4.º)** · ajuste por tablero (5): con ~100 partidas por tablero
+- **Estado:** Decidir el objetivo (24): **ahora (3.º)** · ajuste por tablero (5): con ~100 partidas por tablero
 - **Grupo:** [Reglas y reloj](../ROADMAP.md#5-reglas-y-reloj)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Bajo a medio
 
@@ -39,6 +39,11 @@ baja ya el 5×5 a 1:15, o se acepta que en familia gusta jugar sin prisa y se ba
 - **Datos (17-10-2026):** 7 de 73 partidas acaban por tiempo (10 %).
 - **Propuesta de Devin:** bajar el objetivo del 50 % a un 20-25 %, porque en familia se juega sin
   prisa.
+- **Datos (19-10-2026):** 10 de 89 partidas acaban por tiempo (11 %), pero 4 de 19 (21 %) en las
+  últimas 72 h.
+- **Decidido (JoseLuis, 19-10-2026):** cada OSO da la mitad de tiempo, 5 s en vez de 10
+  (`clock.bonusSeconds`, en la 4.3.0). Con menos tiempo extra, más partidas deberían acabar por
+  tiempo. Revisar el porcentaje en una o dos semanas antes de tocar los relojes de cada tablero.
 
 ## Reloj con la pestaña dormida (16)
 

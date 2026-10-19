@@ -1,6 +1,6 @@
 # Niveles de la máquina (13, 19)
 
-- **Estado:** Extremo hecho en 3.11.0 · Fácil más fácil (19): esperando más datos
+- **Estado:** Extremo hecho en 3.11.0 · Fácil más fácil (19): esperando datos (4.º)
 - **Grupo:** [Contra la máquina](../ROADMAP.md#1-contra-la-máquina)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Bajo
 

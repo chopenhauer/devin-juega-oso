@@ -1,6 +1,6 @@
 # Que la gente llegue a jugar (30)
 
-- **Estado:** Paso 1, medir: hecho en 3.17.0 · «Jugar ya»: según lo que digan los datos
+- **Estado:** Paso 1, medir: hecho en 3.17.0 · «Jugar ya»: **ahora (1.º)**
 - **Grupo:** [Llegar, volver y compartir](../ROADMAP.md#4-llegar-volver-y-compartir)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Bajo-medio
 
@@ -8,6 +8,12 @@
 cada paso de la bienvenida (un evento por paso, sin datos personales) para saber dónde se van, y
 después probar un botón «Jugar ya» que empiece con las elecciones por defecto (contra la máquina,
 5×5, Fácil). Las grabaciones de Clarity ayudan a ver qué pasa en esos pasos.
+
+## Datos (19-10-2026)
+
+Contadores del servidor (sin cookies), octubre: de 67 primeras bienvenidas, 11 pasan por las reglas,
+19 eligen modo, 19 eligen jugadores, 17 eligen tablero y 16 empiezan la partida (24 %). Casi todo se
+pierde en la primera pantalla, así que toca probar «Jugar ya».
 
 ## Paso 1: medir (3.17.0)
 

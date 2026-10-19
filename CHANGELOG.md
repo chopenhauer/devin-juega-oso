@@ -17,6 +17,18 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.3.0] - 2026-10-19
+
+**⏱️ Cada OSO da la mitad de tiempo: 5 segundos en vez de 10**
+
+- Quien forma un OSO sigue jugando, pero ahora gana +5 s en vez de +10 s (`clock.bonusSeconds`). Vale
+  para todos los modos, también en línea, porque el servidor usa la misma configuración.
+- **Decisión (JoseLuis, 19-10-2026):** solo el 11 % de las partidas acaba por tiempo. Con menos
+  tiempo extra, el final por tiempo debería pesar más. Las reglas y la ayuda ya dicen +5 segundos.
+- **Roadmap:** nuevo orden del «Ahora» con los datos del 19-10-2026: «Jugar ya», reto del día,
+  decidir el reloj y Fácil más fácil. Nueva idea (31): que la pantalla del 🛟 al volver a OSO diga
+  OSO, o «🐻 S 🐻» para ambientarla más.
+
 ## [4.2.0] - 2026-10-19
 
 **🏆 Una pantalla final que cuenta la partida: has ganado → así ha ido → ¿revancha? ([ebaf76a](https://github.com/chopenhauer/devin-juega-oso/commit/ebaf76a02b31a2c8174da2ca9ffdc9d2e23111a8))**
