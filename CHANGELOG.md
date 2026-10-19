@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.2.0] - 2026-10-19
 
-**🏆 Una pantalla final que cuenta la partida: has ganado → así ha ido → ¿revancha?**
+**🏆 Una pantalla final que cuenta la partida: has ganado → así ha ido → ¿revancha? ([ebaf76a](https://github.com/chopenhauer/devin-juega-oso/commit/ebaf76a02b31a2c8174da2ca9ffdc9d2e23111a8))**
 
 - **Por qué:** a JoseLuis le pasaron un feedback de la pantalla de victoria. La celebración, las dos
   tablas y cinco botones tenían la misma importancia, el tablero se veía por detrás y el resultado
