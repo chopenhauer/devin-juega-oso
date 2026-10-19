@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.1.0] - 2026-10-19
 
-**⏸️ Pausar la partida desde el menú**
+**⏸️ Pausar la partida desde el menú ([4f6f130](https://github.com/chopenhauer/devin-juega-oso/commit/4f6f1309bd6c9fcc8edafa7cb2079dc8f2363cb4))**
 
 - **Por qué:** JoseLuis y Julia querían poder dejar la partida a medias sin perderla, por ejemplo en
   el transporte, cuando toca hacer otra cosa y no se puede seguir jugando.
