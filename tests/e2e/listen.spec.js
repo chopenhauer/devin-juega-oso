@@ -214,3 +214,22 @@ test('choosing a theme in 🎨 sends theme_change, and games carry the theme and
     theme_source: 'chosen',
   });
 });
+
+test('with analytics accepted, pausing and resuming are sent with the seconds paused', async ({ page }) => {
+  await consent(page, 'granted');
+  await start(page);
+  await page.click('#menu1');
+  await page.click('#pauseGame');
+  await page.waitForTimeout(1600);
+  await page.click('#pauseResume');
+  const pausesSent = async () =>
+    (await events(page)).filter(([name]) => name === 'game_pause').map(([, p]) => p);
+  await expect.poll(async () => (await pausesSent()).length).toBe(2);
+  const pauses = await pausesSent();
+  expect(pauses).toEqual([
+    expect.objectContaining({ action: 'pause', mode: 'two', board_size: '5x5' }),
+    expect.objectContaining({ action: 'resume', mode: 'two', paused_s: expect.any(Number) }),
+  ]);
+  expect(pauses[0]).not.toHaveProperty('paused_s');
+  expect(pauses[1].paused_s).toBeGreaterThanOrEqual(1);
+});

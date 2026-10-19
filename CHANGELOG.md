@@ -17,6 +17,22 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.1.0] - 2026-10-19
+
+**⏸️ Pausar la partida desde el menú**
+
+- **Por qué:** JoseLuis y Julia querían poder dejar la partida a medias sin perderla, por ejemplo en
+  el transporte, cuando toca hacer otra cosa y no se puede seguir jugando.
+- **Cómo funciona:** en el menú de la partida hay una opción nueva, «⏸️ Pausar partida». Al pulsarla,
+  el reloj se para (también el de la máquina) y una pantalla opaca tapa el tablero, para que no se vea
+  ni se pueda jugar. Dice «La partida está en pausa» y tiene el botón «▶️ Retomar partida», que la
+  continúa justo donde estaba.
+- **En línea no está:** el reloj del rival lo lleva el servidor, así que una pausa de uno solo no
+  sería justa. Allí sigue el aviso «¿Sigues ahí?».
+- **Analítica:** evento nuevo `game_pause`, con los parámetros de partida y `action` (`pause` al
+  pausar, `resume` al retomar). Al retomar lleva también `paused_s`, los segundos que estuvo en pausa,
+  registrado en GA4 como métrica. Solo se manda con las cookies aceptadas.
+
 ## [4.0.0] - 2026-10-18
 
 **🔥 Los empates a puntos se desempatan con las rachas ([5fda7df](https://github.com/chopenhauer/devin-juega-oso/commit/5fda7df49d37ceaf6b4cb7d67d241c5c5217cb86))**

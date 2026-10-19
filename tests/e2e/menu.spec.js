@@ -92,3 +92,30 @@ test('same view keeps the menu upright; solo shows only the human menu button', 
   await expect(page.locator('#menu1')).toBeVisible();
   await expect(page.locator('#menu2')).toBeHidden();
 });
+
+test('pausing from the menu stops the clocks and hides the board until resuming', async ({ page }) => {
+  await startGame(page, { solo: true });
+  const clocks = () => page.locator('#timer1, #timer2').allTextContents();
+  await page.click('#menu1');
+  await page.click('#pauseGame');
+  const pause = page.locator('#pauseDialog');
+  await expect(pause).toBeVisible();
+  await expect(pause.getByRole('heading')).toHaveText('La partida está en pausa');
+  await expect(page.locator('#sidebar')).toBeHidden();
+  await expect(page.locator('#pauseResume')).toBeFocused();
+  expect(await pause.evaluate((e) => getComputedStyle(e, '::backdrop').backgroundColor)).toBe(
+    'rgb(15, 6, 25)',
+  );
+
+  const frozen = await clocks();
+  await page.waitForTimeout(2200);
+  expect(await clocks()).toEqual(frozen);
+  const cell = await page.locator('.cell').first().boundingBox();
+  await page.mouse.click(cell.x + cell.width / 2, cell.y + cell.height / 2);
+  await expect(pause).toBeVisible();
+
+  await page.click('#pauseResume');
+  await expect(pause).toBeHidden();
+  await expect(page.locator('.cell.filled')).toHaveCount(0);
+  await expect.poll(clocks, { timeout: 5000 }).not.toEqual(frozen);
+});

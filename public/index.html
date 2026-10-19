@@ -919,6 +919,7 @@
               </button>
             </div>
             <button data-i18n="gameHelp" id="gameHelp">❓ Reglas / Ayuda</button>
+            <button data-i18n="pauseGame" id="pauseGame" type="button">⏸️ Pausar partida</button>
             <button data-i18n="restartMatch" id="restartMatch">🔄 Reiniciar tablero</button>
             <button data-i18n="newGame" id="newGame">🆕 Nueva partida</button>
             <button data-i18n="soundMenu" id="soundMenu" type="button">🔊 Sonido: activado</button>
@@ -1316,6 +1317,17 @@
           <button data-i18n="shopBuy" id="shopBuy" class="primary" type="submit">Comprar</button>
           <button data-i18n="common.ahora_no" class="secondary" type="submit" autofocus>Ahora no</button>
         </form>
+      </dialog>
+      <dialog id="pauseDialog" class="info-dialog pause-dialog" aria-labelledby="pauseTitle">
+        <div class="info-emoji" aria-hidden="true">⏸️</div>
+        <h2 data-i18n="pauseTitle" id="pauseTitle" class="step-title">La partida está en pausa</h2>
+        <p data-i18n="pauseDialog.reloj_parado" class="step-lead">
+          El reloj está parado y el tablero, tapado. Cuando podáis volver a jugar, pulsa aquí para retomar la
+          partida.
+        </p>
+        <button data-i18n="pauseResume" id="pauseResume" class="primary" type="button" autofocus>
+          ▶️ Retomar partida
+        </button>
       </dialog>
       <dialog id="nudgeDialog" class="info-dialog" aria-labelledby="nudgeTitle">
         <div class="info-emoji" aria-hidden="true">👀</div>

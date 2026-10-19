@@ -107,7 +107,7 @@ Los añade `track()` a **todos** los eventos:
 | `display_mode`     | texto  | `standalone` (abierto desde el icono instalado) o `browser` (desde el navegador) |
 
 **Parámetros de partida** (`gameParams()` de `telemetry.js`), en `game_start`, `game_end`,
-`game_abandon`, `extra_used` y `feedback`:
+`game_abandon`, `game_pause`, `extra_used` y `feedback`:
 
 | Parámetro      | Tipo     | Valores                                                                                                                                      |
 | -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -129,6 +129,7 @@ Todos se envían desde `public/js/app.js`, salvo `setup_step`, que sale de `publ
 | `game_start`         | partida                                                                                                                                                                                                                                                                                                                                |
 | `game_end`           | partida + `end_reason` (`timeout`, `board_full`), `result` (`player`, `machine`, `draw`), `tiebreak` (`none`, `streak`, `streaks`, `draw`), `time_available`, `time_used_max`, `time_left_min`, `time_left_p1…p4` (s), `cells_filled`, `cells_total`, `score_total`, `extras_hint`, `extras_last`, `extras_swap`, `extras_sos` (veces) |
 | `game_abandon`       | partida + `cells_filled`, `cells_total`                                                                                                                                                                                                                                                                                                |
+| `game_pause`         | partida + `action` (`pause`: se pulsa «⏸️ Pausar partida» en el menú; `resume`: «▶️ Retomar partida»), `paused_s` (solo en `resume`, segundos en pausa). No existe en línea                                                                                                                                                            |
 | `extra_used`         | partida + `extra` (`hint`, `last`, `swap`, `sos`)                                                                                                                                                                                                                                                                                      |
 | `extra_bought`       | `extra` (`hint`, `swap`, `sos`)                                                                                                                                                                                                                                                                                                        |
 | `secret_shown`       | `secret` (`temas`, `tienda`), `place` (`start`, `end`)                                                                                                                                                                                                                                                                                 |
@@ -165,7 +166,7 @@ El registro está como código en el repo privado `chopenhauer/oso-privado` (`ga
   `secret`, `tiebreak`, `step`, `theme`, `theme_from`, `theme_source`, `told`, `vs_machine`.
 - **Métricas** (números que se suman o se promedian): `answer_ms`, `cells_filled`, `cells_total`,
   `conflicts`, `extras_hint`, `extras_last`, `extras_sos`, `extras_swap`, `move_rtt_p50_ms`,
-  `move_rtt_p95_ms`, `poll_errors`, `polls`, `reconnects`, `score_total`, `sync_p50_ms`,
+  `move_rtt_p95_ms`, `paused_s`, `poll_errors`, `polls`, `reconnects`, `score_total`, `sync_p50_ms`,
   `sync_p95_ms`, `time_available`, `time_left_min`, `time_used_max`.
 - **Sin registrar:** `time_left_p1…p4`. Llegan a GA4, pero no salen en los informes; para el
   reloj basta con `time_left_min` y `time_used_max`.

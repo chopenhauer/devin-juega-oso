@@ -320,6 +320,10 @@ body:has(#gameScreen:not(.hidden)) .consent {
   -webkit-backdrop-filter: blur(0.375rem);
   backdrop-filter: blur(0.375rem);
 }
+/* Opaque so nobody can peek at the board while the game is paused. */
+.pause-dialog::backdrop {
+  background: var(--noche-950);
+}
 .info-dialog .step-title,
 .info-dialog .step-lead {
   margin: 0;

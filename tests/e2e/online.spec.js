@@ -101,6 +101,8 @@ test('invite a friend, play turns remotely, resume after reload and win when the
   await expect(host.locator('#onlineDialog')).toBeHidden();
   await expect(host.locator('#gameScreen')).toBeVisible();
   await expect(host.locator('#board .cell')).toHaveCount(16);
+  await expect(host.locator('#pauseGame')).toHaveClass(/hidden/);
+  await expect(guest.locator('#pauseGame')).toHaveClass(/hidden/);
 
   // Ana starts; Bea can't play out of turn.
   await expect(guest.locator('#turnBarTop')).toContainText('Esperando a Ana');

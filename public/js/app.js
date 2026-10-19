@@ -76,7 +76,7 @@ const { timeFor } = Engine;
     sosCredits = [],
     replaying = false,
     gameId = 0,
-    helpPaused = false,
+    clockPaused = false,
     playing = false;
 
   // The match (match.js) owns the game state; these locals mirror it for the UI.
@@ -539,27 +539,50 @@ const { timeFor } = Engine;
   q('difficultyHard').addEventListener('click', () => setDifficulty('hard'));
   q('difficultyExtreme').addEventListener('click', () => setDifficulty('extreme'));
   setDifficulty(difficulty);
-  function openHelp() {
-    closeMenu(false);
-    q('helpModal').classList.remove('hidden');
-    if (game.classList.contains('hidden') || over || replaying || helpPaused) return;
-    if (settle()) return;
-    helpPaused = true;
+  // Stops the clocks (and the machine) while the help or the pause screen is open.
+  function freeze() {
+    if (game.classList.contains('hidden') || over || replaying || clockPaused) return false;
+    if (settle()) return false;
+    clockPaused = true;
     Match.pause(m, performance.now());
     clearInterval(timer);
     clearTimeout(machineTimeout);
     machineThinking = false;
     updateControls();
+    return true;
   }
-  function closeHelp() {
-    q('helpModal').classList.add('hidden');
-    if (!helpPaused) return;
-    helpPaused = false;
+  function thaw() {
+    if (!clockPaused) return;
+    clockPaused = false;
     Match.resume(m, performance.now());
     timer = setInterval(tick, 100);
     updateControls();
     maybeMachineTurn();
   }
+  function openHelp() {
+    closeMenu(false);
+    q('helpModal').classList.remove('hidden');
+    freeze();
+  }
+  function closeHelp() {
+    q('helpModal').classList.add('hidden');
+    if (!q('pauseDialog').open) thaw();
+  }
+  // Pause: the clocks stop and an opaque screen hides the board until someone resumes.
+  q('pauseGame').addEventListener('click', () => {
+    closeMenu(false);
+    if (online || !freeze()) return;
+    q('pauseDialog').showModal();
+    pausedAt = performance.now();
+    track('game_pause', { ...modeParams(), action: 'pause' });
+  });
+  let pausedAt = 0;
+  q('pauseResume').addEventListener('click', () => q('pauseDialog').close());
+  q('pauseDialog').addEventListener('close', () => {
+    thaw();
+    const paused_s = Math.round((performance.now() - pausedAt) / 1000);
+    track('game_pause', { ...modeParams(), action: 'resume', paused_s });
+  });
   q('helpToggle').addEventListener('click', openHelp);
   q('gameHelp').addEventListener('click', openHelp);
   q('helpClose').addEventListener('click', closeHelp);
@@ -575,7 +598,7 @@ const { timeFor } = Engine;
     if (
       over ||
       replaying ||
-      helpPaused ||
+      clockPaused ||
       p !== current ||
       machineThinking ||
       (gameMode === 'solo' && p === 1)
@@ -768,7 +791,7 @@ const { timeFor } = Engine;
 
     turnBarTop.textContent = over
       ? t('status.over')
-      : helpPaused
+      : clockPaused
         ? t('status.paused')
         : replaying
           ? t('status.sos')
@@ -787,7 +810,7 @@ const { timeFor } = Engine;
     clearTimeout(machineTimeout);
     machineThinking = false;
     replaying = false;
-    helpPaused = false;
+    clockPaused = false;
     q('modeFlash').classList.add('hidden');
   }
   // OSO→SOS switches the whole page to a calmer sea theme until the game ends.
@@ -849,7 +872,7 @@ const { timeFor } = Engine;
   function settle() {
     if (over) return true;
     if (online) return false;
-    if (replaying || helpPaused) return false;
+    if (replaying || clockPaused) return false;
     const events = Match.settle(m, performance.now());
     sync();
     updateTimers();
@@ -931,7 +954,7 @@ const { timeFor } = Engine;
   function cellClick(i, byMachine = false) {
     if (drag) endDrag(false);
     if (online) return onlineCell(i);
-    if (over || replaying || helpPaused) return;
+    if (over || replaying || clockPaused) return;
     const machineTurn = gameMode === 'solo' && current === 1;
     if (machineTurn !== byMachine || (machineThinking && !byMachine)) return;
     if (swapMode !== current && board[i]) return;
@@ -1128,7 +1151,7 @@ const { timeFor } = Engine;
   }
 
   function maybeMachineTurn() {
-    if (gameMode !== 'solo' || current !== 1 || over || replaying || helpPaused) return;
+    if (gameMode !== 'solo' || current !== 1 || over || replaying || clockPaused) return;
 
     clearTimeout(machineTimeout);
     machineThinking = true;
@@ -1137,7 +1160,7 @@ const { timeFor } = Engine;
 
     machineTimeout = setTimeout(() => {
       machineThinking = false;
-      if (id !== gameId || over || replaying || helpPaused || current !== 1 || gameMode !== 'solo') {
+      if (id !== gameId || over || replaying || clockPaused || current !== 1 || gameMode !== 'solo') {
         updateControls();
         return;
       }
@@ -1176,7 +1199,7 @@ const { timeFor } = Engine;
   }
 
   async function activateSOS(player) {
-    if (over || !sosReady(player) || replaying || helpPaused || player !== current) return;
+    if (over || !sosReady(player) || replaying || clockPaused || player !== current) return;
     if (settle()) return;
     const id = gameId;
 
@@ -1910,6 +1933,7 @@ const { timeFor } = Engine;
     q('machineBadge').classList.add('hidden');
     avatarsEl[1].classList.remove('robot');
     q('restartMatch').classList.add('hidden');
+    q('pauseGame').classList.add('hidden');
     setup.classList.add('hidden');
     game.classList.remove('hidden');
     game.classList.add('same-view');
@@ -2052,6 +2076,7 @@ const { timeFor } = Engine;
     Online.clearSeat();
     online = null;
     q('restartMatch').classList.remove('hidden');
+    q('pauseGame').classList.remove('hidden');
     q('otherBoard').classList.remove('hidden');
     game.classList.remove('online');
     renderLobby();
