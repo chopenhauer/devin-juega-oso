@@ -39,8 +39,9 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Revancha, el botón grande:** «Otro tablero» y «Cambiar jugadores» siguen debajo; «Ver la partida»
   y «Compartir» son ahora enlaces discretos. En GA4, de 89 partidas terminadas en 28 días solo hubo 4
   replays y 1 compartir desde aquí.
-- **Más contraste:** fondo sólido y tarjetas más opacas. En un móvil de 360 × 640, también con letra
-  grande, se ven el resultado y «Revancha» sin desplazarse.
+- **Más contraste:** fondo sólido y tarjetas más opacas.
+- **Cabe en una sola pantalla:** en móviles pequeños o con letra grande, la pantalla final se encoge
+  sola (letra y elementos) para que todo se vea sin desplazarse ni cortarse por los lados.
 - **La imagen que se comparte** lleva el marcador con los avatares (sin nombres).
 - **Analítica:** evento nuevo `end_action` con el botón pulsado (`rematch`, `other_board`,
   `change_players`, `leave`, `replay`, `share`, `home`, `details`) y la frase que se vio

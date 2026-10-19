@@ -2344,6 +2344,24 @@ const { timeFor } = Engine;
     document.documentElement.style.setProperty('--toast-mid', `${Math.round(top / 2)}px`);
   }
   new ResizeObserver(placeToast).observe(document.querySelector('.panel'));
+  // The end screen always fits one screen: with big text or a small phone everything is scaled down.
+  const fitEndScreen = () => {
+    const box = q('winnerOverlay');
+    const card = q('winnerCard');
+    card.style.zoom = '';
+    if (box.classList.contains('hidden')) return;
+    const pad = getComputedStyle(box);
+    const h = box.clientHeight - parseFloat(pad.paddingTop) - parseFloat(pad.paddingBottom);
+    const w = box.clientWidth - parseFloat(pad.paddingLeft) - parseFloat(pad.paddingRight);
+    let k = Math.min(1, h / card.offsetHeight, w / Math.max(card.offsetWidth, card.scrollWidth));
+    if (k >= 1) return;
+    k = Math.max(0.5, k);
+    card.style.zoom = k.toFixed(3);
+    while (k > 0.5 && box.scrollHeight > box.clientHeight + 1) card.style.zoom = (k -= 0.02).toFixed(3);
+  };
+  const fitObserver = new ResizeObserver(() => fitEndScreen());
+  fitObserver.observe(q('winnerOverlay'));
+  fitObserver.observe(q('winnerCard'));
   window.addEventListener('resize', placeToast);
   let setupStep = null;
   document.addEventListener('oso:step', (e) => {

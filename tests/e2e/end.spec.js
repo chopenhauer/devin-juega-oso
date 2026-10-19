@@ -87,18 +87,32 @@ test('the end screen tells the result, how the session goes and invites to a rem
   await expect(page.locator('#sessionTitle')).toHaveText('🏆 Marcador de la sesión');
 });
 
-test('on a small phone, even with big text, the result and «Revancha» fit without scrolling', async ({
-  page,
-}) => {
+test('on a small phone, even with big text, the whole end screen fits one screen', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 640 });
   await startTwo(page);
   await playOneZero(page);
-  for (const font of ['', '130%']) {
+  await page.click('#rematch');
+  await playOneZero(page);
+  await expect(page.locator('#sessionBoard')).toBeVisible();
+  for (const font of ['', '130%', '150%']) {
     await page.evaluate((f) => (document.documentElement.style.fontSize = f), font);
-    await page.evaluate(() => (document.querySelector('#winnerOverlay').scrollTop = 0));
+    await expect
+      .poll(
+        () =>
+          overlay(page).evaluate((el) => {
+            const card = el.querySelector('#winnerCard').getBoundingClientRect();
+            return el.scrollHeight <= el.clientHeight + 1 && card.left >= 0 && card.right <= innerWidth + 1;
+          }),
+        `font ${font || '100%'}`,
+      )
+      .toBe(true);
     const box = await page.locator('#rematch').boundingBox();
     expect(box.y + box.height, `font ${font || '100%'}`).toBeLessThanOrEqual(640);
   }
+  // On a big screen nothing is scaled.
+  await page.evaluate(() => (document.documentElement.style.fontSize = ''));
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect.poll(() => page.locator('#winnerCard').evaluate((el) => el.style.zoom)).toBe('');
 });
 
 test('the background is solid and the celebration stops, or does not move with reduced motion', async ({

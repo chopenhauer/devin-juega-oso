@@ -165,9 +165,10 @@ test('«Compartir» and «Replay» replace the long labels when they do not fit 
   }
   expect(seen['#shareResult@360']).toBe('📣 Compartir');
   expect(seen['#replayOpen@1280']).toBe('▶️ Ver la partida');
-  // With a bigger system font (Android accessibility) «Ver la partida» wraps too…
+  // With a huge system font (Android accessibility) the end screen can only shrink to half size,
+  // so «Ver la partida» wraps too…
   await page.setViewportSize({ width: 360, height: 900 });
-  await page.evaluate(() => (document.documentElement.style.fontSize = '200%'));
+  await page.evaluate(() => (document.documentElement.style.fontSize = '400%'));
   // …and even «Compartir» does not fit: both put the emoji above and the text below, on one line.
   const heights = [];
   for (const [sel, , short] of buttons) {
