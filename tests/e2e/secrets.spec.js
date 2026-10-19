@@ -63,6 +63,15 @@ test('after the 2nd game the end screen has a 🎁 that tells a secret, once a d
   const gift = page.locator('#secretToast');
   await expect(gift).toContainText('🎁 ¡Tienes un premio!');
   await expect(page.locator('#feedbackAsk'), 'the secret goes first').toBeHidden();
+  // On a small phone, even with big text, «Ábrelo» stays inside the toast.
+  await page.setViewportSize({ width: 360, height: 740 });
+  for (const font of ['', '130%', '150%']) {
+    await page.evaluate((f) => (document.documentElement.style.fontSize = f), font);
+    const [box, btn] = await Promise.all([gift.boundingBox(), page.locator('#secretOpen').boundingBox()]);
+    expect(btn.x + btn.width, `font ${font || '100%'}`).toBeLessThanOrEqual(box.x + box.width);
+    expect(box.x + box.width, `font ${font || '100%'}`).toBeLessThanOrEqual(360);
+  }
+  await page.evaluate(() => (document.documentElement.style.fontSize = ''));
   await gift.getByRole('button', { name: 'Ábrelo' }).click();
   const dialog = page.locator('#secretDialog');
   await expect(dialog).toBeVisible();

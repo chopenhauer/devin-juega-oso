@@ -3967,7 +3967,9 @@ body:has(#gameScreen:not(.hidden)) .online-toast {
 /* Secrets (secrets.js): «¡Tienes un premio!» uses the same toast as the online news, with a
    button at the end. It is on the first steps and on the end screen, at the top. */
 .secret-toast {
-  gap: var(--space-3);
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  padding-inline-start: var(--space-3);
   /* With the button inside it stays as tall as ← →, like the online news. */
   padding-block: var(--space-1);
   padding-inline-end: var(--space-1);
@@ -3976,8 +3978,10 @@ body:has(#gameScreen:not(.hidden)) .online-toast {
   transform: translate(-50%, -50%);
   animation-name: secretToastIn;
 }
+/* The text may wrap, but «Ábrelo» always stays inside the toast. */
 .secret-toast span {
-  white-space: nowrap;
+  min-width: 0;
+  text-wrap: balance;
 }
 @keyframes secretToastIn {
   from {
@@ -3995,6 +3999,14 @@ body:has(#winnerOverlay:not(.hidden)) .secret-toast {
   transform: translateX(-50%);
   animation-name: toastIn;
   z-index: calc(var(--z-overlay) + 1);
+}
+/* On phones it sits on the left, so it does not cover «Inicio». */
+@media (max-width: 30rem) {
+  body:has(#winnerOverlay:not(.hidden)) .secret-toast {
+    left: calc(env(safe-area-inset-left) + var(--space-3));
+    transform: none;
+    animation-name: fadeIn;
+  }
 }
 .secret-toast button {
   flex: none;

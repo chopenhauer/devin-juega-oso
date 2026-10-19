@@ -42,6 +42,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Más contraste:** fondo sólido y tarjetas más opacas.
 - **Cabe en una sola pantalla:** en móviles pequeños o con letra grande, la pantalla final se encoge
   sola (letra y elementos) para que todo se vea sin desplazarse ni cortarse por los lados.
+- **«🎁 ¡Tienes un premio!»** tiene la letra más pequeña y «Ábrelo» ya no se sale del aviso con letra
+  grande. En el móvil, en la pantalla final, va a la izquierda para no tapar «Inicio».
 - **La imagen que se comparte** lleva el marcador con los avatares (sin nombres).
 - **Analítica:** evento nuevo `end_action` con el botón pulsado (`rematch`, `other_board`,
   `change_players`, `leave`, `replay`, `share`, `home`, `details`) y la frase que se vio
