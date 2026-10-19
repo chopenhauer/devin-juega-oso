@@ -63,6 +63,9 @@ test('four players take turns 1 → 2 → 3 → 4 and finish with four scores', 
   }
   await expect(overlay).toBeVisible();
   await expect(page.locator('#winnerSub')).toHaveText(/\d+ – \d+ – \d+ – \d+/);
+  // No face to face with four: the ranking with every score shows unfolded.
+  await expect(page.locator('#endScore')).toBeHidden();
+  await expect(page.locator('#endDetails')).toHaveAttribute('open', '');
 });
 
 test('on a phone the 4 players option explains itself in a pop-up', async ({ page }, testInfo) => {

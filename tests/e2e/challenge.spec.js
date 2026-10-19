@@ -78,7 +78,7 @@ test('sharing a game against the machine sends a challenge link', async ({ page 
   await page.click('#stepNext');
   await page.click('#startGame');
   await finish(page);
-  const [a, b] = (await page.locator('#winnerSub').textContent()).match(/\d+/g).map(Number);
+  const [a, b] = (await page.locator('#endScore .end-points').textContent()).match(/\d+/g).map(Number);
   await page.click('#shareResult');
   await expect.poll(() => page.evaluate(() => window.sharedData?.text)).toContain('Te reto en OSO 🐻: 4×4');
   const text = await page.evaluate(() => window.sharedData.text);

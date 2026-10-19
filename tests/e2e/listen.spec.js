@@ -109,7 +109,27 @@ test('with analytics accepted, games send anonymous start, end and abandon event
   await page.locator('.menu-btn:visible').first().click();
   await page.click('#newGame');
   const names = (await events(page)).map(([name]) => name);
-  expect(names.slice(2)).toEqual(['game_start', 'game_abandon']);
+  expect(names.slice(2)).toEqual(['end_action', 'game_start', 'game_abandon']);
+  expect((await events(page))[2][1]).toMatchObject({
+    action: 'rematch',
+    end_phrase: expect.any(String),
+    mode: 'two',
+  });
+});
+
+test('the end screen buttons send end_action with the phrase that was shown', async ({ page }) => {
+  await consent(page, 'granted');
+  await start(page);
+  await finishGame(page);
+  await page.click('#endDetails summary');
+  await page.click('#endDetails summary');
+  await page.click('#otherBoard');
+  const actions = (await events(page)).filter(([name]) => name === 'end_action').map(([, p]) => p);
+  expect(
+    actions.map((p) => p.action),
+    'closing the details is not counted',
+  ).toEqual(['details', 'other_board']);
+  expect(actions[1]).toMatchObject({ end_phrase: 'none', board_size: '5x5', mode: 'two' });
 });
 
 test('with analytics rejected, no game events are sent', async ({ page }) => {

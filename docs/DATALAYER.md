@@ -107,7 +107,7 @@ Los añade `track()` a **todos** los eventos:
 | `display_mode`     | texto  | `standalone` (abierto desde el icono instalado) o `browser` (desde el navegador) |
 
 **Parámetros de partida** (`gameParams()` de `telemetry.js`), en `game_start`, `game_end`,
-`game_abandon`, `game_pause`, `extra_used` y `feedback`:
+`game_abandon`, `game_pause`, `end_action`, `extra_used` y `feedback`:
 
 | Parámetro      | Tipo     | Valores                                                                                                                                      |
 | -------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -130,6 +130,7 @@ Todos se envían desde `public/js/app.js`, salvo `setup_step`, que sale de `publ
 | `game_end`           | partida + `end_reason` (`timeout`, `board_full`), `result` (`player`, `machine`, `draw`), `tiebreak` (`none`, `streak`, `streaks`, `draw`), `time_available`, `time_used_max`, `time_left_min`, `time_left_p1…p4` (s), `cells_filled`, `cells_total`, `score_total`, `extras_hint`, `extras_last`, `extras_swap`, `extras_sos` (veces) |
 | `game_abandon`       | partida + `cells_filled`, `cells_total`                                                                                                                                                                                                                                                                                                |
 | `game_pause`         | partida + `action` (`pause`: se pulsa «⏸️ Pausar partida» en el menú; `resume`: «▶️ Retomar partida»), `paused_s` (solo en `resume`, segundos en pausa). No existe en línea                                                                                                                                                            |
+| `end_action`         | partida + `action` (`rematch`: «Revancha»; `other_board`; `change_players`, o `leave` si es «Salir» en línea; `replay`: «Ver la partida»; `share`: «Compartir»; `home`: «🏠 Inicio»; `details`: se abre «📊 Ver detalles»), `end_phrase` (clave de la frase de la pantalla final o `none`)                                             |
 | `extra_used`         | partida + `extra` (`hint`, `last`, `swap`, `sos`)                                                                                                                                                                                                                                                                                      |
 | `extra_bought`       | `extra` (`hint`, `swap`, `sos`)                                                                                                                                                                                                                                                                                                        |
 | `secret_shown`       | `secret` (`temas`, `tienda`), `place` (`start`, `end`)                                                                                                                                                                                                                                                                                 |

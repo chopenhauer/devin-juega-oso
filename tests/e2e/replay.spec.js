@@ -45,7 +45,7 @@ test('the last game can be watched again, move by move', async ({ page }) => {
   await page.click('#stepNext');
   await page.click('#startGame');
   await finish(page);
-  const finalScore = await page.locator('#winnerSub').textContent();
+  const finalScore = await page.locator('#endScore .end-points').textContent();
   const filled = await page.locator('#board .cell.filled').count();
 
   await page.click('#replayOpen');

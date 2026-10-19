@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { sessionKey, recordGame, standings } from '../../public/js/leaderboard.js';
+import { sessionKey, recordGame, standings, endPhrase, sessionNudge } from '../../public/js/leaderboard.js';
 
 const players = { mode: 'two', difficulty: 'easy', names: ['Julia', 'Papá'], avatars: ['🐻', '🐼'] };
 
@@ -42,4 +42,42 @@ test('standings handle four players and shared victories', () => {
   assert.deepEqual(st.wins, [1, 1, 1, 0]);
   assert.deepEqual(st.points, [3, 3, 4, 1]);
   assert.equal(st.draws, 0);
+});
+
+const g = (scores, winner) => ({ scores, winner, size: 5 });
+
+test('the end phrase tells the story of the game and of the session', () => {
+  assert.equal(endPhrase([g([2, 2], null)]), null);
+  assert.equal(endPhrase([g([4, 2], 0)]), null);
+  assert.deepEqual(endPhrase([g([5, 0], 0)]), { key: 'rout', player: 0 });
+  assert.deepEqual(endPhrase([g([3, 4], 1)]), { key: 'close', player: 1 });
+  assert.deepEqual(endPhrase([g([4, 1], 0), g([1, 3], 1)]), { key: 'first_win', player: 1 });
+  assert.deepEqual(endPhrase([g([4, 1], 0), g([4, 2], 0), g([3, 1], 0)]), {
+    key: 'unstoppable',
+    player: 0,
+    count: 3,
+  });
+  // 1 – 0, 1 – 1 and now 2 – 1: whoever led before gets it back.
+  assert.deepEqual(endPhrase([g([4, 1], 0), g([1, 4], 1), g([4, 2], 0)]), { key: 'lead_back', player: 0 });
+  assert.deepEqual(endPhrase([g([4, 1], 0), g([1, 4], 1), g([2, 4], 1)]), { key: 'comeback', player: 1 });
+});
+
+test('against the machine, losing gets an encouraging phrase', () => {
+  assert.deepEqual(endPhrase([g([2, 3], 1)], { machine: 1 }), { key: 'machine_close' });
+  assert.deepEqual(endPhrase([g([0, 5], 1)], { machine: 1 }), { key: 'machine' });
+  assert.deepEqual(endPhrase([g([5, 0], 0)], { machine: 1 }), { key: 'rout', player: 0 });
+});
+
+test('shared wins and four-player games only get the phrases about this game', () => {
+  assert.equal(endPhrase([g([3, 3, 1, 0], [0, 1])]), null);
+  assert.deepEqual(endPhrase([g([3, 2, 1, 0], 0)]), { key: 'close', player: 0 });
+});
+
+test('the session nudge says what the next game can change', () => {
+  assert.equal(sessionNudge({ wins: [0, 0] }), null);
+  assert.deepEqual(sessionNudge({ wins: [1, 1] }), { key: 'tied' });
+  assert.deepEqual(sessionNudge({ wins: [2, 1] }), { key: 'can_tie', player: 1 });
+  assert.deepEqual(sessionNudge({ wins: [0, 3] }), { key: 'ahead', player: 1, count: 3 });
+  assert.deepEqual(sessionNudge({ wins: [0, 3] }, { machine: 1 }), { key: 'machine_ahead', player: 0 });
+  assert.equal(sessionNudge({ wins: [1, 0, 0, 0] }), null);
 });

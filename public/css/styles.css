@@ -1228,9 +1228,11 @@ select option {
   z-index: var(--z-overlay);
   display: grid;
   place-items: center;
-  background: radial-gradient(circle at 50% 40%, var(--noche-600-a94), var(--noche-950-a97));
+  background: radial-gradient(circle at 50% 40%, var(--noche-700), var(--noche-950));
   text-align: center;
   padding: var(--space-5);
+  /* Room for «Inicio» and the secret gift on top, so they never cover the celebration. */
+  padding-top: calc(3.75rem + env(safe-area-inset-top));
   overflow-y: auto;
   animation: fadeIn 0.35s ease;
 }
@@ -1248,11 +1250,17 @@ select option {
   font-size: var(--fs-base);
   font-weight: var(--fw-semibold);
 }
+/* The celebration bounces a few times and then stays still, so it never competes with the score. */
 .winner-avatar {
-  font-size: var(--fs-hero-xl);
+  font-size: var(--fs-display);
   line-height: 1.1;
   filter: drop-shadow(0 0.625rem 1.375rem var(--negro-a45));
-  animation: winnerBounce 0.9s var(--ease-bounce) infinite alternate;
+  animation: winnerBounce 0.45s var(--ease-bounce) 4 alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .winner-avatar {
+    animation: none;
+  }
 }
 @keyframes winnerBounce {
   from {
@@ -1271,11 +1279,80 @@ select option {
   background-clip: text;
   color: transparent;
 }
+/* On phones the score is the hero: a smaller celebration keeps «Revancha» on screen. */
+@media (max-width: 30rem) {
+  .winner-avatar,
+  .winner-title {
+    font-size: var(--fs-4xl);
+  }
+}
 .winner-sub {
   font-size: var(--fs-lg);
   color: var(--muted);
   font-weight: var(--fw-semibold);
   margin-top: var(--space-1-5);
+}
+.winner-sub:empty {
+  display: none;
+}
+.end-phrase {
+  margin: var(--space-1-5) 0 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+}
+/* Two players: each avatar and name next to their own points, the winner in the accent colour. */
+.end-score {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 26.25rem;
+  margin: var(--space-3) auto 0;
+  font-weight: var(--fw-bold);
+}
+.end-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  font-size: var(--fs-base);
+}
+.end-side-avatar {
+  font-size: var(--fs-4xl);
+  line-height: 1.1;
+}
+.end-side-name {
+  max-width: 100%;
+  line-height: 1.15;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.end-points {
+  font-size: var(--fs-display);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.end-side.winner,
+.end-points .winner {
+  color: var(--accent);
+}
+.end-details {
+  max-width: 26.25rem;
+  margin: var(--space-2) auto 0;
+}
+.end-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.end-details .session-board {
+  margin-top: var(--space-1);
 }
 .challenge-result {
   margin: var(--space-2) 0 0;
@@ -1300,6 +1377,16 @@ select option {
 .winner-actions .replay-open {
   margin-top: var(--space-4);
 }
+/* «Ver la partida» and «Compartir» are discreet links: «Revancha» is the one big button. */
+.winner-actions .end-link {
+  min-height: 2.75rem;
+  border-color: transparent;
+  background: none;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
 .winner-actions.stack-labels .share-result,
 .winner-actions.stack-labels .replay-open {
   padding-block: var(--space-2);
@@ -1323,7 +1410,7 @@ select option {
   margin: 1rem auto 0;
   border: 1px solid var(--line);
   border-radius: var(--r-md);
-  background: var(--blanco-a07);
+  background: var(--blanco-a12);
   padding: var(--space-2-5) var(--space-3-5);
 }
 .session-board h2 {
@@ -1381,6 +1468,12 @@ select option {
   font-size: var(--fs-2xs);
   font-weight: var(--fw-semibold);
   color: var(--muted);
+}
+.session-nudge {
+  margin: var(--space-1-5) 0 0;
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
 }
 .secondary {
   min-height: 3.375rem;

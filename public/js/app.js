@@ -1,6 +1,6 @@
 import * as Engine from './engine.js';
 import * as Match from './match.js';
-import { sessionKey, recordGame, standings } from './leaderboard.js';
+import { sessionKey, recordGame, standings, endPhrase, sessionNudge } from './leaderboard.js';
 import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
 import { t, translateDom } from './i18n.js';
@@ -1309,36 +1309,41 @@ const { timeFor } = Engine;
     q('changePlayers').textContent = online ? 'Salir' : t('changePlayers');
     q('rematch').focus({ preventScroll: true });
 
-    const result = scores.join(' – ');
+    // Two players see the score face to face (#endScore); with four it stays in the subtitle.
+    const duel = scores.length === 2;
+    const result = duel ? '' : scores.join(' – ');
+    const sub = (...parts) => parts.filter(Boolean).join(' · ');
     const tiebreak = reason === 'puntos' ? m.tiebreak : null;
     const timeout = gameMode === 'four' ? t('end.timeout', { name: names[current] }) : t('end.rival_timeout');
     if (Array.isArray(w)) {
       q('winnerAvatar').textContent = w.map((i) => avatars[i]).join('');
       q('winnerTitle').textContent = t('end.winners', { names: joinNames(w.map((i) => names[i])) });
-      q('winnerSub').textContent = `${reason === 'tiempo' ? timeout : t('end.shared')} · ${result}`;
+      q('winnerSub').textContent = sub(reason === 'tiempo' ? timeout : t('end.shared'), result);
       confetti();
     } else if (w === null) {
       q('winnerAvatar').textContent = '🤝';
       q('winnerTitle').textContent = t('end.draw');
-      q('winnerSub').textContent = tiebreak === 'draw' ? `${result} · ${t('end.same_streaks')}` : result;
+      q('winnerSub').textContent = sub(result, tiebreak === 'draw' && t('end.same_streaks'));
     } else {
       q('winnerAvatar').textContent = avatars[w];
       q('winnerTitle').textContent = t('end.winner', { name: names[w] });
       const decided = { streak: t('end.tiebreak_streak'), streaks: t('end.tiebreak_streaks') }[tiebreak];
       q('winnerSub').textContent =
         reason === 'tiempo'
-          ? `${timeout} · ${result}`
-          : [t('end.final', { scores: result }), decided].filter(Boolean).join(' · ');
+          ? sub(timeout, result)
+          : sub(result && t('end.final', { scores: result }), decided);
       confetti();
     }
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
-    showEndStats(w);
+    showEndScore(w);
+    showEndStats(w, !duel || (!!tiebreak && tiebreak !== 'none'));
     lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
     q('replayOpen').classList.toggle('hidden', !history.length);
     fitEndLabels();
     showChallenge();
     const st = recordSession(w);
+    showEndPhrase();
     prepareScorecard(st, showSession(st));
     countGame();
     const secret = dueSecret();
@@ -1348,7 +1353,59 @@ const { timeFor } = Engine;
   }
 
   // Points, longest streak and number of streaks of each player: what breaks a tie.
-  function showEndStats(w) {
+  function showEndScore(w) {
+    const box = q('endScore');
+    box.classList.toggle('hidden', scores.length !== 2);
+    if (scores.length !== 2) return;
+    const won = [w].flat();
+    const el = (tag, className, text) => {
+      const e = document.createElement(tag);
+      e.className = className;
+      e.textContent = text;
+      return e;
+    };
+    const side = (p) => {
+      const s = el('span', 'end-side', '');
+      s.classList.toggle('winner', won.includes(p));
+      const avatar = el('span', 'end-side-avatar', avatars[p]);
+      avatar.setAttribute('aria-hidden', 'true');
+      s.append(avatar, el('span', 'end-side-name', names[p]));
+      return s;
+    };
+    const points = el('span', 'end-points', '');
+    const n = (p) => {
+      const b = el('b', '', scores[p]);
+      b.classList.toggle('winner', won.includes(p));
+      return b;
+    };
+    points.append(n(0), ' – ', n(1));
+    box.replaceChildren(side(0), points, side(1));
+  }
+  // The key of the phrase shown, sent with end_action to see which moments bring a rematch.
+  let lastPhrase = 'none';
+  const machineSeat = () => (gameMode === 'solo' ? 1 : null);
+  function showEndPhrase() {
+    const p = endPhrase(sessionGames, { machine: machineSeat() });
+    const name = names[p?.player];
+    const text =
+      p &&
+      {
+        rout: t('end.phrase.rout', { name }),
+        close: t('end.phrase.close'),
+        first_win: t('end.phrase.first_win', { name }),
+        unstoppable: t('end.phrase.unstoppable', { name, count: p.count }),
+        lead_back: t('end.phrase.lead_back', { name }),
+        comeback: t('end.phrase.comeback', { name }),
+        machine_close: t('end.phrase.machine_close'),
+        machine: t('end.phrase.machine'),
+      }[p.key];
+    lastPhrase = p?.key ?? 'none';
+    q('endPhrase').textContent = text ?? '';
+    q('endPhrase').classList.toggle('hidden', !text);
+  }
+  const endAction = (action) => track('end_action', { ...modeParams(), action, end_phrase: lastPhrase });
+  // Streaks only matter when they decide the game: otherwise they wait folded in «Ver detalles».
+  function showEndStats(w, open) {
     const stats = Match.streaks(m);
     const won = [w].flat();
     const rank = (p) => [won.includes(p) ? 1 : 0, scores[p], stats[p].longest, stats[p].count];
@@ -1360,7 +1417,8 @@ const { timeFor } = Engine;
         const k = ra.findIndex((v, i) => v !== rb[i]);
         return k < 0 ? 0 : rb[k] - ra[k];
       });
-    q('endStats').classList.toggle('hidden', !history.length);
+    q('endDetails').classList.toggle('hidden', !history.length);
+    q('endDetails').open = open;
     q('endStatsRows').replaceChildren(
       ...order.map((p) => {
         const s = stats[p];
@@ -1463,6 +1521,7 @@ const { timeFor } = Engine;
     q('replayPlay').setAttribute('aria-label', t(on ? 'replay.pause' : 'replay.play'));
   }
   q('replayOpen').addEventListener('click', () => {
+    endAction('replay');
     const players = playerCount();
     replay = {
       steps: replaySteps(size, history, targetWord, players),
@@ -1552,7 +1611,10 @@ const { timeFor } = Engine;
     }
   });
   shareToggle.addEventListener('click', () => share('start'));
-  q('shareResult').addEventListener('click', () => share('end'));
+  q('shareResult').addEventListener('click', () => {
+    endAction('share');
+    share('end');
+  });
   // «Compartir resultado» and «Ver la partida» go long → short → emoji above the text, so they
   // never wrap mid-label. If one needs the emoji above, both get it, so they look the same.
   const SHORT_LABELS = {
@@ -1600,6 +1662,7 @@ const { timeFor } = Engine;
   });
 
   const SESSION_KEY = 'oso.session.v1';
+  let sessionGames = [];
   function recordSession(winner) {
     let session = null;
     try {
@@ -1615,6 +1678,7 @@ const { timeFor } = Engine;
       avatars: avatars.slice(0, n),
     });
     session = recordGame(session, key, { scores, winner, size });
+    sessionGames = session.games;
     try {
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
     } catch {
@@ -1659,6 +1723,18 @@ const { timeFor } = Engine;
       }),
     );
     q('sessionMeta').textContent = sessionMetaText(st);
+    const nudge = sessionNudge(st, { machine: machineSeat() });
+    const name = names[nudge?.player];
+    const text =
+      nudge &&
+      {
+        tied: t('session.nudge.tied'),
+        can_tie: t('session.nudge.can_tie', { name }),
+        machine_ahead: t('session.nudge.machine_ahead', { name }),
+        ahead: t('session.nudge.ahead', { name, count: nudge.count }),
+      }[nudge.key];
+    q('sessionNudge').textContent = text ?? '';
+    q('sessionNudge').classList.toggle('hidden', !text);
     return { order, leader };
   }
   // The picture is drawn as the game ends: the share sheet must open right on the tap.
@@ -1668,7 +1744,13 @@ const { timeFor } = Engine;
       brand: t('common.oso_el_juego_de'),
       avatar: q('winnerAvatar').textContent,
       title: q('winnerTitle').textContent,
-      subtitle: `${q('winnerSub').textContent} · ${t('scorecard.board', { size })}`,
+      subtitle: [
+        scores.length === 2 && `${avatars[0]} ${scores[0]} – ${scores[1]} ${avatars[1]}`,
+        q('winnerSub').textContent,
+        t('scorecard.board', { size }),
+      ]
+        .filter(Boolean)
+        .join(' · '),
       heading: t('sessionTitle'),
       columns: [t('sessionBoard.jugador'), t('sessionBoard.victorias'), t('sessionBoard.puntos')],
       rows: order.map((p) => ({
@@ -2580,7 +2662,11 @@ const { timeFor } = Engine;
     setSeaTheme(false);
   });
 
-  q('rematch').addEventListener('click', () => (online ? onlineRematch() : reset()));
+  q('rematch').addEventListener('click', () => {
+    endAction('rematch');
+    if (online) onlineRematch();
+    else reset();
+  });
 
   function backToSetup() {
     abandon();
@@ -2592,9 +2678,21 @@ const { timeFor } = Engine;
     setup.classList.remove('hidden');
     setSeaTheme(false);
   }
-  q('otherBoard').addEventListener('click', backToSetup);
-  q('changePlayers').addEventListener('click', backToSetup);
+  q('otherBoard').addEventListener('click', () => {
+    endAction('other_board');
+    backToSetup();
+  });
+  q('changePlayers').addEventListener('click', () => {
+    endAction(online ? 'leave' : 'change_players');
+    backToSetup();
+  });
+  q('endDetails')
+    .querySelector('summary')
+    .addEventListener('click', () => {
+      if (!q('endDetails').open) endAction('details');
+    });
   q('winnerHome').addEventListener('click', () => {
+    endAction('home');
     backToSetup();
     showStep('mode');
     syncThemeToggle();

@@ -17,6 +17,35 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.2.0] - 2026-10-19
+
+**🏆 Una pantalla final que cuenta la partida: has ganado → así ha ido → ¿revancha?**
+
+- **Por qué:** a JoseLuis le pasaron un feedback de la pantalla de victoria. La celebración, las dos
+  tablas y cinco botones tenían la misma importancia, el tablero se veía por detrás y el resultado
+  salía pequeño y en orden de jugador («0 – 5» aunque ganara Julia). Usamos el espíritu de la
+  propuesta, no su diseño.
+- **El resultado manda:** el marcador sale grande, con el avatar y el nombre de cada jugador junto a
+  sus puntos, y el ganador en color. El fantasma (o el avatar que gane) es más pequeño, rebota un
+  momento y se queda quieto; con «reducir movimiento» no se mueve.
+- **Frases que tienen memoria** (las del feedback, adaptadas): «🚀 ¡Julia arrasa!», «😱 ¡Victoria por
+  los pelos!», «🎉 ¡Primera victoria de…!», «🔥 ¡… está imparable: 3 seguidas!», «🏆 ¡… recupera el
+  liderato!» y «🏆 ¡… remonta y se pone en cabeza!». Contra la máquina, si gana ella, anima: «💪 ¡Casi!
+  La revancha puede ser tuya».
+- **Una sola tabla:** el marcador de la sesión, con una frase que dice qué se juega en la siguiente
+  («🔥 ¡Papá puede empatar en la próxima!», «⚔️ ¡Todo empatado!»). Las rachas de la 4.0.0 quedan
+  plegadas en «📊 Ver detalles», que se abre solo cuando el desempate decide la partida o con 4
+  jugadores, donde es la clasificación.
+- **Revancha, el botón grande:** «Otro tablero» y «Cambiar jugadores» siguen debajo; «Ver la partida»
+  y «Compartir» son ahora enlaces discretos. En GA4, de 89 partidas terminadas en 28 días solo hubo 4
+  replays y 1 compartir desde aquí.
+- **Más contraste:** fondo sólido y tarjetas más opacas. En un móvil de 360 × 640, también con letra
+  grande, se ven el resultado y «Revancha» sin desplazarse.
+- **La imagen que se comparte** lleva el marcador con los avatares (sin nombres).
+- **Analítica:** evento nuevo `end_action` con el botón pulsado (`rematch`, `other_board`,
+  `change_players`, `leave`, `replay`, `share`, `home`, `details`) y la frase que se vio
+  (`end_phrase`), para saber si el cambio hace que se pida más revancha. Solo con cookies aceptadas.
+
 ## [4.1.0] - 2026-10-19
 
 **⏸️ Pausar la partida desde el menú ([4f6f130](https://github.com/chopenhauer/devin-juega-oso/commit/4f6f1309bd6c9fcc8edafa7cb2079dc8f2363cb4))**

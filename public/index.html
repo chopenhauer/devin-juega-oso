@@ -1062,7 +1062,7 @@
           role="dialog"
           aria-modal="true"
           aria-labelledby="winnerTitle"
-          aria-describedby="winnerSub"
+          aria-describedby="endPhrase endScore winnerSub"
         >
           <button
             data-i18n="winnerHome"
@@ -1078,24 +1078,12 @@
           <div>
             <div id="winnerAvatar" class="winner-avatar">🐻</div>
             <div data-i18n="winnerTitle" id="winnerTitle" class="winner-title">¡Ganador!</div>
+            <p id="endPhrase" class="end-phrase hidden"></p>
+            <p id="endScore" class="end-score hidden"></p>
             <div id="winnerSub" class="winner-sub"></div>
             <p id="challengeResult" class="challenge-result hidden" role="status"></p>
-            <section id="endStats" class="session-board end-stats hidden" aria-labelledby="endStatsTitle">
-              <h2 data-i18n="endStatsTitle" id="endStatsTitle">Esta partida</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th data-i18n="endStats.jugador" scope="col" class="session-player">Jugador</th>
-                    <th data-i18n="endStats.puntos" scope="col">Total puntos</th>
-                    <th data-i18n="endStats.racha" scope="col">Racha larga</th>
-                    <th data-i18n="endStats.rachas" scope="col">Num rachas</th>
-                  </tr>
-                </thead>
-                <tbody id="endStatsRows"></tbody>
-              </table>
-            </section>
             <section id="sessionBoard" class="session-board hidden" aria-labelledby="sessionTitle">
-              <h2 data-i18n="sessionTitle" id="sessionTitle">Marcador de la sesión</h2>
+              <h2 data-i18n="sessionTitle" id="sessionTitle">🏆 Marcador de la sesión</h2>
               <table>
                 <thead>
                   <tr>
@@ -1108,6 +1096,7 @@
                 <tbody id="sessionRows"></tbody>
               </table>
               <p id="sessionMeta" class="session-meta"></p>
+              <p id="sessionNudge" class="session-nudge hidden"></p>
             </section>
             <div class="winner-actions">
               <button
@@ -1127,7 +1116,7 @@
                 data-i18n="replayOpen"
                 data-i18n-attr="aria-label:replayOpen.label"
                 id="replayOpen"
-                class="secondary replay-open"
+                class="secondary end-link replay-open"
                 type="button"
                 aria-label="Ver la partida (replay)"
               >
@@ -1137,13 +1126,30 @@
                 data-i18n="shareResult"
                 data-i18n-attr="aria-label:shareResult.label"
                 id="shareResult"
-                class="secondary share-result"
+                class="secondary end-link share-result"
                 type="button"
                 aria-label="Compartir resultado"
               >
                 📣 Compartir resultado
               </button>
             </div>
+            <details id="endDetails" class="end-details hidden">
+              <summary data-i18n="endDetails">📊 Ver detalles</summary>
+              <section id="endStats" class="session-board end-stats" aria-labelledby="endStatsTitle">
+                <h2 data-i18n="endStatsTitle" id="endStatsTitle">Esta partida</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th data-i18n="endStats.jugador" scope="col" class="session-player">Jugador</th>
+                      <th data-i18n="endStats.puntos" scope="col">Total puntos</th>
+                      <th data-i18n="endStats.racha" scope="col">Racha larga</th>
+                      <th data-i18n="endStats.rachas" scope="col">Num rachas</th>
+                    </tr>
+                  </thead>
+                  <tbody id="endStatsRows"></tbody>
+                </table>
+              </section>
+            </details>
             <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
               <h2 data-i18n="feedbackTitle" id="feedbackTitle" class="feedback-title">
                 ¿Os está gustando OSO?

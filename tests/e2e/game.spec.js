@@ -123,7 +123,10 @@ test('a full game against the machine ends with a winner screen', async ({ page 
   await expect(overlay).toBeVisible({ timeout: 5000 });
   await expect(page.locator('#winnerTitle')).not.toBeEmpty();
   // Points, longest streak and streaks of each player: what breaks a tie on points.
+  // They are folded in «Ver detalles» unless the streaks decided the game.
   const rows = page.locator('#endStatsRows tr');
+  await expect(page.locator('#endStats')).toBeHidden();
+  await page.click('#endDetails summary');
   await expect(page.locator('#endStats')).toBeVisible();
   await expect(rows).toHaveCount(2);
   await expect(page.locator('#endStatsRows th', { hasText: 'Máquina' })).toHaveCount(1);
@@ -168,7 +171,11 @@ test('a tie on points is broken by the longest streak', async ({ page }) => {
   }
   await expect(page.locator('#winnerOverlay')).toBeVisible();
   await expect(page.locator('#winnerTitle')).toHaveText('¡Gana Jugador 2!');
-  await expect(page.locator('#winnerSub')).toHaveText('Resultado final: 4 – 4 · Desempate: racha más larga');
+  await expect(page.locator('#winnerSub')).toHaveText('Desempate: racha más larga');
+  await expect(page.locator('#endScore .end-points')).toHaveText('4 – 4');
+  await expect(page.locator('#endScore .end-side.winner')).toHaveText('🐼Jugador 2');
+  // The streaks decided it, so «Ver detalles» opens by itself.
+  await expect(page.locator('#endDetails')).toHaveAttribute('open', '');
   const rows = page.locator('#endStatsRows tr');
   // Whoever wins goes first.
   await expect(page.locator('#endStats thead th')).toHaveText([
