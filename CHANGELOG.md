@@ -19,14 +19,14 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.3.0] - 2026-10-19
 
-**⏱️ Cada OSO da la mitad de tiempo: 5 segundos en vez de 10**
+**⏱️ Cada OSO da la mitad de tiempo: 5 segundos en vez de 10 ([a92feaa](https://github.com/chopenhauer/devin-juega-oso/commit/a92feaa5e6844304709c0083e9b4615b2baa0de7))**
 
 - Quien forma un OSO sigue jugando, pero ahora gana +5 s en vez de +10 s (`clock.bonusSeconds`). Vale
   para todos los modos, también en línea, porque el servidor usa la misma configuración.
 - **Decisión (JoseLuis, 19-10-2026):** solo el 11 % de las partidas acaba por tiempo. Con menos
   tiempo extra, el final por tiempo debería pesar más. Las reglas y la ayuda ya dicen +5 segundos.
 
-**🛟 Al volver a OSO, la pantalla de transición ya no parece de SOS**
+**🛟 Al volver a OSO, la pantalla de transición ya no parece de SOS ([0635c10](https://github.com/chopenhauer/devin-juega-oso/commit/0635c10ec529051f1ab9a67210a03d8c5e919e1b))**
 
 - Si un 🛟 comprado devuelve la partida a OSO, la pantalla enseña las fichas «O S O» de la portada,
   con el icono del tema, y «¡Ahora es OSO!», sobre el fondo del tema de la partida (clásico,
