@@ -244,6 +244,16 @@ test('B06: tienda secreta: un 🛟 comprado devuelve la partida a OSO para todo 
   await expect(page.locator('#sos1 .count')).toHaveText('1');
   await expect(page.locator('#sos2 .count')).toHaveText('0');
   await page.click('#sos1');
+  const flash = page.locator('#modeFlash');
+  await expect(flash).toBeVisible();
+  await expect(flash).toHaveClass(/\boso\b/);
+  await expect(flash.locator('.sos-hero')).toBeHidden();
+  await expect(flash.locator('.mode-flash-brand .brand')).toHaveText('OSO');
+  await expect(flash.locator('.mode-flash-title')).toHaveText('¡Ahora es OSO!');
+  const [flashBg, pageBg] = await page.evaluate(() =>
+    [document.getElementById('modeFlash'), document.body].map((e) => getComputedStyle(e).backgroundImage),
+  );
+  expect(flashBg).toBe(pageBg);
   await expect(page.locator('#message')).toContainText('Ahora se puntúa OSO', { timeout: 6000 });
   await expect(page.locator('.score-label').first()).toHaveText('puntos OSO');
   await expect(page.locator('body')).not.toHaveClass(/sea-theme/);
@@ -317,6 +327,7 @@ test('SOS: a full-screen «S🛟S» intro stops the game for 2-3 s, with no butt
   const flash = page.locator('#modeFlash');
   await expect(flash).toBeVisible();
   await expect(page.locator('.sos-hero')).toHaveText('S🛟S');
+  await expect(flash).not.toHaveClass(/\boso\b/);
   await expect(flash).toHaveAttribute('role', 'alert');
   await expect(flash.locator('button')).toHaveCount(0);
   const box = await flash.boundingBox();

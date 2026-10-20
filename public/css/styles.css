@@ -1761,6 +1761,31 @@ body.sea-theme::before {
   text-shadow: 0 0 1.5rem var(--menta-300-a60);
   animation: fadeIn var(--dur-base) 0.6s both;
 }
+.mode-flash-brand {
+  display: none;
+  gap: var(--space-2-5);
+}
+/* Back to OSO: the welcome tiles over the game's own theme instead of the sea */
+.mode-flash.oso {
+  background: var(--bg-scene);
+}
+.mode-flash.oso::before,
+.mode-flash.oso::after {
+  border-color: var(--blanco-a40);
+}
+.mode-flash.oso .sos-hero {
+  display: none;
+}
+.mode-flash.oso .mode-flash-brand {
+  display: grid;
+}
+.mode-flash.oso .mode-flash-title {
+  color: var(--color-text);
+  text-shadow: 0 3px 0 var(--negro-a18);
+}
+.mode-flash.oso .mode-flash-sub {
+  color: var(--color-text-muted);
+}
 .mode-flash-sub {
   max-width: 28ch;
   font-size: var(--fs-base);

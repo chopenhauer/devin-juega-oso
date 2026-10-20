@@ -1186,11 +1186,12 @@ const { timeFor } = Engine;
     return new Promise((r) => setTimeout(r, ms));
   }
 
-  // Full screen «S🛟S» (or «O🛟O»): the game stops and the rules change. No button.
+  // Full screen «S🛟S» in the sea, or the welcome «OSO» tiles in the game's theme when going
+  // back to OSO: the game stops and the rules change. No button.
   let introTimeout;
   function sosIntro(word, ms) {
     const box = q('modeFlash');
-    box.querySelectorAll('.sos-hero-letter').forEach((e) => (e.textContent = word[0]));
+    box.classList.toggle('oso', word === 'OSO');
     box.querySelector('.mode-flash-title').textContent = t('sos.now', { word });
     box.querySelector('.mode-flash-sub').textContent = t('sos.change', { word });
     box.classList.remove('hidden');

@@ -146,7 +146,7 @@ Cambian cómo se juega, así que tocan el motor, la máquina y el servidor en l�
 | --- | -------------------------------------------------------- | --------------------------- |
 | —   | [Temas de temporada](ideas/temas.md)                     | Afinar antes de cada fiesta |
 | —   | [Sonidos](ideas/sonidos.md)                              | Hecho en 2.2.0              |
-| 31  | [Pantalla del 🛟 al volver a OSO](ideas/pantalla-sos.md) | Si se quiere ambientar más  |
+| 31  | [Pantalla del 🛟 al volver a OSO](ideas/pantalla-sos.md) | Hecho en 4.3.0              |
 | 12  | [Oso bailando al ganar](ideas/celebraciones.md)          | Reserva                     |
 | 15  | [Vibración](ideas/celebraciones.md)                      | Reserva                     |
 | 8   | [Accesibilidad extra](ideas/accesibilidad.md)            | Reserva                     |

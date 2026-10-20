@@ -25,9 +25,15 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   para todos los modos, también en línea, porque el servidor usa la misma configuración.
 - **Decisión (JoseLuis, 19-10-2026):** solo el 11 % de las partidas acaba por tiempo. Con menos
   tiempo extra, el final por tiempo debería pesar más. Las reglas y la ayuda ya dicen +5 segundos.
-- **Roadmap:** nuevo orden del «Ahora» con los datos del 19-10-2026: «Jugar ya», reto del día,
-  decidir el reloj y Fácil más fácil. Nueva idea (31): que la pantalla del 🛟 al volver a OSO diga
-  OSO, o «🐻 S 🐻» para ambientarla más.
+
+**🛟 Al volver a OSO, la pantalla de transición ya no parece de SOS**
+
+- Si un 🛟 comprado devuelve la partida a OSO, la pantalla enseña las fichas «O S O» de la portada,
+  con el icono del tema, y «¡Ahora es OSO!», sobre el fondo del tema de la partida (clásico,
+  Halloween…) en vez del mar con «O🛟O». La ida a SOS no cambia. También en línea (idea 31).
+
+**Roadmap:** nuevo orden del «Ahora» con los datos del 19-10-2026: «Jugar ya», reto del día, decidir
+el reloj y Fácil más fácil.
 
 ## [4.2.0] - 2026-10-19
 
