@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.5.2] - 2026-10-24
 
-**🕑 El reto cambia a las 2:00 y el aviso sale a las 7:00**
+**🕑 El reto cambia a las 2:00 y el aviso sale a las 7:00** ([6b2e517](https://github.com/chopenhauer/devin-juega-oso/commit/6b2e51771c4a0eaa691685b06cad0f6fa04aafb0))
 
 - El reto de cada día empieza a las 2:00 de Madrid en vez de a las 7:00 (`daily.startHour`), y la
   cuenta atrás, el número y los días seguidos cambian a esa hora (JoseLuis, 24-10-2026).
