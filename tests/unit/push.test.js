@@ -23,6 +23,8 @@ function setup(now = SUMMER) {
 test('only accepts real push services and well-formed keys', () => {
   assert.ok(cleanSubscription(sub()));
   assert.ok(cleanSubscription(sub(1, 'web.push.apple.com')));
+  assert.ok(cleanSubscription(sub(1, 'jmt17.google.com')));
+  assert.equal(cleanSubscription(sub(1, 'evilgoogle.com')), null);
   assert.ok(cleanSubscription(sub(1, 'updates.push.services.mozilla.com')));
   assert.equal(cleanSubscription(sub(1, 'evil.example.com')), null);
   assert.equal(cleanSubscription(sub(1, 'fcm.googleapis.com.evil.com')), null);

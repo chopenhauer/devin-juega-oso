@@ -14,7 +14,14 @@ import { sendPush } from './_webpush.js';
 export const SUBS = 'push:subs';
 const RATE = { limit: 30, window: 600 };
 // Only the browsers' push services: the cron must never post to any other address.
-const HOSTS = ['fcm.googleapis.com', 'push.services.mozilla.com', 'push.apple.com', 'notify.windows.com'];
+// Chrome's endpoints are on fcm.googleapis.com, and on jmt*.google.com in some builds.
+const HOSTS = [
+  'fcm.googleapis.com',
+  'google.com',
+  'push.services.mozilla.com',
+  'push.apple.com',
+  'notify.windows.com',
+];
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 const hash = (text) => createHash('sha256').update(text).digest('base64url');
