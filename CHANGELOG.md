@@ -17,6 +17,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.4.0] - 2026-10-24
+
+**🗓️ Reto del día, con su propia dirección: [juegaoso.com/reto](https://juegaoso.com/reto)**
+
+- El mismo reto para todo el mundo cada día, como Wordle: contra la máquina, con el tablero y el
+  nivel del día (5×5 entre semana, 6×6 el fin de semana) y 4 letras ya puestas (`daily.letters`).
+  Todo sale de la fecha en Madrid (`public/js/daily.js`), así que funciona sin conexión; la suerte de
+  la máquina también es fija, y las mismas jugadas tienen la misma respuesta.
+- `/reto` abre el reto de hoy ya preparado, con su tarjeta para WhatsApp (`public/reto.html`). En la
+  bienvenida y en «¿Cómo queréis jugar?» sale la tarjeta «🗓️ Reto del día n.º …», que después dice
+  cómo quedó, cuánto falta para el siguiente y los días seguidos.
+- Solo cuenta la primera partida del día. Al acabar, «Compartir» manda el resultado con el enlace a
+  `/reto`, y la imagen lleva el número del reto.
+- **Decisión (JoseLuis, 24-10-2026):** que el reto tenga una dirección propia para compartirla.
+- **Medición:** eventos `daily_start` y `daily_end` en GA4, y la entrada `daily` en los contadores
+  del servidor.
+
 ## [4.3.0] - 2026-10-19
 
 **⏱️ Cada OSO da la mitad de tiempo: 5 segundos en vez de 10 ([a92feaa](https://github.com/chopenhauer/devin-juega-oso/commit/a92feaa5e6844304709c0083e9b4615b2baa0de7))**

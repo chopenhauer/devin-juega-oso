@@ -3,4 +3,5 @@ test-results/
 playwright-report/
 .vercel/
 public/sala.html
+public/reto.html
 .DS_Store

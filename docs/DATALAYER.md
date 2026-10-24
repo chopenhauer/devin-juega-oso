@@ -148,6 +148,8 @@ Todos se envían desde `public/js/app.js`, salvo `setup_step`, que sale de `publ
 | `feedback`           | partida + `rating` (`up`, `down`), `moment` (`first_game`, `beat_machine`, `streak`)                                                                                                                                                                                                                                                   |
 | `challenge_open`     | `board_size`, `difficulty`                                                                                                                                                                                                                                                                                                             |
 | `challenge_end`      | Los de partida + `beaten` (booleano), `missing` (número)                                                                                                                                                                                                                                                                               |
+| `daily_start`        | Los de partida + `daily_number` (número), `daily_first` (booleano)                                                                                                                                                                                                                                                                     |
+| `daily_end`          | Los de partida + `daily_number` (número), `daily_first` (booleano), `daily_streak` (número), `daily_result` (`won`, `lost`, `draw`)                                                                                                                                                                                                    |
 | `replay_view`        | Los de partida + `replay_seen` (número, la jugada más avanzada que se vio), `replay_moves` (número de jugadas)                                                                                                                                                                                                                         |
 | `install_offer`      | `action` (`shown`, `install`, `no_thanks`), `platform` (`prompt`, `ios`)                                                                                                                                                                                                                                                               |
 | `install_prompt`     | `outcome` (`accepted`, `dismissed`)                                                                                                                                                                                                                                                                                                    |
@@ -162,11 +164,11 @@ El registro está como código en el repo privado `chopenhauer/oso-privado` (`ga
 `python3 sync.py plan|apply`):
 
 - **Dimensiones** (texto o categoría): `action`, `answered`, `app_language`, `app_version`,
-  `board_size`, `browser_language`, `channel`, `difficulty`, `display_mode`, `end_reason`, `entry`, `extra`,
+  `board_size`, `browser_language`, `channel`, `daily_first`, `daily_number`, `daily_result`, `difficulty`, `display_mode`, `end_reason`, `entry`, `extra`,
   `mode`, `moment`, `outcome`, `place`, `platform`, `players`, `rating`, `reason`, `result`, `role`,
   `secret`, `tiebreak`, `step`, `theme`, `theme_from`, `theme_source`, `told`, `vs_machine`.
 - **Métricas** (números que se suman o se promedian): `answer_ms`, `cells_filled`, `cells_total`,
-  `conflicts`, `extras_hint`, `extras_last`, `extras_sos`, `extras_swap`, `move_rtt_p50_ms`,
+  `conflicts`, `daily_streak`, `extras_hint`, `extras_last`, `extras_sos`, `extras_swap`, `move_rtt_p50_ms`,
   `move_rtt_p95_ms`, `paused_s`, `poll_errors`, `polls`, `reconnects`, `score_total`, `sync_p50_ms`,
   `sync_p95_ms`, `time_available`, `time_left_min`, `time_used_max`.
 - **Sin registrar:** `time_left_p1…p4`. Llegan a GA4, pero no salen en los informes; para el

@@ -53,6 +53,9 @@ export const GAME = freeze({
     roomHours: 24,
     closedRoomHours: 1,
   },
+  daily: {
+    letters: 4,
+  },
   secrets: {
     gamesPerSecret: 2,
     spotlightMs: 3000,
@@ -93,6 +96,7 @@ export const SECTIONS = {
   shop: '🛒 Tienda secreta (comprar extras gastados)',
   machine: 'Máquina',
   online: 'En línea',
+  daily: '🗓️ Reto del día',
   secrets: 'Secretos',
   themes: 'Temas y easter egg del 🎨',
   feedback: 'Encuesta «¿Os está gustando OSO?»',
@@ -144,6 +148,8 @@ export const HELP = {
   'online.roomsWindowMinutes': 'Ventana del límite anterior.',
   'online.roomHours': 'Horas que se guarda una sala con partida empezada (para revanchas y reconexión).',
   'online.closedRoomHours': 'Horas que se guarda una sala cerrada, para avisar a quien abra el enlace viejo.',
+  'daily.letters':
+    'Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío.',
   'secrets.gamesPerSecret':
     'Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día.',
   'secrets.spotlightMs':

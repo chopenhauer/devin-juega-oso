@@ -7,7 +7,7 @@
 import { month, STATS_TTL } from './_sala.js';
 
 const CHOICES = ['granted', 'denied'];
-const ENTRIES = ['first', 'return', 'challenge'];
+const ENTRIES = ['first', 'return', 'challenge', 'daily'];
 const STEP = /^(welcome|rules_[1-9]|mode|where|players|view|board|start)$/;
 
 export function createVisitHandler(store, { now = Date.now } = {}) {

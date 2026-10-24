@@ -1,6 +1,6 @@
 # Reto del día (23)
 
-- **Estado:** Idea · **ahora (2.º)**
+- **Estado:** Hecho en la 4.4.0
 - **Grupo:** [Llegar, volver y compartir](../ROADMAP.md#4-llegar-volver-y-compartir)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Medio
 
@@ -9,3 +9,35 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
 
 - **Por qué ahora:** el uso baja (de 8 usuarios al día el 11 y el 13 de octubre a entre 1 y 5
   desde el 14) y compartir es lo que más gente trae.
+
+## Cómo funciona (4.4.0)
+
+- **Dirección propia:** [juegaoso.com/reto](https://juegaoso.com/reto) abre siempre el reto de hoy,
+  con el juego ya preparado: solo queda poner nombre y avatar. Tiene su propia tarjeta para WhatsApp
+  (`public/reto.html`, generada por `scripts/invite-page.js`). Pidió la dirección JoseLuis
+  (24-10-2026).
+- **El mismo para todo el mundo, sin servidor:** todo sale de la fecha en Madrid
+  (`public/js/daily.js`), así que cada móvil calcula el mismo reto por su cuenta, también sin
+  conexión. Cambia a medianoche de Madrid. El reto n.º 1 es el 24-10-2026.
+  - **Tablero y nivel según el día:** 5×5 de lunes a viernes (Fácil el lunes, el miércoles y el
+    viernes; Difícil el martes y el jueves) y 6×6 el fin de semana (Fácil el sábado y Difícil el
+    domingo). Siempre contra la máquina.
+  - **Letras ya puestas:** `daily.letters` (4) letras en el tablero al empezar. Nunca forman OSO ni
+    SOS ni dejan un OSO a punto, así que no dan puntos a nadie, tampoco después de un 🛟.
+  - **La suerte de la máquina, fija:** si dos personas hacen las mismas jugadas, la máquina responde
+    igual.
+- **Dónde se ve:** una tarjeta «🗓️ Reto del día n.º …» en la bienvenida y en «¿Cómo queréis jugar?».
+  Si ya lo has jugado, dice cómo quedó y cuánto falta para el siguiente; con 2 días seguidos o más,
+  también la racha.
+- **Un intento al día:** solo cuenta la primera partida terminada del día; se puede repetir, pero no
+  cambia el resultado. Se guarda en el móvil (`oso.daily.v1`, los últimos 60 días).
+- **Al acabar:** la pantalla final de siempre, con «🗓️ ¡Reto del día n.º … superado!» (o «¡casi!») y
+  los días seguidos. «Compartir» manda el resultado con el enlace a `/reto` (campaña
+  `reto_del_dia`), y la imagen lleva el número del reto.
+- **Medición:** `daily_start` y `daily_end` en GA4 (ver [ANALYTICS](../ANALYTICS.md)), y la entrada
+  `daily` en los contadores del servidor de la bienvenida.
+
+## Siguiente
+
+- **Avisos (4.5.0):** una notificación al día cuando hay reto nuevo, pedida después de acabar el
+  primer reto. Pendiente de decidir la hora.

@@ -13,16 +13,20 @@ export const price = (power) => GAME.shop[`${power}Seconds`];
 // How long the 🛟 SOS replay animation lasts; the clock does not run meanwhile.
 export const sosReplayMs = (moves) => GAME.sos.flashMs + GAME.sos.pauseMs + GAME.sos.moveMs * moves;
 
-export function newMatch({ size, players = 2, first = 0, now = 0 }) {
+// `preset`: letters already on the board (reto del día, daily.js). They go first in the history,
+// as player 0's but marked `preset`, so the 🛟 replay and the streaks see them; they never score.
+export function newMatch({ size, players = 2, first = 0, now = 0, preset = [] }) {
+  const board = Array(size * size).fill('');
+  preset.forEach(({ index, letter }) => (board[index] = letter));
   return {
     size,
     players,
-    board: Array(size * size).fill(''),
+    board,
     scored: new Map(),
     scores: Array(players).fill(0),
     times: Array(players).fill(timeFor(size)),
     current: first,
-    history: [],
+    history: preset.map(({ index, letter }) => ({ player: 0, index, letter, preset: true })),
     extras: Array.from({ length: players }, () => ({ ...GAME.extras })),
     word: 'OSO',
     sosUsed: false,

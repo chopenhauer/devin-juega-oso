@@ -3,6 +3,7 @@
 import { GAME } from './config.js';
 import { t } from './i18n.js';
 import { parseChallenge } from './challenge.js';
+import * as Daily from './daily.js';
 import { setupStep, startFunnel } from './funnel.js';
 
 const STORAGE_KEY = 'oso.prefs.v1';
@@ -253,12 +254,39 @@ document.fonts?.ready.then(equalizeHeight);
 setView(defaultView());
 const prefs = loadPrefs();
 applyPrefs(prefs);
-// A challenge link comes with the game already set: only the player's avatar and name are left.
-const challenge = parseChallenge(location.search);
-startFunnel(challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
+// A challenge link and /reto (reto del día) come with the game already set: only the player's
+// avatar and name are left.
+const daily = Daily.isDailyPath(location.pathname) ? Daily.dailyChallenge() : null;
+const challenge = daily ?? parseChallenge(location.search);
+startFunnel(daily ? 'daily' : challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
 if (challenge) {
   $('modeSolo').click();
   $(difficultyId(challenge.difficulty)).click();
   $('sizeSelect').value = String(challenge.size);
   show('players');
 } else show(prefs.seenIntro ? 'mode' : 'welcome');
+
+// The reto del día card on the welcome and mode screens: today's, or how it went and when the next one comes.
+function dailyCard() {
+  const today = Daily.dailyChallenge();
+  const state = Daily.readDaily();
+  const done = state.results[today.key];
+  const { h, m } = Daily.waitParts(Daily.msToNext());
+  const wait = h ? t('daily.wait', { h, m }) : t('daily.wait_min', { m });
+  const streak = Daily.currentStreak(state, today.key);
+  const level = t(`summary.${today.difficulty}`);
+  const sub = done
+    ? t(done.won ? 'daily.card_won' : 'daily.card_lost', { mine: done.mine, theirs: done.theirs, wait })
+    : t('daily.card_new', { size: today.size, level });
+  document.querySelectorAll('.daily-card').forEach((card) => {
+    card.classList.toggle('done', !!done);
+    card.querySelector('.daily-title').textContent = t('daily.card_title', { number: today.number });
+    card.querySelector('.daily-sub').textContent = sub;
+    card.querySelector('.daily-streak').textContent = streak > 1 ? t('daily.streak', { count: streak }) : '';
+  });
+}
+dailyCard();
+setInterval(dailyCard, 60000);
+document
+  .querySelectorAll('.daily-card')
+  .forEach((card) => card.addEventListener('click', () => location.assign('/reto')));

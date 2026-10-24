@@ -12,7 +12,8 @@ Lo ya publicado, versión a versión y con sus decisiones, está en el [CHANGELO
 
 1. **[Que la gente llegue a jugar](ideas/llegar-a-jugar.md) (30):** probar «Jugar ya» en la
    bienvenida. En octubre, de 67 primeras bienvenidas solo 16 llegaron a empezar una partida.
-2. **[Reto del día](ideas/reto-del-dia.md) (23):** un motivo para volver cada día y para compartir.
+2. **[Reto del día](ideas/reto-del-dia.md) (23):** hecho en la 4.4.0, en [juegaoso.com/reto](https://juegaoso.com/reto).
+   Siguiente paso: los avisos (4.5.0), una notificación al día cuando hay reto nuevo.
 3. **[Decidir el reloj](ideas/reloj.md) (24):** propuesta de un objetivo del 20-25 %. En la 4.3.0
    cada OSO da 5 s en vez de 10 (JoseLuis, 19-10-2026): ver cuánto sube el porcentaje de partidas
    que acaban por tiempo.
@@ -106,7 +107,7 @@ Sirve para todos los tipos de partida.
 | #   | Idea                                                              | Estado                  |
 | --- | ----------------------------------------------------------------- | ----------------------- |
 | 30  | [Que la gente llegue a jugar](ideas/llegar-a-jugar.md)            | **Ahora (1.º)**         |
-| 23  | [Reto del día](ideas/reto-del-dia.md)                             | **Ahora (2.º)**         |
+| 23  | [Reto del día](ideas/reto-del-dia.md)                             | Hecho en 4.4.0          |
 | 3   | [Hall of fame local](ideas/hall-of-fame.md)                       | Siguiente               |
 | 14  | [Hall of fame global](ideas/hall-of-fame.md)                      | Reserva                 |
 | 2   | [Secreto n.º 3, inventado por Julia](ideas/secretos-y-regalos.md) | Cuando Julia quiera     |

@@ -83,6 +83,12 @@ Cómo cambiar uno:
 | `online.roomHours` | 24 | Horas que se guarda una sala con partida empezada (para revanchas y reconexión). |
 | `online.closedRoomHours` | 1 | Horas que se guarda una sala cerrada, para avisar a quien abra el enlace viejo. |
 
+## 🗓️ Reto del día
+
+| Parámetro | Valor | Qué hace |
+| --- | --- | --- |
+| `daily.letters` | 4 | Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío. |
+
 ## Secretos
 
 | Parámetro | Valor | Qué hace |

@@ -7,9 +7,10 @@ export const SITE_URL = 'https://juegaoso.com/';
 export const SHARE_SUBJECT = t('share.subject');
 
 // `source` tells GA where the visit came from (whatsapp, email, copy, native).
-// `challenge` is the query of a challenge link (challenge.js), which gets its own campaign.
-export const shareUrl = (source, challenge = null) =>
-  `${SITE_URL}?${challenge ? `${challenge}&` : ''}utm_source=${encodeURIComponent(source)}&utm_medium=share&utm_campaign=${challenge ? 'reto' : 'boca_oreja'}`;
+// `challenge` is the query of a challenge link (challenge.js), which gets its own campaign;
+// `daily` links to /reto, the reto del día (daily.js).
+export const shareUrl = (source, challenge = null, daily = false) =>
+  `${SITE_URL}${daily ? 'reto' : ''}?${challenge ? `${challenge}&` : ''}utm_source=${encodeURIComponent(source)}&utm_medium=share&utm_campaign=${daily ? 'reto_del_dia' : challenge ? 'reto' : 'boca_oreja'}`;
 
 export const withLink = (text, url) => `${text}\n\n${url}`;
 
@@ -20,6 +21,13 @@ export function shareText(result = null) {
   const [a, b] = scores;
   // Same points but a winner: the streaks broke the tie.
   const tie = a === b;
+  if (mode === 'solo' && result.daily) {
+    const params = { number: result.daily, mine: a, theirs: b };
+    return t(
+      winner === 0 ? 'share.daily.won' : winner === 1 ? 'share.daily.lost' : 'share.daily.draw',
+      params,
+    );
+  }
   if (mode === 'solo' && result.size) {
     const params = { size: result.size, level: t(`summary.${result.difficulty}`), mine: a, theirs: b };
     if (winner === 0) return t(tie ? 'share.challenge.won_tie' : 'share.challenge.won', params);

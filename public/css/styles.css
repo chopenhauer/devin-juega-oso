@@ -2385,6 +2385,36 @@ body:has(#helpModal:not(.hidden))
   line-height: 1.25;
   text-align: center;
 }
+.daily-card {
+  display: grid;
+  gap: var(--space-1);
+  justify-self: center;
+  width: 100%;
+  max-width: 20rem;
+  margin: 0 auto var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--accent);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+}
+.daily-title {
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+}
+.daily-sub,
+.daily-streak {
+  font-size: var(--fs-sm);
+}
+.daily-streak:empty {
+  display: none;
+}
+.daily-card.done {
+  border-style: dashed;
+}
 .challenge-note.hidden,
 .challenge-result.hidden {
   display: none;

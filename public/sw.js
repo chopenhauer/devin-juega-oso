@@ -21,6 +21,7 @@ const SHELL = [
   '/img/robot-extreme.svg',
   '/js/app.js',
   '/js/challenge.js',
+  '/js/daily.js',
   '/js/clarity.js',
   '/js/config.js',
   '/js/consent.js',
@@ -74,14 +75,15 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
   if (request.method !== 'GET' || !own(url) || skip(url)) return;
-  // Any link to the game (?reto=…, ?sala=…, utm…) opens the same page offline.
-  const page = request.mode === 'navigate' && url.pathname === '/';
+  // Any link to the game (?reto=…, ?sala=…, utm…) and /reto (reto del día) open the same page offline.
+  const page = request.mode === 'navigate' && (url.pathname === '/' || url.pathname === '/reto');
   const key = page ? '/' : request;
   event.respondWith(
     fetch(request)
       .then((response) => {
-        // Room links get sala.html (another share card): not kept as the game page.
-        if (response.ok && response.type === 'basic' && !url.searchParams.has('sala')) {
+        // Room links get sala.html and /reto reto.html (other share cards): not kept as the game page.
+        const other = url.searchParams.has('sala') || url.pathname === '/reto';
+        if (response.ok && response.type === 'basic' && !other) {
           const copy = response.clone();
           event.waitUntil(caches.open(CACHE).then((cache) => cache.put(key, copy)));
         }

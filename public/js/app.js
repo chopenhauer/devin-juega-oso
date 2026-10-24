@@ -9,6 +9,7 @@ import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from '
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
 import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
 import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
+import * as Daily from './daily.js';
 import { drawScorecard } from './scorecard.js';
 import { replaySteps } from './replay.js';
 import { showInstall } from './install.js';
@@ -841,7 +842,14 @@ const { timeFor } = Engine;
     abandon();
     if (drag) endDrag(false);
     stopGame();
-    m = Match.newMatch({ size, players: playerCount(), now: performance.now() });
+    const today = dailyOn();
+    m = Match.newMatch({
+      size,
+      players: playerCount(),
+      now: performance.now(),
+      preset: today ? daily.preset : [],
+    });
+    dailyRng = today ? Daily.dailyRandom(daily.key) : null;
     sync();
     selected = Array(m.players).fill('O');
     replaying = false;
@@ -866,6 +874,12 @@ const { timeFor } = Engine;
     playing = true;
     extrasUsed = {};
     track('game_start', modeParams());
+    if (today)
+      track('daily_start', {
+        ...modeParams(),
+        ...dailyParams(),
+        daily_first: !Daily.readDaily().results[daily.key],
+      });
   }
   // Charges the active player for the time elapsed since the last settlement.
   // Returns true if that player ran out of time (the game is then finished).
@@ -1147,7 +1161,7 @@ const { timeFor } = Engine;
   q('shopBuy').addEventListener('click', buyExtra);
 
   function chooseMachineMove() {
-    return Engine.chooseMachineMove(board, size, scored, targetWord, difficulty);
+    return Engine.chooseMachineMove(board, size, scored, targetWord, difficulty, dailyRng ?? Math.random);
   }
 
   function maybeMachineTurn() {
@@ -1230,13 +1244,16 @@ const { timeFor } = Engine;
     board = Array(size * size).fill('');
     scores = Array(scores.length).fill(0);
     scored = new Map();
+    // The letters of the reto del día were already there: they come back at once.
+    for (const move of savedHistory.filter((x) => x.preset))
+      ({ board, scored, scores } = Engine.replayMove({ size, board, scored, scores }, move, word));
     scoresEl.forEach((e) => (e.textContent = '0'));
     render();
     msg.textContent = t('sos.replaying', { word });
     await sleep(GAME.sos.pauseMs);
     if (id !== gameId) return;
 
-    for (const move of savedHistory) {
+    for (const move of savedHistory.filter((x) => !x.preset)) {
       ({ board, scored, scores } = Engine.replayMove({ size, board, scored, scores }, move, word));
       scoresEl.forEach((e, i) => (e.textContent = scores[i]));
 
@@ -1339,10 +1356,17 @@ const { timeFor } = Engine;
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     showEndScore(w);
     showEndStats(w, !duel || (!!tiebreak && tiebreak !== 'none'));
-    lastResult = { mode: gameMode, winner: w, scores: [...scores], size, difficulty };
+    lastResult = {
+      mode: gameMode,
+      winner: w,
+      scores: [...scores],
+      size,
+      difficulty,
+      daily: dailyOn() && daily.number,
+    };
     q('replayOpen').classList.toggle('hidden', !history.length);
     fitEndLabels();
-    showChallenge();
+    showChallenge(w);
     const st = recordSession(w);
     showEndPhrase();
     prepareScorecard(st, showSession(st));
@@ -1465,7 +1489,7 @@ const { timeFor } = Engine;
     r.at = Math.max(0, Math.min(n, r.steps.length));
     r.seen = Math.max(r.seen, r.at);
     const step = r.steps[r.at - 1];
-    const cells = step?.board ?? Array(r.size * r.size).fill('');
+    const cells = step?.board ?? r.start;
     const own = cells.map(() => new Set());
     for (const [k, p] of step?.scored ?? []) k.split('-').forEach((i) => own[i].add(p));
     const made = new Set(step?.made.flatMap((k) => k.split('-').map(Number)));
@@ -1524,8 +1548,12 @@ const { timeFor } = Engine;
   q('replayOpen').addEventListener('click', () => {
     endAction('replay');
     const players = playerCount();
+    const steps = replaySteps(size, history, targetWord, players);
+    // Letters already on the board (reto del día) are the starting board, not moves.
+    const presets = steps.filter((s) => s.move.preset).length;
     replay = {
-      steps: replaySteps(size, history, targetWord, players),
+      steps: steps.slice(presets),
+      start: presets ? steps[presets - 1].board : Array(size * size).fill(''),
       size,
       players,
       word: targetWord,
@@ -1559,13 +1587,15 @@ const { timeFor } = Engine;
   });
 
   // Word of mouth: the phone's own share sheet when there is one, otherwise WhatsApp, email or copy.
-  let shareChallenge = null;
+  let shareChallenge = null,
+    shareDaily = false;
   let lastResult = null,
     sharePlace = null;
   async function share(place) {
     const result = place === 'end' ? lastResult : null;
+    shareDaily = !!result?.daily;
     shareChallenge =
-      result?.mode === 'solo'
+      result?.mode === 'solo' && !shareDaily
         ? `reto=${challengeParam({ ...result, mine: result.scores[0], theirs: result.scores[1] })}${theme === 'classic' ? '' : `&tema=${theme}`}`
         : null;
     const text = shareText(result);
@@ -1575,7 +1605,7 @@ const { timeFor } = Engine;
         // The link goes inside the text, after a blank line: with `url` apart, Android glues it on with a space.
         const data = {
           title: t('common.oso_el_juego_de'),
-          text: withLink(text, shareUrl('native', shareChallenge)),
+          text: withLink(text, shareUrl('native', shareChallenge, shareDaily)),
         };
         if (card && navigator.canShare?.({ files: [card] })) data.files = [card];
         await navigator.share(data);
@@ -1587,8 +1617,8 @@ const { timeFor } = Engine;
     }
     sharePlace = place;
     q('shareMessage').textContent = text;
-    q('shareWhatsapp').href = whatsappHref(text, shareUrl('whatsapp', shareChallenge));
-    q('shareEmail').href = emailHref(text, shareUrl('email', shareChallenge));
+    q('shareWhatsapp').href = whatsappHref(text, shareUrl('whatsapp', shareChallenge, shareDaily));
+    q('shareEmail').href = emailHref(text, shareUrl('email', shareChallenge, shareDaily));
     q('shareStatus').textContent = '';
     const image = q('shareImage');
     if (image.href.startsWith('blob:')) URL.revokeObjectURL(image.href);
@@ -1602,7 +1632,7 @@ const { timeFor } = Engine;
   );
   q('shareEmail').addEventListener('click', () => track('share', { channel: 'email', place: sharePlace }));
   q('shareCopy').addEventListener('click', async () => {
-    const url = shareUrl('copy', shareChallenge);
+    const url = shareUrl('copy', shareChallenge, shareDaily);
     try {
       await navigator.clipboard.writeText(url);
       q('shareStatus').textContent = t('share.copied');
@@ -1742,7 +1772,7 @@ const { timeFor } = Engine;
   let shareCard = Promise.resolve(null);
   function prepareScorecard(st, { order, leader }) {
     shareCard = drawScorecard({
-      brand: t('common.oso_el_juego_de'),
+      brand: dailyOn() ? t('daily.brand', { number: daily.number }) : t('common.oso_el_juego_de'),
       avatar: q('winnerAvatar').textContent,
       title: q('winnerTitle').textContent,
       subtitle: [
@@ -2573,13 +2603,28 @@ const { timeFor } = Engine;
       difficulty: challenge.difficulty,
     });
   }
+  // Reto del día (daily.js): /reto opens today's; onboarding.js sets the game up. It is a game against
+  // the machine on its board and level, with its letters already placed and the machine's luck fixed.
+  const daily = Daily.isDailyPath(location.pathname) ? Daily.dailyChallenge() : null;
+  let dailyRng = null;
+  const dailyOn = () =>
+    !!daily && gameMode === 'solo' && size === daily.size && difficulty === daily.difficulty;
+  const dailyParams = () => ({ daily_number: daily.number });
+  if (daily) {
+    const done = Daily.readDaily().results[daily.key];
+    const level = t(`summary.${daily.difficulty}`);
+    q('challengeNote').textContent = done
+      ? t('daily.note_done', { number: daily.number, mine: done.mine, theirs: done.theirs })
+      : t('daily.note', { number: daily.number, size: daily.size, level, letters: daily.preset.length });
+  }
+  const target = challenge ?? daily;
   const syncChallengeNote = () =>
     q('challengeNote').classList.toggle(
       'hidden',
-      !challenge ||
+      !target ||
         gameMode !== 'solo' ||
-        +q('sizeSelect').value !== challenge.size ||
-        difficulty !== challenge.difficulty,
+        +q('sizeSelect').value !== target.size ||
+        difficulty !== target.difficulty,
     );
   document.addEventListener('oso:step', syncChallengeNote);
   q('sizeSelect').addEventListener('change', syncChallengeNote);
@@ -2587,9 +2632,36 @@ const { timeFor } = Engine;
     q(id).addEventListener('click', syncChallengeNote),
   );
   syncChallengeNote();
-  function showChallenge() {
+  function showDaily(w) {
+    const { state, first } = Daily.recordDaily(Daily.readDaily(), daily.key, {
+      mine: scores[0],
+      theirs: scores[1],
+      won: w === 0,
+    });
+    if (first) Daily.saveDaily(state);
+    const streak = Daily.currentStreak(state, daily.key);
+    const n = { number: daily.number };
+    const text = !first
+      ? t('daily.again', n)
+      : w === 0
+        ? t('daily.won', n)
+        : w === 1
+          ? t('daily.lost', n)
+          : t('daily.draw', n);
+    q('challengeResult').textContent =
+      text + (streak > 1 ? ` · ${t('daily.streak', { count: streak })}` : '');
+    track('daily_end', {
+      ...modeParams(),
+      ...dailyParams(),
+      daily_first: first,
+      daily_streak: streak,
+      daily_result: w === 0 ? 'won' : w === 1 ? 'lost' : 'draw',
+    });
+  }
+  function showChallenge(w) {
     const on = challenged();
-    q('challengeResult').classList.toggle('hidden', !on);
+    q('challengeResult').classList.toggle('hidden', !on && !dailyOn());
+    if (dailyOn()) return showDaily(w);
     if (!on) return;
     const { beaten, missing } = challengeOutcome(challenge, scores);
     const diff = scores[0] - scores[1];
