@@ -9,6 +9,14 @@ cada paso de la bienvenida (un evento por paso, sin datos personales) para saber
 después probar un botón «Jugar ya» que empiece con las elecciones por defecto (contra la máquina,
 5×5, Fácil). Las grabaciones de Clarity ayudan a ver qué pasa en esos pasos.
 
+## Datos (24-10-2026)
+
+Contadores del servidor (sin cookies), octubre: de 96 primeras bienvenidas, 26 eligen modo, 25 eligen
+jugadores, 23 eligen tablero y 22 empiezan la partida (23 %). Ya hay las ~100 primeras visitas
+propuestas para decidir, y la caída sigue en la primera pantalla. Desde la 4.4.0 `/reto` tiene su
+propia entrada en el embudo (`daily`), y desde la 4.5.1 empieza la partida con un toque: es un primer
+«Jugar ya», pero solo para quien llega por el reto.
+
 ## Datos (19-10-2026)
 
 Contadores del servidor (sin cookies), octubre: de 67 primeras bienvenidas, 11 pasan por las reglas,
@@ -22,7 +30,7 @@ sin cookies, para ver a todas las visitas.
 
 - **Qué se cuenta:** cada pantalla del inicio vista antes de la primera partida, una vez por visita
   (`welcome`, `rules_1`…`rules_4`, `mode`, `where`, `players`, `view`, `board` y `start`), y cómo
-  llegó la visita (`first`, `return`, `challenge`). Código: `public/js/funnel.js`.
+  llegó la visita (`first`, `return`, `challenge` y, desde la 4.4.0, `daily`). Código: `public/js/funnel.js`.
 - **Dónde se ve:** `npm run online:report` (contadores del servidor `setup_{entrada}_{pantalla}`) y,
   en GA4, una exploración de embudo con el evento `setup_step` y las dimensiones `step` y `entry`.
 - **Cómo leerlo:** el embudo de las primeras visitas empieza en `welcome`; la pantalla con la mayor

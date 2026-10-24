@@ -1,4 +1,4 @@
-// Reto del día reminders (Web Push, docs/ideas/avisos.md). No email or account: the browser gives an
+// Reto del día reminders (Web Push, docs/ideas/reto-del-dia.md). No email or account: the browser gives an
 // anonymous address (subscription) and we keep it until it is turned off or stops working.
 //   GET  /api/push                              the public VAPID key the browser subscribes with
 //   POST /api/push {subscription, played?}      turn on, or update the last reto day played

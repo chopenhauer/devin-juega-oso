@@ -13,7 +13,7 @@ responde. Si un dato no responde a ninguna pregunta, no se mide.
   permiso, la analítica queda denegada; la publicidad está siempre denegada.
 - **Solo producción.** `ga.js` y `clarity.js` solo envían desde `juegaoso.com` y
   `devin-juega-oso.vercel.app`; las previews de Vercel no envían nada y los tests sustituyen la red.
-- **El servidor cuenta sin cookies.** Las salas en línea y las visitas suman contadores anónimos por
+- **El servidor cuenta sin cookies.** Las salas en línea, las visitas y los avisos del reto suman contadores anónimos por
   mes, sin nadie identificable, para no depender de quien acepta las cookies.
 - **Las visitas ocultas se miden.** GA4 solo ve a quien acepta. Desde la 3.13.1, `api/_visita.js`
   cuenta cada carga del juego con la elección guardada y cada clic en el aviso, y Vercel Web
@@ -149,6 +149,22 @@ en línea. No guarda IP ni nada del navegador.
   con sus usuarios. Quien bloquea scripts no se cuenta en ninguno de los dos.
 - Vercel Web Analytics (`public/js/vercel-analytics.js`, solo en producción) da otra cifra de
   visitantes sin cookies para contrastar. Lo consulta la API `/v1/query/web-analytics/visits`.
+
+## Avisos del reto (sin cookies)
+
+`api/_push.js` suma en el mismo hash mensual, sin guardar nada de quien recibe el aviso:
+
+- `push_on` y `push_off`: alguien activa o quita el aviso; `push_played`: un móvil apuntado avisa de
+  que ya ha jugado el reto de hoy.
+- En cada envío de las 18:00: `push_runs` (la tarea ha llegado a enviar), `push_sent` (avisos que
+  acepta el servicio del navegador), `push_gone` (direcciones que ya no valen y se borran),
+  `push_fail` y `push_played_today` (no se avisa porque ya se ha jugado).
+- `api/_visita.js` cuenta `push_click` cuando se abre el juego desde un aviso, y GA4 recibe esa visita
+  con `utm_source=push`.
+
+`push_sent` solo dice que el servicio de avisos del navegador lo ha aceptado, no que se haya visto en
+el móvil; lo que de verdad importa es `push_click`. Hasta el 24-10-2026 la tarea no ha enviado
+ninguno.
 
 ## Limitaciones
 

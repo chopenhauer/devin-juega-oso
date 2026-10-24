@@ -1,6 +1,7 @@
 # Niveles de la máquina (13, 19)
 
-- **Estado:** Extremo hecho en 3.11.0 · Fácil más fácil (19): esperando datos (4.º)
+- **Estado:** Extremo hecho en 3.11.0 · Fácil (19): objetivo cumplido sin tocarlo · Difícil:
+  revisar con ~30 partidas
 - **Grupo:** [Contra la máquina](../ROADMAP.md#1-contra-la-máquina)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Bajo
 
@@ -23,3 +24,8 @@ condición de revisar a futuro los valores (`machine.easyAim`, `hardAim`, `pool`
 - **Espera (17-10-2026):** JoseLuis prefiere esperar unos días más para tener más datos antes de
   tocar el Fácil (31 partidas son pocas). Propuesta de Devin: revisarlo con unas 60 partidas en Fácil
   o dentro de dos semanas, lo que llegue antes.
+- **Datos (GA4, 28 días hasta el 24-10-2026):** en Fácil la persona gana 28 de 57 partidas (49 %),
+  13 de 18 desde el 20-10. Ya se cumple el objetivo propuesto de la mitad, así que la propuesta de
+  Devin es no tocar `machine.easyAim`. En Difícil la persona gana 1 de 12 (9 gana la máquina y 2
+  empates) y en Extremo 1 de 5: revisar Difícil con el Laboratorio cuando haya unas 30 partidas. El
+  reto del día juega en Difícil martes, jueves y domingo, así que dará datos pronto.

@@ -22,7 +22,7 @@ al STEM y decida el roadmap.
 
 ```
 public/               Sitio estático que publica Vercel (sin build)
-  index.html          Marcado (sala.html, la misma página con la tarjeta de invitación, se genera al publicar)
+  index.html          Marcado (sala.html y reto.html, la misma página con la tarjeta de invitación o la del reto, se generan al publicar)
   css/tokens.css      Sistema de diseño: la única fuente de colores, letra, espacios, sombras…
   css/styles.css      Estilos de los componentes (solo usan tokens)
   design.html         Guía viva del sistema de diseño (/design, solo local y previews)
@@ -32,6 +32,8 @@ public/               Sitio estático que publica Vercel (sin build)
   js/app.js           Interfaz: estado de la partida, reloj, tensión, eventos y render (usa engine.js y match.js)
   js/online.js        Cliente de las salas en línea (crear, unirse, consultar al servidor)
   js/secrets.js       Lista de secretos (easter eggs) y cuándo toca contar uno
+  js/daily.js         Reto del día (/reto): tablero, nivel, letras y suerte de la máquina según la fecha de Madrid
+  js/push.js          Avisos del reto (Web Push): cuándo preguntar, activar y quitar desde el menú
   js/onboarding.js    Inicio por pasos (bienvenida, reglas, modo, jugadores, vista, tablero)
   js/tuning.js        Valores en vivo del laboratorio de Julia sobre config.js (/api/config)
   js/lab.js           Laboratorio de Julia (/lab): simulador (lab-sim.js) y cuaderno
@@ -53,6 +55,9 @@ api/sala.js           Función de Vercel de las salas en línea (/api/sala)
 api/_sala.js          Árbitro: valida las jugadas con match.js y lleva los relojes y los contadores
 api/lab.js            Laboratorio de Julia: contraseña, valores en vivo y cuaderno (/api/lab, /api/config)
 api/lab-data.js       Laboratorio: partidas de verdad desde GA4, por versión (/api/lab-data)
+api/push.js           Avisos del reto: guardar y quitar la dirección anónima del navegador (/api/push)
+api/push-cron.js      Envío diario de los avisos (tarea de Vercel, en vercel.json)
+api/_push.js          Lógica de los avisos; api/_webpush.js firma y cifra los avisos sin dependencias
 api/_store.js         Upstash Redis por REST (en local y en tests, en memoria)
 middleware.js         Sirve sala.html cuando el enlace lleva ?sala= (tarjeta de WhatsApp)
 tests/unit/           Tests del motor, partida, servidor, configuración, temas, secretos… (node:test)
@@ -61,7 +66,7 @@ scripts/serve.js      Servidor local con las mismas cabeceras que vercel.json
 scripts/tokens.js     Exporta tokens.css a docs/tokens.json, formato W3C (npm run tokens)
 scripts/config-doc.js Genera docs/CONFIG.md desde public/js/config.js (npm run config)
 scripts/og-image.js   Genera public/og.png desde scripts/og-card.html (npm run og)
-scripts/invite-page.js Genera public/sala.html al publicar (no se sube al repo)
+scripts/invite-page.js Genera public/sala.html y public/reto.html al publicar (no se sube al repo)
 scripts/online-report.js Embudo y salud del juego en línea desde los contadores del servidor
 old-references/       Versiones históricas del juego (no se publican)
 ```
@@ -85,6 +90,8 @@ Lo que se guarda en el dispositivo (`localStorage`), sin datos fuera del navegad
 | `oso.install.v1`  | `dismissed` si se pulsó «No, gracias» en «📲 Instalar»                   |
 | `oso.secretos.v1` | Secretos ya contados, partidas contadas y día del último secreto         |
 | `oso.online.v1`   | Sala en línea y token del asiento, para volver tras recargar             |
+| `oso.daily.v1`    | Resultado de cada reto del día y días seguidos (los últimos 60 días)     |
+| `oso.push.v1`     | Si ya se preguntó por los avisos del reto                                |
 
 ## Desarrollo
 

@@ -44,6 +44,9 @@ baja ya el 5×5 a 1:15, o se acepta que en familia gusta jugar sin prisa y se ba
 - **Decidido (JoseLuis, 19-10-2026):** cada OSO da la mitad de tiempo, 5 s en vez de 10
   (`clock.bonusSeconds`, en la 4.3.0). Con menos tiempo extra, más partidas deberían acabar por
   tiempo. Revisar el porcentaje en una o dos semanas antes de tocar los relojes de cada tablero.
+- **Datos (24-10-2026):** desde la 4.3.0 (20-10), 5 de 31 partidas acaban por tiempo (16 %); en 28
+  días, 16 de 128 (12,5 %). Sube, pero lejos del 50 %. Falta que JoseLuis decida el objetivo: con el
+  20-25 % propuesto, bastaría con esperar otra semana; con el 50 %, habría que bajar los relojes.
 
 ## Reloj con la pestaña dormida (16)
 
