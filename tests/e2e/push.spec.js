@@ -106,12 +106,12 @@ test('the 🔔 notice is offered once, after the first reto, and can be turned o
   await playReto(page);
   const ask = page.locator('#pushAsk');
   await expect(ask).toBeVisible();
-  await expect(page.locator('#pushText')).toContainText('18:00');
+  await expect(page.locator('#pushText')).toContainText('7:00');
   await expect(page.locator('#feedbackAsk')).toBeHidden();
   await expect(page.locator('#installAsk')).toBeHidden();
   await page.click('#pushYes');
   await expect(page.locator('#pushText')).toHaveText(
-    '🔔 ¡Hecho! Te aviso a las 18:00 cuando haya reto nuevo.',
+    '🔔 ¡Hecho! Te aviso a las 7:00 cuando haya reto nuevo.',
   );
   expect(server[0]).toEqual({
     subscription: { endpoint: 'https://fcm.googleapis.com/fcm/send/test', keys: expect.any(Object) },

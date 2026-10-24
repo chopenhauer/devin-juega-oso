@@ -20,7 +20,7 @@ export const WEEK = [
   { size: 6, difficulty: 'easy' },
 ];
 
-// 'YYYY-MM-DD' of the reto being played at `date`. Each one starts at `startHour` in Madrid (7:00),
+// 'YYYY-MM-DD' of the reto being played at `date`. Each one starts at `startHour` in Madrid (2:00),
 // so before that it is still the previous day's.
 export function dayKey(date = new Date(), startHour = GAME.daily.startHour) {
   const parts = new Intl.DateTimeFormat('en-CA', {

@@ -17,14 +17,14 @@ import {
 import { newMatch, place, streaks, sos } from '../../public/js/match.js';
 
 test('the day is the date in Madrid, and the reto’s number is the day of the year', () => {
-  // Each reto starts at 7:00 in Madrid (UTC+2 in summer, UTC+1 in winter).
-  assert.equal(dayKey(new Date('2026-10-24T04:59:00Z')), '2026-10-23');
-  assert.equal(dayKey(new Date('2026-10-24T05:00:00Z')), '2026-10-24');
+  // Each reto starts at 2:00 in Madrid (UTC+2 in summer, UTC+1 in winter).
+  assert.equal(dayKey(new Date('2026-10-23T23:59:00Z')), '2026-10-23');
+  assert.equal(dayKey(new Date('2026-10-24T00:00:00Z')), '2026-10-24');
   assert.equal(dayKey(new Date('2026-10-24T22:01:00Z')), '2026-10-24');
-  assert.equal(dayKey(new Date('2026-10-26T05:59:00Z')), '2026-10-25');
-  assert.equal(dayKey(new Date('2026-10-26T06:00:00Z')), '2026-10-26');
-  assert.equal(dayKey(new Date('2027-01-01T05:30:00Z')), '2026-12-31');
-  assert.equal(dayKey(new Date('2027-01-01T06:30:00Z')), '2027-01-01');
+  assert.equal(dayKey(new Date('2026-10-26T00:59:00Z')), '2026-10-25');
+  assert.equal(dayKey(new Date('2026-10-26T01:00:00Z')), '2026-10-26');
+  assert.equal(dayKey(new Date('2027-01-01T00:30:00Z')), '2026-12-31');
+  assert.equal(dayKey(new Date('2027-01-01T01:30:00Z')), '2027-01-01');
   assert.equal(dayKey(new Date('2026-10-24T22:01:00Z'), 0), '2026-10-25');
   assert.equal(dailyNumber('2026-01-01'), 1);
   assert.equal(dailyNumber('2026-10-24'), 297);
@@ -104,12 +104,16 @@ test('only the first game of each day counts, and the streak counts days in a ro
   assert.deepEqual(Object.keys(s.results), ['2027-02-01']);
 });
 
-test('the next challenge comes at 7:00 in Madrid, and /reto is its address', () => {
-  assert.equal(msToNext(new Date('2026-10-24T04:00:00Z')), 3600000);
-  assert.equal(msToNext(new Date('2026-10-24T22:00:00Z')), 8 * 3600000);
-  // The clocks go back on 25-10 at 3:00: that night has an extra hour, and 7:00 is then 6:00 UTC.
-  assert.equal(msToNext(new Date('2026-10-25T05:30:00Z')), 30 * 60000);
-  assert.equal(msToNext(new Date('2026-10-25T22:00:00Z')), 8 * 3600000);
+const DAY_PLUS_HOUR = 25 * 3600000;
+
+test('the next challenge comes at 2:00 in Madrid, and /reto is its address', () => {
+  assert.equal(msToNext(new Date('2026-10-23T23:00:00Z')), 3600000);
+  assert.equal(msToNext(new Date('2026-10-24T22:00:00Z')), 2 * 3600000);
+  // The clocks go back on 25-10 at 3:00, so 2:00-3:00 happens twice; the reto changes the first time.
+  assert.equal(msToNext(new Date('2026-10-25T00:30:00Z')), DAY_PLUS_HOUR - 30 * 60000);
+  assert.equal(msToNext(new Date('2026-10-25T22:00:00Z')), 3 * 3600000);
+  // They go forward on 28-03 at 2:00, so there is no 2:00 that day: the reto changes at 3:00.
+  assert.equal(msToNext(new Date('2027-03-28T00:30:00Z')), 30 * 60000);
   for (const p of ['/reto', '/reto/', '/reto.html']) assert.ok(isDailyPath(p), p);
   for (const p of ['/', '/retos', '/sala']) assert.ok(!isDailyPath(p), p);
 });

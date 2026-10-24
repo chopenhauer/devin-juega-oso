@@ -1,6 +1,7 @@
 # Reto del día (23)
 
-- **Estado:** Hecho en 4.4.0 (reto), 4.5.0 (avisos y cambio a las 7:00) y 4.5.1 (un toque) ·
+- **Estado:** Hecho en 4.4.0 (reto), 4.5.0 (avisos), 4.5.1 (un toque) y 4.5.2 (reto a las 2:00 y aviso a
+  las 7:00) ·
   medir: **ahora (2.º)**
 - **Grupo:** [Llegar, volver y compartir](../ROADMAP.md#4-llegar-volver-y-compartir)
 - **Valor / esfuerzo** (estimados por Devin): Alto / Medio
@@ -26,8 +27,7 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
     línea dice el resultado y cuánto falta: «🗓️ Reto n.º 297: 7 a 3 · otro en 21 h».
 - **El mismo para todo el mundo, sin servidor:** todo sale de la fecha en Madrid
   (`public/js/daily.js`), así que cada móvil calcula el mismo reto por su cuenta, también sin
-  conexión. Cambia a las 7:00 de Madrid (`daily.startHour`; antes de esa hora sigue el del día
-  anterior, JoseLuis, 24-10-2026).
+  conexión. Cambia a las 2:00 de Madrid (`daily.startHour`; antes de esa hora sigue el del día anterior. En la 4.5.0 eran las 7:00 y en la 4.5.2 pasó a las 2:00, JoseLuis, 24-10-2026).
   - **Número:** el día del año (el 24 de octubre es el n.º 297), siempre con la fecha al lado, para
     que no parezca que el reto acaba de empezar (JoseLuis, 24-10-2026).
   - **Tablero y nivel según el día:** 5×5 de lunes a viernes (Fácil el lunes, el miércoles y el
@@ -56,9 +56,7 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
 - **Cuándo se pregunta:** solo al acabar el primer reto del día y una sola vez («🔔 ¿Te aviso cuando
   haya reto nuevo?»). Se quita o se vuelve a poner en el menú, en «🔔 Avisos del reto». En el iPhone
   solo funciona con OSO en la pantalla de inicio; si no, no se pregunta.
-- **Cuándo llega:** como mucho uno al día, a las 18:00 de Madrid para todo el mundo (`push.hour`), y
-  solo a quien aún no ha jugado el reto de ese día. La tarea de Vercel se lanza a las 16 y a las 17
-  UTC (verano e invierno) y en el plan gratuito puede llegar hasta 59 minutos tarde. Al tocarlo se
+- **Cuándo llega:** como mucho uno al día, a las 7:00 de Madrid para todo el mundo (`push.hour`, 4.5.2; en la 4.5.0 eran las 18:00), y solo a quien aún no ha jugado el reto de ese día. La tarea de Vercel se lanza a las 5 y a las 6 UTC (verano e invierno) y en el plan gratuito puede llegar hasta 59 minutos tarde. Al tocarlo se
   abre `/reto?utm_source=push&utm_medium=notification&utm_campaign=reto_del_dia`.
 - **Comprobado y por comprobar:** están probados la API, el cifrado, que la tarea rechaza las
   llamadas sin su clave y el aviso que enseña el service worker. Todavía no se ha visto llegar un

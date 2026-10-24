@@ -444,7 +444,7 @@
   "push.title": "🗓️ Reto del día n.º {number}",
   "push.body": "{size}×{size} contra la máquina en {level}. Aún no lo has jugado: ¿le ganas?",
   "pushTitle": "🔔 ¿Te aviso cuando haya reto nuevo?",
-  "pushText": "Un aviso al día a las 18:00, solo si aún no lo has jugado. Se quita desde el menú.",
+  "pushText": "Un aviso al día a las 7:00, solo si aún no lo has jugado. Se quita desde el menú.",
   "push.text": "Un aviso al día a las {hour}:00, solo si aún no lo has jugado. Se quita desde el menú.",
   "pushYes": "Avísame",
   "pushNo": "No, gracias",

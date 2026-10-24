@@ -6,8 +6,8 @@
   "outputDirectory": "public",
   "cleanUrls": true,
   "crons": [
-    { "path": "/api/push-cron", "schedule": "0 16 * * *" },
-    { "path": "/api/push-cron", "schedule": "0 17 * * *" }
+    { "path": "/api/push-cron", "schedule": "0 5 * * *" },
+    { "path": "/api/push-cron", "schedule": "0 6 * * *" }
   ],
   "headers": [
     {

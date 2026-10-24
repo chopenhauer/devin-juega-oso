@@ -55,10 +55,10 @@ export const GAME = freeze({
   },
   daily: {
     letters: 4,
-    startHour: 7,
+    startHour: 2,
   },
   push: {
-    hour: 18,
+    hour: 7,
   },
   secrets: {
     gamesPerSecret: 2,
@@ -158,7 +158,7 @@ export const HELP = {
   'daily.letters':
     'Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío.',
   'push.hour':
-    'Hora de Madrid (0-23) a la que sale el aviso del reto del día, solo a quien lo ha pedido y aún no lo ha jugado. Vercel lo lanza a las 16 y 17 UTC (verano e invierno), así que solo valen las 17, 18 o 19 sin tocar vercel.json; en el plan gratuito puede llegar hasta 59 minutos tarde.',
+    'Hora de Madrid (0-23) a la que sale el aviso del reto del día, solo a quien lo ha pedido y aún no lo ha jugado. Vercel lo lanza a las 5 y 6 UTC (verano e invierno), así que sin tocar vercel.json solo vale la 7 todo el año (la 6 solo en invierno y la 8 solo en verano); en el plan gratuito puede llegar hasta 59 minutos tarde.',
   'secrets.gamesPerSecret':
     'Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día.',
   'secrets.spotlightMs':

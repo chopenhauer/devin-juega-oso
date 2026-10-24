@@ -17,6 +17,17 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.5.2] - 2026-10-24
+
+**🕑 El reto cambia a las 2:00 y el aviso sale a las 7:00**
+
+- El reto de cada día empieza a las 2:00 de Madrid en vez de a las 7:00 (`daily.startHour`), y la
+  cuenta atrás, el número y los días seguidos cambian a esa hora (JoseLuis, 24-10-2026).
+- El aviso del reto sale a las 7:00 de Madrid en vez de a las 18:00 (`push.hour`). La tarea de Vercel
+  pasa a las 5 y 6 UTC (verano e invierno) y en el plan gratuito puede llegar hasta las 8:00.
+- Roadmap repriorizado con los datos del 24-10-2026 e idea nueva 32: que cada persona elija la hora de
+  su aviso.
+
 ## [4.5.1] - 2026-10-24
 
 **🗓️ El reto, en un toque** ([f1d98df](https://github.com/chopenhauer/devin-juega-oso/commit/f1d98df1362451ba889dcf6de92128314f8c5bf9))

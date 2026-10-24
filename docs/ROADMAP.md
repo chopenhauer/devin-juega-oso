@@ -21,7 +21,7 @@ Lo ya publicado, versión a versión y con sus decisiones, está en el [CHANGELO
    acaban por tiempo (16 %), frente al 11 % de antes. Falta que JoseLuis decida el objetivo; la
    propuesta de Devin es el 20-25 %.
 4. **[Elegir la hora del aviso](ideas/hora-del-aviso.md) (32):** idea nueva de JoseLuis: que cada
-   persona elija a qué hora quiere que le avisen (hoy, las 18:00 para todo el mundo). Va después de
+   persona elija a qué hora quiere que le avisen (desde la 4.5.2, las 7:00 para todo el mundo). Va después de
    medir los avisos, porque solo vale la pena si la gente los acepta.
 5. **[Hall of fame local](ideas/hall-of-fame.md) (3):** sube desde «Siguiente». 18 de los 28 toques en
    la pantalla final son «Revancha»: se encadenan partidas, y un récord en el móvil da algo que batir.

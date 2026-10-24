@@ -1,7 +1,7 @@
 {
   "name": "devin-juega-oso",
   "private": true,
-  "version": "4.5.1",
+  "version": "4.5.2",
   "license": "MIT",
   "description": "OSO, el juego de Julia: juego web estático de O y S.",
   "type": "module",

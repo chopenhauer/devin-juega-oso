@@ -8,9 +8,9 @@ const b64 = (buf) => Buffer.from(buf).toString('base64url');
 const ecdh = createECDH('prime256v1');
 const keys = { p256dh: b64(ecdh.generateKeys()), auth: b64(randomBytes(16)) };
 const sub = (n = 1, host = 'fcm.googleapis.com') => ({ endpoint: `https://${host}/fcm/send/abc${n}`, keys });
-// 24-10-2026 18:10 in Madrid (summer time, UTC+2) and 26-10-2026 18:10 (winter time, UTC+1).
-const SUMMER = Date.UTC(2026, 9, 24, 16, 10);
-const WINTER = Date.UTC(2026, 9, 26, 17, 10);
+// 24-10-2026 7:10 in Madrid (summer time, UTC+2) and 26-10-2026 7:10 (winter time, UTC+1).
+const SUMMER = Date.UTC(2026, 9, 24, 5, 10);
+const WINTER = Date.UTC(2026, 9, 26, 6, 10);
 
 function setup(now = SUMMER) {
   const store = memoryStore();
@@ -61,7 +61,7 @@ function cron(store, now, send) {
     (await handle(new Request('http://x/api/push-cron', { headers: { authorization: auth } }))).json();
 }
 
-test('the daily notice goes once, at 18:00 Madrid, to who has not played today', async () => {
+test('the daily notice goes once, at 7:00 Madrid, to who has not played today', async () => {
   const s = setup();
   await s.post({ subscription: sub(1) });
   await s.post({ subscription: sub(2), played: '2026-10-24' });

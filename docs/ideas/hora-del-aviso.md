@@ -7,7 +7,7 @@
 ## Qué problema resuelve
 
 El aviso del [reto del día](reto-del-dia.md) (4.5.0) sale para todo el mundo a la misma hora, las
-18:00 de Madrid (`push.hour`). A cada persona le va bien una hora distinta: antes del cole, al salir
+7:00 de Madrid (`push.hour`, desde la 4.5.2; antes, las 18:00). A cada persona le va bien una hora distinta: antes del cole, al salir
 del trabajo, después de cenar… Idea de JoseLuis (24-10-2026): que cada persona pueda elegir a qué hora
 quiere que le avisen.
 
@@ -20,8 +20,8 @@ conviene ver cuántas personas aceptan el aviso (`push_optin`, `action=granted`)
 ## Propuesta
 
 - **Dónde se elige:** al aceptar el aviso («🔔 ¿Te aviso cuando haya reto nuevo?») y después en el
-  menú, en «🔔 Avisos del reto». Por defecto, las 18:00.
-- **Pocas horas, no un reloj:** 3 o 4 opciones fijas (por ejemplo, 8:00, 13:00, 18:00 y 21:00), para
+  menú, en «🔔 Avisos del reto». Por defecto, las 7:00.
+- **Pocas horas, no un reloj:** 3 o 4 opciones fijas (por ejemplo, 7:00, 13:00, 18:00 y 21:00), para
   que sea un toque y para que el servidor solo tenga que mandar avisos a esas horas.
 - **Servidor:** la suscripción guarda también la hora elegida (`api/_push.js`) y `/api/push-cron`
   manda, en cada ejecución, solo a quien eligió esa hora de Madrid y aún no ha jugado el reto.
@@ -29,8 +29,8 @@ conviene ver cuántas personas aceptan el aviso (`push_optin`, `action=granted`)
   vez al día y con hasta 59 minutos de retraso. Hacen falta dos entradas en `vercel.json` por cada
   hora (verano e invierno). Hay que comprobar cuántas tareas admite el plan; si no llega, una tarea
   programada de GitHub Actions puede llamar a `/api/push-cron` cada hora.
-- **Nunca antes del reto:** ninguna hora antes de las 7:00, cuando empieza el reto
-  (`daily.startHour`).
+- **Nunca antes del reto:** ninguna hora antes de que empiece el reto de ese día (`daily.startHour`,
+  hoy las 2:00).
 
 ## Decidido
 
