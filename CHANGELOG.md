@@ -25,12 +25,15 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   nivel del día (5×5 entre semana, 6×6 el fin de semana) y 4 letras ya puestas (`daily.letters`).
   Todo sale de la fecha en Madrid (`public/js/daily.js`), así que funciona sin conexión; la suerte de
   la máquina también es fija, y las mismas jugadas tienen la misma respuesta.
-- `/reto` abre el reto de hoy ya preparado, con su tarjeta para WhatsApp (`public/reto.html`). En la
-  bienvenida y en «¿Cómo queréis jugar?» sale la tarjeta «🗓️ Reto del día n.º …», que después dice
-  cómo quedó, cuánto falta para el siguiente y los días seguidos.
+- `/reto` es la landing propia del reto de hoy: número, fecha, el tablero con sus letras y «Jugar el
+  reto →», con su tarjeta para WhatsApp (`public/reto.html`). La landing de siempre lleva a ella con
+  el botón 🗓️ junto al 🌐 y una línea discreta en la bienvenida y en «¿Cómo queréis jugar?». Las dos
+  dicen después cómo quedó y cuánto falta para el siguiente.
+- El número del reto es el día del año (el 24 de octubre, n.º 297), siempre con la fecha.
 - Solo cuenta la primera partida del día. Al acabar, «Compartir» manda el resultado con el enlace a
   `/reto`, y la imagen lleva el número del reto.
-- **Decisión (JoseLuis, 24-10-2026):** que el reto tenga una dirección propia para compartirla.
+- **Decisiones (JoseLuis, 24-10-2026):** que el reto tenga una dirección y una landing propias, que la
+  landing de siempre solo lleve a él de forma discreta, y numerarlo por el día del año.
 - **Medición:** eventos `daily_start` y `daily_end` en GA4, y la entrada `daily` en los contadores
   del servidor.
 

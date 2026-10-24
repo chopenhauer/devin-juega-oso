@@ -305,7 +305,7 @@ const { timeFor } = Engine;
   );
   syncSound();
   // The 🎨 and 🔊 buttons live on the intro screens, up to choosing the number of players.
-  const THEME_STEPS = ['welcome', 'rules', 'mode'];
+  const THEME_STEPS = ['daily', 'welcome', 'rules', 'mode'];
   const syncThemeToggle = () => {
     const show = THEME_STEPS.includes(setup.dataset.step);
     if (!show) toggleThemeMenu(false);
@@ -313,6 +313,7 @@ const { timeFor } = Engine;
     soundToggle.classList.toggle('hidden', !show);
     shareToggle.classList.toggle('hidden', !show);
     q('onlineToggle').classList.toggle('hidden', !show);
+    q('dailyToggle').classList.toggle('hidden', !show || Daily.isDailyPath(location.pathname));
     syncSecretGift();
   };
   // Secrets: a 🎁 on the first screens (for coming back) or at the end of a game (for playing on)
@@ -1363,6 +1364,7 @@ const { timeFor } = Engine;
       size,
       difficulty,
       daily: dailyOn() && daily.number,
+      dailyDate: dailyOn() && Daily.dateLabel(daily.key, false),
     };
     q('replayOpen').classList.toggle('hidden', !history.length);
     fitEndLabels();
@@ -2622,6 +2624,7 @@ const { timeFor } = Engine;
     q('challengeNote').classList.toggle(
       'hidden',
       !target ||
+        setup.dataset.step === 'daily' ||
         gameMode !== 'solo' ||
         +q('sizeSelect').value !== target.size ||
         difficulty !== target.difficulty,

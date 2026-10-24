@@ -8,7 +8,7 @@ import { setupStep, startFunnel } from './funnel.js';
 
 const STORAGE_KEY = 'oso.prefs.v1';
 const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
-const NO_NEXT = new Set(['welcome', 'board']);
+const NO_NEXT = new Set(['daily', 'welcome', 'board']);
 const SWIPE_PX = GAME.screen.swipePx;
 
 const $ = (id) => document.getElementById(id);
@@ -146,7 +146,7 @@ function show(step, slideIndex = 0) {
   steps.forEach((s) => s.classList.toggle('inactive', s.dataset.step !== step));
   setup.dataset.step = step;
   setSetupMode(modeNow());
-  $('stepBack').classList.toggle('invisible', step === 'welcome');
+  $('stepBack').classList.toggle('invisible', step === 'welcome' || step === 'daily');
   $('stepBack').textContent = step === 'mode' ? t('stepBack.rules') : '←';
   $('stepBack').setAttribute('aria-label', t(step === 'mode' ? 'ruleCarousel.label' : 'stepBack.label'));
   $('stepNext').classList.toggle('invisible', NO_NEXT.has(step));
@@ -185,6 +185,7 @@ function back() {
   const step = setup.dataset.step;
   if (step === 'rules' && slide > 0) setSlide(slide - 1);
   else if (step === 'mode') show('rules');
+  else if (step === 'players' && daily) show('daily');
   else show(neighbour(step, -1));
 }
 
@@ -259,34 +260,57 @@ applyPrefs(prefs);
 const daily = Daily.isDailyPath(location.pathname) ? Daily.dailyChallenge() : null;
 const challenge = daily ?? parseChallenge(location.search);
 startFunnel(daily ? 'daily' : challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
-if (challenge) {
+function setChallenge() {
   $('modeSolo').click();
   $(difficultyId(challenge.difficulty)).click();
   $('sizeSelect').value = String(challenge.size);
   show('players');
-} else show(prefs.seenIntro ? 'mode' : 'welcome');
+}
+$('dailyPlay').addEventListener('click', setChallenge);
+$('dailyHome').addEventListener('click', () => location.assign('/'));
+if (daily) show('daily');
+else if (challenge) setChallenge();
+else show(prefs.seenIntro ? 'mode' : 'welcome');
 
-// The reto del día card on the welcome and mode screens: today's, or how it went and when the next one comes.
-function dailyCard() {
+// Reto del día: its own landing on /reto, and a discreet line to it on the usual one.
+function dailyTexts() {
   const today = Daily.dailyChallenge();
   const state = Daily.readDaily();
   const done = state.results[today.key];
   const { h, m } = Daily.waitParts(Daily.msToNext());
   const wait = h ? t('daily.wait', { h, m }) : t('daily.wait_min', { m });
+  const line = done
+    ? t('daily.line_done', { number: today.number, mine: done.mine, theirs: done.theirs, wait })
+    : t('daily.line_new', { number: today.number });
+  document.querySelectorAll('.daily-link').forEach((a) => (a.textContent = line));
+  if (!daily) return;
   const streak = Daily.currentStreak(state, today.key);
-  const level = t(`summary.${today.difficulty}`);
-  const sub = done
-    ? t(done.won ? 'daily.card_won' : 'daily.card_lost', { mine: done.mine, theirs: done.theirs, wait })
-    : t('daily.card_new', { size: today.size, level });
-  document.querySelectorAll('.daily-card').forEach((card) => {
-    card.classList.toggle('done', !!done);
-    card.querySelector('.daily-title').textContent = t('daily.card_title', { number: today.number });
-    card.querySelector('.daily-sub').textContent = sub;
-    card.querySelector('.daily-streak').textContent = streak > 1 ? t('daily.streak', { count: streak }) : '';
-  });
+  $('dailyStatus').textContent = done
+    ? [
+        t(done.won ? 'daily.status_won' : 'daily.status_lost', { mine: done.mine, theirs: done.theirs }),
+        streak > 1 ? t('daily.streak', { count: streak }) : '',
+        t('daily.next', { wait }),
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : '';
+  $('dailyPlay').textContent = done ? t('daily.play_again') : t('daily.play');
 }
-dailyCard();
-setInterval(dailyCard, 60000);
-document
-  .querySelectorAll('.daily-card')
-  .forEach((card) => card.addEventListener('click', () => location.assign('/reto')));
+if (daily) {
+  $('dailyTitle').textContent = t('daily.title', { number: daily.number });
+  $('dailyDate').textContent = Daily.dateLabel(daily.key);
+  $('dailyLead').textContent = t('daily.lead', {
+    size: daily.size,
+    level: levelText(daily.difficulty),
+    letters: daily.preset.length,
+  });
+  const board = $('dailyBoard');
+  board.style.setProperty('--n', daily.size);
+  const letters = Array(daily.size * daily.size).fill('');
+  daily.preset.forEach(({ index, letter }) => (letters[index] = letter));
+  board.replaceChildren(
+    ...letters.map((letter) => Object.assign(document.createElement('span'), { textContent: letter })),
+  );
+}
+dailyTexts();
+setInterval(dailyTexts, 60000);

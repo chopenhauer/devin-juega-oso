@@ -5,8 +5,6 @@
 import { GAME } from './config.js';
 import { findNew, LETTERS } from './engine.js';
 
-// Reto n.º 1. Changing it renumbers every challenge.
-export const EPOCH = '2026-10-24';
 export const TIME_ZONE = 'Europe/Madrid';
 export const STORAGE_KEY = 'oso.daily.v1';
 const DAY_MS = 86400000;
@@ -32,7 +30,16 @@ export const dayKey = (date = new Date()) =>
   }).format(date);
 
 const utc = (key) => Date.UTC(+key.slice(0, 4), +key.slice(5, 7) - 1, +key.slice(8, 10));
-export const dailyNumber = (key) => Math.round((utc(key) - utc(EPOCH)) / DAY_MS) + 1;
+// The reto's number is the day of the year (24 October = 297), so it never looks newly started.
+export const dailyNumber = (key) => Math.round((utc(key) - Date.UTC(+key.slice(0, 4), 0, 1)) / DAY_MS) + 1;
+// «lunes, 26 de octubre» (or «26 de octubre» without the weekday).
+export const dateLabel = (key, weekday = true, locale = 'es') =>
+  new Intl.DateTimeFormat(locale, {
+    weekday: weekday ? 'long' : undefined,
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  }).format(new Date(utc(key)));
 export const addDays = (key, n) => new Date(utc(key) + n * DAY_MS).toISOString().slice(0, 10);
 
 // Small seeded generator (mulberry32): the same seed always gives the same numbers.

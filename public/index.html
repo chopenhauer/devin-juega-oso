@@ -84,6 +84,14 @@
     >
       🌐
     </button>
+    <a
+      data-i18n-attr="aria-label:daily.toggle_label"
+      id="dailyToggle"
+      class="daily-toggle"
+      href="/reto"
+      aria-label="Reto del día"
+      >🗓️</a
+    >
     <p id="onlineToast" class="online-toast hidden" role="status" aria-live="polite"></p>
     <div id="rivalBanner" class="rival-banner hidden" role="status" aria-live="polite">
       <p id="rivalBannerText"></p>
@@ -117,6 +125,19 @@
         <div id="setupScreen" class="setup">
           <p id="challengeNote" class="challenge-note hidden" role="status"></p>
           <div id="setupSteps" class="setup-steps">
+            <div class="step inactive" data-step="daily">
+              <h2 id="dailyTitle" class="step-title"></h2>
+              <p id="dailyDate" class="daily-date"></p>
+              <div id="dailyBoard" class="daily-board" aria-hidden="true"></div>
+              <p id="dailyLead" class="step-lead"></p>
+              <p id="dailyStatus" class="daily-status"></p>
+              <div class="intro-actions">
+                <button id="dailyPlay" class="primary" type="button"></button
+                ><button data-i18n="daily.home" id="dailyHome" class="secondary" type="button">
+                  Ir a OSO
+                </button>
+              </div>
+            </div>
             <div class="step" data-step="welcome">
               <div id="brandIcon" class="brand-bear" aria-hidden="true">🐻</div>
               <div data-i18n-attr="aria-label:welcome.oso.label" class="brand" aria-label="OSO">
@@ -127,10 +148,7 @@
                 Un juego de letras para dos jugadores, o contra la máquina: coloca O y S en el tablero y forma
                 la palabra OSO más veces que tu rival.
               </p>
-              <button id="dailyWelcome" class="daily-card" type="button">
-                <span class="daily-title"></span><span class="daily-sub"></span
-                ><span class="daily-streak"></span>
-              </button>
+              <a id="dailyWelcome" class="daily-link" href="/reto"></a>
               <div class="intro-actions">
                 <button data-i18n="introStart" id="introStart" class="primary" type="button">
                   Cómo se juega →</button
@@ -303,10 +321,7 @@
                 <div class="brand"><span>O</span><span>S</span><span>O</span></div>
                 <div data-i18n="common.conecta_forma_gana" class="tagline">Conecta · forma · gana</div>
               </div>
-              <button id="dailyMode" class="daily-card" type="button">
-                <span class="daily-title"></span><span class="daily-sub"></span
-                ><span class="daily-streak"></span>
-              </button>
+              <a id="dailyMode" class="daily-link" href="/reto"></a>
               <h2 data-i18n="mode.como_quereis_jugar" class="step-title">¿Cómo queréis jugar?</h2>
               <div
                 data-i18n-attr="aria-label:mode.modo_de_juego.label"

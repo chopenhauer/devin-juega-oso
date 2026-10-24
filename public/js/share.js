@@ -22,7 +22,7 @@ export function shareText(result = null) {
   // Same points but a winner: the streaks broke the tie.
   const tie = a === b;
   if (mode === 'solo' && result.daily) {
-    const params = { number: result.daily, mine: a, theirs: b };
+    const params = { number: result.daily, date: result.dailyDate, mine: a, theirs: b };
     return t(
       winner === 0 ? 'share.daily.won' : winner === 1 ? 'share.daily.lost' : 'share.daily.draw',
       params,

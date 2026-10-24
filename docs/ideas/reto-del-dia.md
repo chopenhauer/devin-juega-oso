@@ -12,13 +12,18 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
 
 ## Cómo funciona (4.4.0)
 
-- **Dirección propia:** [juegaoso.com/reto](https://juegaoso.com/reto) abre siempre el reto de hoy,
-  con el juego ya preparado: solo queda poner nombre y avatar. Tiene su propia tarjeta para WhatsApp
-  (`public/reto.html`, generada por `scripts/invite-page.js`). Pidió la dirección JoseLuis
-  (24-10-2026).
+- **Dos experiencias en paralelo** (JoseLuis, 24-10-2026):
+  - **[juegaoso.com/reto](https://juegaoso.com/reto)** es la landing propia del reto de hoy: número,
+    fecha, el tablero con sus letras, en qué consiste y «Jugar el reto →», que deja el juego
+    preparado (solo queda poner nombre y avatar). Tiene su propia tarjeta para WhatsApp
+    (`public/reto.html`, generada por `scripts/invite-page.js`).
+  - **La landing de siempre (`/`)** solo lleva al reto de forma discreta: el botón 🗓️ junto al 🌐 de
+    jugar en línea y una línea pequeña en la bienvenida y en «¿Cómo queréis jugar?».
 - **El mismo para todo el mundo, sin servidor:** todo sale de la fecha en Madrid
   (`public/js/daily.js`), así que cada móvil calcula el mismo reto por su cuenta, también sin
-  conexión. Cambia a medianoche de Madrid. El reto n.º 1 es el 24-10-2026.
+  conexión. Cambia a medianoche de Madrid.
+  - **Número:** el día del año (el 24 de octubre es el n.º 297), siempre con la fecha al lado, para
+    que no parezca que el reto acaba de empezar (JoseLuis, 24-10-2026).
   - **Tablero y nivel según el día:** 5×5 de lunes a viernes (Fácil el lunes, el miércoles y el
     viernes; Difícil el martes y el jueves) y 6×6 el fin de semana (Fácil el sábado y Difícil el
     domingo). Siempre contra la máquina.
@@ -26,9 +31,8 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
     SOS ni dejan un OSO a punto, así que no dan puntos a nadie, tampoco después de un 🛟.
   - **La suerte de la máquina, fija:** si dos personas hacen las mismas jugadas, la máquina responde
     igual.
-- **Dónde se ve:** una tarjeta «🗓️ Reto del día n.º …» en la bienvenida y en «¿Cómo queréis jugar?».
-  Si ya lo has jugado, dice cómo quedó y cuánto falta para el siguiente; con 2 días seguidos o más,
-  también la racha.
+- **Si ya lo has jugado:** la landing y la línea dicen cómo quedó y cuánto falta para el siguiente;
+  la landing, con 2 días seguidos o más, también la racha.
 - **Un intento al día:** solo cuenta la primera partida terminada del día; se puede repetir, pero no
   cambia el resultado. Se guarda en el móvil (`oso.daily.v1`, los últimos 60 días).
 - **Al acabar:** la pantalla final de siempre, con «🗓️ ¡Reto del día n.º … superado!» (o «¡casi!») y

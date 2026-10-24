@@ -1880,7 +1880,16 @@ body.sea-theme::before {
 }
 /* The modal lives inside .app's stacking context, so hide the fixed chrome above it. */
 body:has(#helpModal:not(.hidden))
-  :is(.theme-toggle, .sound-toggle, .share-toggle, .online-toggle, .theme-menu, .credits, .consent) {
+  :is(
+    .theme-toggle,
+    .sound-toggle,
+    .share-toggle,
+    .online-toggle,
+    .daily-toggle,
+    .theme-menu,
+    .credits,
+    .consent
+  ) {
   display: none;
 }
 .help-dialog {
@@ -2385,35 +2394,46 @@ body:has(#helpModal:not(.hidden))
   line-height: 1.25;
   text-align: center;
 }
-.daily-card {
-  display: grid;
-  gap: var(--space-1);
+.daily-link {
   justify-self: center;
-  width: 100%;
-  max-width: 20rem;
   margin: 0 auto var(--space-2);
-  padding: var(--space-2) var(--space-4);
-  border: 2px solid var(--accent);
-  border-radius: var(--r-md);
-  background: transparent;
   color: inherit;
-  font: inherit;
+  font-size: var(--fs-sm);
+  opacity: 0.8;
   text-align: center;
-  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
-.daily-title {
+.daily-date {
+  margin: 0;
   color: var(--accent);
   font-weight: var(--fw-bold);
+  text-align: center;
 }
-.daily-sub,
-.daily-streak {
+.daily-board {
+  display: grid;
+  grid-template-columns: repeat(var(--n, 5), 1fr);
+  gap: 0.1875rem;
+  width: min(8.5rem, 40vw);
+  margin: var(--space-3) auto;
+}
+.daily-board span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  background: var(--blanco-a12);
+  color: var(--accent);
+  font-weight: var(--fw-bold);
   font-size: var(--fs-sm);
 }
-.daily-streak:empty {
-  display: none;
+.daily-status {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-sm);
+  text-align: center;
 }
-.daily-card.done {
-  border-style: dashed;
+.daily-status:empty {
+  display: none;
 }
 .challenge-note.hidden,
 .challenge-result.hidden {
@@ -3941,6 +3961,26 @@ body.legal-page {
   min-height: 2.75rem;
 }
 
+/* Reto del día: next to 🌐, it opens /reto. */
+.daily-toggle {
+  position: fixed;
+  top: max(0.75rem, env(safe-area-inset-top));
+  left: calc(max(0.75rem, env(safe-area-inset-left)) + 3.375rem);
+  z-index: var(--z-toolbar);
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--blanco-a12);
+  font-size: var(--fs-xl);
+  line-height: 1;
+  text-decoration: none;
+}
+.daily-toggle.hidden {
+  display: none;
+}
 /* Online 1 vs 1: the rival's card is the invite, then shows who joined. */
 .online-toggle {
   position: fixed;
@@ -3955,12 +3995,12 @@ body.legal-page {
   font-size: var(--fs-xl);
   line-height: 1;
 }
-body:has(#gameScreen:not(.hidden)) .online-toggle {
+body:has(#gameScreen:not(.hidden)) :is(.online-toggle, .daily-toggle) {
   display: none;
 }
 /* On the first steps (the guest's «Sala cerrada»), the notice takes the place of the top buttons. */
 body:has(.online-toast:not(.hidden), .secret-toast:not(.hidden))
-  :is(.theme-toggle, .sound-toggle, .share-toggle, .online-toggle, .theme-menu) {
+  :is(.theme-toggle, .sound-toggle, .share-toggle, .online-toggle, .daily-toggle, .theme-menu) {
   visibility: hidden;
 }
 .online-seat,

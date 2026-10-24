@@ -12,16 +12,20 @@ import {
   emptyDaily,
   msToNext,
   isDailyPath,
-  EPOCH,
+  dateLabel,
 } from '../../public/js/daily.js';
 import { newMatch, place, streaks, sos } from '../../public/js/match.js';
 
-test('the day is the date in Madrid, and reto n.º 1 is the first day', () => {
+test('the day is the date in Madrid, and the reto’s number is the day of the year', () => {
   assert.equal(dayKey(new Date('2026-10-24T21:59:00Z')), '2026-10-24');
   assert.equal(dayKey(new Date('2026-10-24T22:01:00Z')), '2026-10-25');
   assert.equal(dayKey(new Date('2026-12-31T23:30:00Z')), '2027-01-01');
-  assert.equal(dailyNumber(EPOCH), 1);
-  assert.equal(dailyNumber('2026-11-23'), 31);
+  assert.equal(dailyNumber('2026-01-01'), 1);
+  assert.equal(dailyNumber('2026-10-24'), 297);
+  assert.equal(dailyNumber('2026-12-31'), 365);
+  assert.equal(dailyNumber('2028-12-31'), 366);
+  assert.equal(dateLabel('2026-10-26'), 'lunes, 26 de octubre');
+  assert.equal(dateLabel('2026-10-26', false), '26 de octubre');
   assert.equal(addDays('2026-10-31', 1), '2026-11-01');
   assert.equal(addDays('2026-03-01', -1), '2026-02-28');
 });
@@ -30,7 +34,7 @@ test('every phone gets the same challenge for a day, and another one the next da
   const a = dailyChallenge('2026-10-26');
   assert.deepEqual(a, dailyChallenge('2026-10-26'));
   assert.notDeepEqual(a.preset, dailyChallenge('2026-10-27').preset);
-  assert.equal(a.number, 3);
+  assert.equal(a.number, 299);
   assert.deepEqual([a.size, a.difficulty], [5, 'easy']);
   assert.deepEqual([dailyChallenge('2026-10-24').size, dailyChallenge('2026-10-25').size], [6, 6]);
   const r1 = dailyRandom('2026-10-26');
@@ -40,7 +44,7 @@ test('every phone gets the same challenge for a day, and another one the next da
 
 test('the letters already placed never score nor leave a point ready to take', () => {
   for (let d = 0; d < 120; d++) {
-    const { size, preset } = dailyChallenge(addDays(EPOCH, d));
+    const { size, preset } = dailyChallenge(addDays('2026-10-24', d));
     assert.equal(preset.length, 4);
     assert.equal(new Set(preset.map((p) => p.index)).size, 4);
     const board = Array(size * size).fill('');
