@@ -20,14 +20,21 @@ export const WEEK = [
   { size: 6, difficulty: 'easy' },
 ];
 
-// 'YYYY-MM-DD' of `date` in Madrid.
-export const dayKey = (date = new Date()) =>
-  new Intl.DateTimeFormat('en-CA', {
+// 'YYYY-MM-DD' of the reto being played at `date`. Each one starts at `startHour` in Madrid (7:00),
+// so before that it is still the previous day's.
+export function dayKey(date = new Date(), startHour = GAME.daily.startHour) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
     timeZone: TIME_ZONE,
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
-  }).format(date);
+    hour: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+  const p = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+  const key = `${p.year}-${p.month}-${p.day}`;
+  return +p.hour < startHour ? addDays(key, -1) : key;
+}
 
 const utc = (key) => Date.UTC(+key.slice(0, 4), +key.slice(5, 7) - 1, +key.slice(8, 10));
 // The reto's number is the day of the year (24 October = 297), so it never looks newly started.
@@ -109,7 +116,7 @@ export function recordDaily(state, key, { mine, theirs, won }) {
 export const currentStreak = (state, today) =>
   state.last === today || state.last === addDays(today, -1) ? state.streak : 0;
 
-// Milliseconds until the next challenge (midnight in Madrid).
+// Milliseconds until the next challenge (GAME.daily.startHour in Madrid).
 export function msToNext(now = new Date()) {
   const today = dayKey(now);
   let lo = now.getTime();

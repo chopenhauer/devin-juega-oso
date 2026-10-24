@@ -88,6 +88,7 @@ Cómo cambiar uno:
 | Parámetro | Valor | Qué hace |
 | --- | --- | --- |
 | `daily.letters` | 4 | Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío. |
+| `daily.startHour` | 7 | Hora de Madrid (0-23) a la que empieza el reto de cada día. Antes de esa hora sigue el del día anterior (con su número, su tablero y la cuenta atrás). |
 
 ## 🔔 Avisos del reto
 

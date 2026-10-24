@@ -152,7 +152,7 @@ test('only the first game counts: the result stays on the landing and the share 
 
   await page.goto('/reto');
   await expect(page.locator('#dailyStatus')).toContainText(`${mine} a ${theirs}`);
-  await expect(page.locator('#dailyStatus')).toContainText('el siguiente, en 14 h 0 min');
+  await expect(page.locator('#dailyStatus')).toContainText('el siguiente, en 21 h 0 min');
   await expect(page.locator('#dailyPlay')).toHaveText('Repetir el reto');
   await page.click('#dailyPlay');
   await expect(page.locator('#challengeNote')).toContainText(
@@ -168,7 +168,7 @@ test('only the first game counts: the result stays on the landing and the share 
 
   await page.goto('/');
   await expect(page.locator('#dailyWelcome')).toHaveText(
-    `🗓️ Reto n.º 299: ${mine} a ${theirs} · el siguiente, en 14 h 0 min`,
+    `🗓️ Reto n.º 299: ${mine} a ${theirs} · el siguiente, en 21 h 0 min`,
   );
 });
 

@@ -55,6 +55,7 @@ export const GAME = freeze({
   },
   daily: {
     letters: 4,
+    startHour: 7,
   },
   push: {
     hour: 18,
@@ -152,6 +153,8 @@ export const HELP = {
   'online.roomsWindowMinutes': 'Ventana del límite anterior.',
   'online.roomHours': 'Horas que se guarda una sala con partida empezada (para revanchas y reconexión).',
   'online.closedRoomHours': 'Horas que se guarda una sala cerrada, para avisar a quien abra el enlace viejo.',
+  'daily.startHour':
+    'Hora de Madrid (0-23) a la que empieza el reto de cada día. Antes de esa hora sigue el del día anterior (con su número, su tablero y la cuenta atrás).',
   'daily.letters':
     'Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío.',
   'push.hour':

@@ -22,7 +22,8 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
     jugar en línea y una línea pequeña bajo «Saltar e ir a jugar» y en «¿Cómo queréis jugar?».
 - **El mismo para todo el mundo, sin servidor:** todo sale de la fecha en Madrid
   (`public/js/daily.js`), así que cada móvil calcula el mismo reto por su cuenta, también sin
-  conexión. Cambia a medianoche de Madrid.
+  conexión. Cambia a las 7:00 de Madrid (`daily.startHour`; antes de esa hora sigue el del día
+  anterior, JoseLuis, 24-10-2026).
   - **Número:** el día del año (el 24 de octubre es el n.º 297), siempre con la fecha al lado, para
     que no parezca que el reto acaba de empezar (JoseLuis, 24-10-2026).
   - **Tablero y nivel según el día:** 5×5 de lunes a viernes (Fácil el lunes, el miércoles y el

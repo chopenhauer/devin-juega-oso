@@ -30,6 +30,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - Sin dependencias: cifrado y firma VAPID con `node:crypto` (`api/_webpush.js`). Una tarea diaria de
   Vercel (`/api/push-cron`, a las 16 y 17 UTC por el horario de verano e invierno) manda los avisos y
   borra las direcciones que ya no valen.
+- **El reto cambia a las 7:00 de Madrid** en vez de a medianoche (`daily.startHour`). Hasta esa hora
+  sigue el del día anterior, con su número, su tablero y la cuenta atrás.
 - **Límite:** en Android funciona en Chrome sin instalar; en iPhone y iPad solo con OSO en la pantalla
   de inicio. En el plan gratuito de Vercel el aviso puede llegar hasta 59 minutos tarde.
 - **Medición:** evento `push_optin` en GA4 (`action`: shown, granted, denied, default, no, off, error;
