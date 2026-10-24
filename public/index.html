@@ -131,6 +131,20 @@
               <div id="dailyBoard" class="daily-board" aria-hidden="true"></div>
               <p id="dailyLead" class="step-lead"></p>
               <p id="dailyStatus" class="daily-status"></p>
+              <p id="dailyWho" class="daily-who">
+                <span id="dailyAvatar" aria-hidden="true">🐻</span> <span id="dailyAs"></span>
+                <button data-i18n="daily.change" id="dailyChange" class="daily-change" type="button">
+                  cambiar
+                </button>
+              </p>
+              <input
+                data-i18n-attr="aria-label:daily.name;placeholder:daily.name"
+                id="dailyName"
+                class="nickname daily-name hidden"
+                maxlength="16"
+                placeholder="Tu nombre"
+                aria-label="Tu nombre"
+              />
               <div class="intro-actions">
                 <button id="dailyPlay" class="primary" type="button"></button>
               </div>
@@ -318,7 +332,6 @@
                 <div class="brand"><span>O</span><span>S</span><span>O</span></div>
                 <div data-i18n="common.conecta_forma_gana" class="tagline">Conecta · forma · gana</div>
               </div>
-              <a id="dailyMode" class="daily-link" href="/reto"></a>
               <h2 data-i18n="mode.como_quereis_jugar" class="step-title">¿Cómo queréis jugar?</h2>
               <div
                 data-i18n-attr="aria-label:mode.modo_de_juego.label"
@@ -339,6 +352,7 @@
                   ><span data-i18n="modeFour.4_jugadores">4 jugadores</span>
                 </button>
               </div>
+              <a id="dailyMode" class="daily-link" href="/reto"></a>
             </div>
             <div class="step inactive" data-step="where">
               <h2 data-i18n="where.donde_esta_tu_rival" class="step-title">¿Dónde está tu rival?</h2>

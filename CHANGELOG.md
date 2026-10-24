@@ -17,6 +17,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.5.1] - 2026-10-24
+
+**🗓️ El reto, en un toque**
+
+- En `/reto`, «Jugar el reto →» empieza la partida directamente: ya no pasa por «¿Quién juega?» ni
+  deja elegir nivel o tablero. Encima pone «Juegas como Julia · cambiar» con el nombre guardado; si no
+  hay ninguno, se escribe ahí mismo (opcional).
+- En la portada, la línea del reto es más corta («🗓️ Reto del día n.º 297 →») y en «¿Cómo queréis
+  jugar?» va debajo de los modos. El texto de la landing del reto también es más corto.
+
 ## [4.5.0] - 2026-10-24
 
 **🔔 Avisos del reto del día, sin email ni cuenta** ([3f56999](https://github.com/chopenhauer/devin-juega-oso/commit/3f569996094c3667db65dbfe9169850adc79df8c), [6764a3d](https://github.com/chopenhauer/devin-juega-oso/commit/6764a3daf9e822c8c72c69044b6d2a1fe07357d9), [f92a65d](https://github.com/chopenhauer/devin-juega-oso/commit/f92a65d20e8f2beed7b3e631e699355e1536b00a))

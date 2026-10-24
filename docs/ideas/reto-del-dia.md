@@ -14,8 +14,9 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
 
 - **Dos experiencias en paralelo** (JoseLuis, 24-10-2026):
   - **[juegaoso.com/reto](https://juegaoso.com/reto)** es la landing propia del reto de hoy: número,
-    fecha, el tablero con sus letras, en qué consiste y «Jugar el reto →», que deja el juego
-    preparado (solo queda poner nombre y avatar). Tiene su propia tarjeta para WhatsApp
+    fecha, el tablero con sus letras, en qué consiste y «Jugar el reto →», que empieza la partida al
+    momento, sin elegir modo, nivel ni tablero. Usa el nombre guardado («Juegas como Julia ·
+    cambiar»); si no hay, lo pide ahí mismo y es opcional (JoseLuis, 24-10-2026). Tiene su propia tarjeta para WhatsApp
     (`public/reto.html`, generada por `scripts/invite-page.js`). No tiene ❓ ni flechas: arriba, junto
     al 🌐, el 🗓️ se convierte en 🏠 para volver a OSO.
   - **La landing de siempre (`/`)** solo lleva al reto de forma discreta: el botón 🗓️ junto al 🌐 de

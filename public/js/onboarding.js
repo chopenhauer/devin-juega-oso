@@ -268,13 +268,39 @@ if (daily) {
 }
 const challenge = daily ?? parseChallenge(location.search);
 startFunnel(daily ? 'daily' : challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
-function setChallenge() {
+function presetChallenge() {
   $('modeSolo').click();
   $(difficultyId(challenge.difficulty)).click();
   $('sizeSelect').value = String(challenge.size);
+}
+function setChallenge() {
+  presetChallenge();
   show('players');
 }
-$('dailyPlay').addEventListener('click', setChallenge);
+// The reto starts straight from its landing with the saved name (or none): nothing to choose.
+let editingName = false;
+function syncDailyWho() {
+  const name = nameInputs[0].value.trim();
+  const typing = editingName || !name;
+  $('dailyWho').classList.toggle('hidden', typing);
+  $('dailyName').classList.toggle('hidden', !typing);
+  $('dailyAs').textContent = t('daily.as', { name });
+  $('dailyAvatar').textContent = $('preview1').textContent;
+}
+$('dailyChange').addEventListener('click', () => {
+  editingName = true;
+  $('dailyName').value = nameInputs[0].value;
+  syncDailyWho();
+  $('dailyName').focus();
+  $('dailyName').select();
+});
+$('dailyName').addEventListener('input', () => (nameInputs[0].value = $('dailyName').value));
+$('dailyName').addEventListener('keydown', (e) => e.key === 'Enter' && $('dailyPlay').click());
+$('dailyPlay').addEventListener('click', () => {
+  presetChallenge();
+  $('startGame').click();
+});
+document.addEventListener('oso:step', (e) => e.detail === 'daily' && syncDailyWho());
 if (daily) show('daily');
 else if (challenge) setChallenge();
 else show(prefs.seenIntro ? 'mode' : 'welcome');

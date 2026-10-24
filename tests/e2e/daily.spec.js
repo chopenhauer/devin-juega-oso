@@ -41,17 +41,10 @@ async function finish(page) {
   await expect(overlay).toBeVisible();
 }
 
-async function start(page) {
-  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'players');
-  for (let i = 0; i < 6 && !(await page.locator('#startGame').isVisible()); i++)
-    await page.click('#stepNext');
-  await page.click('#startGame');
-}
-
 async function play(page) {
   await page.goto('/reto');
   await page.click('#dailyPlay');
-  await start(page);
+  await expect(page.locator('#gameScreen')).toBeVisible();
 }
 
 const letters = (page) =>
@@ -59,9 +52,7 @@ const letters = (page) =>
 
 test('the usual landing links to /reto discreetly, and /reto is the reto’s own landing', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('#dailyWelcome')).toHaveText(
-    '🗓️ Reto del día n.º 299: ¿le ganas a la máquina? →',
-  );
+  await expect(page.locator('#dailyWelcome')).toHaveText('🗓️ Reto del día n.º 299 →');
   await expect(page.locator('#dailyToggle')).toBeVisible();
   const [skip, line] = await Promise.all(
     ['#introSkip', '#dailyWelcome'].map((s) => page.locator(s).boundingBox()),
@@ -85,18 +76,13 @@ test('the usual landing links to /reto discreetly, and /reto is the reto’s own
     .locator('#dailyBoard span')
     .evaluateAll((cs) => cs.map((c) => c.textContent).join(','));
   await expect(page.locator('#dailyPlay')).toHaveText('Jugar el reto →');
+  // Without a saved name it is asked right there; the game starts with one tap.
+  await expect(page.locator('#dailyWho')).toBeHidden();
+  await page.fill('#dailyName', 'Julia');
   await page.click('#dailyPlay');
-  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'players');
-  await expect(page.locator('#challengeNote')).toHaveText(
-    '🗓️ Reto del día n.º 299 · 5×5 contra la máquina en fácil, con 4 letras ya puestas',
-  );
-  await expect(page.locator('#modeSolo')).toHaveClass(/selected/);
-  await expect(page.locator('#difficultyEasy')).toHaveClass(/selected/);
-  await expect(page.locator('#sizeSelect')).toHaveValue('5');
-  await page.click('#stepBack');
-  await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'daily');
-  await page.click('#dailyPlay');
-  await start(page);
+  await expect(page.locator('#gameScreen')).toBeVisible();
+  await expect(page.locator('#name1')).toHaveText('Julia');
+  await expect(page.locator('#name2')).toHaveText('Máquina');
   const board = await letters(page);
   expect(board).toBe(preview);
   expect(board.split(',').filter(Boolean)).toHaveLength(4);
@@ -155,10 +141,7 @@ test('only the first game counts: the result stays on the landing and the share 
   await expect(page.locator('#dailyStatus')).toContainText('el siguiente, en 21 h 0 min');
   await expect(page.locator('#dailyPlay')).toHaveText('Repetir el reto');
   await page.click('#dailyPlay');
-  await expect(page.locator('#challengeNote')).toContainText(
-    `Ya has jugado el reto n.º 299 (${mine} a ${theirs})`,
-  );
-  await start(page);
+  await expect(page.locator('#gameScreen')).toBeVisible();
   await finish(page);
   await expect(page.locator('#challengeResult')).toContainText('Repetición del reto n.º 299');
   expect((await events(page, 'daily_end'))[0]).toEqual(expect.objectContaining({ daily_first: false }));
@@ -168,16 +151,29 @@ test('only the first game counts: the result stays on the landing and the share 
 
   await page.goto('/');
   await expect(page.locator('#dailyWelcome')).toHaveText(
-    `🗓️ Reto n.º 299: ${mine} a ${theirs} · el siguiente, en 21 h 0 min`,
+    `🗓️ Reto n.º 299: ${mine} a ${theirs} · otro en 21 h 0 min`,
   );
 });
 
-test('changing the board or the level leaves the challenge: an ordinary game', async ({ page }) => {
+test('with a saved name /reto says who plays and lets change it', async ({ page }) => {
+  await page.addInitScript(() =>
+    localStorage.setItem(
+      'oso.prefs.v1',
+      JSON.stringify({ seenIntro: true, names: ['Papá'], avatars: ['🦊'] }),
+    ),
+  );
   await page.goto('/reto');
-  await page.click('#dailyPlay');
-  await page.click('#difficultyHard');
-  await expect(page.locator('#challengeNote')).toBeHidden();
-  await start(page);
-  expect((await letters(page)).split(',').filter(Boolean)).toHaveLength(0);
-  expect(await events(page, 'daily_start')).toEqual([]);
+  await expect(page.locator('#dailyWho')).toHaveText(/🦊\s+Juegas como Papá\s+cambiar/);
+  await expect(page.locator('#dailyName')).toBeHidden();
+  await page.click('#dailyChange');
+  await expect(page.locator('#dailyName')).toBeFocused();
+  await expect(page.locator('#dailyName')).toHaveValue('Papá');
+  await page.fill('#dailyName', 'Julia');
+  await page.press('#dailyName', 'Enter');
+  await expect(page.locator('#gameScreen')).toBeVisible();
+  await expect(page.locator('#name1')).toHaveText('Julia');
+  expect((await letters(page)).split(',').filter(Boolean)).toHaveLength(4);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('oso.prefs.v1')).names)).toEqual([
+    'Julia',
+  ]);
 });

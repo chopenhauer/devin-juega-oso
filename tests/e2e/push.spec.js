@@ -75,9 +75,6 @@ const events = (page) =>
 async function startReto(page) {
   await page.goto('/reto');
   await page.click('#dailyPlay');
-  for (let i = 0; i < 6 && !(await page.locator('#startGame').isVisible()); i++)
-    await page.click('#stepNext');
-  await page.click('#startGame');
 }
 
 async function finish(page) {

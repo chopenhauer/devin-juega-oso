@@ -2435,6 +2435,32 @@ body:has(#helpModal:not(.hidden))
 .daily-status:empty {
   display: none;
 }
+.daily-who {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+.daily-change {
+  min-height: 2.75rem;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.daily-name {
+  justify-self: center;
+  max-width: 16rem;
+  margin: 0 auto var(--space-3);
+}
+.daily-who.hidden,
+.daily-name.hidden {
+  display: none;
+}
 .challenge-note.hidden,
 .challenge-result.hidden {
   display: none;
