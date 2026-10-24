@@ -313,7 +313,7 @@ const { timeFor } = Engine;
     soundToggle.classList.toggle('hidden', !show);
     shareToggle.classList.toggle('hidden', !show);
     q('onlineToggle').classList.toggle('hidden', !show);
-    q('dailyToggle').classList.toggle('hidden', !show || Daily.isDailyPath(location.pathname));
+    q('dailyToggle').classList.toggle('hidden', !show);
     syncSecretGift();
   };
   // Secrets: a 🎁 on the first screens (for coming back) or at the end of a game (for playing on)

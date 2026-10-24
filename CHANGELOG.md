@@ -26,9 +26,12 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   Todo sale de la fecha en Madrid (`public/js/daily.js`), así que funciona sin conexión; la suerte de
   la máquina también es fija, y las mismas jugadas tienen la misma respuesta.
 - `/reto` es la landing propia del reto de hoy: número, fecha, el tablero con sus letras y «Jugar el
-  reto →», con su tarjeta para WhatsApp (`public/reto.html`). La landing de siempre lleva a ella con
-  el botón 🗓️ junto al 🌐 y una línea discreta en la bienvenida y en «¿Cómo queréis jugar?». Las dos
-  dicen después cómo quedó y cuánto falta para el siguiente.
+  reto →», con su tarjeta para WhatsApp (`public/reto.html`); arriba, junto al 🌐, un 🏠 vuelve a OSO.
+  La landing de siempre lleva a ella con el botón 🗓️ junto al 🌐 y una línea discreta bajo «Saltar e
+  ir a jugar» y en «¿Cómo queréis jugar?». Las dos dicen después cómo quedó y cuánto falta para el
+  siguiente.
+- En móviles con sitio (680 px de alto o más), la tarjeta empieza debajo de los botones redondos de
+  arriba, en vez de quedar por debajo de ellos.
 - El número del reto es el día del año (el 24 de octubre, n.º 297), siempre con la fecha.
 - Solo cuenta la primera partida del día. Al acabar, «Compartir» manda el resultado con el enlace a
   `/reto`, y la imagen lleva el número del reto.

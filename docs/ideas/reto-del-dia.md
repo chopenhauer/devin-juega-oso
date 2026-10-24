@@ -16,9 +16,10 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
   - **[juegaoso.com/reto](https://juegaoso.com/reto)** es la landing propia del reto de hoy: número,
     fecha, el tablero con sus letras, en qué consiste y «Jugar el reto →», que deja el juego
     preparado (solo queda poner nombre y avatar). Tiene su propia tarjeta para WhatsApp
-    (`public/reto.html`, generada por `scripts/invite-page.js`).
+    (`public/reto.html`, generada por `scripts/invite-page.js`). No tiene ❓ ni flechas: arriba, junto
+    al 🌐, el 🗓️ se convierte en 🏠 para volver a OSO.
   - **La landing de siempre (`/`)** solo lleva al reto de forma discreta: el botón 🗓️ junto al 🌐 de
-    jugar en línea y una línea pequeña en la bienvenida y en «¿Cómo queréis jugar?».
+    jugar en línea y una línea pequeña bajo «Saltar e ir a jugar» y en «¿Cómo queréis jugar?».
 - **El mismo para todo el mundo, sin servidor:** todo sale de la fecha en Madrid
   (`public/js/daily.js`), así que cada móvil calcula el mismo reto por su cuenta, también sin
   conexión. Cambia a medianoche de Madrid.

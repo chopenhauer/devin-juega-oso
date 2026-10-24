@@ -63,10 +63,17 @@ test('the usual landing links to /reto discreetly, and /reto is the reto’s own
     '🗓️ Reto del día n.º 299: ¿le ganas a la máquina? →',
   );
   await expect(page.locator('#dailyToggle')).toBeVisible();
+  const [skip, line] = await Promise.all(
+    ['#introSkip', '#dailyWelcome'].map((s) => page.locator(s).boundingBox()),
+  );
+  expect(line.y).toBeGreaterThan(skip.y + skip.height);
   await page.click('#dailyWelcome');
   await expect(page).toHaveURL(/\/reto$/);
   await expect(page.locator('#setupScreen')).toHaveAttribute('data-step', 'daily');
-  await expect(page.locator('#dailyToggle')).toBeHidden();
+  await expect(page.locator('#dailyToggle')).toHaveText('🏠');
+  await expect(page.locator('#dailyToggle')).toHaveAttribute('href', '/');
+  await expect(page.locator('#dailyToggle')).toHaveAttribute('aria-label', 'Ir a OSO');
+  await expect(page.locator('#helpToggle')).toBeHidden();
   await expect(page.locator('#challengeNote')).toBeHidden();
   await expect(page.locator('#dailyTitle')).toHaveText('🗓️ Reto del día n.º 299');
   await expect(page.locator('#dailyDate')).toHaveText('lunes, 26 de octubre');

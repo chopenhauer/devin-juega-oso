@@ -3981,6 +3981,16 @@ body.legal-page {
 .daily-toggle.hidden {
   display: none;
 }
+#setupScreen[data-step='daily'] .wizard-nav {
+  display: none;
+}
+/* On phones with room to spare, the card starts below the round top buttons instead of under them;
+   the same room below keeps it centred where it already fitted. */
+@media (max-width: 600px) and (min-height: 680px) {
+  body:has(#setupScreen:not(.hidden)) .app {
+    padding-block: calc(max(0.75rem, env(safe-area-inset-top)) + 3.25rem);
+  }
+}
 /* Online 1 vs 1: the rival's card is the invite, then shows who joined. */
 .online-toggle {
   position: fixed;

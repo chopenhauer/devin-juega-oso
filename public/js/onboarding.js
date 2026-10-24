@@ -258,6 +258,14 @@ applyPrefs(prefs);
 // A challenge link and /reto (reto del día) come with the game already set: only the player's
 // avatar and name are left.
 const daily = Daily.isDailyPath(location.pathname) ? Daily.dailyChallenge() : null;
+// On the reto's own landing, the 🗓️ next to 🌐 becomes the way back to the usual OSO.
+if (daily) {
+  const home = $('dailyToggle');
+  home.removeAttribute('data-i18n-attr');
+  home.href = '/';
+  home.textContent = '🏠';
+  home.setAttribute('aria-label', t('daily.home'));
+}
 const challenge = daily ?? parseChallenge(location.search);
 startFunnel(daily ? 'daily' : challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
 function setChallenge() {
@@ -267,7 +275,6 @@ function setChallenge() {
   show('players');
 }
 $('dailyPlay').addEventListener('click', setChallenge);
-$('dailyHome').addEventListener('click', () => location.assign('/'));
 if (daily) show('daily');
 else if (challenge) setChallenge();
 else show(prefs.seenIntro ? 'mode' : 'welcome');
