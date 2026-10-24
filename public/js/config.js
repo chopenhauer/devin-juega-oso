@@ -56,6 +56,9 @@ export const GAME = freeze({
   daily: {
     letters: 4,
   },
+  push: {
+    hour: 18,
+  },
   secrets: {
     gamesPerSecret: 2,
     spotlightMs: 3000,
@@ -97,6 +100,7 @@ export const SECTIONS = {
   machine: 'Máquina',
   online: 'En línea',
   daily: '🗓️ Reto del día',
+  push: '🔔 Avisos del reto',
   secrets: 'Secretos',
   themes: 'Temas y easter egg del 🎨',
   feedback: 'Encuesta «¿Os está gustando OSO?»',
@@ -150,6 +154,8 @@ export const HELP = {
   'online.closedRoomHours': 'Horas que se guarda una sala cerrada, para avisar a quien abra el enlace viejo.',
   'daily.letters':
     'Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío.',
+  'push.hour':
+    'Hora de Madrid (0-23) a la que sale el aviso del reto del día, solo a quien lo ha pedido y aún no lo ha jugado. Vercel lo lanza a las 16 y 17 UTC (verano e invierno), así que solo valen las 17, 18 o 19 sin tocar vercel.json; en el plan gratuito puede llegar hasta 59 minutos tarde.',
   'secrets.gamesPerSecret':
     'Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día.',
   'secrets.spotlightMs':

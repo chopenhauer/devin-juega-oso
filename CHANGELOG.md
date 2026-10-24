@@ -17,6 +17,25 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.5.0] - 2026-10-24
+
+**🔔 Avisos del reto del día, sin email ni cuenta**
+
+- Al acabar el primer reto del día, OSO pregunta una sola vez «🔔 ¿Te aviso cuando haya reto nuevo?».
+  Nunca al entrar. Si se acepta, el navegador da una dirección anónima (Web Push) y el servidor la
+  guarda en Upstash hasta que se quita o deja de funcionar.
+- Como mucho un aviso al día, a las 18:00 de Madrid (`push.hour`), y solo a quien aún no ha jugado el
+  reto de ese día. Al tocarlo se abre `/reto`. Se quita o se vuelve a poner desde el menú («🔔 Avisos
+  del reto»).
+- Sin dependencias: cifrado y firma VAPID con `node:crypto` (`api/_webpush.js`). Una tarea diaria de
+  Vercel (`/api/push-cron`, a las 16 y 17 UTC por el horario de verano e invierno) manda los avisos y
+  borra las direcciones que ya no valen.
+- **Límite:** en Android funciona en Chrome sin instalar; en iPhone y iPad solo con OSO en la pantalla
+  de inicio. En el plan gratuito de Vercel el aviso puede llegar hasta 59 minutos tarde.
+- **Medición:** evento `push_optin` en GA4 (`action`: shown, granted, denied, default, no, off, error;
+  `place`: end o menu) y contadores sin cookies `push_on`, `push_off`, `push_sent`, `push_gone`,
+  `push_fail` y `push_click`. Las visitas desde un aviso llegan con `utm_source=push`.
+
 ## [4.4.0] - 2026-10-24
 
 **🗓️ Reto del día, con su propia dirección: [juegaoso.com/reto](https://juegaoso.com/reto) ([9751937](https://github.com/chopenhauer/devin-juega-oso/commit/975193746057a3c3dc95a2ab42cfd668f768382d), [d9e8d32](https://github.com/chopenhauer/devin-juega-oso/commit/d9e8d32eb5bd4c2b9ee8c6f865f14f9a6db72113), [e6dab9c](https://github.com/chopenhauer/devin-juega-oso/commit/e6dab9c17bd1b669f51d2212343dfe63d5145e9c))**

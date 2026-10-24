@@ -57,6 +57,16 @@ export function redisStore(url, token, prefix = '') {
         ['EXPIRE', prefix + key, String(ttl)],
       ]);
     },
+    // Hashes of JSON values that never expire (push subscriptions).
+    put: async (key, field, value) =>
+      void (await call('', ['HSET', prefix + key, field, JSON.stringify(value)])),
+    drop: async (key, field) => void (await call('', ['HDEL', prefix + key, field])),
+    all: async (key) => {
+      const flat = (await call('', ['HGETALL', prefix + key])) ?? [];
+      const out = {};
+      for (let i = 0; i < flat.length; i += 2) out[flat[i]] = JSON.parse(flat[i + 1]);
+      return out;
+    },
     counters: async (key) => {
       const flat = (await call('', ['HGETALL', prefix + key])) ?? [];
       const out = {};
@@ -95,5 +105,16 @@ export function memoryStore() {
       put(key, c, ttl);
     },
     counters: async (key) => ({ ...(live(key) ?? {}) }),
+    put: async (key, field, value) => {
+      const h = live(key) ?? {};
+      h[field] = JSON.stringify(value);
+      put(key, h, 1e9);
+    },
+    drop: async (key, field) => {
+      const h = live(key);
+      if (h) delete h[field];
+    },
+    all: async (key) =>
+      Object.fromEntries(Object.entries(live(key) ?? {}).map(([f, v]) => [f, JSON.parse(v)])),
   };
 }

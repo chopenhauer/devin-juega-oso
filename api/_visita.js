@@ -4,6 +4,7 @@
 //   POST {consent: granted | denied | unset}  the game page loaded, with the stored choice
 //   POST {choice: granted | denied}           Aceptar / Rechazar clicked in the cookie banner
 //   POST {step, entry}                        a setup screen seen before the first game (funnel.js)
+//   POST {push: click}                        a 🔔 reto notice was tapped (sw.js)
 import { month, STATS_TTL } from './_sala.js';
 
 const CHOICES = ['granted', 'denied'];
@@ -17,6 +18,7 @@ export function createVisitHandler(store, { now = Date.now } = {}) {
     let stats;
     if ([...CHOICES, 'unset'].includes(input?.consent)) stats = { visits: 1, [`visit_${input.consent}`]: 1 };
     else if (CHOICES.includes(input?.choice)) stats = { [`consent_${input.choice}`]: 1 };
+    else if (input?.push === 'click') stats = { push_click: 1 };
     else if (STEP.test(input?.step) && ENTRIES.includes(input?.entry))
       stats = { [`setup_${input.entry}_${input.step}`]: 1 };
     else return new Response(null, { status: 400 });

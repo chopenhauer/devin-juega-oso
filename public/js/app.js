@@ -13,6 +13,7 @@ import * as Daily from './daily.js';
 import { drawScorecard } from './scorecard.js';
 import { replaySteps } from './replay.js';
 import { showInstall } from './install.js';
+import { hidePushAsk, pushAfterDaily } from './push.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 import { onLongPress } from './hold.js';
@@ -1368,6 +1369,8 @@ const { timeFor } = Engine;
     };
     q('replayOpen').classList.toggle('hidden', !history.length);
     fitEndLabels();
+    hidePushAsk();
+    pushAsking = false;
     showChallenge(w);
     const st = recordSession(w);
     showEndPhrase();
@@ -1375,8 +1378,10 @@ const { timeFor } = Engine;
     countGame();
     const secret = dueSecret();
     syncSecretGift();
-    showFeedback(nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret }));
-    showInstall(!!secret || !!feedbackMomentNow);
+    showFeedback(
+      nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret || pushAsking }),
+    );
+    showInstall(!!secret || !!feedbackMomentNow || pushAsking);
   }
 
   // Points, longest streak and number of streaks of each player: what breaks a tie.
@@ -2609,6 +2614,8 @@ const { timeFor } = Engine;
   // the machine on its board and level, with its letters already placed and the machine's luck fixed.
   const daily = Daily.isDailyPath(location.pathname) ? Daily.dailyChallenge() : null;
   let dailyRng = null;
+  // The end of the first reto of the day is asking for the 🔔 notice: the other questions wait.
+  let pushAsking = false;
   const dailyOn = () =>
     !!daily && gameMode === 'solo' && size === daily.size && difficulty === daily.difficulty;
   const dailyParams = () => ({ daily_number: daily.number });
@@ -2642,6 +2649,7 @@ const { timeFor } = Engine;
       won: w === 0,
     });
     if (first) Daily.saveDaily(state);
+    pushAsking = pushAfterDaily({ first });
     const streak = Daily.currentStreak(state, daily.key);
     const n = { number: daily.number };
     const text = !first

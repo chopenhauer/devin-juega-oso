@@ -89,6 +89,12 @@ Cómo cambiar uno:
 | --- | --- | --- |
 | `daily.letters` | 4 | Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío. |
 
+## 🔔 Avisos del reto
+
+| Parámetro | Valor | Qué hace |
+| --- | --- | --- |
+| `push.hour` | 18 | Hora de Madrid (0-23) a la que sale el aviso del reto del día, solo a quien lo ha pedido y aún no lo ha jugado. Vercel lo lanza a las 16 y 17 UTC (verano e invierno), así que solo valen las 17, 18 o 19 sin tocar vercel.json; en el plan gratuito puede llegar hasta 59 minutos tarde. |
+
 ## Secretos
 
 | Parámetro | Valor | Qué hace |

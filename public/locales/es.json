@@ -437,5 +437,17 @@
   "daily.next": "el siguiente, en {wait}",
   "daily.play": "Jugar el reto →",
   "daily.play_again": "Repetir el reto",
-  "daily.home": "Ir a OSO"
+  "daily.home": "Ir a OSO",
+  "push.title": "🗓️ Reto del día n.º {number}",
+  "push.body": "{size}×{size} contra la máquina en {level}. Aún no lo has jugado: ¿le ganas?",
+  "pushTitle": "🔔 ¿Te aviso cuando haya reto nuevo?",
+  "pushText": "Un aviso al día a las 18:00, solo si aún no lo has jugado. Se quita desde el menú.",
+  "push.text": "Un aviso al día a las {hour}:00, solo si aún no lo has jugado. Se quita desde el menú.",
+  "pushYes": "Avísame",
+  "pushNo": "No, gracias",
+  "push.done": "🔔 ¡Hecho! Te aviso a las {hour}:00 cuando haya reto nuevo.",
+  "push.denied": "🔕 El navegador tiene bloqueados los avisos de OSO. Se pueden permitir en sus ajustes.",
+  "push.failed": "No se ha podido activar el aviso. Inténtalo más tarde.",
+  "pushMenu": "🔔 Avisos del reto: no",
+  "push.menu_on": "🔔 Avisos del reto: sí"
 }

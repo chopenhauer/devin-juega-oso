@@ -44,5 +44,6 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
 
 ## Siguiente
 
-- **Avisos (4.5.0):** una notificación al día cuando hay reto nuevo, pedida después de acabar el
-  primer reto. Pendiente de decidir la hora.
+- **Avisos (4.5.0, hecho):** una notificación al día a las 18:00 de Madrid, pedida al acabar el
+  primer reto y solo para quien aún no lo ha jugado. Se quita desde el menú (`public/js/push.js`,
+  `api/_push.js`, `api/_webpush.js`, `/api/push-cron`).

@@ -5,6 +5,10 @@
   "installCommand": "",
   "outputDirectory": "public",
   "cleanUrls": true,
+  "crons": [
+    { "path": "/api/push-cron", "schedule": "0 16 * * *" },
+    { "path": "/api/push-cron", "schedule": "0 17 * * *" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

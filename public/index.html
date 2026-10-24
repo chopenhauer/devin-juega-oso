@@ -943,6 +943,9 @@
             <button data-i18n="restartMatch" id="restartMatch">🔄 Reiniciar tablero</button>
             <button data-i18n="newGame" id="newGame">🆕 Nueva partida</button>
             <button data-i18n="soundMenu" id="soundMenu" type="button">🔊 Sonido: activado</button>
+            <button data-i18n="pushMenu" id="pushMenu" class="hidden" type="button" aria-pressed="false">
+              🔔 Avisos del reto: no
+            </button>
             <button data-i18n="shareMenu" id="shareMenu" type="button">📣 Invitar a jugar</button>
             <a
               data-i18n="ideasMenu"
@@ -1174,6 +1177,20 @@
                 </table>
               </section>
             </details>
+            <section id="pushAsk" class="install-ask push-ask hidden" aria-labelledby="pushTitle">
+              <h2 data-i18n="pushTitle" id="pushTitle" class="feedback-title">
+                🔔 ¿Te aviso cuando haya reto nuevo?
+              </h2>
+              <p data-i18n="pushText" id="pushText" class="install-text" role="status">
+                Un aviso al día a las 18:00, solo si aún no lo has jugado. Se quita desde el menú.
+              </p>
+              <div id="pushActions" class="feedback-actions">
+                <button data-i18n="pushYes" id="pushYes" type="button" class="secondary install-yes">
+                  Avísame
+                </button>
+                <button data-i18n="pushNo" id="pushNo" type="button" class="install-no">No, gracias</button>
+              </div>
+            </section>
             <section id="feedbackAsk" class="feedback-ask hidden" aria-labelledby="feedbackTitle">
               <h2 data-i18n="feedbackTitle" id="feedbackTitle" class="feedback-title">
                 ¿Os está gustando OSO?

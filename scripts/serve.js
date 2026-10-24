@@ -6,6 +6,8 @@ import { extname, join, normalize, resolve } from 'node:path';
 import { createHandler } from '../api/_sala.js';
 import { memoryStore } from '../api/_store.js';
 import { createVisitHandler } from '../api/_visita.js';
+import { createPushHandler } from '../api/_push.js';
+import { vapidKeys } from '../api/_webpush.js';
 import { createLabDataHandler } from '../api/_labdata.js';
 import { createConfigHandler, createLabHandler } from '../api/_lab.js';
 import { writeInvitePage } from './invite-page.js';
@@ -37,6 +39,8 @@ const store = memoryStore();
 const handlers = {
   '/api/sala': createHandler(store),
   '/api/visita': createVisitHandler(store),
+  // A throwaway VAPID key: subscribing works locally, nothing is ever sent from here.
+  '/api/push': createPushHandler(store, { publicKey: vapidKeys().publicKey }),
   '/api/config': createConfigHandler(store),
   '/api/lab': createLabHandler(store, { password: process.env.LAB_PASSWORD ?? 'osolab-local' }),
   '/api/lab-data': createLabDataHandler({

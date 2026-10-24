@@ -57,3 +57,10 @@ test('counts each setup screen by how the visit came in', async () => {
   ])
     assert.equal(await s.post(bad), 400);
 });
+
+test('counts the 🔔 reto notices that are tapped', async () => {
+  const s = setup();
+  assert.equal(await s.post({ push: 'click' }), 204);
+  assert.equal(await s.post({ push: 'other' }), 400);
+  assert.equal((await s.counters()).push_click, 1);
+});

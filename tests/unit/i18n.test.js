@@ -58,7 +58,9 @@ test('every key used by the page and the code exists in es.json', () => {
 });
 
 test('es.json has no texts that nobody uses', () => {
-  const used = new Set([...keysInHtml(), ...keysInJs(), ...themeKeys]);
+  // The 🔔 notice texts are filled in by the server (api/_push.js).
+  const server = [...read('api/_push.js').matchAll(/fill\('([^']+)'/g)].map((m) => m[1]);
+  const used = new Set([...keysInHtml(), ...keysInJs(), ...themeKeys, ...server]);
   assert.deepEqual(
     Object.keys(es).filter((k) => !used.has(k)),
     [],

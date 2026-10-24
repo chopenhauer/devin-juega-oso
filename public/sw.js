@@ -36,6 +36,7 @@ const SHELL = [
   '/js/leaderboard.js',
   '/js/match.js',
   '/js/onboarding.js',
+  '/js/push.js',
   '/js/online.js',
   '/js/replay.js',
   '/js/scorecard.js',
@@ -91,4 +92,32 @@ self.addEventListener('fetch', (event) => {
       })
       .catch(async () => (await caches.match(key, { ignoreSearch: page })) ?? Response.error()),
   );
+});
+
+// 🔔 Aviso del reto del día (api/_push.js): the server only sends title, text and where to go.
+self.addEventListener('push', (event) => {
+  const data = event.data?.json() ?? {};
+  event.waitUntil(
+    self.registration.showNotification(data.title ?? 'OSO', {
+      body: data.body,
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      tag: 'oso-reto',
+      data: { url: data.url ?? '/reto' },
+    }),
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = new URL(event.notification.data?.url ?? '/reto', self.location.origin).href;
+  // Counted without cookies, like the visits: how many come back from a notice.
+  const count = fetch('/api/visita', { method: 'POST', body: JSON.stringify({ push: 'click' }) }).catch(
+    () => {},
+  );
+  const open = self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+    const tab = list.find((c) => 'navigate' in c);
+    return tab ? tab.navigate(url).then((c) => (c ?? tab).focus()) : self.clients.openWindow(url);
+  });
+  event.waitUntil(Promise.all([count, open]));
 });
