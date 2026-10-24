@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.4.0] - 2026-10-24
 
-**🗓️ Reto del día, con su propia dirección: [juegaoso.com/reto](https://juegaoso.com/reto)**
+**🗓️ Reto del día, con su propia dirección: [juegaoso.com/reto](https://juegaoso.com/reto) ([9751937](https://github.com/chopenhauer/devin-juega-oso/commit/975193746057a3c3dc95a2ab42cfd668f768382d), [d9e8d32](https://github.com/chopenhauer/devin-juega-oso/commit/d9e8d32eb5bd4c2b9ee8c6f865f14f9a6db72113), [e6dab9c](https://github.com/chopenhauer/devin-juega-oso/commit/e6dab9c17bd1b669f51d2212343dfe63d5145e9c))**
 
 - El mismo reto para todo el mundo cada día, como Wordle: contra la máquina, con el tablero y el
   nivel del día (5×5 entre semana, 6×6 el fin de semana) y 4 letras ya puestas (`daily.letters`).
