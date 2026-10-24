@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.5.1] - 2026-10-24
 
-**🗓️ El reto, en un toque**
+**🗓️ El reto, en un toque** ([f1d98df](https://github.com/chopenhauer/devin-juega-oso/commit/f1d98df1362451ba889dcf6de92128314f8c5bf9))
 
 - En `/reto`, «Jugar el reto →» empieza la partida directamente: ya no pasa por «¿Quién juega?» ni
   deja elegir nivel o tablero. Encima pone «Juegas como Julia · cambiar» con el nombre guardado; si no
