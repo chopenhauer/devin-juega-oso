@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.5.0] - 2026-10-24
 
-**🔔 Avisos del reto del día, sin email ni cuenta**
+**🔔 Avisos del reto del día, sin email ni cuenta** ([3f56999](https://github.com/chopenhauer/devin-juega-oso/commit/3f569996094c3667db65dbfe9169850adc79df8c), [6764a3d](https://github.com/chopenhauer/devin-juega-oso/commit/6764a3daf9e822c8c72c69044b6d2a1fe07357d9), [f92a65d](https://github.com/chopenhauer/devin-juega-oso/commit/f92a65d20e8f2beed7b3e631e699355e1536b00a))
 
 - Al acabar el primer reto del día, OSO pregunta una sola vez «🔔 ¿Te aviso cuando haya reto nuevo?».
   Nunca al entrar. Si se acepta, el navegador da una dirección anónima (Web Push) y el servidor la
