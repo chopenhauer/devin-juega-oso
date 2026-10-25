@@ -101,11 +101,18 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 - **Extras** (`.power`, `.sos-power`): icono + contador; su nombre accesible es «Pista, quedan 1» o «… (ya usado)».
 - **Casillas** (`.cell`): botones con nombre «Fila 2, columna 3: O» o «… vacía».
 - **Diálogos**: la ayuda y la pantalla de victoria son `role="dialog"`; al ganar, el foco va a «Revancha». Los avisos cortos (`.info-dialog`) usan `<dialog>` nativo con `showModal()`, fuera de `.app` para que el fondo cubra toda la pantalla, y se cierran con su botón o con Escape.
+- **Racha del reto** (`#dailyStreak`, `.daily-streak`): tarjeta compacta bajo el resultado del reto, con
+  la misma caja que `.session-board`. Los 7 últimos retos son círculos (`.streak-mark`): con ✓ y
+  degradado `--sol-400`→`--naranja-500` si se jugó, vacíos si no, y hoy con anillo. Cada día lleva su
+  nombre completo oculto para lectores de pantalla («sábado: sin jugar»).
+- **Marcador de la sesión** (`#sessionBoard`): desde la segunda partida; con una, el marcador grande ya
+  lo dice. Un solo comentario a la vez: si hay frase de la partida (`#endPhrase`), no sale
+  `#sessionNudge`.
 - **«Esta partida»** (`#endStats`): bajo el resultado de la pantalla final, la misma tabla que el
   marcador de la sesión (`.session-board`) con «Total puntos», «Racha larga» y «Num rachas» de cada
   jugador, centradas. Quien gana va primero y resaltado (`tr.leader`); después, el resto en el orden
   del desempate. Sale en todas las
-  partidas con alguna jugada, haga falta desempatar o no.
+  partidas con alguna jugada, plegada en «📊 Ver detalles» (abierta solo con 4 jugadores).
 - **Opinión al final** (`.feedback-ask`): debajo de los botones de la pantalla final, pequeña y atenuada, porque no sale siempre y el sitio principal es para el marcador y las acciones. Al contestar se abre `#thanksDialog` (`.info-dialog`, fondo más oscuro) con «💡 Cuéntanos más» y «Cerrar»; al cerrar, el foco vuelve a «Revancha».
 - **Compartir** (`#shareToggle`, `#shareMenu`, `#shareResult`): 📣 redondo junto a 🔊 y 🎨 en el inicio (se oculta en la partida), «📣 Invitar a jugar» en el menú ☰ y «📣 Compartir resultado» a todo el ancho bajo las acciones finales, separado de ellas (`--space-4` más). La pantalla final tiene «🏠 Inicio» (`#winnerHome`) arriba a la derecha, que vuelve al paso de modo. Abre el menú nativo (`navigator.share`); si no hay, `#shareDialog` (`.info-dialog`) con el texto, WhatsApp (principal), Email, «Copiar enlace», un estado `role="status"` y «Cerrar». Los textos nunca llevan nombres.
 - **Aviso arriba** (`#onlineToast`, `.online-toast`): centrado entre el borde y la tarjeta, con borde amarillo y, si hace falta, un botón al final. Lo usan las novedades de la sala en línea y el premio «🎁 ¡Tienes un premio!» con «Ábrelo» (3.3.0, a petición de JoseLuis: que parezca un aviso y se vea que hay que pulsar). Mientras se ve, los botones de arriba del inicio se ocultan para no solaparse.

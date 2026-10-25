@@ -41,8 +41,10 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
   la landing, con 2 días seguidos o más, también la racha.
 - **Un intento al día:** solo cuenta la primera partida terminada del día; se puede repetir, pero no
   cambia el resultado. Se guarda en el móvil (`oso.daily.v1`, los últimos 60 días).
-- **Al acabar:** la pantalla final de siempre, con «🗓️ ¡Reto del día n.º … superado!» (o «¡casi!») y
-  los días seguidos. «Compartir» manda el resultado con el enlace a `/reto` (campaña
+- **Al acabar:** la pantalla final de siempre, con «🗓️ ¡Reto del día n.º … superado!» (o «¡casi!»)
+  y la tarjeta de la racha (`#dailyStreak`, 4.6.0): los días seguidos, los 7 últimos retos con ✓ en los
+  jugados, «¡Vuelve mañana para mantener tu racha!» y cuándo sale el siguiente. Solo «Revancha» como
+  botón grande: sin «Otro tablero» ni «Cambiar jugadores». «Compartir» manda el resultado con el enlace a `/reto` (campaña
   `reto_del_dia`), y la imagen lleva el número del reto.
 - **Medición:** `daily_start` y `daily_end` en GA4 (ver [ANALYTICS](../ANALYTICS.md)), y la entrada
   `daily` en los contadores del servidor de la bienvenida.

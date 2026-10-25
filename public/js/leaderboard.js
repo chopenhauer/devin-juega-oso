@@ -55,7 +55,7 @@ export function endPhrase(games, { machine = null } = {}) {
   if (before.length && !before.some((g) => [g.winner].flat().includes(w)))
     return { key: 'first_win', player: w };
   if (margin === 1) return { key: 'close', player: w };
-  if (margin === s[w] && s[w] >= 3) return { key: 'rout', player: w };
+  if (margin >= Math.max(3, s[w] / 2)) return { key: 'rout', player: w };
   return null;
 }
 

@@ -54,6 +54,8 @@ test('the end screen tells the result, how the session goes and invites to a rem
   test.slow(); // plays two whole games
   await startTwo(page);
   await playOneZero(page);
+  // One game: the big score tells it all, no session board yet.
+  await expect(page.locator('#sessionBoard')).toBeHidden();
   // Result: each avatar and name next to their own points, in player order, the winner highlighted.
   await expect(page.locator('#winnerTitle')).toHaveText('¡Gana Jugador 1!');
   await expect(page.locator('#endScore .end-side')).toHaveText(['🐻Jugador 1', '🐼Jugador 2']);
@@ -61,7 +63,7 @@ test('the end screen tells the result, how the session goes and invites to a rem
   await expect(page.locator('#endScore .end-side.winner')).toHaveText('🐻Jugador 1');
   await expect(page.locator('#endScore .end-points b.winner')).toHaveText('1');
   await expect(page.locator('#winnerSub')).toBeHidden();
-  await expect(page.locator('#endPhrase')).toHaveText('😱 ¡Victoria por los pelos!');
+  await expect(page.locator('#endPhrase')).toHaveText('😱 ¡Por los pelos!');
   // The streaks are folded: they did not decide this game.
   const details = page.locator('#endDetails');
   await expect(details).toBeVisible();
@@ -78,12 +80,12 @@ test('the end screen tells the result, how the session goes and invites to a rem
   await playOneZero(page);
   const title = await page.locator('#winnerTitle').textContent();
   if (title === '¡Gana Jugador 1!') {
-    await expect(page.locator('#endPhrase')).toHaveText('😱 ¡Victoria por los pelos!');
-    await expect(page.locator('#sessionNudge')).toHaveText('👑 Jugador 1 va 2 por delante');
+    await expect(page.locator('#endPhrase')).toHaveText('😱 ¡Por los pelos!');
   } else {
     await expect(page.locator('#endPhrase')).toHaveText('🎉 ¡Primera victoria de Jugador 2!');
-    await expect(page.locator('#sessionNudge')).toHaveText('⚔️ ¡Todo empatado!');
   }
+  // One comment at a time: with a phrase, the session board has no nudge.
+  await expect(page.locator('#sessionNudge')).toBeHidden();
   await expect(page.locator('#sessionTitle')).toHaveText('🏆 Marcador de la sesión');
 });
 

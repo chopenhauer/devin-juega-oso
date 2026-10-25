@@ -50,6 +50,8 @@ test('the end phrase tells the story of the game and of the session', () => {
   assert.equal(endPhrase([g([2, 2], null)]), null);
   assert.equal(endPhrase([g([4, 2], 0)]), null);
   assert.deepEqual(endPhrase([g([5, 0], 0)]), { key: 'rout', player: 0 });
+  assert.deepEqual(endPhrase([g([15, 6], 0)]), { key: 'rout', player: 0 });
+  assert.equal(endPhrase([g([9, 6], 0)]), null);
   assert.deepEqual(endPhrase([g([3, 4], 1)]), { key: 'close', player: 1 });
   assert.deepEqual(endPhrase([g([4, 1], 0), g([1, 3], 1)]), { key: 'first_win', player: 1 });
   assert.deepEqual(endPhrase([g([4, 1], 0), g([4, 2], 0), g([3, 1], 0)]), {

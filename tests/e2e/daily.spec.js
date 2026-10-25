@@ -121,6 +121,14 @@ test('only the first game counts: the result stays on the landing and the share 
   await play(page);
   await finish(page);
   await expect(page.locator('#challengeResult')).toContainText(/Reto (del día )?n\.º 299/);
+  // The streak card instead of the session board, and only «Revancha» as a big button.
+  await expect(page.locator('#dailyStreakTitle')).toHaveText('🔥 1 día de racha');
+  await expect(page.locator('#dailyStreakDays .played')).toHaveCount(1);
+  await expect(page.locator('#dailyStreakDays li.today')).toHaveClass(/played/);
+  await expect(page.locator('#dailyStreakNext')).toHaveText('Reto n.º 300 en 16 h 0 min');
+  await expect(page.locator('#sessionBoard')).toBeHidden();
+  await expect(page.locator('#otherBoard')).toBeHidden();
+  await expect(page.locator('#changePlayers')).toBeHidden();
   const [end] = await events(page, 'daily_end');
   expect(end).toEqual(expect.objectContaining({ daily_number: 299, daily_first: true, daily_streak: 1 }));
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.daily.v1')));
@@ -153,6 +161,32 @@ test('only the first game counts: the result stays on the landing and the share 
   await expect(page.locator('#dailyWelcome')).toHaveText(
     `🗓️ Reto n.º 299: ${mine} a ${theirs} · otro en 16 h 0 min`,
   );
+});
+
+test('the end shows the streak and the week from the saved retos, missed days too', async ({ page }) => {
+  // Played Thursday 22 and Friday 23, missed Saturday 24, played Sunday 25: today makes 2 in a row.
+  await page.addInitScript(() => {
+    if (localStorage.getItem('oso.daily.v1')) return;
+    const r = { mine: 5, theirs: 3, won: true };
+    const results = { '2026-10-22': r, '2026-10-23': r, '2026-10-25': r };
+    localStorage.setItem('oso.daily.v1', JSON.stringify({ last: '2026-10-25', streak: 1, results }));
+  });
+  await play(page);
+  await finish(page);
+  await expect(page.locator('#dailyStreakTitle')).toHaveText('🔥 2 días seguidos');
+  const days = page.locator('#dailyStreakDays li');
+  await expect(days.locator('.streak-day')).toHaveText(['M', 'X', 'J', 'V', 'S', 'D', 'L']);
+  expect(await days.evaluateAll((li) => li.map((e) => e.classList.contains('played')))).toEqual([
+    false,
+    false,
+    true,
+    true,
+    false,
+    true,
+    true,
+  ]);
+  await expect(days.nth(4)).toContainText('sábado: sin jugar');
+  await expect(page.locator('.daily-streak-cta')).toHaveText('¡Vuelve mañana para mantener tu racha!');
 });
 
 test('with a saved name /reto says who plays and lets change it', async ({ page }) => {

@@ -174,8 +174,9 @@ test('a tie on points is broken by the longest streak', async ({ page }) => {
   await expect(page.locator('#winnerSub')).toHaveText('Desempate: racha más larga');
   await expect(page.locator('#endScore .end-points')).toHaveText('4 – 4');
   await expect(page.locator('#endScore .end-side.winner')).toHaveText('🐼Jugador 2');
-  // The streaks decided it, so «Ver detalles» opens by itself.
-  await expect(page.locator('#endDetails')).toHaveAttribute('open', '');
+  // The subtitle says the streaks decided it; the numbers wait folded in «Ver detalles».
+  await expect(page.locator('#endDetails')).not.toHaveAttribute('open', '');
+  await page.click('#endDetails summary');
   const rows = page.locator('#endStatsRows tr');
   // Whoever wins goes first.
   await expect(page.locator('#endStats thead th')).toHaveText([

@@ -111,7 +111,7 @@ test('the session leaderboard adds up games between the same players', async ({ 
   expect(await step(page)).toBe('players');
 });
 
-test('against the machine the session leaderboard shows from the first game', async ({ page }) => {
+test('against the machine the session leaderboard also waits for the second game', async ({ page }) => {
   await page.goto('/');
   await page.click('#introSkip');
   await page.click('#modeSolo');
@@ -128,8 +128,6 @@ test('against the machine the session leaderboard shows from the first game', as
     }
     await page.waitForTimeout(200);
   }
-  await expect(page.locator('#sessionBoard')).toBeVisible();
-  await expect(page.locator('#sessionMeta')).toHaveText(/^1 partida/);
-  await expect(page.locator('#sessionRows tr')).toHaveCount(2);
-  await expect(page.locator('#sessionRows')).toContainText('Máquina');
+  await expect(page.locator('#sessionBoard')).toBeHidden();
+  await expect(page.locator('#sessionNudge')).toBeHidden();
 });

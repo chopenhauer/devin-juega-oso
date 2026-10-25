@@ -129,6 +129,16 @@ export function msToNext(now = new Date()) {
   return hi - now.getTime();
 }
 
+// The 7 retos up to `key` (oldest first) and whether each one was played: the week of the streak.
+export const lastWeek = (state, key) =>
+  Array.from({ length: 7 }, (_, i) => {
+    const day = addDays(key, i - 6);
+    return { key: day, played: !!state.results[day] };
+  });
+// «X» or «miércoles» for a reto's day.
+export const weekdayName = (key, style = 'narrow', locale = 'es') =>
+  new Intl.DateTimeFormat(locale, { weekday: style, timeZone: 'UTC' }).format(new Date(utc(key)));
+
 export const isDailyPath = (pathname) => /^\/reto(\.html)?\/?$/.test(pathname);
 
 export function readDaily() {

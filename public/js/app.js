@@ -1325,7 +1325,9 @@ const { timeFor } = Engine;
     q('rematch').disabled = false;
     q('rematch').innerHTML = t('rematch.sized', { size });
     q('rematch').setAttribute('aria-label', t('rematch.sized_label', { size }));
-    q('otherBoard').classList.toggle('hidden', !!online);
+    // The reto goes straight to the rematch: other boards and players are for normal games.
+    q('otherBoard').classList.toggle('hidden', !!online || dailyOn());
+    q('changePlayers').classList.toggle('hidden', dailyOn());
     q('changePlayers').textContent = online ? 'Salir' : t('changePlayers');
     q('rematch').focus({ preventScroll: true });
 
@@ -1357,7 +1359,7 @@ const { timeFor } = Engine;
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
     showEndScore(w);
-    showEndStats(w, !duel || (!!tiebreak && tiebreak !== 'none'));
+    showEndStats(w, !duel);
     lastResult = {
       mode: gameMode,
       winner: w,
@@ -1436,7 +1438,7 @@ const { timeFor } = Engine;
     q('endPhrase').classList.toggle('hidden', !text);
   }
   const endAction = (action) => track('end_action', { ...modeParams(), action, end_phrase: lastPhrase });
-  // Streaks only matter when they decide the game: otherwise they wait folded in «Ver detalles».
+  // The details wait folded in «Ver detalles»; with four players they are the scoreboard, so open.
   function showEndStats(w, open) {
     const stats = Match.streaks(m);
     const won = [w].flat();
@@ -1731,8 +1733,8 @@ const { timeFor } = Engine;
       .map((_, i) => i)
       .sort((a, b) => st.wins[b] - st.wins[a] || st.points[b] - st.points[a]);
     const leader = st.wins[order[0]] > st.wins[order[1]] ? order[0] : null;
-    // Against the machine it shows from the first game; between people, from the second one.
-    const hidden = st.games < (gameMode === 'solo' ? 1 : 2);
+    // One game is already told by the big score: the session board shows from the second one.
+    const hidden = st.games < 2;
     q('sessionBoard').classList.toggle('hidden', hidden);
     if (hidden) return { order, leader };
     q('sessionRows').replaceChildren(
@@ -1761,7 +1763,8 @@ const { timeFor } = Engine;
       }),
     );
     q('sessionMeta').textContent = sessionMetaText(st);
-    const nudge = sessionNudge(st, { machine: machineSeat() });
+    // One comment at a time: the end phrase goes first.
+    const nudge = lastPhrase === 'none' ? sessionNudge(st, { machine: machineSeat() }) : null;
     const name = names[nudge?.player];
     const text =
       nudge &&
@@ -2659,8 +2662,8 @@ const { timeFor } = Engine;
         : w === 1
           ? t('daily.lost', n)
           : t('daily.draw', n);
-    q('challengeResult').textContent =
-      text + (streak > 1 ? ` · ${t('daily.streak', { count: streak })}` : '');
+    q('challengeResult').textContent = text;
+    showStreak(state, streak);
     track('daily_end', {
       ...modeParams(),
       ...dailyParams(),
@@ -2669,7 +2672,39 @@ const { timeFor } = Engine;
       daily_result: w === 0 ? 'won' : w === 1 ? 'lost' : 'draw',
     });
   }
+  // The streak and the week: a ✓ for each reto played, from the saved results.
+  function showStreak(state, streak) {
+    const span = (className, text) => {
+      const e = document.createElement('span');
+      e.className = className;
+      e.textContent = text;
+      return e;
+    };
+    q('dailyStreakTitle').textContent = t('daily.streak_title', { count: streak });
+    q('dailyStreakDays').replaceChildren(
+      ...Daily.lastWeek(state, daily.key).map(({ key, played }) => {
+        const li = document.createElement('li');
+        li.classList.toggle('played', played);
+        li.classList.toggle('today', key === daily.key);
+        const mark = span('streak-mark', played ? '✓' : '');
+        const day = span('streak-day', Daily.weekdayName(key));
+        mark.setAttribute('aria-hidden', 'true');
+        day.setAttribute('aria-hidden', 'true');
+        const label = t(played ? 'daily.day_played' : 'daily.day_missed', {
+          day: Daily.weekdayName(key, 'long'),
+        });
+        li.append(mark, day, span('visually-hidden', label));
+        return li;
+      }),
+    );
+    const { h, m } = Daily.waitParts(Daily.msToNext());
+    q('dailyStreakNext').textContent = t('daily.streak_next', {
+      number: Daily.dailyNumber(Daily.addDays(daily.key, 1)),
+      wait: h ? t('daily.wait', { h, m }) : t('daily.wait_min', { m }),
+    });
+  }
   function showChallenge(w) {
+    q('dailyStreak').classList.toggle('hidden', !dailyOn());
     const on = challenged();
     q('challengeResult').classList.toggle('hidden', !on && !dailyOn());
     if (dailyOn()) return showDaily(w);

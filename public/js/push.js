@@ -102,6 +102,8 @@ export function pushAfterDaily({ first, quiet = false }) {
   });
   box.classList.toggle('hidden', !ask);
   if (ask) {
+    box.classList.remove('done');
+    q('pushTitle').classList.remove('hidden');
     q('pushActions').classList.remove('hidden');
     q('pushText').textContent = t('push.text', { hour: GAME.push.hour });
     track('push_optin', { action: 'shown', place: 'end' });
@@ -119,6 +121,9 @@ if (typeof document !== 'undefined') {
     remember();
     q('pushActions').classList.add('hidden');
     const result = await turnOn('end');
+    // Once on, a single short line: the end screen is for the result and the rematch.
+    q('pushAsk').classList.toggle('done', result === 'on');
+    q('pushTitle').classList.toggle('hidden', result === 'on');
     q('pushText').textContent =
       result === 'on'
         ? t('push.done', { hour: GAME.push.hour })

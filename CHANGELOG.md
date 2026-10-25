@@ -17,6 +17,30 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.6.0] - 2026-10-25
+
+**🔥 La pantalla final del reto: la racha a la vista y la revancha más arriba**
+
+- **Racha del reto:** al acabar el reto sale una tarjeta pequeña con los días seguidos («🔥 3 días
+  seguidos»), los 7 últimos retos con un ✓ naranja en los jugados (hoy, con un anillo), «¡Vuelve mañana
+  para mantener tu racha!» y cuándo sale el siguiente («Reto n.º 302 en 16 h 0 min»). Sale de lo que ya
+  se guardaba en `oso.daily.v1`: no cambia cómo se cuenta la racha ni cómo se genera el reto. La línea
+  «🗓️ ¡Reto del día n.º … superado!» ya no lleva los días seguidos detrás.
+- **Menos repetido:** el marcador de la sesión sale desde la segunda partida en todos los modos, también
+  contra la máquina (antes salía desde la primera, con el mismo resultado que el marcador grande).
+- **Más directo:** en el reto no salen «Otro tablero» ni «Cambiar jugadores»; queda «Revancha» y,
+  debajo, «Ver la partida», «Compartir» y «📊 Ver detalles». Algo menos de hueco encima del título.
+  En un móvil de 360 × 640 se ven el resultado, la racha y «Revancha» sin bajar.
+- **Un comentario cada vez:** si sale una frase de la partida, el marcador de la sesión ya no añade la
+  suya («Máquina puede empatar en la próxima»). Frases más cortas: «😱 ¡Por los pelos!» y «🚀 ¡Menuda
+  paliza de Julia!», que ahora sale también cuando se gana por el doble o más (antes, solo si el rival
+  se quedaba a 0).
+- **«Ver detalles»** se queda plegado aunque el desempate lo decidan las rachas (el subtítulo ya lo
+  dice). Con 4 jugadores sigue abierto, porque es su marcador.
+- **Avisos:** al aceptar el 🔔 solo queda una línea corta de confirmación, sin el título.
+- Decisión: la racha va en su tarjeta y no como frase (si no, saldría dos veces); la frase de la partida
+  sigue siendo de la partida. Petición de JoseLuis, 25-10-2026.
+
 ## [4.5.2] - 2026-10-24
 
 **🕑 El reto cambia a las 2:00 y el aviso sale a las 7:00** ([6b2e517](https://github.com/chopenhauer/devin-juega-oso/commit/6b2e51771c4a0eaa691685b06cad0f6fa04aafb0))
