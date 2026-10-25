@@ -48,9 +48,11 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   nuevo (antes seguía enseñando el anterior). Si hay una partida en marcha no se toca.
 - **Quién juega:** «🧟 Juegas como **Papá**» con el nombre resaltado y un botón «Cambiar» en la
   misma línea, con su tamaño para el dedo. Hace lo mismo que antes.
-- **Más compacta:** en el móvil la tarjeta empieza justo bajo los botones redondos y los huecos son
-  más pequeños. En un móvil de 390 × 844, el botón acaba unos 150 px más arriba (de 677 a 527 px con
-  el reto jugado); en uno de 360 × 640 cabe entero sin bajar. El tablero no se ha encogido.
+- **Más arriba:** en el móvil la tarjeta empieza justo bajo los botones redondos. En un móvil de
+  390 × 844, el botón acaba a 599 px con el reto jugado (antes, 677) y a 544 px sin jugar (antes,
+  646); en uno de 360 × 640 se ve sin bajar. El tablero no se ha encogido.
+- **Aire entre bloques:** a petición de JoseLuis, más espacio entre el panel y su contenido, el
+  tablero, la configuración, la invitación o el cuadro del resultado, quién juega y el botón.
 - **Decoraciones del tema:** siguen igual, pero detrás de la tarjeta se ven desenfocadas, para que
   nunca tapen el texto.
 - **Sin cambios** en la pantalla final, las reglas, cómo se genera el reto, cómo se cuenta la racha
