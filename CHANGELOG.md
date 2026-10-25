@@ -19,7 +19,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.6.0] - 2026-10-25
 
-**🔥 La pantalla final del reto: la racha a la vista y la revancha más arriba**
+**🔥 La pantalla final del reto: la racha a la vista y la revancha más arriba** ([fccc543](https://github.com/chopenhauer/devin-juega-oso/commit/fccc543a6031fd52aac8f8b4d90d2f2d06e9682e))
 
 - **Racha del reto:** al acabar el reto sale una tarjeta pequeña con los días seguidos («🔥 3 días
   seguidos»), los 7 últimos retos con un ✓ naranja en los jugados (hoy, con un anillo), «¡Vuelve mañana
