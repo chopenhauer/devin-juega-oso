@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.6.1] - 2026-10-25
 
-**🗓️ La landing del reto, más corta y clara: qué toca hoy, cómo te fue y cuándo vuelve**
+**🗓️ La landing del reto, más corta y clara: qué toca hoy, cómo te fue y cuándo vuelve** ([09727d9](https://github.com/chopenhauer/devin-juega-oso/commit/09727d9e4fb586c2a0051b0ca3bbb43e724b2569), [cf07316](https://github.com/chopenhauer/devin-juega-oso/commit/cf07316d433f0f23a662a23f11102a33fec30c86), [03550b0](https://github.com/chopenhauer/devin-juega-oso/commit/03550b0e06f56f6b4eaea57fed22d2381e83c2e1))
 
 - **Por qué:** en `/reto` todo iba en dos frases largas («6×6 contra la máquina en difícil, con 4
   letras ya puestas» y «✅ Hoy lo has superado 15 a 6 · 🔥 2 días seguidos · el siguiente, en 15 h
