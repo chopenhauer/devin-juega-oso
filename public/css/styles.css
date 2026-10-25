@@ -2511,14 +2511,12 @@ body:has(#helpModal:not(.hidden))
   margin: 0;
   padding: 0;
   list-style: none;
-}
-.daily-chips li {
-  padding: var(--space-1) var(--space-2-5);
-  border: 1px solid var(--line);
-  border-radius: var(--r-pill);
-  background: var(--blanco-a12);
   font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
+  color: var(--muted);
+}
+.daily-chips li + li::before {
+  content: '·';
+  margin-inline-end: var(--space-1-5);
 }
 .daily-lead {
   font-size: var(--fs-sm);

@@ -35,8 +35,9 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   letras ya puestas» y «✅ Hoy lo has superado 15 a 6 · 🔥 2 días seguidos · el siguiente, en 15 h
   10 min»), y la tarjeta quedaba lejos de los botones de arriba. Petición de JoseLuis: en tres
   segundos tiene que verse qué reto toca, si ya lo has jugado, tu racha y cuándo sale el siguiente.
-- **Orden:** título y fecha, tablero, tres etiquetas (`🎮 6×6`, `🤖 Difícil`, `🔤 4 letras
-iniciales`, sacadas del reto de hoy), el resultado o la invitación, quién juega y el botón.
+- **Orden:** título y fecha, tablero, una línea discreta, pequeña y en gris, con la
+  configuración sacada del reto de hoy («🎮 6×6 · 🤖 Difícil · 🔤 4 letras iniciales»; JoseLuis la
+  quiso sin chips ni círculos), el resultado o la invitación, quién juega y el botón.
 - **Ya jugado:** una caja pequeña con el resultado grande («15–6»), «🏆 Reto superado» (o «💪 Reto
   jugado», «🤝 Reto empatado») y «🔥 2 días seguidos». Debajo, aparte, «⏳ Próximo reto en 15 h 10
   min», con la misma cuenta atrás de antes, que se actualiza cada minuto. El botón dice «Repetir el
