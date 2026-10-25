@@ -2480,7 +2480,7 @@ body:has(#helpModal:not(.hidden))
   grid-template-columns: repeat(var(--n, 5), 1fr);
   gap: 0.1875rem;
   width: min(8.5rem, 40vw);
-  margin: var(--space-3) auto;
+  margin: var(--space-1) auto;
 }
 .daily-board span {
   display: grid;
@@ -2492,35 +2492,106 @@ body:has(#helpModal:not(.hidden))
   font-weight: var(--fw-bold);
   font-size: var(--fs-sm);
 }
-.daily-status {
-  margin: 0 0 var(--space-3);
-  font-size: var(--fs-sm);
-  text-align: center;
+/* /reto landing: title and date, board, chips, today's result or an invitation, who plays, play. */
+.daily-step {
+  gap: var(--space-2);
 }
-.daily-status:empty {
+/* Only the reto's step sits in the card, so the hidden ones do not make it taller. */
+#setupScreen[data-step='daily'] .step:not(.daily-step) {
   display: none;
 }
-.daily-who {
-  margin: 0 0 var(--space-3);
+.daily-step .intro-actions {
+  gap: var(--space-1-5);
+}
+.daily-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.daily-chips li {
+  padding: var(--space-1) var(--space-2-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--blanco-a12);
   font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.daily-lead {
+  font-size: var(--fs-sm);
+}
+.daily-done {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  align-items: center;
+  column-gap: var(--space-3);
+  justify-self: center;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--blanco-a12);
+}
+.daily-done p {
+  margin: 0;
+}
+.daily-done-title {
+  grid-column: 2;
+  font-weight: var(--fw-bold);
+  color: var(--accent);
+}
+.daily-done-score {
+  grid-area: 1 / 1 / 3 / 2;
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+}
+.daily-done-streak {
+  grid-column: 2;
+  font-size: var(--fs-sm);
+}
+.daily-next {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
   text-align: center;
+}
+.daily-who {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-1) var(--space-2-5);
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.daily-as {
+  color: var(--accent);
 }
 .daily-change {
   min-height: 2.75rem;
-  padding: 0 var(--space-2);
-  border: 0;
-  background: none;
+  padding: 0 var(--space-3-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--blanco-a12);
   color: inherit;
   font: inherit;
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-  opacity: 0.8;
+  font-weight: var(--fw-semibold);
   cursor: pointer;
+}
+.daily-practice {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  text-align: center;
 }
 .daily-name {
   justify-self: center;
   max-width: 16rem;
-  margin: 0 auto var(--space-3);
+  margin: 0 auto;
 }
 .daily-who.hidden,
 .daily-name.hidden {
@@ -4081,6 +4152,18 @@ body.legal-page {
 }
 #setupScreen[data-step='daily'] .wizard-nav {
   display: none;
+}
+/* The seasonal decorations stay behind the reto's card, blurred, so they never cover its text. */
+.panel:has(#setupScreen[data-step='daily']:not(.hidden)) {
+  -webkit-backdrop-filter: blur(0.375rem);
+  backdrop-filter: blur(0.375rem);
+}
+/* On phones the reto's card starts right below the round top buttons. */
+@media (max-width: 600px) {
+  body:has(#setupScreen[data-step='daily']:not(.hidden)) .app {
+    margin-top: 0;
+    padding-top: calc(max(0.75rem, env(safe-area-inset-top)) + 3.25rem);
+  }
 }
 /* On phones with room to spare, the card starts below the round top buttons instead of under them;
    the same room below keeps it centred where it already fitted. */

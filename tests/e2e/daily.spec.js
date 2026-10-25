@@ -68,9 +68,13 @@ test('the usual landing links to /reto discreetly, and /reto is the reto’s own
   await expect(page.locator('#challengeNote')).toBeHidden();
   await expect(page.locator('#dailyTitle')).toHaveText('🗓️ Reto del día n.º 299');
   await expect(page.locator('#dailyDate')).toHaveText('lunes, 26 de octubre');
-  await expect(page.locator('#dailyLead')).toContainText(
-    '5×5 contra la máquina en fácil, con 4 letras ya puestas',
+  await expect(page.locator('#dailyChips li')).toHaveText(['🎮 5×5', '🤖 Fácil', '🔤 4 letras iniciales']);
+  // Not played yet: an invitation, no result, countdown or replay note.
+  await expect(page.locator('#dailyLead')).toHaveText(
+    '¿Le ganas hoy a la máquina? Solo cuenta el primer intento.',
   );
+  for (const id of ['#dailyDone', '#dailyNext', '#dailyPractice'])
+    await expect(page.locator(id)).toBeHidden();
   await expect(page.locator('#dailyBoard span')).toHaveCount(25);
   const preview = await page
     .locator('#dailyBoard span')
@@ -145,9 +149,19 @@ test('only the first game counts: the result stays on the landing and the share 
   );
 
   await page.goto('/reto');
-  await expect(page.locator('#dailyStatus')).toContainText(`${mine} a ${theirs}`);
-  await expect(page.locator('#dailyStatus')).toContainText('el siguiente, en 16 h 0 min');
+  await expect(page.locator('#dailyLead')).toBeHidden();
+  await expect(page.locator('#dailyDoneTitle')).toHaveText(
+    saved.results['2026-10-26'].won
+      ? '🏆 Reto superado'
+      : mine === theirs
+        ? '🤝 Reto empatado'
+        : '💪 Reto jugado',
+  );
+  await expect(page.locator('#dailyDoneScore')).toHaveText(`${mine}–${theirs}`);
+  await expect(page.locator('#dailyDoneStreak')).toHaveText('🔥 1 día de racha');
+  await expect(page.locator('#dailyNext')).toHaveText('⏳ Próximo reto en 16 h 0 min');
   await expect(page.locator('#dailyPlay')).toHaveText('Repetir el reto');
+  await expect(page.locator('#dailyPractice')).toHaveText('Puedes practicar sin perder tu racha.');
   await page.click('#dailyPlay');
   await expect(page.locator('#gameScreen')).toBeVisible();
   await finish(page);
@@ -197,7 +211,7 @@ test('with a saved name /reto says who plays and lets change it', async ({ page 
     ),
   );
   await page.goto('/reto');
-  await expect(page.locator('#dailyWho')).toHaveText(/🦊\s+Juegas como Papá\s+cambiar/);
+  await expect(page.locator('#dailyWho')).toHaveText(/🦊\s+Juegas como\s+Papá\s+Cambiar/);
   await expect(page.locator('#dailyName')).toBeHidden();
   await page.click('#dailyChange');
   await expect(page.locator('#dailyName')).toBeFocused();
@@ -210,4 +224,38 @@ test('with a saved name /reto says who plays and lets change it', async ({ page 
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('oso.prefs.v1')).names)).toEqual([
     'Julia',
   ]);
+});
+
+test('/reto keeps the streak in view before playing and shows the new reto when the day changes', async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    if (localStorage.getItem('oso.daily.v1')) return;
+    const r = { mine: 9, theirs: 4, won: true };
+    const results = { '2026-10-23': r, '2026-10-24': r, '2026-10-25': r };
+    localStorage.setItem('oso.daily.v1', JSON.stringify({ last: '2026-10-25', streak: 3, results }));
+  });
+  await page.goto('/reto');
+  await expect(page.locator('#dailyLead')).toHaveText(
+    '🔥 Llevas 3 días seguidos. ¡Juega hoy para no perder la racha!',
+  );
+  await expect(page.locator('#dailyDone')).toBeHidden();
+  await expect(page.locator('#dailyPlay')).toHaveText('Jugar el reto →');
+
+  // Played today: at 2:00 in Madrid the open landing moves on to reto n.º 300.
+  await page.evaluate(() => {
+    const state = JSON.parse(localStorage.getItem('oso.daily.v1'));
+    state.results['2026-10-26'] = { mine: 6, theirs: 6, won: false };
+    localStorage.setItem('oso.daily.v1', JSON.stringify({ ...state, last: '2026-10-26', streak: 4 }));
+  });
+  await page.reload();
+  await expect(page.locator('#dailyDoneTitle')).toHaveText('🤝 Reto empatado');
+  await expect(page.locator('#dailyDoneStreak')).toHaveText('🔥 4 días seguidos');
+  await page.clock.setFixedTime(new Date('2026-10-27T02:00:30+01:00'));
+  await page.clock.fastForward(60000);
+  await expect(page.locator('#dailyTitle')).toHaveText('🗓️ Reto del día n.º 300');
+  await expect(page.locator('#dailyDone')).toBeHidden();
+  await expect(page.locator('#dailyLead')).toHaveText(
+    '🔥 Llevas 4 días seguidos. ¡Juega hoy para no perder la racha!',
+  );
 });

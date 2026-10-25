@@ -125,16 +125,25 @@
         <div id="setupScreen" class="setup">
           <p id="challengeNote" class="challenge-note hidden" role="status"></p>
           <div id="setupSteps" class="setup-steps">
-            <div class="step inactive" data-step="daily">
+            <div class="step inactive daily-step" data-step="daily">
               <h2 id="dailyTitle" class="step-title"></h2>
               <p id="dailyDate" class="daily-date"></p>
               <div id="dailyBoard" class="daily-board" aria-hidden="true"></div>
-              <p id="dailyLead" class="step-lead"></p>
-              <p id="dailyStatus" class="daily-status"></p>
+              <ul id="dailyChips" class="daily-chips"></ul>
+              <p id="dailyLead" class="step-lead daily-lead"></p>
+              <div id="dailyDone" class="daily-done hidden">
+                <p id="dailyDoneTitle" class="daily-done-title"></p>
+                <p id="dailyDoneScore" class="daily-done-score"></p>
+                <p id="dailyDoneStreak" class="daily-done-streak"></p>
+              </div>
+              <p id="dailyNext" class="daily-next hidden" role="timer"></p>
               <p id="dailyWho" class="daily-who">
-                <span id="dailyAvatar" aria-hidden="true">🐻</span> <span id="dailyAs"></span>
+                <span
+                  ><span id="dailyAvatar" aria-hidden="true">🐻</span>
+                  <span data-i18n="daily.as">Juegas como</span> <strong id="dailyAs" class="daily-as"></strong
+                ></span>
                 <button data-i18n="daily.change" id="dailyChange" class="daily-change" type="button">
-                  cambiar
+                  Cambiar
                 </button>
               </p>
               <input
@@ -147,6 +156,9 @@
               />
               <div class="intro-actions">
                 <button id="dailyPlay" class="primary" type="button"></button>
+                <p data-i18n="daily.practice" id="dailyPractice" class="daily-practice hidden">
+                  Puedes practicar sin perder tu racha.
+                </p>
               </div>
             </div>
             <div class="step" data-step="welcome">

@@ -284,7 +284,7 @@ function syncDailyWho() {
   const typing = editingName || !name;
   $('dailyWho').classList.toggle('hidden', typing);
   $('dailyName').classList.toggle('hidden', !typing);
-  $('dailyAs').textContent = t('daily.as', { name });
+  $('dailyAs').textContent = name;
   $('dailyAvatar').textContent = $('preview1').textContent;
 }
 $('dailyChange').addEventListener('click', () => {
@@ -317,26 +317,35 @@ function dailyTexts() {
     : t('daily.line_new', { number: today.number });
   document.querySelectorAll('.daily-link').forEach((a) => (a.textContent = line));
   if (!daily) return;
+  // At the change of day a landing left open shows the new reto, unless a game is under way.
+  if (today.key !== daily.key && !setup.classList.contains('hidden')) return location.reload();
   const streak = Daily.currentStreak(state, today.key);
-  $('dailyStatus').textContent = done
-    ? [
-        t(done.won ? 'daily.status_won' : 'daily.status_lost', { mine: done.mine, theirs: done.theirs }),
-        streak > 1 ? t('daily.streak', { count: streak }) : '',
-        t('daily.next', { wait }),
-      ]
-        .filter(Boolean)
-        .join(' · ')
-    : '';
+  $('dailyLead').classList.toggle('hidden', !!done);
+  $('dailyLead').textContent = streak ? t('daily.lead_streak', { count: streak }) : t('daily.lead');
+  ['dailyDone', 'dailyNext', 'dailyPractice'].forEach((id) => $(id).classList.toggle('hidden', !done));
+  if (done) {
+    $('dailyDoneTitle').textContent = done.won
+      ? t('daily.done_won')
+      : done.mine === done.theirs
+        ? t('daily.done_draw')
+        : t('daily.done_lost');
+    $('dailyDoneScore').textContent = t('daily.done_score', { mine: done.mine, theirs: done.theirs });
+    $('dailyDoneStreak').textContent = t('daily.streak_title', { count: streak });
+    $('dailyNext').textContent = t('daily.next', { wait });
+  }
   $('dailyPlay').textContent = done ? t('daily.play_again') : t('daily.play');
 }
 if (daily) {
   $('dailyTitle').textContent = t('daily.title', { number: daily.number });
   $('dailyDate').textContent = Daily.dateLabel(daily.key);
-  $('dailyLead').textContent = t('daily.lead', {
-    size: daily.size,
-    level: levelText(daily.difficulty),
-    letters: daily.preset.length,
-  });
+  const level = { easy: 'difficultyEasy', hard: 'difficultyHard', extreme: 'difficultyExtreme' };
+  $('dailyChips').replaceChildren(
+    ...[
+      t('daily.chip_size', { size: daily.size }),
+      t('daily.chip_level', { level: t(level[daily.difficulty]) }),
+      t('daily.chip_letters', { count: daily.preset.length }),
+    ].map((text) => Object.assign(document.createElement('li'), { textContent: text })),
+  );
   const board = $('dailyBoard');
   board.style.setProperty('--n', daily.size);
   const letters = Array(daily.size * daily.size).fill('');

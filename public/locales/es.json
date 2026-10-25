@@ -416,7 +416,6 @@
   "daily.og_image_alt": "El oso de OSO junto a las fichas O, S y O",
   "daily.wait": "{h} h {m} min",
   "daily.wait_min": "{m} min",
-  "daily.streak": "🔥 {count} días seguidos",
   "daily.streak_title": {
     "one": "🔥 {count} día de racha",
     "other": "🔥 {count} días seguidos"
@@ -439,15 +438,28 @@
   "daily.line_new": "🗓️ Reto del día n.º {number} →",
   "daily.line_done": "🗓️ Reto n.º {number}: {mine} a {theirs} · otro en {wait}",
   "daily.title": "🗓️ Reto del día n.º {number}",
-  "daily.lead": "{size}×{size} contra la máquina en {level}, con {letters} letras ya puestas.",
-  "daily.status_won": "✅ Hoy lo has superado {mine} a {theirs}",
-  "daily.status_lost": "Hoy: {mine} a {theirs}",
-  "daily.next": "el siguiente, en {wait}",
+  "daily.chip_size": "🎮 {size}×{size}",
+  "daily.chip_level": "🤖 {level}",
+  "daily.chip_letters": {
+    "one": "🔤 {count} letra inicial",
+    "other": "🔤 {count} letras iniciales"
+  },
+  "daily.lead": "¿Le ganas hoy a la máquina? Solo cuenta el primer intento.",
+  "daily.lead_streak": {
+    "one": "🔥 Llevas {count} día de racha. ¡Juega hoy para no perderla!",
+    "other": "🔥 Llevas {count} días seguidos. ¡Juega hoy para no perder la racha!"
+  },
+  "daily.done_won": "🏆 Reto superado",
+  "daily.done_lost": "💪 Reto jugado",
+  "daily.done_draw": "🤝 Reto empatado",
+  "daily.done_score": "{mine}–{theirs}",
+  "daily.next": "⏳ Próximo reto en {wait}",
+  "daily.practice": "Puedes practicar sin perder tu racha.",
   "daily.play": "Jugar el reto →",
   "daily.play_again": "Repetir el reto",
   "daily.home": "Ir a OSO",
-  "daily.as": "Juegas como {name}",
-  "daily.change": "cambiar",
+  "daily.as": "Juegas como",
+  "daily.change": "Cambiar",
   "daily.name": "Tu nombre",
   "push.title": "🗓️ Reto del día n.º {number}",
   "push.body": "{size}×{size} contra la máquina en {level}. Aún no lo has jugado: ¿le ganas?",

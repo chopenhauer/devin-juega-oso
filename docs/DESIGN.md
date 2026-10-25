@@ -101,6 +101,12 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 - **Extras** (`.power`, `.sos-power`): icono + contador; su nombre accesible es «Pista, quedan 1» o «… (ya usado)».
 - **Casillas** (`.cell`): botones con nombre «Fila 2, columna 3: O» o «… vacía».
 - **Diálogos**: la ayuda y la pantalla de victoria son `role="dialog"`; al ganar, el foco va a «Revancha». Los avisos cortos (`.info-dialog`) usan `<dialog>` nativo con `showModal()`, fuera de `.app` para que el fondo cubra toda la pantalla, y se cierran con su botón o con Escape.
+- **Landing del reto** (`/reto`, `.daily-step`): título y fecha, tablero, etiquetas `.daily-chips`
+  (píldoras con `--r-pill` y `--blanco-a12`), y luego o la invitación (`#dailyLead`) o la caja
+  `#dailyDone` (resultado grande a la izquierda, estado y racha a la derecha) con `#dailyNext`
+  aparte. Quién juega y «Cambiar» (píldora de 2,75rem de alto) van en una línea; bajo el botón,
+  `#dailyPractice` solo si ya se jugó. En el móvil la tarjeta empieza bajo los botones redondos y el
+  panel desenfoca las decoraciones del tema que tiene detrás.
 - **Racha del reto** (`#dailyStreak`, `.daily-streak`): tarjeta compacta bajo el resultado del reto, con
   la misma caja que `.session-board`. Los 7 últimos retos son círculos (`.streak-mark`): con ✓ y
   degradado `--sol-400`→`--naranja-500` si se jugó, vacíos si no, y hoy con anillo. Cada día lleva su

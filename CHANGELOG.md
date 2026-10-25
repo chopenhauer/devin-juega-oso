@@ -27,6 +27,34 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.6.1] - 2026-10-25
+
+**🗓️ La landing del reto, más corta y clara: qué toca hoy, cómo te fue y cuándo vuelve**
+
+- **Por qué:** en `/reto` todo iba en dos frases largas («6×6 contra la máquina en difícil, con 4
+  letras ya puestas» y «✅ Hoy lo has superado 15 a 6 · 🔥 2 días seguidos · el siguiente, en 15 h
+  10 min»), y la tarjeta quedaba lejos de los botones de arriba. Petición de JoseLuis: en tres
+  segundos tiene que verse qué reto toca, si ya lo has jugado, tu racha y cuándo sale el siguiente.
+- **Orden:** título y fecha, tablero, tres etiquetas (`🎮 6×6`, `🤖 Difícil`, `🔤 4 letras
+iniciales`, sacadas del reto de hoy), el resultado o la invitación, quién juega y el botón.
+- **Ya jugado:** una caja pequeña con el resultado grande («15–6»), «🏆 Reto superado» (o «💪 Reto
+  jugado», «🤝 Reto empatado») y «🔥 2 días seguidos». Debajo, aparte, «⏳ Próximo reto en 15 h 10
+  min», con la misma cuenta atrás de antes, que se actualiza cada minuto. El botón dice «Repetir el
+  reto» y debajo «Puedes practicar sin perder tu racha», porque solo cuenta la primera partida del día.
+- **Sin jugar:** «¿Le ganas hoy a la máquina? Solo cuenta el primer intento.» o, si vienes de una
+  racha, «🔥 Llevas 3 días seguidos. ¡Juega hoy para no perder la racha!». Ni resultado ni cuenta atrás.
+- **Cambio de día:** si la landing se queda abierta, a las 2:00 de Madrid se recarga con el reto
+  nuevo (antes seguía enseñando el anterior). Si hay una partida en marcha no se toca.
+- **Quién juega:** «🧟 Juegas como **Papá**» con el nombre resaltado y un botón «Cambiar» en la
+  misma línea, con su tamaño para el dedo. Hace lo mismo que antes.
+- **Más compacta:** en el móvil la tarjeta empieza justo bajo los botones redondos y los huecos son
+  más pequeños. En un móvil de 390 × 844, el botón acaba unos 150 px más arriba (de 677 a 527 px con
+  el reto jugado); en uno de 360 × 640 cabe entero sin bajar. El tablero no se ha encogido.
+- **Decoraciones del tema:** siguen igual, pero detrás de la tarjeta se ven desenfocadas, para que
+  nunca tapen el texto.
+- **Sin cambios** en la pantalla final, las reglas, cómo se genera el reto, cómo se cuenta la racha
+  ni los avisos. Es una corrección según las reglas de numeración: ajustes de diseño y de textos.
+
 ## [4.6.0] - 2026-10-25
 
 **🔥 La pantalla final del reto: la racha a la vista y la revancha más arriba** ([fccc543](https://github.com/chopenhauer/devin-juega-oso/commit/fccc543a6031fd52aac8f8b4d90d2f2d06e9682e))
