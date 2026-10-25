@@ -118,7 +118,7 @@ cualquier rama. Dependabot propone actualizaciones mensuales de dependencias y a
 1. Cada cambio se hace en una rama `devin/…` y se prueba en su preview de Vercel. Se publica cuando
    JoseLuis dice «publica».
 2. Al aprobarlo se sube la versión (`package.json`, `package-lock.json` y `public/js/version.js`) y
-   se apunta en `CHANGELOG.md` siguiendo SemVer.
+   se apunta en `CHANGELOG.md` según las reglas de numeración de su cabecera.
 3. `main` está protegida con un ruleset de GitHub: sin force push ni borrado, y solo acepta un
    commit cuando su job `check` ya ha pasado. Por eso primero se sube el merge a la rama, se
    espera al CI en verde y después se sube a `main`.

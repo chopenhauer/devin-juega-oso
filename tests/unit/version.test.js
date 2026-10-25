@@ -5,8 +5,11 @@ import { VERSION } from '../../public/js/version.js';
 
 const read = (path) => readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
 
-test('the footer version matches package.json and the latest CHANGELOG entry', () => {
+test('the footer version matches package.json, package-lock.json and the latest CHANGELOG entry', () => {
   assert.match(VERSION, /^\d+\.\d+\.\d+$/);
   assert.equal(JSON.parse(read('package.json')).version, VERSION);
+  const lock = JSON.parse(read('package-lock.json'));
+  assert.equal(lock.version, VERSION);
+  assert.equal(lock.packages[''].version, VERSION);
   assert.equal(read('CHANGELOG.md').match(/^## \[(\d+\.\d+\.\d+)\]/m)?.[1], VERSION);
 });

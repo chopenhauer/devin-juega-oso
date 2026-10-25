@@ -5,9 +5,19 @@ tomamos por el camino. La versión que sale en el pie del juego viene de `public
 
 **Cómo numeramos (MAYOR.MENOR.CORRECCIÓN):**
 
-- **Mayor:** cambia cómo se juega (modos o reglas nuevas). Ejemplo: el modo 4 jugadores será la 2.0.0.
-- **Menor:** novedades sin cambiar las reglas (temas, marcador, pantallas, avisos).
-- **Corrección:** arreglos y ajustes visuales.
+- **Mayor:** un modo nuevo, o una regla nueva o distinta: cómo se puntúa, cómo se gana o cómo se
+  desempata. Ejemplos: 4 jugadores (2.0.0), en línea (3.0.0), desempate por rachas (4.0.0).
+- **Menor:** algo nuevo que se ve o se usa, sin cambiar las reglas: una pantalla, un botón, un tema,
+  un nivel, un aviso o un secreto.
+- **Corrección:** arreglos, ajustes de diseño o de textos, cambiar un valor de `config.js` (tiempos,
+  horas, máquina), medir algo que no se ve y cambios internos.
+- **Sin versión:** si solo cambian documentos, tests o el CI (nada de lo que se publica). Van con la
+  siguiente versión.
+- **Si una versión mezcla varias cosas,** manda la más alta.
+
+Estas reglas son del 25-10-2026 (decisión de JoseLuis). Las versiones anteriores no se renumeran:
+algunas no las siguen, como la 3.6.0 y la 4.3.0 (cambios de tiempos, hoy serían correcciones) o la
+3.9.0 (textos en `es.json`, un cambio interno).
 
 Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`. Lo pendiente está en
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
