@@ -18,3 +18,5 @@ Un salón de la fama con las mejores partidas y rachas.
   (RGPD); sería mejor usar solo alias o iniciales.
 - **Pantalla:** acceso desde el inicio («🏆 Hall of fame») y al terminar la partida («¡Nuevo
   récord!»), con botón para borrar el historial.
+- **Relación con el reto del día:** la [clasificación del reto](clasificacion-reto.md) (33) sería
+  una primera versión del global, limitada al reto, donde todo el mundo juega el mismo tablero.

@@ -77,3 +77,5 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
   (`push_optin`) y cuántos vuelven desde él (`push_click`).
 - **[Elegir la hora del aviso](hora-del-aviso.md) (32):** idea de JoseLuis (24-10-2026), que cada
   persona elija a qué hora quiere el aviso. Va después de medir.
+- **[Clasificación del reto](clasificacion-reto.md) (33):** idea de JoseLuis (25-10-2026), una
+  clasificación con las puntuaciones de cada reto y otra con las de todos. Va después de medir.

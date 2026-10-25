@@ -130,6 +130,7 @@ Sirve para todos los tipos de partida.
 | 32  | [Elegir la hora del aviso](ideas/hora-del-aviso.md)               | **Ahora (4.º)**, después de medir             |
 | 3   | [Hall of fame local](ideas/hall-of-fame.md)                       | **Ahora (5.º)**                               |
 | 14  | [Hall of fame global](ideas/hall-of-fame.md)                      | Reserva                                       |
+| 33  | [Clasificación del reto del día](ideas/clasificacion-reto.md)     | Siguiente, después de medir el reto           |
 | 2   | [Secreto n.º 3, inventado por Julia](ideas/secretos-y-regalos.md) | Cuando Julia quiera                           |
 | 17  | [Regalos desbloqueables](ideas/secretos-y-regalos.md)             | Sin plan                                      |
 | 26  | [Otros idiomas](ideas/idiomas.md)                                 | Cuando lo diga JoseLuis                       |
@@ -195,7 +196,7 @@ volver a OSO (4.3), reto del día en `/reto` (4.4) y avisos del reto (4.5). El d
 ## Cómo añadir una idea
 
 1. Copia la plantilla de [`ideas/README.md`](ideas/README.md) en `docs/ideas/<nombre>.md` y dale el
-   siguiente número libre (el 33).
+   siguiente número libre (el 34).
 2. Añádela al índice de `ideas/README.md` y a la tabla de su grupo aquí. Si no encaja en ningún
    grupo, se decide con JoseLuis si hace falta uno nuevo.
 3. Cuando se publique, marca el estado como «Hecho en x.y» en los dos sitios y deja las decisiones en
