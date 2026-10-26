@@ -52,6 +52,11 @@ Al acabar cada partida, `wrap.js` suma los totales del año en `oso.wrap.v1`
 | -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `games`, `days`, `firstDay`, `lastDay` | Partidas acabadas, días con alguna partida, el primero y el último                                                       |
 | `modes`, `boards`, `themes`            | Partidas por modo (`solo`, `two`, `four`, `online`), tablero y tema                                                      |
+| `themeChanges`                         | Veces que se elige otro tema en el 🎨 (¿se queda siempre con el mismo?)                                                  |
+| `avatars`                              | Partidas con cada avatar de quien juega en el móvil (¿cuál es el más común?, ¿es fiel a uno?)                            |
+| `longestSession`, `marathons`          | La sesión más larga, en partidas, y cuántas llegaron a `wrap.marathonGames` (5)                                          |
+| `lastName`, `nameChanges`              | Tu nombre (jugador 1, o tu asiento en línea) en la última partida y cuántas veces ha cambiado                            |
+| `shares`                               | Veces que compartes, por canal: `native`, `whatsapp`, `email`, `copy`, `image`                                           |
 | `extras`                               | Extras usados en el móvil (💡 `hint`, 👁️ `last`, 🔄 `swap`, 🛟 `sos`), nunca los de la máquina ni los del rival en línea |
 | `machine`                              | Contra la máquina, `won`/`lost`/`draw` por nivel                                                                         |
 | `online`                               | En línea, `won`/`lost`/`draw` de tu asiento                                                                              |
@@ -66,6 +71,9 @@ Al acabar cada partida, `wrap.js` suma los totales del año en `oso.wrap.v1`
 - **Quién es «tú»:** contra la máquina, el jugador 1; en línea, tu asiento; en Juntos y con 4, todos,
   porque todos juegan en ese móvil. Por eso ahí se cuenta por nombre.
 - **El día** es el de Madrid, contado desde las 0:00, y la hora es la del móvil.
+- **Sesión:** la del marcador: partidas seguidas con los mismos jugadores, avatares, modo y nivel.
+- **Ideas de JoseLuis (26-10-2026):** avatares, temas, maratones, cambios de nombre y veces que se
+  comparte, para que el wrap enseñe también otras funciones del juego.
 - **No cuenta:** las partidas que se dejan a medias.
 
 ## Cuidado

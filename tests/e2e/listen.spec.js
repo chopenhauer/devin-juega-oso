@@ -229,6 +229,8 @@ test('choosing a theme in 🎨 sends theme_change, and games carry the theme and
     theme: 'halloween',
     theme_from: 'classic',
   });
+  const wrap = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.wrap.v1')));
+  expect(wrap.years['2026'].themeChanges).toBe(1);
   expect(sent.find(([name]) => name === 'game_start')[1]).toMatchObject({
     theme: 'halloween',
     theme_source: 'chosen',

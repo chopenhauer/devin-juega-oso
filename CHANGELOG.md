@@ -39,6 +39,10 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   `oso.wrap.v1`. No se guarda cada partida, solo los totales:
   - partidas, días con partida, el primer y el último día;
   - partidas por modo, tablero y tema, y extras usados en el móvil;
+  - avatares de quien juega en el móvil y veces que se cambia de tema en el 🎨;
+  - la sesión más larga y las maratones: sesiones de 5 partidas o más (`wrap.marathonGames`);
+  - veces que cambia tu nombre, el del jugador 1 o el de tu asiento en línea, de una partida a otra;
+  - veces que compartes, por canal (WhatsApp, correo, copiar, imagen o el menú del móvil);
   - contra la máquina, las victorias, derrotas y empates por nivel; en línea, los de tu asiento;
   - en Juntos y con 4, cuántas partidas juega y gana cada nombre (como mucho 20 nombres al año);
   - los OSO hechos, la mejor partida, la victoria más amplia y la racha más larga;

@@ -50,6 +50,9 @@ test('without a native share sheet, 📣 offers WhatsApp, email and copy', async
     'https://juegaoso.com/?utm_source=copy&utm_medium=share&utm_campaign=boca_oreja',
   );
   expect(await shares(page)).toEqual([expect.objectContaining({ channel: 'copy', place: 'start' })]);
+  // The OSO wrap counts it too.
+  const wrap = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.wrap.v1')));
+  expect(Object.values(wrap.years)).toEqual([expect.objectContaining({ shares: { copy: 1 }, days: 0 })]);
 
   await page.keyboard.press('Escape');
   await expect(dialog(page)).toBeHidden();

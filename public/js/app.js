@@ -438,7 +438,10 @@ const { timeFor } = Engine;
       toggleThemeMenu(false);
       return toast(online?.seat === 0 ? t('themes.host_locked') : t('themes.guest_locked'));
     }
-    if (b.dataset.theme !== theme) track('theme_change', { theme: b.dataset.theme, theme_from: theme });
+    if (b.dataset.theme !== theme) {
+      track('theme_change', { theme: b.dataset.theme, theme_from: theme });
+      countWrapOnce('themeChanges');
+    }
     applyTheme(b.dataset.theme);
     toggleThemeMenu(false);
     themeToggle.focus();
@@ -1379,7 +1382,7 @@ const { timeFor } = Engine;
     showEndPhrase();
     prepareScorecard(st, showSession(st));
     countGame();
-    countWrap(w, reason);
+    countWrap(w, reason, st.games);
     const secret = dueSecret();
     syncSecretGift();
     showFeedback(
@@ -1389,7 +1392,7 @@ const { timeFor } = Engine;
   }
 
   // The year's totals on this device, for the OSO wrap (docs/ideas/oso-wrap.md).
-  function countWrap(w, reason) {
+  function countWrap(w, reason, sessionGames) {
     const now = new Date();
     const mode = online ? 'online' : gameMode;
     Wrap.saveWrap(
@@ -1403,12 +1406,17 @@ const { timeFor } = Engine;
         winner: w,
         scores,
         names,
+        avatars,
         local: mode === 'solo' ? [0] : online ? [online.seat] : [...scores.keys()],
         longest: Match.streaks(m).map((s) => s.longest),
         extras: extrasUsed,
         reason,
+        sessionGames,
       }),
     );
+  }
+  function countWrapOnce(field, key) {
+    Wrap.saveWrap(Wrap.count(Wrap.readWrap(), { day: Daily.dayKey(new Date(), 0), field, key }));
   }
 
   // Points, longest streak and number of streaks of each player: what breaks a tie.
@@ -1643,7 +1651,7 @@ const { timeFor } = Engine;
         };
         if (card && navigator.canShare?.({ files: [card] })) data.files = [card];
         await navigator.share(data);
-        track('share', { channel: 'native', place });
+        trackShare('native', place);
         return;
       } catch (e) {
         if (e.name === 'AbortError') return;
@@ -1660,17 +1668,19 @@ const { timeFor } = Engine;
     image.classList.toggle('hidden', !card);
     q('shareDialog').showModal();
   }
-  q('shareImage').addEventListener('click', () => track('share', { channel: 'image', place: sharePlace }));
-  q('shareWhatsapp').addEventListener('click', () =>
-    track('share', { channel: 'whatsapp', place: sharePlace }),
-  );
-  q('shareEmail').addEventListener('click', () => track('share', { channel: 'email', place: sharePlace }));
+  function trackShare(channel, place) {
+    track('share', { channel, place });
+    countWrapOnce('shares', channel);
+  }
+  q('shareImage').addEventListener('click', () => trackShare('image', sharePlace));
+  q('shareWhatsapp').addEventListener('click', () => trackShare('whatsapp', sharePlace));
+  q('shareEmail').addEventListener('click', () => trackShare('email', sharePlace));
   q('shareCopy').addEventListener('click', async () => {
     const url = shareUrl('copy', shareChallenge, shareDaily);
     try {
       await navigator.clipboard.writeText(url);
       q('shareStatus').textContent = t('share.copied');
-      track('share', { channel: 'copy', place: sharePlace });
+      trackShare('copy', sharePlace);
     } catch {
       q('shareStatus').textContent = t('share.copy_this', { url: url });
     }

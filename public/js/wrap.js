@@ -1,6 +1,8 @@
 // OSO wrap (docs/ideas/oso-wrap.md): the year's totals of what is played on this device, saved now
 // so an end-of-year summary has something to tell. Only counters, never each game, and nothing
 // leaves the device. Pure, except readWrap/saveWrap (localStorage).
+import { GAME } from './config.js';
+
 export const STORAGE_KEY = 'oso.wrap.v1';
 // This year and the last one: the summary is shown from December to mid-January.
 export const KEEP_YEARS = 2;
@@ -16,10 +18,17 @@ export const emptyYear = () => ({
   modes: {},
   boards: {},
   themes: {},
+  themeChanges: 0,
+  avatars: {},
   extras: {},
   machine: {},
   online: tally(),
   names: {},
+  lastName: null,
+  nameChanges: 0,
+  longestSession: 0,
+  marathons: 0,
+  shares: {},
   points: 0,
   best: 0,
   bigWin: 0,
@@ -34,11 +43,12 @@ const add = (counts, key, n = 1) => ({ ...counts, [key]: (counts[key] ?? 0) + n 
 const outcome = (winner, p) => (winner === null ? 'draw' : [winner].flat().includes(p) ? 'won' : 'lost');
 const weekday = (day) => new Date(`${day}T12:00:00Z`).getUTCDay();
 
-function year(state, day) {
+function year(state, day, played = true) {
   const y = day.slice(0, 4);
   const saved = state.years?.[y];
   // Fields added later start empty in a year saved before them.
   const current = { ...emptyYear(), ...saved, daily: { ...emptyYear().daily, ...saved?.daily } };
+  if (!played) return { y, current };
   const firstVisit = current.lastDay !== day;
   return {
     y,
@@ -58,10 +68,27 @@ function keep(state, y, current) {
 
 // One finished game. `day` is 'YYYY-MM-DD' and `hour` 0–23 where it was played; `local` are the
 // players on this device (0 against the machine, your seat online, everybody in Juntos and with 4);
-// `longest` is each player's longest streak; `extras` the extras used on this device.
+// `longest` is each player's longest streak; `extras` the extras used on this device;
+// `sessionGames` the games of the session so far, this one included.
 export function recordGame(
   state,
-  { day, hour, mode, size, theme, difficulty, winner, scores, names, local, longest, extras = {}, reason },
+  {
+    day,
+    hour,
+    mode,
+    size,
+    theme,
+    difficulty,
+    winner,
+    scores,
+    names,
+    avatars,
+    local,
+    longest,
+    extras = {},
+    reason,
+    sessionGames = 1,
+  },
 ) {
   const { y, current: c } = year(state, day);
   const r = { ...c };
@@ -73,6 +100,13 @@ export function recordGame(
   r.weekdays = r.weekdays.map((n, i) => n + (i === weekday(day) ? 1 : 0));
   r.hours = r.hours.map((n, i) => n + (i === hour ? 1 : 0));
   if (reason === 'tiempo') r.timeouts++;
+  for (const p of local) r.avatars = add(r.avatars, avatars[p]);
+  // Your name is the first one on this device: player 1, or your seat online.
+  const me = names[local[0]];
+  if (r.lastName !== null && me !== r.lastName) r.nameChanges++;
+  r.lastName = me;
+  r.longestSession = Math.max(r.longestSession, sessionGames);
+  if (sessionGames === GAME.wrap.marathonGames) r.marathons++;
   const mine = local.map((p) => scores[p]);
   r.points += mine.reduce((a, b) => a + b, 0);
   r.best = Math.max(r.best, ...mine);
@@ -98,6 +132,14 @@ export function recordGame(
     }
   }
   return keep(state, y, r);
+}
+
+// Something done outside a game, like sharing or changing the theme: `field` goes up by one, or
+// `field[key]` if there is a key. It does not count as a day played.
+export function count(state, { day, field, key }) {
+  const { y, current: r } = year(state, day, false);
+  const value = key === undefined ? (r[field] ?? 0) + 1 : add(r[field] ?? {}, key);
+  return keep(state, y, { ...r, [field]: value });
 }
 
 // The first try at a reto del día, with the streak it leaves.

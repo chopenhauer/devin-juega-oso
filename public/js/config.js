@@ -80,6 +80,9 @@ export const GAME = freeze({
   telemetry: {
     timeoutTarget: 0.5,
   },
+  wrap: {
+    marathonGames: 5,
+  },
   sound: {
     volume: 0.16,
   },
@@ -106,6 +109,7 @@ export const SECTIONS = {
   themes: 'Temas y easter egg del 🎨',
   feedback: 'Encuesta «¿Os está gustando OSO?»',
   telemetry: 'Medición',
+  wrap: '📦 OSO wrap',
   sound: 'Sonido',
   screen: 'Pantalla (técnico)',
 };
@@ -177,6 +181,8 @@ export const HELP = {
   'feedback.cooldown': 'Partidas mínimas entre dos preguntas.',
   'telemetry.timeoutTarget':
     'Objetivo (0 a 1) de partidas que acaban por tiempo; sirve para ajustar los tiempos con datos.',
+  'wrap.marathonGames':
+    'Partidas seguidas con los mismos jugadores (una sesión) a partir de las que cuenta como una maratón en el OSO wrap.',
   'sound.volume': 'Volumen general de los sonidos (0 a 1).',
   'screen.fourMinWidth': 'Ancho mínimo de pantalla (px) para ofrecer 4 jugadores.',
   'screen.fourMinHeight': 'Alto mínimo de pantalla (px) para ofrecer 4 jugadores.',

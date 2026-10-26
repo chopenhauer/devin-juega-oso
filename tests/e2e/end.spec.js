@@ -72,6 +72,9 @@ test('the end screen tells the result, how the session goes and invites to a rem
       days: 1,
       modes: { two: 1 },
       points: 1,
+      avatars: { '🐻': 1, '🐼': 1 },
+      longestSession: 1,
+      nameChanges: 0,
       names: { 'Jugador 1': { games: 1, won: 1 }, 'Jugador 2': { games: 1, won: 0 } },
     }),
   ]);

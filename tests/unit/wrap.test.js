@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { recordGame, recordDaily, emptyYear, KEEP_YEARS, MAX_NAMES } from '../../public/js/wrap.js';
+import { recordGame, recordDaily, count, emptyYear, KEEP_YEARS, MAX_NAMES } from '../../public/js/wrap.js';
+import { GAME } from '../../public/js/config.js';
 
 const game = (over = {}) => ({
   day: '2026-10-26',
@@ -12,6 +13,7 @@ const game = (over = {}) => ({
   winner: 0,
   scores: [6, 2],
   names: ['Julia', 'Máquina'],
+  avatars: ['🦊', '🤖'],
   local: [0],
   longest: [3, 1],
   extras: {},
@@ -123,4 +125,43 @@ test('a year saved before a new field still works', () => {
   assert.equal(y.days, 3);
   assert.deepEqual(y.modes, { solo: 5 });
   assert.deepEqual(y.daily, emptyYear().daily);
+});
+
+test('avatars of the players on this device, never the machine’s', () => {
+  let s = recordGame({ years: {} }, game());
+  s = recordGame(s, game({ mode: 'two', avatars: ['🦊', '🐼'], names: ['Julia', 'Papá'], local: [0, 1] }));
+  assert.deepEqual(s.years['2026'].avatars, { '🦊': 2, '🐼': 1 });
+});
+
+test('the longest session and the marathons: a session reaching marathonGames counts once', () => {
+  const n = GAME.wrap.marathonGames;
+  let s = { years: {} };
+  for (let g = 1; g <= n + 2; g++) s = recordGame(s, game({ sessionGames: g }));
+  for (let g = 1; g <= n; g++) s = recordGame(s, game({ sessionGames: g }));
+  for (let g = 1; g < n; g++) s = recordGame(s, game({ sessionGames: g }));
+  assert.equal(s.years['2026'].longestSession, n + 2);
+  assert.equal(s.years['2026'].marathons, 2);
+});
+
+test('name changes: your name (player 1, or your seat online) against the last game', () => {
+  let s = recordGame({ years: {} }, game());
+  s = recordGame(s, game());
+  assert.equal(s.years['2026'].nameChanges, 0);
+  s = recordGame(s, game({ names: ['Juli', 'Máquina'] }));
+  s = recordGame(s, game({ mode: 'online', names: ['Papá', 'Juli'], local: [1], winner: 1 }));
+  s = recordGame(s, game({ names: ['Julia', 'Máquina'] }));
+  assert.equal(s.years['2026'].nameChanges, 2);
+  assert.equal(s.years['2026'].lastName, 'Julia');
+});
+
+test('shares and theme changes count outside games and are not days played', () => {
+  let s = count({ years: {} }, { day: '2026-10-26', field: 'shares', key: 'whatsapp' });
+  s = count(s, { day: '2026-10-26', field: 'shares', key: 'whatsapp' });
+  s = count(s, { day: '2026-10-27', field: 'shares', key: 'copy' });
+  s = count(s, { day: '2026-10-27', field: 'themeChanges' });
+  const y = s.years['2026'];
+  assert.deepEqual(y.shares, { whatsapp: 2, copy: 1 });
+  assert.equal(y.themeChanges, 1);
+  assert.equal(y.days, 0);
+  assert.equal(y.games, 0);
 });

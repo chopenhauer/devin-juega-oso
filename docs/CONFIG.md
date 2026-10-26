@@ -128,6 +128,12 @@ Cómo cambiar uno:
 | --- | --- | --- |
 | `telemetry.timeoutTarget` | 0.5 | Objetivo (0 a 1) de partidas que acaban por tiempo; sirve para ajustar los tiempos con datos. |
 
+## 📦 OSO wrap
+
+| Parámetro | Valor | Qué hace |
+| --- | --- | --- |
+| `wrap.marathonGames` | 5 | Partidas seguidas con los mismos jugadores (una sesión) a partir de las que cuenta como una maratón en el OSO wrap. |
+
 ## Sonido
 
 | Parámetro | Valor | Qué hace |
