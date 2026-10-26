@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.6.3] - 2026-10-26
 
-**📦 OSO wrap: el móvil empieza a guardar tu año**
+**📦 OSO wrap: el móvil empieza a guardar tu año** ([e029c8b](https://github.com/chopenhauer/devin-juega-oso/commit/e029c8b9045fadf649bdd913b6fece9991e38d6f))
 
 - **Por qué:** JoseLuis (26-10-2026) quiere un resumen de fin de año como el de Spotify, el OSO wrap
   ([idea 35](docs/ideas/oso-wrap.md)), y pidió empezar por guardar los datos que luego hagan falta.
