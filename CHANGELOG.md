@@ -27,6 +27,28 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.6.2] - 2026-10-26
+
+**🗓️ La tarjeta del reto, igual que la de la portada**
+
+- **Por qué:** JoseLuis (26-10-2026), con capturas de su móvil: al pasar de la portada a `/reto`
+  la tarjeta cambiaba de sitio y de tamaño. Desde la 4.6.1 empezaba justo bajo los botones redondos y
+  era más baja. Las dos landings tienen que seguir el mismo patrón, con la tarjeta centrada y el
+  mismo peso visual. Solo se ajusta la del reto.
+- **Centrada:** la tarjeta del reto se coloca como la de la portada, centrada en la pantalla y
+  con los mismos márgenes. Ya no se sube bajo los botones redondos.
+- **Mismo tamaño:** la miden los pasos ocultos del inicio, como en la portada, más el hueco de los
+  botones de pasos, que aquí no salen y se reparte arriba y abajo. En un móvil de 412 × 915 las dos
+  tarjetas van de 180 a 735 px. Con el reto ya jugado, el contenido necesita algo más y la tarjeta
+  crece solo eso: 8 px. En el iPad y en el escritorio, lo mismo.
+- **Móviles bajos (menos de 680 px de alto):** allí la tarjeta de la portada ya llega hasta los
+  botones redondos, así que la del reto sigue empezando justo debajo de ellos con su propio alto, como
+  en la 4.6.1, para que el título no quede debajo de un botón.
+- **Margen del panel:** el mismo que en la portada. El aire que pidió JoseLuis en la 4.6.1 sale ahora
+  del alto de la tarjeta, y el espacio entre bloques no cambia.
+- **Sin cambios** en los textos, el orden, el tablero, el botón, la portada ni las reglas. Es una
+  corrección: ajuste de diseño.
+
 ## [4.6.1] - 2026-10-25
 
 **🗓️ La landing del reto, más corta y clara: qué toca hoy, cómo te fue y cuándo vuelve** ([09727d9](https://github.com/chopenhauer/devin-juega-oso/commit/09727d9e4fb586c2a0051b0ca3bbb43e724b2569), [cf07316](https://github.com/chopenhauer/devin-juega-oso/commit/cf07316d433f0f23a662a23f11102a33fec30c86), [03550b0](https://github.com/chopenhauer/devin-juega-oso/commit/03550b0e06f56f6b4eaea57fed22d2381e83c2e1))

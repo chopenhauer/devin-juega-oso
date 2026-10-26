@@ -105,8 +105,10 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
   (texto pequeño en `--muted`, separado por «·», sin chips para que no compita con el tablero), y luego o la invitación (`#dailyLead`) o la caja
   `#dailyDone` (resultado grande a la izquierda, estado y racha a la derecha) con `#dailyNext`
   aparte. Quién juega y «Cambiar» (píldora de 2,75rem de alto) van en una línea; bajo el botón,
-  `#dailyPractice` solo si ya se jugó. En el móvil la tarjeta empieza bajo los botones redondos y el
-  panel desenfoca las decoraciones del tema que tiene detrás.
+  `#dailyPractice` solo si ya se jugó. La tarjeta se ve como la de la portada (4.6.2): centrada, con
+  el mismo margen y el mismo alto, porque la miden los pasos ocultos más el hueco de los botones de
+  pasos (`.wizard-nav`, que aquí no sale), repartido arriba y abajo; si el reto ya jugado necesita
+  más, solo crece lo justo. El panel desenfoca las decoraciones del tema que tiene detrás.
 - **Racha del reto** (`#dailyStreak`, `.daily-streak`): tarjeta compacta bajo el resultado del reto, con
   la misma caja que `.session-board`. Los 7 últimos retos son círculos (`.streak-mark`): con ✓ y
   degradado `--sol-400`→`--naranja-500` si se jugó, vacíos si no, y hoy con anillo. Cada día lleva su

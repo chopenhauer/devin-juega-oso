@@ -2496,15 +2496,13 @@ body:has(#helpModal:not(.hidden))
 .daily-step {
   gap: var(--space-4);
 }
-#setupScreen[data-step='daily'] {
-  padding: var(--space-6) var(--space-4) var(--space-5);
+/* The reto's card is as tall as the home card: the hidden steps still size it, plus the room of the
+   step buttons it does not show, half above and half below. A longer reto only adds what it needs. */
+#setupScreen[data-step='daily'] .step:not(.daily-step) {
+  padding-block: calc((var(--nav-btn-h) + var(--space-4)) / 2);
 }
 .daily-step .daily-date {
   margin-top: calc(var(--space-3) * -1);
-}
-/* Only the reto's step sits in the card, so the hidden ones do not make it taller. */
-#setupScreen[data-step='daily'] .step:not(.daily-step) {
-  display: none;
 }
 .daily-step .intro-actions {
   gap: var(--space-2-5);
@@ -4163,8 +4161,17 @@ body.legal-page {
   -webkit-backdrop-filter: blur(0.375rem);
   backdrop-filter: blur(0.375rem);
 }
-/* On phones the reto's card starts right below the round top buttons. */
 @media (max-width: 600px) {
+  #setupScreen[data-step='daily'] .step:not(.daily-step) {
+    padding-block: calc((var(--nav-btn-h) + var(--space-3)) / 2);
+  }
+}
+/* On short phones the home card already reaches the round top buttons: the reto's card keeps only
+   its own height and starts right below them, so the title never sits under a button. */
+@media (max-width: 600px) and (max-height: 679px) {
+  #setupScreen[data-step='daily'] .step:not(.daily-step) {
+    display: none;
+  }
   body:has(#setupScreen[data-step='daily']:not(.hidden)) .app {
     margin-top: 0;
     padding-top: calc(max(0.75rem, env(safe-area-inset-top)) + 3.25rem);
