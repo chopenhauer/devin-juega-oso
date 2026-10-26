@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.6.2] - 2026-10-26
 
-**🗓️ La tarjeta del reto, igual que la de la portada**
+**🗓️ La tarjeta del reto, igual que la de la portada** ([0c77839](https://github.com/chopenhauer/devin-juega-oso/commit/0c77839b56c8449051b36eea800fe57356e8a97c))
 
 - **Por qué:** JoseLuis (26-10-2026), con capturas de su móvil: al pasar de la portada a `/reto`
   la tarjeta cambiaba de sitio y de tamaño. Desde la 4.6.1 empezaba justo bajo los botones redondos y
