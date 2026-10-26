@@ -64,6 +64,10 @@ test('a challenge link opens the game already set, with its theme and goal', asy
   expect(end).toEqual(
     expect.objectContaining({ board_size: '4x4', difficulty: 'hard', beaten: expect.any(Boolean) }),
   );
+  const wrap = await page.evaluate(
+    () => Object.values(JSON.parse(localStorage.getItem('oso.wrap.v1')).years)[0],
+  );
+  expect(wrap.challenges).toEqual(expect.objectContaining({ opened: 1, played: 1 }));
 });
 
 test('sharing a game against the machine sends a challenge link', async ({ page }) => {

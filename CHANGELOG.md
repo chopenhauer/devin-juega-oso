@@ -43,6 +43,11 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   - la sesión más larga y las maratones: sesiones de 5 partidas o más (`wrap.marathonGames`);
   - veces que cambia tu nombre, el del jugador 1 o el de tu asiento en línea, de una partida a otra;
   - veces que compartes, por canal (WhatsApp, correo, copiar, imagen o el menú del móvil);
+  - remontadas con el 🛟, extras comprados en la tienda y secretos encontrados;
+  - partidas sin conexión y desde la app instalada;
+  - enlaces de reto abiertos, jugados y superados, y veces que se ve «Ver la partida»;
+  - tu némesis: quién te gana más, la máquina por nivel o el nombre del rival;
+  - los días seguidos con alguna partida, las revanchas y la racha más larga de revanchas seguidas;
   - contra la máquina, las victorias, derrotas y empates por nivel; en línea, los de tu asiento;
   - en Juntos y con 4, cuántas partidas juega y gana cada nombre (como mucho 20 nombres al año);
   - los OSO hechos, la mejor partida, la victoria más amplia y la racha más larga;

@@ -101,6 +101,12 @@ test('the end screen tells the result, how the session goes and invites to a rem
   // One comment at a time: with a phrase, the session board has no nudge.
   await expect(page.locator('#sessionNudge')).toBeHidden();
   await expect(page.locator('#sessionTitle')).toHaveText('🏆 Marcador de la sesión');
+  const after = await page.evaluate(
+    () => Object.values(JSON.parse(localStorage.getItem('oso.wrap.v1')).years)[0],
+  );
+  expect(after).toEqual(
+    expect.objectContaining({ games: 2, rematches: 1, rematchRun: 1, longestSession: 2 }),
+  );
 });
 
 test('on a small phone, even with big text, the whole end screen fits one screen', async ({ page }) => {

@@ -5,7 +5,7 @@ import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, iso
 import { VERSION } from './version.js';
 import { t, translateDom } from './i18n.js';
 import { play, isMuted, setMuted } from './sound.js';
-import { track, gameParams, gameEndParams, nextFeedback, answerFeedback } from './telemetry.js';
+import { track, gameParams, gameEndParams, nextFeedback, answerFeedback, displayMode } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
 import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
 import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
@@ -429,6 +429,7 @@ const { timeFor } = Engine;
       toggleThemeMenu(true);
       celebrateEgg();
       track('secret_found', { secret: 'temas', told: readSecrets().told.includes('temas') });
+      countWrapOnce('secrets', 'temas');
     },
   });
   themeMenu.addEventListener('click', (e) => {
@@ -1143,6 +1144,7 @@ const { timeFor } = Engine;
     q('shopBuy').classList.toggle('hidden', !enough);
     q('shopDialog').showModal();
     track('secret_found', { secret: 'tienda', told: readSecrets().told.includes('tienda') });
+    countWrapOnce('secrets', 'tienda');
   }
   function closeShop() {
     shopOffer = null;
@@ -1163,6 +1165,7 @@ const { timeFor } = Engine;
     updateControls();
     msg.textContent = t('shop.bought', { cost: o.cost, icon: SHOP_ITEMS[o.power].icon });
     track('extra_bought', { extra: o.power });
+    countWrapOnce('bought', o.power);
   }
   q('shopBuy').addEventListener('click', buyExtra);
 
@@ -1223,6 +1226,7 @@ const { timeFor } = Engine;
     if (over || !sosReady(player) || replaying || clockPaused || player !== current) return;
     if (settle()) return;
     const id = gameId;
+    const was = [...scores];
 
     // Global power-up: spent for everybody at once; a bought-back one switches OSO ↔ SOS again.
     const { replay: savedHistory } = Match.sos(m, player, performance.now()).events[0];
@@ -1277,6 +1281,8 @@ const { timeFor } = Engine;
     render();
     updateControls();
     msg.textContent = t('sos.recalculated', { word: targetWord, scores: scores.join(' – ') });
+    if ((gameMode !== 'solo' || player === 0) && Wrap.isComeback(was, scores, player))
+      countWrapOnce('sosComebacks');
 
     Match.resume(m, performance.now());
     timer = setInterval(tick, 100);
@@ -1412,11 +1418,13 @@ const { timeFor } = Engine;
         extras: extrasUsed,
         reason,
         sessionGames,
+        offline: navigator.onLine === false,
+        installed: displayMode() === 'standalone',
       }),
     );
   }
-  function countWrapOnce(field, key) {
-    Wrap.saveWrap(Wrap.count(Wrap.readWrap(), { day: Daily.dayKey(new Date(), 0), field, key }));
+  function countWrapOnce(field, key, atLeast) {
+    Wrap.saveWrap(Wrap.count(Wrap.readWrap(), { day: Daily.dayKey(new Date(), 0), field, key, atLeast }));
   }
 
   // Points, longest streak and number of streaks of each player: what breaks a tie.
@@ -1625,6 +1633,7 @@ const { timeFor } = Engine;
   q('replayDialog').addEventListener('close', () => {
     replayPlay(false);
     track('replay_view', { ...modeParams(), replay_seen: replay.seen, replay_moves: replay.steps.length });
+    countWrapOnce('replays');
     q('replayOpen').focus({ preventScroll: true });
   });
 
@@ -2647,6 +2656,7 @@ const { timeFor } = Engine;
       board_size: `${challenge.size}x${challenge.size}`,
       difficulty: challenge.difficulty,
     });
+    countWrapOnce('challenges', 'opened');
   }
   // Reto del día (daily.js): /reto opens today's; onboarding.js sets the game up. It is a game against
   // the machine on its board and level, with its letters already placed and the machine's luck fixed.
@@ -2753,9 +2763,12 @@ const { timeFor } = Engine;
         ? t('challenge.short', { target: challengeTarget(challenge), diff })
         : t('challenge.lost');
     track('challenge_end', { ...modeParams(), beaten, missing });
+    countWrapOnce('challenges', 'played');
+    if (beaten) countWrapOnce('challenges', 'beaten');
   }
 
   q('startGame').addEventListener('click', () => {
+    rematchRun = 0;
     if (gameMode === 'online') return void startOnline();
     startLocalGame();
   });
@@ -2835,8 +2848,12 @@ const { timeFor } = Engine;
     setSeaTheme(false);
   });
 
+  // Rematches in a row, until going back to the start.
+  let rematchRun = 0;
   q('rematch').addEventListener('click', () => {
     endAction('rematch');
+    countWrapOnce('rematches');
+    countWrapOnce('rematchRun', undefined, ++rematchRun);
     if (online) onlineRematch();
     else reset();
   });

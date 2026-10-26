@@ -57,6 +57,14 @@ Al acabar cada partida, `wrap.js` suma los totales del año en `oso.wrap.v1`
 | `longestSession`, `marathons`          | La sesión más larga, en partidas, y cuántas llegaron a `wrap.marathonGames` (5)                                          |
 | `lastName`, `nameChanges`              | Tu nombre (jugador 1, o tu asiento en línea) en la última partida y cuántas veces ha cambiado                            |
 | `shares`                               | Veces que compartes, por canal: `native`, `whatsapp`, `email`, `copy`, `image`                                           |
+| `dayRun`, `bestDayRun`                 | Días seguidos con alguna partida: los de ahora y la racha más larga del año                                              |
+| `beatenBy`                             | Tu némesis: quién te gana, `machine.<nivel>` o el nombre del rival (como mucho 20)                                       |
+| `sosComebacks`                         | Veces que el 🛟 te pone por delante cuando ibas perdiendo (no en línea)                                                  |
+| `bought`, `secrets`                    | Extras comprados en la tienda secreta y veces que se encuentra cada secreto                                              |
+| `offline`, `installed`                 | Partidas sin conexión y desde la app instalada                                                                           |
+| `challenges`                           | Enlaces de reto: `opened`, `played` y `beaten`                                                                           |
+| `replays`                              | Veces que se ve «Ver la partida»                                                                                         |
+| `rematches`, `rematchRun`              | Revanchas pedidas y la tanda más larga de revanchas seguidas                                                             |
 | `extras`                               | Extras usados en el móvil (💡 `hint`, 👁️ `last`, 🔄 `swap`, 🛟 `sos`), nunca los de la máquina ni los del rival en línea |
 | `machine`                              | Contra la máquina, `won`/`lost`/`draw` por nivel                                                                         |
 | `online`                               | En línea, `won`/`lost`/`draw` de tu asiento                                                                              |
@@ -73,7 +81,9 @@ Al acabar cada partida, `wrap.js` suma los totales del año en `oso.wrap.v1`
 - **El día** es el de Madrid, contado desde las 0:00, y la hora es la del móvil.
 - **Sesión:** la del marcador: partidas seguidas con los mismos jugadores, avatares, modo y nivel.
 - **Ideas de JoseLuis (26-10-2026):** avatares, temas, maratones, cambios de nombre y veces que se
-  comparte, para que el wrap enseñe también otras funciones del juego.
+  comparte, para que el wrap enseñe también otras funciones del juego. Después pidió guardar también
+  las otras ocho propuestas (🛟, tienda, sin conexión, retos, «Ver la partida», némesis, días seguidos
+  y revanchas), «y luego vemos si se emplearán».
 - **No cuenta:** las partidas que se dejan a medias.
 
 ## Cuidado

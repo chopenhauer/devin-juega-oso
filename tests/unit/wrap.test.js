@@ -1,6 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { recordGame, recordDaily, count, emptyYear, KEEP_YEARS, MAX_NAMES } from '../../public/js/wrap.js';
+import {
+  recordGame,
+  recordDaily,
+  count,
+  isComeback,
+  emptyYear,
+  KEEP_YEARS,
+  MAX_NAMES,
+} from '../../public/js/wrap.js';
 import { GAME } from '../../public/js/config.js';
 
 const game = (over = {}) => ({
@@ -164,4 +172,44 @@ test('shares and theme changes count outside games and are not days played', () 
   assert.equal(y.themeChanges, 1);
   assert.equal(y.days, 0);
   assert.equal(y.games, 0);
+});
+
+test('days in a row with some game: the run so far and the best one', () => {
+  let s = { years: {} };
+  for (const day of ['2026-10-30', '2026-10-31', '2026-11-01', '2026-11-01', '2026-11-03', '2026-11-04'])
+    s = recordGame(s, game({ day }));
+  assert.equal(s.years['2026'].dayRun, 2);
+  assert.equal(s.years['2026'].bestDayRun, 3);
+});
+
+test('the nemesis: the machine by level, or the name that beats you', () => {
+  let s = recordGame({ years: {} }, game({ winner: 1 }));
+  s = recordGame(s, game({ winner: 1, difficulty: 'hard' }));
+  s = recordGame(s, game({ winner: 0 }));
+  s = recordGame(s, game({ winner: null }));
+  s = recordGame(s, game({ mode: 'two', names: ['Julia', 'Papá'], local: [0, 1], winner: 1 }));
+  s = recordGame(s, game({ mode: 'online', names: ['Mamá', 'Julia'], local: [1], winner: 0 }));
+  assert.deepEqual(s.years['2026'].beatenBy, { 'machine.easy': 1, 'machine.hard': 1, Papá: 1, Mamá: 1 });
+});
+
+test('games without connection and from the installed app', () => {
+  let s = recordGame({ years: {} }, game({ offline: true, installed: true }));
+  s = recordGame(s, game({ installed: true }));
+  s = recordGame(s, game());
+  assert.equal(s.years['2026'].offline, 1);
+  assert.equal(s.years['2026'].installed, 2);
+});
+
+test('count with atLeast keeps the biggest value, like the longest run of rematches', () => {
+  let s = count({ years: {} }, { day: '2026-10-26', field: 'rematchRun', atLeast: 3 });
+  s = count(s, { day: '2026-10-26', field: 'rematchRun', atLeast: 1 });
+  assert.equal(s.years['2026'].rematchRun, 3);
+});
+
+test('a 🛟 comeback: behind before, ahead of everybody after', () => {
+  assert.equal(isComeback([2, 5], [6, 3], 0), true);
+  assert.equal(isComeback([2, 5], [5, 5], 0), false);
+  assert.equal(isComeback([6, 5], [8, 3], 0), false);
+  assert.equal(isComeback([1, 4, 2, 0], [5, 3, 4, 1], 0), true);
+  assert.equal(isComeback([1, 4, 2, 0], [3, 3, 4, 1], 0), false);
 });

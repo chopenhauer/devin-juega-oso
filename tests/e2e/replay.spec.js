@@ -87,6 +87,10 @@ test('the last game can be watched again, move by move', async ({ page }) => {
     .poll(() => events(page, 'replay_view'))
     .toEqual([expect.objectContaining({ board_size: '4x4', replay_seen: filled, replay_moves: filled })]);
   expect(await page.evaluate(() => Object.keys(localStorage).filter((k) => /replay/i.test(k)))).toEqual([]);
+  const wrap = await page.evaluate(
+    () => Object.values(JSON.parse(localStorage.getItem('oso.wrap.v1')).years)[0],
+  );
+  expect(wrap.replays).toBe(1);
 });
 
 test('playing again from the end starts over and stops at the last move', async ({ page }) => {
