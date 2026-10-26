@@ -20,3 +20,5 @@ Un salón de la fama con las mejores partidas y rachas.
   récord!»), con botón para borrar el historial.
 - **Relación con el reto del día:** la [clasificación del reto](clasificacion-reto.md) (33) sería
   una primera versión del global, limitada al reto, donde todo el mundo juega el mismo tablero.
+- **Relación con el [OSO wrap](oso-wrap.md) (35):** el resumen de fin de año también necesita guardar
+  en el móvil cómo fueron las partidas. Conviene que los dos usen los mismos datos.

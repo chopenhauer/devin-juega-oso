@@ -124,21 +124,22 @@ Sirve para todos los tipos de partida.
   bienvenidas llega a jugar. 70 de 170 sesiones llegaron por un enlace compartido. Del reto y de los
   avisos aún no hay datos.
 
-| #   | Idea                                                              | Estado                                        |
-| --- | ----------------------------------------------------------------- | --------------------------------------------- |
-| 30  | [Que la gente llegue a jugar](ideas/llegar-a-jugar.md)            | **Ahora (1.º)**                               |
-| 23  | [Reto del día y avisos](ideas/reto-del-dia.md)                    | Hecho en 4.4.0–4.5.1 · medir: **Ahora (2.º)** |
-| 32  | [Elegir la hora del aviso](ideas/hora-del-aviso.md)               | **Ahora (4.º)**, después de medir             |
-| 3   | [Hall of fame local](ideas/hall-of-fame.md)                       | **Ahora (5.º)**                               |
-| 14  | [Hall of fame global](ideas/hall-of-fame.md)                      | Reserva                                       |
-| 33  | [Clasificación del reto del día](ideas/clasificacion-reto.md)     | Siguiente, después de medir el reto           |
-| 2   | [Secreto n.º 3, inventado por Julia](ideas/secretos-y-regalos.md) | Cuando Julia quiera                           |
-| 17  | [Regalos desbloqueables](ideas/secretos-y-regalos.md)             | Sin plan                                      |
-| 26  | [Otros idiomas](ideas/idiomas.md)                                 | Cuando lo diga JoseLuis                       |
-| 29  | [Icono de la app dibujado por Julia](ideas/instalable.md)         | Cuando quiera                                 |
-| 20  | [Compartir y enlace de reto](ideas/compartir.md)                  | Hecho en 2.6.0–3.13.0                         |
-| 21  | [Ver la partida](ideas/ver-la-partida.md)                         | Hecho en 3.14.0                               |
-| 22  | [Instalable y sin conexión](ideas/instalable.md)                  | Hecho en 3.15.0–3.16.0                        |
+| #   | Idea                                                              | Estado                                                |
+| --- | ----------------------------------------------------------------- | ----------------------------------------------------- |
+| 30  | [Que la gente llegue a jugar](ideas/llegar-a-jugar.md)            | **Ahora (1.º)**                                       |
+| 23  | [Reto del día y avisos](ideas/reto-del-dia.md)                    | Hecho en 4.4.0–4.5.1 · medir: **Ahora (2.º)**         |
+| 32  | [Elegir la hora del aviso](ideas/hora-del-aviso.md)               | **Ahora (4.º)**, después de medir                     |
+| 3   | [Hall of fame local](ideas/hall-of-fame.md)                       | **Ahora (5.º)**                                       |
+| 14  | [Hall of fame global](ideas/hall-of-fame.md)                      | Reserva                                               |
+| 33  | [Clasificación del reto del día](ideas/clasificacion-reto.md)     | Siguiente, después de medir el reto                   |
+| 35  | [OSO wrap: tu año en OSO](ideas/oso-wrap.md)                      | Siguiente: contadores en noviembre, wrap en diciembre |
+| 2   | [Secreto n.º 3, inventado por Julia](ideas/secretos-y-regalos.md) | Cuando Julia quiera                                   |
+| 17  | [Regalos desbloqueables](ideas/secretos-y-regalos.md)             | Sin plan                                              |
+| 26  | [Otros idiomas](ideas/idiomas.md)                                 | Cuando lo diga JoseLuis                               |
+| 29  | [Icono de la app dibujado por Julia](ideas/instalable.md)         | Cuando quiera                                         |
+| 20  | [Compartir y enlace de reto](ideas/compartir.md)                  | Hecho en 2.6.0–3.13.0                                 |
+| 21  | [Ver la partida](ideas/ver-la-partida.md)                         | Hecho en 3.14.0                                       |
+| 22  | [Instalable y sin conexión](ideas/instalable.md)                  | Hecho en 3.15.0–3.16.0                                |
 
 ### 5. Reglas y reloj
 
