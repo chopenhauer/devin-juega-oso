@@ -1,7 +1,6 @@
 # OSO wrap: tu año en OSO (35)
 
-- **Estado:** Idea · siguiente, con fecha: los contadores tendrían que salir en noviembre para que el
-  wrap de 2026 tenga algo que contar
+- **Estado:** Contadores hechos en 4.6.3 · la pantalla del wrap, a principios de diciembre
 - **Grupo:** [Llegar, volver y compartir](../ROADMAP.md#4-llegar-volver-y-compartir)
 - **Valor / esfuerzo** (estimados por Devin): Medio / Medio
 
@@ -22,7 +21,7 @@ Solo lo que se juega en ese móvil, por ejemplo:
 - el día de la semana y la hora a la que más juegas;
 - un título final divertido, como «🐻 Oso de las rachas» o «🛟 Rey del SOS».
 
-## Qué falta hoy
+## Qué faltaba
 
 - **Los datos:** el móvil no guarda un historial de partidas. `oso.session.v1` es solo el marcador
   de la sesión, `oso.feedback.v1` cuenta las partidas jugadas y `oso.daily.v1` guarda los retos de
@@ -43,6 +42,31 @@ Solo lo que se juega en ese móvil, por ejemplo:
    - Las pantallas usan los temas y el diseño que ya hay. Hay que respetar «reducir movimiento».
    - Al final, una imagen para compartir, como la del marcador (3.12.0).
    - Si alguien ha jugado muy poco, no sale el wrap, o sale una versión corta.
+
+## Hecho en 4.6.3: los contadores
+
+Al acabar cada partida, `wrap.js` suma los totales del año en `oso.wrap.v1`
+(`{ years: { 2026: {...} } }`, solo este año y el anterior):
+
+| Campo                                  | Qué cuenta                                                                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `games`, `days`, `firstDay`, `lastDay` | Partidas acabadas, días con alguna partida, el primero y el último                                                       |
+| `modes`, `boards`, `themes`            | Partidas por modo (`solo`, `two`, `four`, `online`), tablero y tema                                                      |
+| `extras`                               | Extras usados en el móvil (💡 `hint`, 👁️ `last`, 🔄 `swap`, 🛟 `sos`), nunca los de la máquina ni los del rival en línea |
+| `machine`                              | Contra la máquina, `won`/`lost`/`draw` por nivel                                                                         |
+| `online`                               | En línea, `won`/`lost`/`draw` de tu asiento                                                                              |
+| `names`                                | En Juntos y con 4, partidas y victorias de cada nombre (como mucho 20 al año)                                            |
+| `points`, `best`                       | OSO hechos en el móvil y el máximo de una persona en una partida                                                         |
+| `bigWin`                               | La victoria más amplia, contra la máquina o en línea                                                                     |
+| `streak`                               | La racha más larga en una partida                                                                                        |
+| `timeouts`                             | Partidas que acabaron por tiempo                                                                                         |
+| `weekdays`, `hours`                    | Partidas por día de la semana (0 = domingo) y por hora                                                                   |
+| `daily`                                | Retos del día: primeros intentos (`played`), victorias (`won`) y mejor racha (`bestStreak`)                              |
+
+- **Quién es «tú»:** contra la máquina, el jugador 1; en línea, tu asiento; en Juntos y con 4, todos,
+  porque todos juegan en ese móvil. Por eso ahí se cuenta por nombre.
+- **El día** es el de Madrid, contado desde las 0:00, y la hora es la del móvil.
+- **No cuenta:** las partidas que se dejan a medias.
 
 ## Cuidado
 

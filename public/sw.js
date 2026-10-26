@@ -49,6 +49,7 @@ const SHELL = [
   '/js/vercel-analytics.js',
   '/js/version.js',
   '/js/visit.js',
+  '/js/wrap.js',
 ];
 
 const own = (url) => url.origin === self.location.origin;

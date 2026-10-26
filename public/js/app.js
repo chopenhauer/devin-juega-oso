@@ -10,6 +10,7 @@ import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecr
 import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
 import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
 import * as Daily from './daily.js';
+import * as Wrap from './wrap.js';
 import { drawScorecard } from './scorecard.js';
 import { replaySteps } from './replay.js';
 import { showInstall } from './install.js';
@@ -1378,12 +1379,36 @@ const { timeFor } = Engine;
     showEndPhrase();
     prepareScorecard(st, showSession(st));
     countGame();
+    countWrap(w, reason);
     const secret = dueSecret();
     syncSecretGift();
     showFeedback(
       nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret || pushAsking }),
     );
     showInstall(!!secret || !!feedbackMomentNow || pushAsking);
+  }
+
+  // The year's totals on this device, for the OSO wrap (docs/ideas/oso-wrap.md).
+  function countWrap(w, reason) {
+    const now = new Date();
+    const mode = online ? 'online' : gameMode;
+    Wrap.saveWrap(
+      Wrap.recordGame(Wrap.readWrap(), {
+        day: Daily.dayKey(now, 0),
+        hour: now.getHours(),
+        mode,
+        size,
+        theme,
+        difficulty,
+        winner: w,
+        scores,
+        names,
+        local: mode === 'solo' ? [0] : online ? [online.seat] : [...scores.keys()],
+        longest: Match.streaks(m).map((s) => s.longest),
+        extras: extrasUsed,
+        reason,
+      }),
+    );
   }
 
   // Points, longest streak and number of streaks of each player: what breaks a tie.
@@ -2654,6 +2679,7 @@ const { timeFor } = Engine;
     if (first) Daily.saveDaily(state);
     pushAsking = pushAfterDaily({ first });
     const streak = Daily.currentStreak(state, daily.key);
+    if (first) Wrap.saveWrap(Wrap.recordDaily(Wrap.readWrap(), { day: daily.key, won: w === 0, streak }));
     const n = { number: daily.number };
     const text = !first
       ? t('daily.again', n)

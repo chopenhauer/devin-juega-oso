@@ -27,6 +27,31 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.6.3] - 2026-10-26
+
+**📦 OSO wrap: el móvil empieza a guardar tu año**
+
+- **Por qué:** JoseLuis (26-10-2026) quiere un resumen de fin de año como el de Spotify, el OSO wrap
+  ([idea 35](docs/ideas/oso-wrap.md)), y pidió empezar por guardar los datos que luego hagan falta.
+  Hasta ahora el móvil no guardaba ningún historial de partidas, y cuanto antes empiece, más tendrá
+  que contar el wrap de 2026.
+- **Qué se guarda:** al acabar cada partida, unos contadores del año en la clave nueva
+  `oso.wrap.v1`. No se guarda cada partida, solo los totales:
+  - partidas, días con partida, el primer y el último día;
+  - partidas por modo, tablero y tema, y extras usados en el móvil;
+  - contra la máquina, las victorias, derrotas y empates por nivel; en línea, los de tu asiento;
+  - en Juntos y con 4, cuántas partidas juega y gana cada nombre (como mucho 20 nombres al año);
+  - los OSO hechos, la mejor partida, la victoria más amplia y la racha más larga;
+  - a qué día de la semana y a qué hora se juega, y cuántas partidas acaban por tiempo;
+  - del reto del día: los primeros intentos, las victorias y la mejor racha. `oso.daily.v1` solo
+    guarda 60 días, así que esto no se pierde.
+- **Privacidad:** nada sale del móvil y no hay eventos nuevos en GA4. Se guardan este año y el
+  anterior, y se borra como el resto, con «borrar datos del sitio». La política de privacidad y el
+  README ya lo cuentan.
+- **No se ve nada:** la pantalla del wrap es para diciembre. Por eso es una corrección.
+- **Código:** `wrap.js` es un módulo nuevo y puro, con sus tests. `app.js` lo llama al acabar la
+  partida y al acabar el primer intento del reto.
+
 ## [4.6.2] - 2026-10-26
 
 **🗓️ La tarjeta del reto, igual que la de la portada** ([0c77839](https://github.com/chopenhauer/devin-juega-oso/commit/0c77839b56c8449051b36eea800fe57356e8a97c))

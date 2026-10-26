@@ -64,6 +64,17 @@ test('the end screen tells the result, how the session goes and invites to a rem
   await expect(page.locator('#endScore .end-points b.winner')).toHaveText('1');
   await expect(page.locator('#winnerSub')).toBeHidden();
   await expect(page.locator('#endPhrase')).toHaveText('😱 ¡Por los pelos!');
+  // The year's totals for the OSO wrap: both players are on this device, counted by name.
+  const wrap = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.wrap.v1')));
+  expect(Object.values(wrap.years)).toEqual([
+    expect.objectContaining({
+      games: 1,
+      days: 1,
+      modes: { two: 1 },
+      points: 1,
+      names: { 'Jugador 1': { games: 1, won: 1 }, 'Jugador 2': { games: 1, won: 0 } },
+    }),
+  ]);
   // The streaks are folded: they did not decide this game.
   const details = page.locator('#endDetails');
   await expect(details).toBeVisible();

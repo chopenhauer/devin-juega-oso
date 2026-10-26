@@ -79,19 +79,20 @@ old-references/       Versiones históricas del juego (no se publican)
 Lo que se guarda en el dispositivo (`localStorage`), sin datos fuera del navegador (en línea, el servidor guarda la sala un tiempo, ver
 [`docs/ONLINE.md`](docs/ONLINE.md)):
 
-| Clave             | Qué guarda                                                               |
-| ----------------- | ------------------------------------------------------------------------ |
-| `oso.prefs.v1`    | Últimas elecciones del inicio y si ya se vio la intro                    |
-| `oso.theme.v1`    | Tema elegido en el menú 🎨                                               |
-| `oso.sound.v1`    | Sonido activado o silenciado                                             |
-| `oso.session.v1`  | Marcador de la sesión                                                    |
-| `oso.consent.v1`  | Respuesta al aviso de cookies                                            |
-| `oso.feedback.v1` | Partidas jugadas y si ya se contestó 👍/👎 (para no preguntar demasiado) |
-| `oso.install.v1`  | `dismissed` si se pulsó «No, gracias» en «📲 Instalar»                   |
-| `oso.secretos.v1` | Secretos ya contados, partidas contadas y día del último secreto         |
-| `oso.online.v1`   | Sala en línea y token del asiento, para volver tras recargar             |
-| `oso.daily.v1`    | Resultado de cada reto del día y días seguidos (los últimos 60 días)     |
-| `oso.push.v1`     | Si ya se preguntó por los avisos del reto                                |
+| Clave             | Qué guarda                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------- |
+| `oso.prefs.v1`    | Últimas elecciones del inicio y si ya se vio la intro                                             |
+| `oso.theme.v1`    | Tema elegido en el menú 🎨                                                                        |
+| `oso.sound.v1`    | Sonido activado o silenciado                                                                      |
+| `oso.session.v1`  | Marcador de la sesión                                                                             |
+| `oso.consent.v1`  | Respuesta al aviso de cookies                                                                     |
+| `oso.feedback.v1` | Partidas jugadas y si ya se contestó 👍/👎 (para no preguntar demasiado)                          |
+| `oso.install.v1`  | `dismissed` si se pulsó «No, gracias» en «📲 Instalar»                                            |
+| `oso.secretos.v1` | Secretos ya contados, partidas contadas y día del último secreto                                  |
+| `oso.online.v1`   | Sala en línea y token del asiento, para volver tras recargar                                      |
+| `oso.daily.v1`    | Resultado de cada reto del día y días seguidos (los últimos 60 días)                              |
+| `oso.push.v1`     | Si ya se preguntó por los avisos del reto                                                         |
+| `oso.wrap.v1`     | Totales del año para el OSO wrap (partidas, modos, OSO, rachas, retos), de este año y el anterior |
 
 ## Desarrollo
 

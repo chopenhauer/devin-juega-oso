@@ -138,6 +138,16 @@ test('only the first game counts: the result stays on the landing and the share 
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.daily.v1')));
   expect(saved.last).toBe('2026-10-26');
   const { mine, theirs } = saved.results['2026-10-26'];
+  // The OSO wrap counts the game and the first try at the reto.
+  const wrap = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.wrap.v1')));
+  expect(wrap.years['2026']).toEqual(
+    expect.objectContaining({
+      games: 1,
+      modes: { solo: 1 },
+      points: mine,
+      daily: { played: 1, won: saved.results['2026-10-26'].won ? 1 : 0, bestStreak: 1 },
+    }),
+  );
 
   await page.click('#shareResult');
   await expect(page.locator('#shareDialog')).toBeVisible();
