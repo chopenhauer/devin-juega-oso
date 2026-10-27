@@ -3,7 +3,7 @@ import * as Match from './match.js';
 import { sessionKey, recordGame, standings, endPhrase, sessionNudge } from './leaderboard.js';
 import { THEMES, themeOf, themeTokens, mapAvatars, festivalOn, themeMenuFor, isoDay } from './themes.js';
 import { VERSION } from './version.js';
-import { t, translateDom } from './i18n.js';
+import { t, translateDom, setHtml } from './i18n.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback, displayMode } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
@@ -1336,7 +1336,8 @@ const { timeFor } = Engine;
     q('winnerOverlay').classList.toggle('pleno', endPleno);
     q('plenoBadge').classList.toggle('hidden', !endPleno);
     q('rematch').disabled = false;
-    q('rematch').innerHTML = t('rematch.sized', { size });
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    setHtml(q('rematch'), t('rematch.sized', { size }));
     q('rematch').setAttribute('aria-label', t('rematch.sized_label', { size }));
     // The reto goes straight to the rematch: other boards and players are for normal games.
     q('otherBoard').classList.toggle('hidden', !!online || dailyOn());

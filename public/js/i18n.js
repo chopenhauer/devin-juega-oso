@@ -50,12 +50,45 @@ const setOwnText = (el, text) => {
   else el.prepend(text);
 };
 
+// HTML from the locale files keeps only the few tags they use; the rest is left out.
+// Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+const SAFE_TAGS = new Map([
+  ['A', ['href', 'target', 'rel']],
+  ['B', []],
+  ['BR', []],
+  ['EM', []],
+  ['SPAN', ['class', 'data-config']],
+  ['STRONG', []],
+]);
+const DROP_TAGS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE', 'IFRAME', 'OBJECT']);
+const SAFE_HREF = /^(?:\/(?!\/)|https:\/\/)/;
+
+function clean(node) {
+  for (const child of [...node.childNodes]) {
+    if (child.nodeType === 3) continue;
+    const allowed = child.nodeType === 1 && SAFE_TAGS.get(child.tagName);
+    if (!allowed) {
+      child.replaceWith(child.nodeType !== 1 || DROP_TAGS.has(child.tagName) ? '' : child.textContent);
+      continue;
+    }
+    for (const { name, value } of [...child.attributes])
+      if (!allowed.includes(name) || (name === 'href' && !SAFE_HREF.test(value))) child.removeAttribute(name);
+    clean(child);
+  }
+  return node;
+}
+
+export function setHtml(el, html) {
+  el.replaceChildren(...clean(new DOMParser().parseFromString(html, 'text/html').body).childNodes);
+}
+
 // data-i18n: the element's own text (child icons stay); data-i18n-html: its whole content, for
 // texts with <b>, <a>…; data-i18n-attr="aria-label:key;title:key".
 export function translateDom(root = document) {
   document.documentElement.lang = LANG;
   root.querySelectorAll('[data-i18n]').forEach((el) => setOwnText(el, t(el.dataset.i18n)));
-  root.querySelectorAll('[data-i18n-html]').forEach((el) => (el.innerHTML = t(el.dataset.i18nHtml)));
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  root.querySelectorAll('[data-i18n-html]').forEach((el) => setHtml(el, t(el.dataset.i18nHtml)));
   root.querySelectorAll('[data-i18n-attr]').forEach((el) =>
     el.dataset.i18nAttr.split(';').forEach((pair) => {
       const [attr, key] = pair.split(':');

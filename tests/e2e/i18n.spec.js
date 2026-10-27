@@ -66,3 +66,23 @@ test.describe('in a browser in another language', () => {
     expect(errors).toEqual([]);
   });
 });
+
+test('locale HTML keeps only its own tags: no handlers, scripts or javascript: links', async ({ page }) => {
+  await page.goto('/');
+  const html = await page.evaluate(async () => {
+    const { setHtml } = await import('/js/i18n.js');
+    const el = document.createElement('p');
+    setHtml(
+      el,
+      'Hola <b onclick="alert(1)">tú</b><img src="x" onerror="alert(1)"><script>alert(1)</script>' +
+        '<a href="javascript:alert(1)">x</a><a href="//evil.example">w</a>' +
+        '<a href="/privacidad" target="_blank" rel="noopener">y</a><span class="btn-sub" style="color:red">z</span>' +
+        '<div>d<i>i</i></div>',
+    );
+    return el.innerHTML;
+  });
+  expect(html).toBe(
+    'Hola <b>tú</b><a>x</a><a>w</a><a href="/privacidad" target="_blank" rel="noopener">y</a>' +
+      '<span class="btn-sub">z</span>di',
+  );
+});
