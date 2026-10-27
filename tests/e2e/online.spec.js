@@ -121,6 +121,17 @@ test('invite a friend, play turns remotely, resume after reload and win when the
   await expect(guest.locator('#gameScreen')).toBeVisible();
   await expect(cell(guest, 0)).toHaveText('O');
   await expect(cell(guest, 5)).toHaveText('O');
+  // The seat key lives only in an HttpOnly cookie: the page's JavaScript never sees it.
+  const [saved, pageCookies] = await guest.evaluate(() => [
+    JSON.parse(localStorage.getItem('oso.online.v1')),
+    document.cookie,
+  ]);
+  expect(saved).toEqual({ code, seat: 1 });
+  expect(pageCookies).not.toContain('oso_sala_');
+  const seatCookies = (await guest.context().cookies()).filter((c) => c.name.startsWith('oso_sala_'));
+  expect(seatCookies).toMatchObject([
+    { name: `oso_sala_${code}_1`, path: '/api/sala', httpOnly: true, sameSite: 'Strict' },
+  ]);
 
   // Leaving on purpose gives the win to the rival.
   await guest.locator('.menu-btn:visible').first().click();

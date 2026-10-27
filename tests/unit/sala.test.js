@@ -9,27 +9,35 @@ function setup() {
   const store = memoryStore();
   const clock = { t: 1_000_000 };
   const handle = createHandler(store, { now: () => clock.t });
-  const call = async (body, ip = '1.2.3.4') => {
+  // One browser: keeps the seat cookies of every room and seat, like a real cookie jar.
+  const jar = new Map();
+  const call = async (body, ip = '1.2.3.4', cookies = jar) => {
     const res = await handle(
       new Request('http://x/api/sala', {
         method: 'POST',
         body: JSON.stringify(body),
-        headers: { 'x-real-ip': ip },
+        headers: { 'x-real-ip': ip, cookie: [...cookies].map(([k, v]) => `${k}=${v}`).join('; ') },
       }),
     );
+    const [pair, ...attrs] = res.headers.get('set-cookie')?.split('; ') ?? [];
+    if (pair) {
+      const [k, v] = pair.split('=');
+      if (attrs.includes('Max-Age=0')) cookies.delete(k);
+      else cookies.set(k, v);
+    }
     return { http: res.status, ...(await res.json()) };
   };
   const get = async (query) => {
     const res = await handle(new Request(`http://x/api/sala?${query}`));
     return { http: res.status, ...(await res.json()) };
   };
-  return { store, clock, call, get };
+  return { store, clock, call, get, handle, jar };
 }
 
 async function startedRoom(s, size = 4) {
   const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
-  const started = await s.call({ action: 'start', code: host.code, token: host.token, size });
+  const started = await s.call({ action: 'start', code: host.code, seat: host.seat, size });
   s.clock.t += COUNTDOWN_MS;
   return { host, guest: { ...guest, rev: started.rev }, code: host.code };
 }
@@ -38,13 +46,13 @@ test('the game starts after a 3-2-1 countdown: no clock and no moves meanwhile',
   const s = setup();
   const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
   await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
-  const started = await s.call({ action: 'start', code: host.code, token: host.token, size: 4 });
+  const started = await s.call({ action: 'start', code: host.code, seat: host.seat, size: 4 });
   assert.equal(started.match.holdMs, COUNTDOWN_MS);
   s.clock.t += 1000;
   const early = await s.call({
     action: 'move',
     code: host.code,
-    token: host.token,
+    seat: host.seat,
     rev: started.rev,
     move: { type: 'place', index: 0, letter: 'O' },
   });
@@ -55,7 +63,7 @@ test('the game starts after a 3-2-1 countdown: no clock and no moves meanwhile',
   const go = await s.call({
     action: 'move',
     code: host.code,
-    token: host.token,
+    seat: host.seat,
     rev: started.rev,
     move: { type: 'place', index: 0, letter: 'O' },
   });
@@ -71,7 +79,10 @@ test('create gives a 5-character code and a secret seat; join opens the lobby, t
   assert.equal(host.http, 200);
   assert.equal(host.seats[0].name, 'Ana');
   assert.equal(JSON.stringify(host).includes('hash'), false);
-  assert.equal(JSON.stringify([...s.store.data.values()]).includes(host.token), false);
+  assert.equal(host.token, undefined);
+  const token = s.jar.get(`oso_sala_${host.code}_0`);
+  assert.match(token, /^[\w-]{22}$/);
+  assert.equal(JSON.stringify([...s.store.data.values()]).includes(token), false);
 
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   assert.equal(guest.seat, 1);
@@ -79,7 +90,7 @@ test('create gives a 5-character code and a secret seat; join opens the lobby, t
   assert.equal(guest.status, 'lobby');
   assert.equal(guest.match, undefined);
   assert.equal((await s.call({ action: 'join', code: host.code, avatar: '🐸' })).error, 'full');
-  const start = (who) => s.call({ action: 'start', code: host.code, token: who.token, size: 6 });
+  const start = (who) => s.call({ action: 'start', code: host.code, seat: who.seat, size: 6 });
   assert.equal((await start(guest)).error, 'host');
   const started = await start(host);
   assert.equal(started.status, 'playing');
@@ -106,7 +117,7 @@ test('moves are refereed: turn, version, token and rules', async () => {
   const s = setup();
   const { host, guest, code } = await startedRoom(s);
   const place = (who, rev, index, letter = 'O') =>
-    s.call({ action: 'move', code, token: who.token, rev, move: { type: 'place', index, letter } });
+    s.call({ action: 'move', code, seat: who.seat, rev, move: { type: 'place', index, letter } });
 
   assert.equal((await place(guest, guest.rev, 0)).error, 'turn');
   assert.equal((await s.call({ action: 'move', code, token: 'nope', rev: guest.rev, move: {} })).http, 403);
@@ -150,7 +161,7 @@ test('the server clock decides who runs out of time, even without moves', async 
 test('SOS and swap go through the referee; SOS holds the clock for the replay', async () => {
   const s = setup();
   const { host, guest, code } = await startedRoom(s);
-  const mv = (who, rev, move) => s.call({ action: 'move', code, token: who.token, rev, move });
+  const mv = (who, rev, move) => s.call({ action: 'move', code, seat: who.seat, rev, move });
   const a = await mv(host, guest.rev, { type: 'place', index: 0, letter: 'S' });
   const b = await mv(guest, a.rev, { type: 'sos' });
   assert.equal(b.match.word, 'SOS');
@@ -164,7 +175,7 @@ test('SOS and swap go through the referee; SOS holds the clock for the replay', 
 test('leaving gives the game to the rival and closes the room for rematches', async () => {
   const s = setup();
   const { host, guest, code } = await startedRoom(s);
-  const left = await s.call({ action: 'leave', code, token: guest.token });
+  const left = await s.call({ action: 'leave', code, seat: guest.seat });
   assert.equal(left.status, 'over');
   assert.equal(left.match.winner, 0);
   assert.equal(left.match.reason, 'abandono');
@@ -172,7 +183,7 @@ test('leaving gives the game to the rival and closes the room for rematches', as
     left.seats.map((x) => x.left),
     [false, true],
   );
-  assert.equal((await s.call({ action: 'rematch', code, token: host.token })).error, 'left');
+  assert.equal((await s.call({ action: 'rematch', code, seat: host.seat })).error, 'left');
 });
 
 test('after a game ends both must ask for a rematch and who starts alternates', async () => {
@@ -180,13 +191,13 @@ test('after a game ends both must ask for a rematch and who starts alternates', 
   const { host, guest, code } = await startedRoom(s);
   s.clock.t += timeFor(4) * 1000 + 1;
   assert.equal((await s.get(`code=${code}`)).match.reason, 'tiempo');
-  const r1 = await s.call({ action: 'rematch', code, token: host.token });
+  const r1 = await s.call({ action: 'rematch', code, seat: host.seat });
   assert.equal(r1.status, 'over');
   assert.deepEqual(
     r1.seats.map((x) => x.rematch),
     [true, false],
   );
-  const r2 = await s.call({ action: 'rematch', code, token: guest.token });
+  const r2 = await s.call({ action: 'rematch', code, seat: guest.seat });
   assert.equal(r2.status, 'playing');
   assert.equal(r2.game, 2);
   assert.equal(r2.match.current, 1);
@@ -206,18 +217,18 @@ test('anonymous counters track rooms, games, endings and errors', async () => {
   await s.call({
     action: 'move',
     code,
-    token: host.token,
+    seat: host.seat,
     rev: guest.rev,
     move: { type: 'place', index: 0, letter: 'O' },
   });
   await s.call({
     action: 'move',
     code,
-    token: host.token,
+    seat: host.seat,
     rev: guest.rev,
     move: { type: 'place', index: 1, letter: 'O' },
   });
-  await s.call({ action: 'leave', code, token: guest.token });
+  await s.call({ action: 'leave', code, seat: guest.seat });
   await s.call({ action: 'nope' });
   const { counters } = await s.get('stats=1');
   assert.equal(counters.created, 1);
@@ -236,7 +247,7 @@ test('«¡Sigo aquí!» pings are visible to the rival and need a valid seat', a
   const s = setup();
   const { host, guest, code } = await startedRoom(s);
   s.clock.t += 21_000;
-  const p = await s.call({ action: 'ping', code, token: host.token });
+  const p = await s.call({ action: 'ping', code, seat: host.seat });
   assert.equal(p.seats[0].here, s.clock.t);
   assert.equal(p.seats[1].here, 0);
   assert.equal((await s.get(`code=${code}&rev=${guest.rev}`)).seats[0].here, s.clock.t);
@@ -246,12 +257,12 @@ test('«¡Sigo aquí!» pings are visible to the rival and need a valid seat', a
 test('in the lobby both can change name and avatar; a guest who leaves frees the seat', async () => {
   const s = setup();
   const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
-  assert.equal((await s.call({ action: 'start', code: host.code, token: host.token })).error, 'alone');
+  assert.equal((await s.call({ action: 'start', code: host.code, seat: host.seat })).error, 'alone');
   const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   const p = await s.call({
     action: 'profile',
     code: host.code,
-    token: guest.token,
+    seat: guest.seat,
     name: 'Bea',
     avatar: '🦊',
   });
@@ -262,14 +273,14 @@ test('in the lobby both can change name and avatar; a guest who leaves frees the
       ['Bea', '🦊'],
     ],
   );
-  const taken = await s.call({ action: 'profile', code: host.code, token: host.token, avatar: '🦊' });
+  const taken = await s.call({ action: 'profile', code: host.code, seat: host.seat, avatar: '🦊' });
   assert.equal(taken.error, 'avatar_taken');
-  const left = await s.call({ action: 'leave', code: host.code, token: guest.token });
+  const left = await s.call({ action: 'leave', code: host.code, seat: guest.seat });
   assert.equal(left.status, 'waiting');
   assert.equal(left.seats.length, 1);
   const again = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
   assert.equal(again.status, 'lobby');
-  assert.equal((await s.call({ action: 'leave', code: host.code, token: host.token })).status, 'closed');
+  assert.equal((await s.call({ action: 'leave', code: host.code, seat: host.seat })).status, 'closed');
 });
 
 test('a room with no game after 30 min closes: polls see why, actions get «expired»', async () => {
@@ -283,7 +294,7 @@ test('a room with no game after 30 min closes: polls see why, actions get «expi
   const view = await s.get(`code=${host.code}&rev=${guest.rev}`);
   assert.equal(view.status, 'closed');
   assert.equal(view.closed, 'expired');
-  const start = await s.call({ action: 'start', code: host.code, token: host.token, size: 4 });
+  const start = await s.call({ action: 'start', code: host.code, seat: host.seat, size: 4 });
   assert.equal(start.http, 410);
   assert.equal(start.error, 'expired');
   assert.equal(start.room.status, 'closed');
@@ -300,13 +311,13 @@ test('a game started within 30 min is not closed later', async () => {
   const view = await s.get(`code=${code}`);
   assert.notEqual(view.status, 'closed');
   assert.equal(view.closed, undefined);
-  assert.equal((await s.call({ action: 'ping', code, token: host.token })).http, 200);
+  assert.equal((await s.call({ action: 'ping', code, seat: host.seat })).http, 200);
 });
 
 test('🛒 buying back an extra goes through the referee and costs seconds of the buyer', async () => {
   const s = setup();
   const { host, guest, code } = await startedRoom(s);
-  const mv = (who, rev, move) => s.call({ action: 'move', code, token: who.token, rev, move });
+  const mv = (who, rev, move) => s.call({ action: 'move', code, seat: who.seat, rev, move });
   const a = await mv(host, guest.rev, { type: 'power', power: 'hint' });
   const b = await mv(host, a.rev, { type: 'buy', power: 'hint' });
   assert.equal(b.match.extras[0].hint, 1);
@@ -324,10 +335,10 @@ test('🛒 buying back an extra goes through the referee and costs seconds of th
 test('the invite funnel is counted: links sent, opened (late or full), joins and their wait', async () => {
   const s = setup();
   const host = await s.call({ action: 'create', name: 'Ana', avatar: '🐻' });
-  const sent = await s.call({ action: 'invite', code: host.code, token: host.token, channel: 'whatsapp' });
+  const sent = await s.call({ action: 'invite', code: host.code, seat: host.seat, channel: 'whatsapp' });
   assert.equal(sent.http, 200);
   assert.equal(sent.rev, host.rev);
-  await s.call({ action: 'invite', code: host.code, token: host.token, channel: 'copy' });
+  await s.call({ action: 'invite', code: host.code, seat: host.seat, channel: 'copy' });
   assert.equal(
     (await s.call({ action: 'invite', code: host.code, token: 'nope', channel: 'copy' })).http,
     403,
@@ -363,4 +374,38 @@ test("the host's theme travels with the room; unknown themes fall back to classi
   assert.equal(odd.theme, 'classic');
   const none = await s.call({ action: 'create', name: 'Eva', avatar: '🐻' }, '5.6.7.9');
   assert.equal(none.theme, 'classic');
+});
+
+test('the seat token only travels in an HttpOnly cookie per room and seat; leaving deletes it', async () => {
+  const s = setup();
+  const res = await s.handle(
+    new Request('https://juegaoso.com/api/sala', {
+      method: 'POST',
+      body: JSON.stringify({ action: 'create', name: 'Ana', avatar: '🐻' }),
+      headers: { 'x-real-ip': '9.9.9.9' },
+    }),
+  );
+  const host = await res.json();
+  assert.equal(host.token, undefined);
+  assert.match(
+    res.headers.get('set-cookie'),
+    new RegExp(
+      `^oso_sala_${host.code}_0=[\\w-]{22}; Path=/api/sala; Max-Age=${ROOM_TTL}; HttpOnly; SameSite=Strict; Secure$`,
+    ),
+  );
+  const guest = await s.call({ action: 'join', code: host.code, name: 'Leo', avatar: '🐼' });
+  assert.equal(guest.token, undefined);
+  // Another browser, without the cookie, can't act for that seat.
+  assert.equal((await s.call({ action: 'ping', code: host.code, seat: 1 }, undefined, new Map())).http, 403);
+  assert.equal((await s.call({ action: 'ping', code: host.code, seat: 1 })).http, 200);
+  // A token kept in memory from before 4.7.5 still works and moves into the cookie.
+  const legacy = s.jar.get(`oso_sala_${host.code}_1`);
+  const other = new Map();
+  assert.equal(
+    (await s.call({ action: 'ping', code: host.code, token: legacy }, undefined, other)).http,
+    200,
+  );
+  assert.equal(other.get(`oso_sala_${host.code}_1`), legacy);
+  await s.call({ action: 'leave', code: host.code, seat: 1 });
+  assert.equal(s.jar.has(`oso_sala_${host.code}_1`), false);
 });

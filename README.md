@@ -89,7 +89,7 @@ Lo que se guarda en el dispositivo (`localStorage`), sin datos fuera del navegad
 | `oso.feedback.v1` | Partidas jugadas y si ya se contestó 👍/👎 (para no preguntar demasiado)                                                                                                |
 | `oso.install.v1`  | `dismissed` si se pulsó «No, gracias» en «📲 Instalar»                                                                                                                  |
 | `oso.secretos.v1` | Secretos ya contados, partidas contadas y día del último secreto                                                                                                        |
-| `oso.online.v1`   | Sala en línea y token del asiento, para volver tras recargar                                                                                                            |
+| `oso.online.v1`   | Sala en línea y asiento, para volver tras recargar (la clave del asiento va en una cookie `HttpOnly`)                                                                   |
 | `oso.daily.v1`    | Resultado de cada reto del día y días seguidos (los últimos 60 días)                                                                                                    |
 | `oso.push.v1`     | Si ya se preguntó por los avisos del reto                                                                                                                               |
 | `oso.wrap.v1`     | Totales del año para el OSO wrap (partidas, modos, avatares, temas, OSO, rachas, sesiones, retos, veces que se comparte, tienda, revanchas…), de este año y el anterior |

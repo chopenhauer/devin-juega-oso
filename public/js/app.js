@@ -1899,6 +1899,12 @@ const { timeFor } = Engine;
   const onlineError = (e) => ONLINE_ERRORS[e] ?? t('online.err.generic');
   const setOnlineStatus = (text) => (q('onlineStatus').textContent = text);
 
+  // The server knows the seat by its HttpOnly cookie; `token` only exists in memory for a seat
+  // saved before 4.7.5, and the server then moves it to the cookie.
+  function seatAuth(o) {
+    return { code: o.code, seat: o.seat, token: o.token };
+  }
+
   function connect(r, seat) {
     online = {
       code: r.code,
@@ -1911,7 +1917,8 @@ const { timeFor } = Engine;
       busy: false,
       offline: false,
     };
-    Online.saveSeat({ code: r.code, token: r.token, seat });
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    Online.saveSeat({ code: r.code, seat });
     if (Online.codeFromUrl()) window.history.replaceState(null, '', Online.urlWithoutRoom());
   }
 
@@ -2203,7 +2210,7 @@ const { timeFor } = Engine;
     closeNudge(true);
     const o = online;
     if (o)
-      Online.send({ action: 'ping', code: o.code, token: o.token }).then(
+      Online.send({ action: 'ping', ...seatAuth(o) }).then(
         (r) => r.ok && o === online && !o.busy && applyView(r),
       );
   });
@@ -2216,10 +2223,7 @@ const { timeFor } = Engine;
     const o = online;
     if (!o || o.busy || over || remote(current)) return false;
     o.busy = true;
-    const r = await Online.send(
-      { action: 'move', code: o.code, token: o.token, rev: o.rev, move },
-      o.quality,
-    );
+    const r = await Online.send({ action: 'move', ...seatAuth(o), rev: o.rev, move }, o.quality);
     o.busy = false;
     if (o !== online) return false;
     if (r.ok) applyView(r);
@@ -2244,7 +2248,7 @@ const { timeFor } = Engine;
 
   async function onlineRematch() {
     q('rematch').disabled = true;
-    const r = await Online.send({ action: 'rematch', code: online.code, token: online.token });
+    const r = await Online.send({ action: 'rematch', ...seatAuth(online) });
     if (r.ok || r.room) applyView(r.ok ? r : r.room);
     else q('rematch').disabled = false;
   }
@@ -2254,8 +2258,7 @@ const { timeFor } = Engine;
     restoreOwnTheme();
     if (!online) return renderLobby();
     closeNudge(false);
-    const { code, token } = online;
-    Online.send({ action: 'leave', code, token });
+    Online.send({ action: 'leave', ...seatAuth(online) });
     clearTimeout(pollTimeout);
     Online.clearSeat();
     online = null;
@@ -2407,11 +2410,11 @@ const { timeFor } = Engine;
   function dropParked(closed = false) {
     if (!closed) rivalBanner('');
     if (!parked) return;
-    const { code, token } = parked;
+    const auth = seatAuth(parked);
     parked = null;
     clearTimeout(parkTimeout);
     if (closed) rivalBanner(t('online.machine_closed', { min: GAME.online.closeAfterMinutes }));
-    else Online.send({ action: 'leave', code, token });
+    else Online.send({ action: 'leave', ...auth });
     Online.clearSeat();
   }
   q('rivalGo').addEventListener('click', () => {
@@ -2516,7 +2519,7 @@ const { timeFor } = Engine;
       schedulePoll();
     } else if (!online) return hostRoom();
     else {
-      const r = await Online.send({ action: 'profile', code: online.code, token: online.token, ...body });
+      const r = await Online.send({ action: 'profile', ...seatAuth(online), ...body });
       if (r.error === 'avatar_taken') return toast(onlineError(r.error));
       if (r.error === 'expired') return applyView(r.room);
       if (r.ok && online) applyView(r);
@@ -2539,8 +2542,7 @@ const { timeFor } = Engine;
     btn.disabled = true;
     const r = await Online.send({
       action: 'start',
-      code: online.code,
-      token: online.token,
+      ...seatAuth(online),
       size: +q('sizeSelect').value,
     });
     if (r.ok) return startOnlineGame(r);
@@ -2595,7 +2597,7 @@ const { timeFor } = Engine;
   // Counted by the server (invite funnel, docs/ONLINE.md) and in GA if allowed.
   function inviteSent(channel) {
     track('online_invite', { channel });
-    if (online) Online.send({ action: 'invite', code: online.code, token: online.token, channel });
+    if (online) Online.send({ action: 'invite', ...seatAuth(online), channel });
   }
   q('onlineWhatsapp').addEventListener('click', () => inviteSent('whatsapp'));
   q('onlineCopy').addEventListener('click', async () => {

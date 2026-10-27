@@ -39,6 +39,19 @@ const MOVES = {
 };
 
 const hash = (s) => createHash('sha256').update(s).digest('hex');
+
+// Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+// Each seat's token travels in an HttpOnly cookie, one per room and seat, so page scripts never
+// see it. Two seats of one room in the same browser (two tabs) keep their own cookie.
+const seatCookie = (code, seat) => `oso_sala_${code}_${seat}`;
+const readSeatCookie = (request, name) =>
+  request.headers
+    .get('cookie')
+    ?.split(/;\s*/)
+    .find((c) => c.startsWith(`${name}=`))
+    ?.slice(name.length + 1);
+const cookieHeader = (name, value, maxAge, secure) =>
+  `${name}=${value}; Path=/api/sala; Max-Age=${maxAge}; HttpOnly; SameSite=Strict${secure ? '; Secure' : ''}`;
 const newCode = () => Array.from({ length: 5 }, () => CODE_CHARS[randomInt(CODE_CHARS.length)]).join('');
 export const month = (now) => `stats:${new Date(now).toISOString().slice(0, 7)}`;
 
@@ -319,6 +332,7 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
     const stats = {};
     let status = 200;
     let body;
+    const headers = { 'Cache-Control': 'no-store' };
     try {
       const url = new URL(request.url);
       if (request.method === 'GET') {
@@ -348,8 +362,18 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
         if (!action) throw new HttpError(400, 'action');
         const ip =
           request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for')?.split(',')[0] ?? '-';
+        // Clients from before 4.7.5 may still hold the token in memory and send it in the body.
+        if (typeof input.token !== 'string' && [0, 1].includes(input.seat) && CODE_RE.test(input.code ?? ''))
+          input.token = readSeatCookie(request, seatCookie(input.code, input.seat));
         const { seat, token, room } = await action(input, now, stats, ip);
-        body = { seat, token, ...publicView(room, now) };
+        body = { seat, ...publicView(room, now) };
+        const secure = url.protocol === 'https:';
+        // Every action renews the cookie, so it lasts as long as the room; leaving deletes it.
+        const name = seatCookie(room.code, seat);
+        headers['Set-Cookie'] =
+          input.action === 'leave'
+            ? cookieHeader(name, '', 0, secure)
+            : cookieHeader(name, token ?? input.token, ROOM_TTL, secure);
       } else throw new HttpError(405, 'method');
     } catch (e) {
       status = e instanceof HttpError ? e.status : 500;
@@ -364,6 +388,6 @@ export function createHandler(store, { now: clock = Date.now } = {}) {
       stats.redis_cmds = store.commands() - commandsBefore + 1;
       await store.count(month(now), stats, STATS_TTL).catch((e) => console.error(e));
     }
-    return Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
+    return Response.json(body, { status, headers });
   };
 }

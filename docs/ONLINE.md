@@ -60,8 +60,13 @@ Cloudflare Durable Objects gratis 100 K peticiones/día; Supabase Realtime grati
   cambia el orden de `#side1` y `#side2` en el móvil del invitado. Al activar 🛟, la intro «S🛟S»
   sale en los dos móviles durante el tiempo que el servidor tiene parado el reloj (máx.
   `sos.flashMs`).
-- **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash. El
-  token va en `localStorage` (`oso.online.v1`) para poder volver tras recargar o perder la conexión.
+- **Asientos:** cada jugador recibe un token aleatorio (128 bits) que el servidor guarda con hash.
+  Desde la 4.7.5 (aviso de Norma) el token no lo ve el JavaScript de la página: el servidor lo pone
+  en una cookie `oso_sala_<código>_<asiento>` con `HttpOnly`, `SameSite=Strict`, `Path=/api/sala`,
+  `Secure` en https y `Max-Age` de `roomHours`, que renueva en cada acción y borra con `leave`.
+  `localStorage` (`oso.online.v1`) solo guarda el código y el asiento, para volver tras recargar o
+  perder la conexión. Las peticiones mandan `seat` y el servidor lee la cookie de ese asiento; un
+  `token` en el cuerpo aún vale para los asientos guardados antes de la 4.7.5 (y pasa a la cookie).
 - **Árbitro:** el cliente envía intenciones (`place`, `swap`, `sos`, `power`, `buy`, `leave`) con la
   `version` que conoce; el servidor las valida con `match.js`, descuenta el reloj con su propia hora
   y guarda el estado nuevo con `version + 1`. Una jugada con versión antigua se rechaza (409) y el

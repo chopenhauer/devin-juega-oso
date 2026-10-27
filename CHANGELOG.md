@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.7.5] - 2026-10-27
 
-**🔒 Textos con HTML: solo las etiquetas que usan**
+**🔒 Textos con HTML filtrados y la clave en línea, en una cookie**
 
 - **Por qué:** un escaneo de Norma (27-10-2026) avisó de que `translateDom` y el botón «Revancha»
   escribían con `innerHTML`. Los textos salen de `es.json`, que es nuestro, y la CSP ya no deja
@@ -38,8 +38,13 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Qué cambia:** `setHtml` (`i18n.js`) lee el HTML con `DOMParser` y solo deja `<b>`, `<strong>`,
   `<em>`, `<br>`, `<span>` (con `class` y `data-config`) y `<a>` (con `href`, `target` y `rel`, y
   solo enlaces que empiezan por `/` o `https://`). Lo demás se queda fuera. Sin dependencias nuevas.
-- **Sin cambiar:** el otro aviso, «token en `localStorage`» en `oso.session.v1`, es el marcador de
-  las partidas seguidas, no una credencial.
+- **La clave del asiento en línea:** Norma señaló «token en `localStorage`» en `oso.session.v1`,
+  que es el marcador de las partidas seguidas, no una credencial. La que sí lo es, la clave del
+  asiento en una sala, estaba en `oso.online.v1`. Ahora `/api/sala` la pone en una cookie `HttpOnly`
+  y `SameSite=Strict` por sala y asiento (solo para `/api/sala`), la renueva en cada acción y la
+  borra al salir. El cliente manda solo el número de asiento y `oso.online.v1` guarda el código y el
+  asiento. Recargar la página sigue devolviendo a la partida. Un asiento guardado antes de esta
+  versión sigue funcionando y su clave pasa a la cookie (decisión de JoseLuis: opción de la cookie).
 - **Versión de corrección:** es un arreglo interno, no se ve nada nuevo.
 
 ## [4.7.4] - 2026-10-27
