@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.7.4] - 2026-10-27
 
-**🔒 Avisos del reto: tampoco a las direcciones guardadas antes**
+**🔒 Avisos del reto: tampoco a las direcciones guardadas antes** ([6630ea7](https://github.com/chopenhauer/devin-juega-oso/commit/6630ea7f3e16a5bd055656caa56ff210b7552eef))
 
 - **Por qué:** el code scan de seguridad (27-10-2026) vio que la lista de hosts aceptaba cualquier
   subdominio de `google.com` y el cron diario mandaba un POST firmado con VAPID a la URL que
