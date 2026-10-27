@@ -52,6 +52,7 @@ reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo
 | [`docs/ANALYTICS.md`](docs/ANALYTICS.md) | Qué se mide, para qué y qué no se mide nunca                        |
 | [`docs/DATALAYER.md`](docs/DATALAYER.md) | Cómo viajan los datos: consentimiento, `dataLayer`, parámetros      |
 | [`docs/CONFIG.md`](docs/CONFIG.md)       | Parámetros del juego (generado desde `config.js`, no editar)        |
+| [`SECURITY_MODEL.md`](SECURITY_MODEL.md) | Modelo de amenazas: qué se protege, de quién y con qué              |
 
 ## Comandos
 
