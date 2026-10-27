@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.7.2] - 2026-10-27
 
-**🔒 Laboratorio: los intentos de entrar se cuentan por IP**
+**🔒 Laboratorio: los intentos de entrar se cuentan por IP** ([ffb9c39](https://github.com/chopenhauer/devin-juega-oso/commit/ffb9c39a176e7a6728924a67b6662d07c0c0681f))
 
 - **Por qué:** el escaneo de seguridad encontró que el login de `/lab` contaba todos los intentos
   en un solo contador global (`lab:tries`, 20 cada 15 min). Cualquiera podía mandar 21 contraseñas
