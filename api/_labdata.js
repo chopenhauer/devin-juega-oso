@@ -62,10 +62,13 @@ export async function fetchGames(account, fetchFn = fetch) {
   });
   if (!r.ok) throw new Error('report');
   const body = await r.json();
-  return (body.rows ?? []).map((row) => ({
-    ...Object.fromEntries(DIMENSIONS.map((d, i) => [d, row.dimensionValues[i].value])),
-    games: Number(row.metricValues[0].value),
-  }));
+  // Anyone can send GA4 events, so only keep lab versions the lab can have written.
+  return (body.rows ?? [])
+    .map((row) => ({
+      ...Object.fromEntries(DIMENSIONS.map((d, i) => [d, row.dimensionValues[i].value])),
+      games: Number(row.metricValues[0].value),
+    }))
+    .filter((row) => row.lab_version === '(not set)' || /^\d{1,9}$/.test(row.lab_version));
 }
 
 export function createLabDataHandler({ password, account, fetchFn = fetch, now = Date.now } = {}) {

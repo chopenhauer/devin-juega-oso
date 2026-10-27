@@ -27,6 +27,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.3] - 2026-10-27
+
+**🧪 Laboratorio: los datos de GA4, siempre como texto**
+
+- **Por qué:** el escaneo de seguridad vio que cualquiera que conozca el ID de medición público
+  puede mandar a GA4 una partida falsa con `lab_version` hecho de HTML. `/api/lab-data` lo pasaba
+  tal cual y la vista de datos del laboratorio lo metía con `innerHTML` en el título de la tabla:
+  podía pintar texto, enlaces o imágenes falsos (la CSP impedía ejecutar scripts).
+- **Servidor:** `fetchGames` (`api/_labdata.js`) solo se queda con las filas cuyo `lab_version` es
+  `(not set)` o un número de guardado; las demás se descartan.
+- **Navegador:** `renderData` (`public/js/lab.js`) construye la tabla con `createElement` y
+  `textContent`, sin `innerHTML`, así que aunque llegue un valor raro se ve como texto.
+- **Corrección:** un cambio interno de seguridad, sin nada nuevo que se vea.
+
 ## [4.7.2] - 2026-10-27
 
 **🔒 Laboratorio: los intentos de entrar se cuentan por IP** ([ffb9c39](https://github.com/chopenhauer/devin-juega-oso/commit/ffb9c39a176e7a6728924a67b6662d07c0c0681f))

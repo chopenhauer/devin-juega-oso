@@ -169,27 +169,33 @@ async function renderData() {
       const sum = (f) => rows.filter(f).reduce((n, row) => n + row.games, 0);
       const table = document.createElement('table');
       const head = v === '0' ? 'Valores de fábrica' : `Desde el guardado n.º ${v}`;
-      const cells = (...c) => `<tr>${c.map((x) => `<td>${x}</td>`).join('')}</tr>`;
-      table.innerHTML =
-        `<caption>${head} · ${sum(() => true)} partidas</caption>` +
-        '<tr><th>Contra la máquina</th><th>Partidas</th><th>Gana la persona</th><th>Gana la máquina</th></tr>' +
-        Object.entries(DIFFICULTIES)
-          .map(([d, name]) => {
-            const all = sum((row) => row.difficulty === d);
-            return cells(
-              name,
+      const row = (tag, ...c) => {
+        const tr = document.createElement('tr');
+        tr.append(...c.map((x) => Object.assign(document.createElement(tag), { textContent: x })));
+        return tr;
+      };
+      const caption = document.createElement('caption');
+      caption.textContent = `${head} · ${sum(() => true)} partidas`;
+      table.append(
+        caption,
+        row('th', 'Contra la máquina', 'Partidas', 'Gana la persona', 'Gana la máquina'),
+        ...Object.entries(DIFFICULTIES).map(([d, name]) => {
+          const all = sum((g) => g.difficulty === d);
+          return row(
+            'td',
+            name,
+            all,
+            pct(
+              sum((g) => g.difficulty === d && g.result === 'player'),
               all,
-              pct(
-                sum((row) => row.difficulty === d && row.result === 'player'),
-                all,
-              ),
-              pct(
-                sum((row) => row.difficulty === d && row.result === 'machine'),
-                all,
-              ),
-            );
-          })
-          .join('');
+            ),
+            pct(
+              sum((g) => g.difficulty === d && g.result === 'machine'),
+              all,
+            ),
+          );
+        }),
+      );
       const timeouts = document.createElement('p');
       const all = sum(() => true);
       timeouts.textContent = `Acaban por tiempo: ${pct(

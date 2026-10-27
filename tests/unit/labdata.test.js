@@ -60,3 +60,22 @@ test('lab data turns GA4 rows into games and caches them for 10 minutes', async 
   await handle(await asLab('pw'));
   assert.equal(calls.length, 4);
 });
+
+test('lab data drops rows whose lab version is not a saved version number', async () => {
+  const forged = (version) => ({
+    dimensionValues: ['easy', 'player', 'board_full', '5x5', version].map((value) => ({ value })),
+    metricValues: [{ value: '1' }],
+  });
+  const fn = async (url) =>
+    Response.json(
+      url === account.token_uri
+        ? { access_token: 't' }
+        : { rows: [forged('<b>x</b>'), forged('3'), forged('3 '), forged('-1'), forged('(not set)')] },
+    );
+  const handle = createLabDataHandler({ password: 'pw', account, fetchFn: fn });
+  const body = await (await handle(await asLab('pw'))).json();
+  assert.deepEqual(
+    body.rows.map((row) => row.lab_version),
+    ['3', '(not set)'],
+  );
+});
