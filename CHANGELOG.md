@@ -27,6 +27,25 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.1] - 2026-10-27
+
+**🔔 La lista de avisos del reto, con tope y limpieza**
+
+- **Por qué:** el escaneo de seguridad vio que cualquiera, con muchas IP, podía apuntar direcciones
+  falsas sin límite (solo había 30 peticiones / 10 min por IP). Se guardaban para siempre y la
+  tarea de las 7:00 las lee todas y avisa a cada una, así que podía no llegar a tiempo a quien de
+  verdad quiere el aviso.
+- **Tope:** como mucho `push.maxSubs` (2000) móviles apuntados. Con la lista llena no se apunta
+  nadie nuevo (`/api/push` responde 503 y suma `push_full`); quien ya está puede seguir
+  actualizando. La comprobación y el guardado van en un solo script de Redis, así que el tope
+  aguanta peticiones a la vez.
+- **Limpieza:** la tarea borra las direcciones que fallan `push.maxFails` (7) días seguidos
+  (`push_dropped`) y las que llevan `push.inactiveDays` (60) días sin jugar el reto ni volver a
+  apuntarse (`push_stale`; cada suscripción guarda `seen`, el último día que llamó). Si esa persona
+  vuelve a jugar un reto, se apunta sola otra vez.
+- **Lista de hosts:** de Google solo valen `fcm.googleapis.com` y `jmt<n>.google.com`, no cualquier
+  subdominio de `google.com` (eran direcciones que nunca dan 404 y nunca se borraban).
+
 ## [4.7.0] - 2026-10-27
 
 **🌟 En pleno, y tras ganar el reto, otra partida**

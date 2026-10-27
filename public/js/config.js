@@ -59,6 +59,9 @@ export const GAME = freeze({
   },
   push: {
     hour: 7,
+    maxSubs: 2000,
+    inactiveDays: 60,
+    maxFails: 7,
   },
   secrets: {
     gamesPerSecret: 2,
@@ -163,6 +166,12 @@ export const HELP = {
     'Letras que ya están puestas en el tablero del reto del día al empezar (las mismas para todo el mundo). Más = el reto de cada día se parece menos al anterior. 0 = tablero vacío.',
   'push.hour':
     'Hora de Madrid (0-23) a la que sale el aviso del reto del día, solo a quien lo ha pedido y aún no lo ha jugado. Vercel lo lanza a las 5 y 6 UTC (verano e invierno), así que sin tocar vercel.json solo vale la 7 todo el año (la 6 solo en invierno y la 8 solo en verano); en el plan gratuito puede llegar hasta 59 minutos tarde.',
+  'push.maxSubs':
+    'Máximo de móviles apuntados al aviso. Con la lista llena no se apunta nadie más, para que nadie pueda llenar la base de datos ni hacer que la tarea de las 7:00 no llegue a tiempo a todos.',
+  'push.inactiveDays':
+    'Días sin jugar el reto ni volver a apuntarse tras los que se borra un móvil de la lista. Si vuelve a jugar un reto, se apunta solo otra vez.',
+  'push.maxFails':
+    'Días seguidos en que el servicio de avisos del navegador falla tras los que se borra esa dirección (las que ya no existen se borran a la primera).',
   'secrets.gamesPerSecret':
     'Partidas terminadas (cualquier modo y resultado) para cada secreto nuevo; como mucho 1 al día.',
   'secrets.spotlightMs':

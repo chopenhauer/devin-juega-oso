@@ -12,6 +12,14 @@ end
 redis.call('SET', KEYS[1], ARGV[2], 'EX', ARGV[3])
 return 1`;
 
+// Sets a hash field only if it already exists or the hash has fewer than ARGV[3] fields, so the
+// cap holds even with concurrent writes.
+const PUT_CAPPED = `if redis.call('HEXISTS', KEYS[1], ARGV[1]) == 0 and redis.call('HLEN', KEYS[1]) >= tonumber(ARGV[3]) then
+  return 0
+end
+redis.call('HSET', KEYS[1], ARGV[1], ARGV[2])
+return 1`;
+
 const pack = (rev, value) => `${rev}|${JSON.stringify(value)}`;
 const unpack = (raw) => (raw ? JSON.parse(raw.slice(raw.indexOf('|') + 1)) : null);
 
@@ -60,6 +68,9 @@ export function redisStore(url, token, prefix = '') {
     // Hashes of JSON values that never expire (push subscriptions).
     put: async (key, field, value) =>
       void (await call('', ['HSET', prefix + key, field, JSON.stringify(value)])),
+    putCapped: async (key, field, value, max) =>
+      (await call('', ['EVAL', PUT_CAPPED, '1', prefix + key, field, JSON.stringify(value), String(max)])) ===
+      1,
     drop: async (key, field) => void (await call('', ['HDEL', prefix + key, field])),
     all: async (key) => {
       const flat = (await call('', ['HGETALL', prefix + key])) ?? [];
@@ -109,6 +120,13 @@ export function memoryStore() {
       const h = live(key) ?? {};
       h[field] = JSON.stringify(value);
       put(key, h, 1e9);
+    },
+    putCapped: async (key, field, value, max) => {
+      const h = live(key) ?? {};
+      if (!(field in h) && Object.keys(h).length >= max) return false;
+      h[field] = JSON.stringify(value);
+      put(key, h, 1e9);
+      return true;
     },
     drop: async (key, field) => {
       const h = live(key);

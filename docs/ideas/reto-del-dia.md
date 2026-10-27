@@ -57,8 +57,9 @@ acabar se comparte la imagen del marcador. Da un motivo para volver y para compa
 ## Avisos (4.5.0)
 
 - **Sin email ni cuenta:** al aceptar, el navegador da una dirección anónima (Web Push) que se guarda
-  en Upstash con el último día que se jugó el reto, y se borra al quitar los avisos o cuando deja de
-  valer. Código: `public/js/push.js`, `api/_push.js`, `api/_webpush.js` (sin dependencias),
+  en Upstash con el último día que se jugó el reto, y se borra al quitar los avisos, cuando deja de
+  valer (o falla `push.maxFails` días seguidos) o tras `push.inactiveDays` días sin jugar el reto
+  (al volver a jugar uno se apunta solo otra vez). Como mucho se guardan `push.maxSubs` (4.7.1). Código: `public/js/push.js`, `api/_push.js`, `api/_webpush.js` (sin dependencias),
   `/api/push` y `/api/push-cron`.
 - **Cuándo se pregunta:** solo al acabar el primer reto del día y una sola vez («🔔 ¿Te aviso cuando
   haya reto nuevo?»). Se quita o se vuelve a poner en el menú, en «🔔 Avisos del reto». En el iPhone

@@ -55,7 +55,9 @@ Los nombres de los componentes van en inglés porque son los que usan los hallaz
   propósito).
 - `POST /api/visita`: cualquiera; solo suma contadores de una lista cerrada.
 - `GET/POST /api/push`: cualquiera; guarda suscripciones Web Push (lista de hosts, tamaño de las
-  claves), 30 peticiones / 10 min por IP con hash.
+  claves), 30 peticiones / 10 min por IP con hash y como mucho `push.maxSubs` en total (tope atómico
+  en Redis). La tarea borra las que fallan `push.maxFails` días seguidos o llevan
+  `push.inactiveDays` días sin usarse, para que la lista y el envío diario no crezcan sin límite.
 - `GET /api/push-cron`: Vercel Cron con `Authorization: Bearer CRON_SECRET`; avisa a todas las
   suscripciones.
 - `GET /api/config`: cualquiera; los valores del laboratorio (caché de 15 s en el borde).

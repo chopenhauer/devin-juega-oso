@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createECDH, randomBytes } from 'node:crypto';
 import { SUBS, cleanSubscription, createPushCron, createPushHandler } from '../../api/_push.js';
 import { memoryStore } from '../../api/_store.js';
+import { GAME } from '../../public/js/config.js';
 
 const b64 = (buf) => Buffer.from(buf).toString('base64url');
 const ecdh = createECDH('prime256v1');
@@ -25,6 +26,8 @@ test('only accepts real push services and well-formed keys', () => {
   assert.ok(cleanSubscription(sub(1, 'web.push.apple.com')));
   assert.ok(cleanSubscription(sub(1, 'jmt17.google.com')));
   assert.equal(cleanSubscription(sub(1, 'evilgoogle.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'sites.google.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'x.jmt17.google.com')), null);
   assert.ok(cleanSubscription(sub(1, 'updates.push.services.mozilla.com')));
   assert.equal(cleanSubscription(sub(1, 'evil.example.com')), null);
   assert.equal(cleanSubscription(sub(1, 'fcm.googleapis.com.evil.com')), null);
@@ -80,6 +83,8 @@ test('the daily notice goes once, at 7:00 Madrid, to who has not played today', 
     push_sent: 2,
     push_gone: 1,
     push_fail: 0,
+    push_dropped: 0,
+    push_stale: 0,
     push_played_today: 1,
   });
   assert.equal(sent[0].payload.title, '🗓️ Reto del día n.º 297');
@@ -96,4 +101,63 @@ test('in winter time it is the other UTC run that sends', async () => {
   const send = async () => 201;
   assert.deepEqual(await cron(s.store, WINTER - 3600e3, send)(), { skipped: 'hour' });
   assert.equal((await cron(s.store, WINTER, send)()).push_sent, 1);
+});
+
+test('the list is capped: past GAME.push.maxSubs nobody new is saved, but saved ones still update', async () => {
+  const s = setup();
+  await s.post({ subscription: sub(0) });
+  for (let n = 1; n < GAME.push.maxSubs; n++)
+    await s.store.put(SUBS, `fill${n}`, { ...sub(n), played: null });
+  assert.equal(Object.keys(await s.subs()).length, GAME.push.maxSubs);
+  const full = await s.post({ subscription: sub(GAME.push.maxSubs) });
+  assert.equal(full.status, 503);
+  assert.deepEqual(await full.json(), { error: 'full' });
+  assert.equal(Object.keys(await s.subs()).length, GAME.push.maxSubs);
+  assert.equal((await s.post({ subscription: sub(0), played: '2026-10-24', update: true })).status, 200);
+  assert.equal(
+    Object.values(await s.subs()).find((x) => x.endpoint === sub(0).endpoint).played,
+    '2026-10-24',
+  );
+  assert.equal((await s.store.counters('stats:2026-10')).push_full, 1);
+});
+
+test('subscriptions that keep failing or go unused are dropped', async () => {
+  const s = setup(WINTER);
+  await s.post({ subscription: sub(1) });
+  await s.post({ subscription: sub(2) });
+  const day = 86400e3;
+  const send = async (to) => (to.endpoint.endsWith('1') ? 500 : 201);
+  for (let d = 0; d < GAME.push.maxFails - 1; d++) {
+    const out = await cron(s.store, WINTER + d * day, send)();
+    assert.deepEqual([out.push_fail, out.push_dropped], [1, 0]);
+  }
+  const last = await cron(s.store, WINTER + (GAME.push.maxFails - 1) * day, send)();
+  assert.deepEqual([last.push_fail, last.push_dropped], [1, 1]);
+  assert.deepEqual(
+    Object.values(await s.subs()).map((x) => x.endpoint),
+    [sub(2).endpoint],
+  );
+  const later = await cron(s.store, WINTER + (GAME.push.inactiveDays + 1) * day, send)();
+  assert.deepEqual([later.push_stale, later.push_sent], [1, 0]);
+  assert.deepEqual(await s.subs(), {});
+});
+
+test('a failure in between does not add up once the address works again', async () => {
+  const s = setup(WINTER);
+  await s.post({ subscription: sub(1) });
+  let status = 500;
+  const send = async () => status;
+  await cron(s.store, WINTER, send)();
+  assert.equal(Object.values(await s.subs())[0].fails, 1);
+  status = 201;
+  await cron(s.store, WINTER + 86400e3, send)();
+  assert.equal(Object.values(await s.subs())[0].fails, 0);
+});
+
+test('entries saved before `seen` existed are kept and start counting from the next notice', async () => {
+  const s = setup();
+  await s.store.put(SUBS, 'old', { ...sub(1), played: null });
+  const out = await cron(s.store, SUMMER, async () => 201)();
+  assert.deepEqual([out.push_sent, out.push_stale], [1, 0]);
+  assert.equal((await s.subs()).old.seen, '2026-10-24');
 });

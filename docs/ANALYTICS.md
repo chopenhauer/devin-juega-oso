@@ -158,7 +158,10 @@ en línea. No guarda IP ni nada del navegador.
   que ya ha jugado el reto de hoy.
 - En cada envío de las 7:00: `push_runs` (la tarea ha llegado a enviar), `push_sent` (avisos que
   acepta el servicio del navegador), `push_gone` (direcciones que ya no valen y se borran),
-  `push_fail` y `push_played_today` (no se avisa porque ya se ha jugado).
+  `push_fail`, `push_dropped` (se borran tras `push.maxFails` días seguidos fallando), `push_stale`
+  (se borran tras `push.inactiveDays` días sin jugar el reto ni volver a apuntarse) y
+  `push_played_today` (no se avisa porque ya se ha jugado).
+- `push_full`: alguien quiere el aviso pero la lista ya tiene `push.maxSubs` móviles y no se guarda.
 - `api/_visita.js` cuenta `push_click` cuando se abre el juego desde un aviso, y GA4 recibe esa visita
   con `utm_source=push`.
 
