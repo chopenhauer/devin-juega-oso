@@ -28,6 +28,11 @@ test('only accepts real push services and well-formed keys', () => {
   assert.equal(cleanSubscription(sub(1, 'evilgoogle.com')), null);
   assert.equal(cleanSubscription(sub(1, 'sites.google.com')), null);
   assert.equal(cleanSubscription(sub(1, 'x.jmt17.google.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'google.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'evil.google.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'jmt17.google.com.evil.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'fcm.googleapis.com:8443')), null);
+  assert.equal(cleanSubscription(sub(1, 'user@fcm.googleapis.com')), null);
   assert.ok(cleanSubscription(sub(1, 'updates.push.services.mozilla.com')));
   assert.equal(cleanSubscription(sub(1, 'evil.example.com')), null);
   assert.equal(cleanSubscription(sub(1, 'fcm.googleapis.com.evil.com')), null);
@@ -160,4 +165,17 @@ test('entries saved before `seen` existed are kept and start counting from the n
   const out = await cron(s.store, SUMMER, async () => 201)();
   assert.deepEqual([out.push_sent, out.push_stale], [1, 0]);
   assert.equal((await s.subs()).old.seen, '2026-10-24');
+});
+
+test('the cron never posts to a saved address that is not a push service, and forgets it', async () => {
+  const s = setup();
+  await s.post({ subscription: sub(1) });
+  await s.store.put(SUBS, 'old', { ...sub(2, 'evil.google.com'), seen: '2026-10-24' });
+  const sent = [];
+  const send = async (to) => (sent.push(to.endpoint), 201);
+  const out = await cron(s.store, SUMMER, send)();
+  assert.equal(out.push_sent, 1);
+  assert.equal(out.push_dropped, 1);
+  assert.deepEqual(sent, [sub(1).endpoint]);
+  assert.equal('old' in (await s.subs()), false);
 });
