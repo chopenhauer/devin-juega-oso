@@ -102,7 +102,7 @@ CSP estricta sin inline, `frame-ancestors 'none'`, `X-Frame-Options: DENY`, `nos
 `Referrer-Policy: no-referrer`, COOP/CORP same-origin y `Permissions-Policy` (`vercel.json`); el
 texto de los jugadores con `textContent`; nombres y avatares limpiados en el servidor (`cleanName`,
 `cleanAvatar`); tokens de asiento con hash y nunca en `publicView`; escrituras CAS en Redis; límites
-por IP con hash para crear salas y para push; lista de hosts push (contra SSRF); cookie del
+por IP con hash para crear salas y para push; lista de hosts push (contra SSRF: solo los servicios push, en Chrome `fcm.googleapis.com` y `jmt*.google.com`; el cron vuelve a comprobar las suscripciones guardadas); cookie del
 laboratorio con HMAC, comparación en tiempo constante y límite de intentos; `cleanValues` comprueba
 los rangos del laboratorio; `.vercelignore` solo sube lo necesario; `design.html` se borra en
 producción; prefijo de entorno en las claves de Redis.

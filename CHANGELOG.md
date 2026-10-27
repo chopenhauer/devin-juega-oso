@@ -27,6 +27,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.1] - 2026-10-27
+
+**🔒 Avisos del reto: solo a los servicios push de verdad** ([#7](https://github.com/chopenhauer/devin-juega-oso/pull/7))
+
+- **Por qué:** el code scan de seguridad (27-10-2026) encontró que la lista de hosts de
+  `api/_push.js` aceptaba cualquier dirección de `google.com`. Cualquiera podía guardar como
+  «suscripción» una URL de Google a su elección y el cron diario le mandaba un POST firmado con
+  VAPID (un SSRF limitado: sin datos, pero tráfico no deseado desde nuestros servidores).
+- **Qué cambia:** de Google solo valen `fcm.googleapis.com` y `jmt*.google.com` (los de Chrome), y
+  se rechazan las direcciones con puerto o usuario. El cron vuelve a comprobar cada suscripción
+  guardada antes de enviar y borra las que ya no pasan, así que tampoco se avisa a las que se
+  guardaron antes de este cambio.
+- **Versión de corrección:** es un arreglo interno, no se ve nada nuevo.
+
 ## [4.7.0] - 2026-10-27
 
 **🌟 En pleno, y tras ganar el reto, otra partida**
