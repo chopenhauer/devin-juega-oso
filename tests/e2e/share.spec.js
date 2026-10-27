@@ -145,7 +145,8 @@ test('«Compartir» and «Replay» replace the long labels when they do not fit 
       probe.textContent = longText;
       Object.assign(probe.style, {
         position: 'absolute',
-        width: `${el.offsetWidth}px`,
+        // The layout width, unrounded: offsetWidth rounds 174.43 down to 174 and the label wraps.
+        width: getComputedStyle(el).width,
         visibility: 'hidden',
       });
       el.after(probe);
