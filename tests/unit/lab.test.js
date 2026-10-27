@@ -12,11 +12,11 @@ function setup() {
   const store = memoryStore();
   const lab = createLabHandler(store, { password: PW });
   let cookie = '';
-  const call = async (method, body) => {
+  const call = async (method, body, ip = '1.1.1.1') => {
     const r = await lab(
       new Request('http://x/api/lab', {
         method,
-        headers: cookie ? { cookie } : {},
+        headers: { 'x-real-ip': ip, ...(cookie ? { cookie } : {}) },
         body: body && JSON.stringify(body),
       }),
     );
@@ -62,7 +62,18 @@ test('without the password nothing is readable or writable, and tries are limite
   s.logout();
   for (let i = 0; i < 20; i++) await s.call('POST', { action: 'login', password: 'x' });
   assert.equal((await s.call('POST', { action: 'login', password: PW })).status, 429);
+  assert.equal((await s.call('POST', { action: 'login', password: PW }, '2.2.2.2')).status, 200);
   assert.equal((await createLabHandler(memoryStore(), {})(new Request('http://x/api/lab'))).status, 503);
+});
+
+test('login tries are counted per IP, with a larger global backstop', async () => {
+  const s = setup();
+  for (let i = 0; i < 25; i++) await s.call('POST', { action: 'login', password: 'x' }, '6.6.6.6');
+  assert.equal((await s.call('POST', { action: 'login', password: PW }, '6.6.6.6')).status, 429);
+  assert.equal((await s.call('POST', { action: 'login', password: PW }, '7.7.7.7')).status, 200);
+  for (let ip = 0; ip < 10; ip++)
+    for (let i = 0; i < 20; i++) await s.call('POST', { action: 'login', password: 'x' }, `10.0.0.${ip}`);
+  assert.equal((await s.call('POST', { action: 'login', password: PW }, '8.8.8.8')).status, 429);
 });
 
 test('a change applies to everyone, is written in the notebook and can be undone', async () => {

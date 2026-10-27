@@ -61,10 +61,10 @@ Los nombres de los componentes van en inglés porque son los que usan los hallaz
 - `GET /api/push-cron`: Vercel Cron con `Authorization: Bearer CRON_SECRET`; avisa a todas las
   suscripciones.
 - `GET /api/config`: cualquiera; los valores del laboratorio (caché de 15 s en el borde).
-- `POST /api/lab {login}`: cualquiera; contraseña comparada por HMAC, 20 intentos / 15 min con un
-  contador **global**, cookie `oso_lab` HttpOnly, Secure, SameSite=Strict de 30 días. El resto del
-  laboratorio y `GET /api/lab-data` piden la cookie. Lo que se guarda en el laboratorio se aplica
-  **en directo a todos** (juego, máquina y árbitro en línea).
+- `POST /api/lab {login}`: cualquiera; contraseña comparada por HMAC, 20 intentos / 15 min por IP
+  con hash (y 200 / 15 min en total como tope), cookie `oso_lab` HttpOnly, Secure, SameSite=Strict
+  de 30 días. El resto del laboratorio y `GET /api/lab-data` piden la cookie. Lo que se guarda en
+  el laboratorio se aplica **en directo a todos** (juego, máquina y árbitro en línea).
 - Las previews están detrás de Vercel Authentication y comparten Upstash con el prefijo `preview:`.
 
 ## Qué protegemos

@@ -27,6 +27,22 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.2] - 2026-10-27
+
+**🔒 Laboratorio: los intentos de entrar se cuentan por IP**
+
+- **Por qué:** el escaneo de seguridad encontró que el login de `/lab` contaba todos los intentos
+  en un solo contador global (`lab:tries`, 20 cada 15 min). Cualquiera podía mandar 21 contraseñas
+  malas cada 15 minutos y dejar a Julia sin poder entrar (la cookie de 30 días ya emitida seguía
+  valiendo). No se exponía ningún dato.
+- **Qué cambia** (`api/_lab.js`): cada IP (`x-real-ip`, guardada con hash, como en las salas y en
+  push) tiene sus 20 intentos cada 15 min. Queda un tope global de 200 cada 15 min como respaldo
+  contra la fuerza bruta repartida. Se mira primero el contador de la IP, así que una IP bloqueada
+  ya no suma al global: una sola fuente no puede agotarlo.
+- **Lo que queda:** alguien con unas 10 IPs distintas aún podría agotar el tope global durante 15
+  min. Es el precio de tener el tope; está anotado en `SECURITY_MODEL.md`.
+- **Corrección:** un cambio interno de seguridad, sin nada nuevo que se vea.
+
 ## [4.7.1] - 2026-10-27
 
 **🔔 La lista de avisos del reto, con tope y limpieza** ([e58f5ea](https://github.com/chopenhauer/devin-juega-oso/commit/e58f5eaba645119ce3ce555628f2319af45158f5))

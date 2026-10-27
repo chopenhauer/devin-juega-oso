@@ -3,6 +3,7 @@
 //   POST /api/lab { action: 'login', password }   sets the session cookie (api/_labauth.js)
 //   GET  /api/lab                                 values, defaults, ranges and notebook
 //   POST /api/lab { action: 'set', values, note } | { action: 'undo', version, note } | { action: 'reset', note }
+import { createHash } from 'node:crypto';
 import { TUNABLE, DEFAULTS, cleanValues } from '../public/js/tuning.js';
 import { rightPassword, makeToken, cookieHeader, authorized } from './_labauth.js';
 
@@ -11,7 +12,12 @@ const KEEP = 10 * 365 * 86400;
 const MAX_NOTES = 500;
 const NOTE_LENGTH = 500;
 const TRIES = 20;
+const TRIES_ALL = 200;
 const TRIES_WINDOW = 15 * 60;
+const ipKey = (request) => {
+  const ip = request.headers.get('x-real-ip') ?? request.headers.get('x-forwarded-for')?.split(',')[0] ?? '-';
+  return `lab:tries:${createHash('sha256').update(ip).digest('hex').slice(0, 16)}`;
+};
 const json = (body, status = 200, headers = {}) =>
   new Response(JSON.stringify(body), {
     status,
@@ -71,7 +77,9 @@ export function createLabHandler(store, { password, now = Date.now } = {}) {
     if (!password) return json({ error: 'off' }, 503);
     const input = request.method === 'POST' ? await request.json().catch(() => null) : null;
     if (input?.action === 'login') {
-      if ((await store.hit('lab:tries', TRIES_WINDOW)) > TRIES) return json({ error: 'rate' }, 429);
+      // Per-IP budget first, so one source can't use up the global backstop.
+      if ((await store.hit(ipKey(request), TRIES_WINDOW)) > TRIES) return json({ error: 'rate' }, 429);
+      if ((await store.hit('lab:tries', TRIES_WINDOW)) > TRIES_ALL) return json({ error: 'rate' }, 429);
       if (!(await rightPassword(password, input.password))) return json({ error: 'password' }, 401);
       return json({ ok: true }, 200, { 'Set-Cookie': cookieHeader(await makeToken(password, now())) });
     }
