@@ -33,7 +33,7 @@ export function cleanSubscription(input) {
   }
   const host = url.hostname;
   const known = GOOGLE_JMT.test(host) || HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
-  if (url.protocol !== 'https:' || !known) return null;
+  if (url.protocol !== 'https:' || url.port || url.username || url.password || !known) return null;
   if (input.endpoint.length > 1000 || !bytes(input.keys?.p256dh, 65) || !bytes(input.keys?.auth, 16))
     return null;
   return { endpoint: input.endpoint, keys: { p256dh: input.keys.p256dh, auth: input.keys.auth } };
@@ -111,6 +111,11 @@ export function createPushCron(
     for (let i = 0; i < subs.length; i += 25) {
       await Promise.all(
         subs.slice(i, i + 25).map(async ([id, sub]) => {
+          // Saved before the host list was tightened: never post there, forget it.
+          if (!cleanSubscription(sub)) {
+            stats.push_dropped++;
+            return store.drop(SUBS, id);
+          }
           // Entries saved before `seen` existed start counting from today.
           const seen = sub.seen ?? key;
           const last = sub.played > seen ? sub.played : seen;

@@ -27,6 +27,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.4] - 2026-10-27
+
+**🔒 Avisos del reto: tampoco a las direcciones guardadas antes**
+
+- **Por qué:** el code scan de seguridad (27-10-2026) vio que la lista de hosts aceptaba cualquier
+  subdominio de `google.com` y el cron diario mandaba un POST firmado con VAPID a la URL que
+  eligiera quien se apuntaba (un SSRF limitado). La 4.7.1 ya cerró la lista para las nuevas, pero
+  las que se guardaron antes seguían en Redis y el cron les seguía enviando hasta que fallaran 7
+  días o pasaran 60.
+- **Qué cambia:** el cron vuelve a comprobar cada suscripción guardada con `cleanSubscription` antes
+  de enviar y borra las que ya no pasan (cuentan en `push_dropped`). Además se rechazan las
+  direcciones con puerto o usuario en la URL.
+- **Versión de corrección:** es un arreglo interno, no se ve nada nuevo.
+
 ## [4.7.3] - 2026-10-27
 
 **🧪 Laboratorio: los datos de GA4, siempre como texto** ([0ed1993](https://github.com/chopenhauer/devin-juega-oso/commit/0ed19931c413ceaf6c8f6b359b4116f571063052))
