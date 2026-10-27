@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.7.1] - 2026-10-27
 
-**🔔 La lista de avisos del reto, con tope y limpieza**
+**🔔 La lista de avisos del reto, con tope y limpieza** ([e58f5ea](https://github.com/chopenhauer/devin-juega-oso/commit/e58f5eaba645119ce3ce555628f2319af45158f5))
 
 - **Por qué:** el escaneo de seguridad vio que cualquiera, con muchas IP, podía apuntar direcciones
   falsas sin límite (solo había 30 peticiones / 10 min por IP). Se guardaban para siempre y la
