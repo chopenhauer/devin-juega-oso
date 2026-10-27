@@ -5,6 +5,7 @@ import { t } from './i18n.js';
 import { parseChallenge } from './challenge.js';
 import * as Daily from './daily.js';
 import { setupStep, startFunnel } from './funnel.js';
+import { swallowed } from './report.js';
 
 const STORAGE_KEY = 'oso.prefs.v1';
 const STEPS = ['welcome', 'rules', 'mode', 'where', 'players', 'view', 'board'];
@@ -55,7 +56,9 @@ function loadPrefs() {
 function savePrefs(prefs) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('prefs.save', e);
     // Storage may be unavailable (private mode); preferences are optional.
   }
 }

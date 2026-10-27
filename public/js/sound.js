@@ -1,6 +1,7 @@
 // Short game sounds generated with Web Audio: no audio files and nothing extra in the CSP.
 // Muting is remembered on the device.
 import { GAME } from './config.js';
+import { swallowed } from './report.js';
 
 const KEY = 'oso.sound.v1';
 const VOLUME = GAME.sound.volume;
@@ -124,7 +125,9 @@ export function setMuted(value) {
   muted = value;
   try {
     localStorage.setItem(KEY, value ? 'off' : 'on');
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('sound.saveMute', e);
     /* ignore */
   }
 }
@@ -153,7 +156,9 @@ export function play(name) {
       o.start(t);
       o.stop(t + d + 0.02);
     }
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('sound.play', e);
     /* no sound */
   }
 }

@@ -1,5 +1,6 @@
 // Cookie banner for the analytics tags (Google Analytics + Microsoft Clarity).
 // The choice is stored locally and broadcast as an `oso:consent` event.
+import { swallowed } from './report.js';
 const KEY = 'oso.consent.v1';
 const banner = document.getElementById('consentBanner');
 const settings = document.getElementById('cookieSettings');
@@ -15,7 +16,9 @@ banner.classList.toggle('hidden', stored === 'granted' || stored === 'denied');
 function choose(value) {
   try {
     localStorage.setItem(KEY, value);
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('consent.save', e);
     /* ignore */
   }
   window.gtag?.('consent', 'update', { analytics_storage: value });

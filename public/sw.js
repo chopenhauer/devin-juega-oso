@@ -24,6 +24,7 @@ const SHELL = [
   '/js/daily.js',
   '/js/clarity.js',
   '/js/config.js',
+  '/js/report.js',
   '/js/consent.js',
   '/js/engine.js',
   '/js/funnel.js',

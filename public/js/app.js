@@ -18,6 +18,7 @@ import { hidePushAsk, pushAfterDaily } from './push.js';
 import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 import { onLongPress } from './hold.js';
+import { swallowed } from './report.js';
 const { timeFor } = Engine;
 (() => {
   const { BONUS } = Match;
@@ -226,7 +227,9 @@ const { timeFor } = Engine;
     try {
       localStorage.setItem(THEME_KEY, theme);
       localStorage.setItem(THEME_DAY_KEY, isoDay(new Date()));
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('theme.save', e);
       /* ignore */
     }
   }
@@ -467,7 +470,9 @@ const { timeFor } = Engine;
     try {
       saved = localStorage.getItem(THEME_KEY);
       choseToday = localStorage.getItem(THEME_DAY_KEY) === isoDay(today);
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('theme.read', e);
       /* ignore */
     }
     const festival = !choseToday && festivalOn(today);
@@ -628,7 +633,9 @@ const { timeFor } = Engine;
   let suppressClick = false;
   try {
     if (localStorage.getItem(DRAG_KEY)) game.classList.add('drag-known');
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('drag.readHint', e);
     /* storage unavailable: keep showing the hint */
   }
 
@@ -658,7 +665,9 @@ const { timeFor } = Engine;
     game.classList.add('drag-known');
     try {
       localStorage.setItem(DRAG_KEY, '1');
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('drag.saveHint', e);
       /* ignore */
     }
     cellClick([...boardEl.children].indexOf(target));
@@ -678,7 +687,9 @@ const { timeFor } = Engine;
       drag = { button: b, x: e.clientX, y: e.clientY, ghost: null, target: null };
       try {
         b.setPointerCapture(e.pointerId);
-      } catch {
+      } catch (e) {
+        // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+        swallowed('drag.pointerCapture', e);
         /* window listeners below still track the drag */
       }
     });
@@ -1768,7 +1779,9 @@ const { timeFor } = Engine;
     let session = null;
     try {
       session = JSON.parse(localStorage.getItem(SESSION_KEY));
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('session.read', e);
       /* unreadable or unavailable: start a new session */
     }
     const n = scores.length;
@@ -1782,7 +1795,9 @@ const { timeFor } = Engine;
     sessionGames = session.games;
     try {
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('session.save', e);
       /* ignore */
     }
     return standings(session);

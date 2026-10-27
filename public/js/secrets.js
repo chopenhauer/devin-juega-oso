@@ -5,6 +5,7 @@
 // button that takes you where it is used: `go` 'home' (the 🎨 step) or 'play' (a game with extras).
 import { GAME } from './config.js';
 import { t } from './i18n.js';
+import { swallowed } from './report.js';
 
 const seconds = (ms) => t('secrets.seconds', { count: ms / 1000, n: (ms / 1000).toLocaleString('es') });
 
@@ -52,7 +53,9 @@ export function readSecrets() {
 function save(state) {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('secrets.save', e);
     /* storage unavailable: secrets just wait */
   }
   return state;

@@ -3,6 +3,7 @@
 // so they get the steps. «No, gracias» hides it for good on this device. Also registers sw.js,
 // which lets the game open without connection. The ❤️ story also offers it, when asked for.
 import { track, displayMode } from './telemetry.js';
+import { swallowed } from './report.js';
 
 const KEY = 'oso.install.v1';
 const q = (id) => document.getElementById(id);
@@ -81,7 +82,9 @@ if (typeof document !== 'undefined') {
   q('installNo')?.addEventListener('click', () => {
     try {
       localStorage.setItem(KEY, 'dismissed');
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('install.saveDismissed', e);
       /* storage unavailable: it will ask again next game */
     }
     track('install_offer', { action: 'no_thanks', platform: kind });

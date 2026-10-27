@@ -4,6 +4,7 @@
 // readDaily/saveDaily (localStorage).
 import { GAME } from './config.js';
 import { findNew, LETTERS } from './engine.js';
+import { swallowed } from './report.js';
 
 export const TIME_ZONE = 'Europe/Madrid';
 export const STORAGE_KEY = 'oso.daily.v1';
@@ -151,7 +152,9 @@ export function readDaily() {
 export function saveDaily(state) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('daily.save', e);
     // Private mode or full storage: the challenge still plays, it just is not remembered.
   }
 }

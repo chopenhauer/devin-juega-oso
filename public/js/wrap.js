@@ -2,6 +2,7 @@
 // so an end-of-year summary has something to tell. Only counters, never each game, and nothing
 // leaves the device. Pure, except readWrap/saveWrap (localStorage).
 import { GAME } from './config.js';
+import { swallowed } from './report.js';
 
 export const STORAGE_KEY = 'oso.wrap.v1';
 // This year and the last one: the summary is shown from December to mid-January.
@@ -206,7 +207,9 @@ export function readWrap() {
 export function saveWrap(state) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('wrap.save', e);
     /* storage unavailable: this game is just not counted */
   }
   return state;

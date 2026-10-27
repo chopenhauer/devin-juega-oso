@@ -26,7 +26,9 @@
   }
   try {
     if (localStorage.getItem('oso.consent.v1') === 'granted') load();
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    console.warn('OSO: clarity.readConsent', e);
     /* storage unavailable: wait for an explicit choice */
   }
   w.addEventListener('oso:consent', (e) => {

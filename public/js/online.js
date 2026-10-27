@@ -2,6 +2,7 @@
 // (docs/ONLINE.md). The server decides everything; this only sends intentions.
 import { GAME } from './config.js';
 import { t } from './i18n.js';
+import { swallowed } from './report.js';
 
 const KEY = 'oso.online.v1';
 const ENDPOINT = '/api/sala';
@@ -11,7 +12,9 @@ export const POLL_MS = GAME.online.pollMs;
 export function saveSeat(seat) {
   try {
     localStorage.setItem(KEY, JSON.stringify(seat));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('online.saveSeat', e);
     // Without storage the game still works, it just can't be resumed after a reload.
   }
 }
@@ -25,7 +28,9 @@ export function loadSeat() {
 export function clearSeat() {
   try {
     localStorage.removeItem(KEY);
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('online.clearSeat', e);
     // Nothing to clear.
   }
 }

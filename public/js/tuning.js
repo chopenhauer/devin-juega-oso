@@ -2,6 +2,7 @@
 // the game, the machine and the online referee. Values out of range are rejected (TUNABLE), and if
 // the server can't be reached the game uses the last values it got, or else config.js.
 import { GAME, BOARD_SIZES } from './config.js';
+import { swallowed } from './report.js';
 
 const at = (path) => path.split('.').reduce((o, k) => o?.[k], GAME);
 export const TUNABLE = {
@@ -51,7 +52,9 @@ if (typeof window !== 'undefined' && typeof fetch === 'function') {
   let cached = null;
   try {
     cached = JSON.parse(localStorage.getItem(KEY));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('lab.readCache', e);
     /* no cache */
   }
   if (cached) applyTuning(cached);

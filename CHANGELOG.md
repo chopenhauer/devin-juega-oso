@@ -27,6 +27,21 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.6] - 2026-10-27
+
+**🔎 Avisos en la consola cuando algo opcional falla**
+
+- **Por qué:** un segundo escaneo de Norma (27-10-2026) marcó 20 `catch` vacíos. Ninguno se tragaba
+  un fallo de la partida: todos protegen cosas opcionales que pueden fallar en el navegador
+  (`localStorage` en modo privado o lleno, el sonido, `setPointerCapture`, `sendBeacon`), y el juego
+  ya seguía sin ellas. Pero no quedaba rastro, y costaba saber por qué algo no se recordaba.
+- **Qué cambia:** `report.js` exporta `swallowed(lugar, error)`, que deja un `console.warn` con
+  `OSO: lugar` la primera vez que falla cada sitio, no en cada partida. Los 20 sitios lo usan
+  (`clarity.js`, que no es un módulo, llama a `console.warn` directamente). El jugador no ve nada
+  nuevo: no hay aviso en pantalla, porque no hay nada que pueda hacer, y no se manda a GA4 ni a otro
+  servicio, para no sacar nada del móvil.
+- **Versión de corrección:** es un cambio interno.
+
 ## [4.7.5] - 2026-10-27
 
 **🔒 Textos con HTML filtrados y la clave en línea, en una cookie**
