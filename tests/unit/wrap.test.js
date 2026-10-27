@@ -213,3 +213,22 @@ test('a 🛟 comeback: behind before, ahead of everybody after', () => {
   assert.equal(isComeback([1, 4, 2, 0], [5, 3, 4, 1], 0), true);
   assert.equal(isComeback([1, 4, 2, 0], [3, 3, 4, 1], 0), false);
 });
+
+test('games won «en pleno» on this device', () => {
+  const game = {
+    day: '2026-10-27',
+    hour: 9,
+    mode: 'solo',
+    size: 5,
+    theme: 'clasico',
+    difficulty: 'facil',
+    names: ['Julia', 'Máquina'],
+    avatars: ['🐻', '🤖'],
+    local: [0],
+    longest: [3, 0],
+  };
+  let s = recordGame({ years: {} }, { ...game, winner: 0, scores: [22, 0], pleno: true });
+  s = recordGame(s, { ...game, winner: 0, scores: [9, 4] });
+  s = recordGame(s, { ...game, winner: 1, scores: [0, 7], pleno: true });
+  assert.equal(s.years['2026'].plenos, 1);
+});

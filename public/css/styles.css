@@ -1286,6 +1286,25 @@ select option {
     font-size: var(--fs-4xl);
   }
 }
+/* «En pleno»: every cell scores and every point is the winner's (Match.isPleno). */
+.pleno-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-0-5);
+  width: fit-content;
+  margin: var(--space-2) auto 0;
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--lila-300), var(--rosa-400));
+  color: var(--noche-950);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.pleno-badge strong {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+}
 .winner-sub {
   font-size: var(--fs-lg);
   color: var(--muted);
@@ -1407,6 +1426,11 @@ select option {
   background: linear-gradient(135deg, var(--sol-400), var(--naranja-500));
   color: var(--noche-950);
 }
+/* A reto won «en pleno»: a ★ in its own colours instead of the ✓. */
+.daily-streak-days .pleno .streak-mark {
+  background: linear-gradient(135deg, var(--lila-300), var(--rosa-400));
+  color: var(--noche-950);
+}
 .daily-streak-days .today .streak-mark {
   outline: 2px solid var(--sol-400);
   outline-offset: 2px;
@@ -1432,7 +1456,8 @@ select option {
   max-width: 26.25rem;
   margin: var(--space-4) auto 0;
 }
-.winner-actions .rematch {
+.winner-actions .rematch,
+.winner-actions .play-more {
   grid-column: 1 / -1;
 }
 .winner-actions .secondary {

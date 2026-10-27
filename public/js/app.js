@@ -1331,7 +1331,10 @@ const { timeFor } = Engine;
       track('online_quality', { board_size: `${size}x${size}`, ...Online.qualityParams(online.quality) });
     clearInterval(timer);
     updateControls();
+    endPleno = Match.isPleno(m, w);
     q('winnerOverlay').classList.remove('hidden');
+    q('winnerOverlay').classList.toggle('pleno', endPleno);
+    q('plenoBadge').classList.toggle('hidden', !endPleno);
     q('rematch').disabled = false;
     q('rematch').innerHTML = t('rematch.sized', { size });
     q('rematch').setAttribute('aria-label', t('rematch.sized_label', { size }));
@@ -1339,7 +1342,16 @@ const { timeFor } = Engine;
     q('otherBoard').classList.toggle('hidden', !!online || dailyOn());
     q('changePlayers').classList.toggle('hidden', dailyOn());
     q('changePlayers').textContent = online ? 'Salir' : t('changePlayers');
-    q('rematch').focus({ preventScroll: true });
+    // A reto won is done for today: the big button invites to another game, repeating it is secondary.
+    const wonDaily = dailyOn() && w === 0;
+    q('playMore').classList.toggle('hidden', !wonDaily);
+    q('rematch').classList.toggle('primary', !wonDaily);
+    q('rematch').classList.toggle('secondary', wonDaily);
+    if (wonDaily) {
+      q('rematch').textContent = t('daily.play_again');
+      q('rematch').setAttribute('aria-label', t('daily.play_again'));
+    }
+    q(wonDaily ? 'playMore' : 'rematch').focus({ preventScroll: true });
 
     // Two players see the score face to face (#endScore); with four it stays in the subtitle.
     const duel = scores.length === 2;
@@ -1364,7 +1376,7 @@ const { timeFor } = Engine;
         reason === 'tiempo'
           ? sub(timeout, result)
           : sub(result && t('end.final', { scores: result }), decided);
-      confetti();
+      confetti(endPleno ? 180 : 90);
     }
     if (reason === 'abandono') q('winnerSub').textContent = t('end.left_game', { name: names[1 - w] });
     play(w === null ? 'draw' : (gameMode === 'solo' && w === 1) || remote(w) ? 'lose' : 'win');
@@ -1418,6 +1430,7 @@ const { timeFor } = Engine;
         extras: extrasUsed,
         reason,
         sessionGames,
+        pleno: endPleno,
         offline: navigator.onLine === false,
         installed: displayMode() === 'standalone',
       }),
@@ -1458,9 +1471,12 @@ const { timeFor } = Engine;
   }
   // The key of the phrase shown, sent with end_action to see which moments bring a rematch.
   let lastPhrase = 'none';
+  // Whether the game just finished was won «en pleno» (Match.isPleno).
+  let endPleno = false;
   const machineSeat = () => (gameMode === 'solo' ? 1 : null);
   function showEndPhrase() {
-    const p = endPhrase(sessionGames, { machine: machineSeat() });
+    // «En pleno» is the celebration: no other phrase competes with it.
+    const p = endPleno ? null : endPhrase(sessionGames, { machine: machineSeat() });
     const name = names[p?.player];
     const text =
       p &&
@@ -1474,7 +1490,7 @@ const { timeFor } = Engine;
         machine_close: t('end.phrase.machine_close'),
         machine: t('end.phrase.machine'),
       }[p.key];
-    lastPhrase = p?.key ?? 'none';
+    lastPhrase = endPleno ? 'pleno' : (p?.key ?? 'none');
     q('endPhrase').textContent = text ?? '';
     q('endPhrase').classList.toggle('hidden', !text);
   }
@@ -1848,7 +1864,7 @@ const { timeFor } = Engine;
       site: new URL(SITE_URL).host,
     }).catch(() => null);
   }
-  function confetti() {
+  function confetti(pieces = 90) {
     const h = q('confetti');
     h.innerHTML = '';
     const cs =
@@ -1858,7 +1874,7 @@ const { timeFor } = Engine;
         .split(',')
         .map((c) => c.trim());
 
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < pieces; i++) {
       const x = document.createElement('i');
       x.style.left = Math.random() * 100 + '%';
       x.style.background = cs[i % cs.length];
@@ -2695,6 +2711,7 @@ const { timeFor } = Engine;
       mine: scores[0],
       theirs: scores[1],
       won: w === 0,
+      pleno: w === 0 && endPleno,
     });
     if (first) Daily.saveDaily(state);
     pushAsking = pushAfterDaily({ first });
@@ -2704,7 +2721,7 @@ const { timeFor } = Engine;
     const text = !first
       ? t('daily.again', n)
       : w === 0
-        ? t('daily.won', n)
+        ? t(endPleno ? 'daily.won_pleno' : 'daily.won', n)
         : w === 1
           ? t('daily.lost', n)
           : t('daily.draw', n);
@@ -2728,15 +2745,16 @@ const { timeFor } = Engine;
     };
     q('dailyStreakTitle').textContent = t('daily.streak_title', { count: streak });
     q('dailyStreakDays').replaceChildren(
-      ...Daily.lastWeek(state, daily.key).map(({ key, played }) => {
+      ...Daily.lastWeek(state, daily.key).map(({ key, played, pleno }) => {
         const li = document.createElement('li');
         li.classList.toggle('played', played);
+        li.classList.toggle('pleno', pleno);
         li.classList.toggle('today', key === daily.key);
-        const mark = span('streak-mark', played ? '✓' : '');
+        const mark = span('streak-mark', pleno ? '★' : played ? '✓' : '');
         const day = span('streak-day', Daily.weekdayName(key));
         mark.setAttribute('aria-hidden', 'true');
         day.setAttribute('aria-hidden', 'true');
-        const label = t(played ? 'daily.day_played' : 'daily.day_missed', {
+        const label = t(pleno ? 'daily.day_pleno' : played ? 'daily.day_played' : 'daily.day_missed', {
           day: Daily.weekdayName(key, 'long'),
         });
         li.append(mark, day, span('visually-hidden', label));
@@ -2881,6 +2899,12 @@ const { timeFor } = Engine;
     .addEventListener('click', () => {
       if (!q('endDetails').open) endAction('details');
     });
+  q('playMore').addEventListener('click', () => {
+    endAction('play_more');
+    backToSetup();
+    showStep('mode');
+    syncThemeToggle();
+  });
   q('winnerHome').addEventListener('click', () => {
     endAction('home');
     backToSetup();

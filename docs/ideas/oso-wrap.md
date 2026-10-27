@@ -60,6 +60,7 @@ Al acabar cada partida, `wrap.js` suma los totales del año en `oso.wrap.v1`
 | `dayRun`, `bestDayRun`                 | Días seguidos con alguna partida: los de ahora y la racha más larga del año                                              |
 | `beatenBy`                             | Tu némesis: quién te gana, `machine.<nivel>` o el nombre del rival (como mucho 20)                                       |
 | `sosComebacks`                         | Veces que el 🛟 te pone por delante cuando ibas perdiendo (no en línea)                                                  |
+| `plenos`                               | Partidas ganadas en pleno en el móvil (`Match.isPleno`)                                                                  |
 | `bought`, `secrets`                    | Extras comprados en la tienda secreta y veces que se encuentra cada secreto                                              |
 | `offline`, `installed`                 | Partidas sin conexión y desde la app instalada                                                                           |
 | `challenges`                           | Enlaces de reto: `opened`, `played` y `beaten`                                                                           |

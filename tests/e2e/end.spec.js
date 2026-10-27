@@ -150,3 +150,51 @@ test('the background is solid and the celebration stops, or does not move with r
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(avatar).toHaveCSS('animation-name', 'none');
 });
+
+// 4×4: whoever starts makes all 7 OSO and every cell is in one (tests/unit/match.test.js).
+test('a game won «en pleno» gets its own celebration, in any mode', async ({ page }) => {
+  await page.goto('/');
+  await page.click('#introSkip');
+  for (let i = 0; i < 4; i++) await page.click('#stepNext');
+  await page.selectOption('#sizeSelect', '4');
+  await page.click('#startGame');
+  await play(page, [
+    [0, 'O'],
+    [1, 'S'],
+    [2, 'O'],
+    [3, 'O'],
+    [4, 'S'],
+    [5, 'O'],
+    [6, 'O'],
+    [7, 'S'],
+    [9, 'S'],
+    [8, 'O'],
+    [11, 'O'],
+    [12, 'O'],
+    [13, 'O'],
+    [14, 'O'],
+    [15, 'O'],
+    [10, 'S'],
+  ]);
+  await expect(overlay(page)).toBeVisible();
+  await expect(page.locator('#endScore .end-points')).toHaveText(/^(7 – 0|0 – 7)$/);
+  await expect(page.locator('#plenoBadge')).toBeVisible();
+  await expect(page.locator('#plenoBadge')).toHaveText(
+    /🌟 ¡En pleno!\s*Todas las fichas puntúan y todos los puntos son tuyos/,
+  );
+  await expect(overlay(page)).toHaveClass(/pleno/);
+  await expect(page.locator('#endPhrase')).toBeHidden();
+  // Outside the reto «Revancha» stays the big button.
+  await expect(page.locator('#rematch')).toHaveClass(/primary/);
+  await expect(page.locator('#playMore')).toBeHidden();
+  const wrap = await page.evaluate(
+    () => Object.values(JSON.parse(localStorage.getItem('oso.wrap.v1')).years)[0],
+  );
+  expect(wrap.plenos).toBe(1);
+
+  // The next game, not «en pleno», has no badge.
+  await page.click('#rematch');
+  await playOneZero(page);
+  await expect(page.locator('#plenoBadge')).toBeHidden();
+  await expect(overlay(page)).not.toHaveClass(/pleno/);
+});

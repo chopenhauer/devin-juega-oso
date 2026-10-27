@@ -27,6 +27,26 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.0] - 2026-10-27
+
+**🌟 En pleno, y tras ganar el reto, otra partida**
+
+- **Por qué:** JoseLuis (27-10-2026) ganó un reto 18–0 y preguntó si era el máximo. No lo es: en un
+  5×5 caben como mucho 22 OSO (4×4: 9; 6×6: 30; 7×7: 51). Pidió celebrar la partida perfecta en
+  cualquier modo y marcarla en la racha, y que al ganar el reto «Revancha» no sea lo principal.
+- **En pleno** (`Match.isPleno`): ganas con todos los puntos (los demás, 0) y todas las fichas del
+  tablero forman parte de algún OSO (o SOS tras el 🛟). Vale en todos los modos. No cambia ninguna
+  regla: solo se celebra.
+  - En la pantalla final sale «🌟 ¡En pleno!» con «Todas las fichas puntúan y todos los puntos son
+    tuyos», el doble de confeti y sin otra frase. `end_action` lleva `end_phrase: pleno`.
+  - En el reto: «🌟 ¡Reto del día n.º … superado en pleno!», se guarda `pleno: true` en
+    `oso.daily.v1` y en la racha ese día lleva ★ con otro color en vez de ✓.
+  - El OSO wrap cuenta las partidas en pleno (`plenos`).
+- **Reto ganado:** el botón grande es «🎮 Jugar otra partida» (en línea, juntos o contra la máquina),
+  que lleva al inicio (`end_action: play_more`), y «Repetir el reto» pasa a secundario. Si pierdes o
+  empatas, sigue «Revancha» como botón grande. Fuera del reto no cambia nada.
+- **Versión menor:** hay un botón y una celebración nuevos, sin cambiar las reglas.
+
 ## [4.6.3] - 2026-10-26
 
 **📦 OSO wrap: el móvil empieza a guardar tu año** ([e029c8b](https://github.com/chopenhauer/devin-juega-oso/commit/e029c8b9045fadf649bdd913b6fece9991e38d6f))

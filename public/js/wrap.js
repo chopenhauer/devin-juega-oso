@@ -33,6 +33,7 @@ export const emptyYear = () => ({
   bestDayRun: 0,
   beatenBy: {},
   sosComebacks: 0,
+  plenos: 0,
   bought: {},
   secrets: {},
   offline: 0,
@@ -107,6 +108,7 @@ export function recordGame(
     sessionGames = 1,
     offline = false,
     installed = false,
+    pleno = false,
   },
 ) {
   const { y, current: c } = year(state, day);
@@ -121,6 +123,7 @@ export function recordGame(
   if (reason === 'tiempo') r.timeouts++;
   if (offline) r.offline++;
   if (installed) r.installed++;
+  if (pleno && local.includes(winner)) r.plenos++;
   for (const p of local) r.avatars = add(r.avatars, avatars[p]);
   // Your name is the first one on this device: player 1, or your seat online.
   const me = names[local[0]];

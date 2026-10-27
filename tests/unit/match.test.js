@@ -18,6 +18,7 @@ import {
   sosReplayMs,
   toJSON,
   fromJSON,
+  isPleno,
 } from '../../public/js/match.js';
 import { replayHistory, timeFor } from '../../public/js/engine.js';
 
@@ -321,4 +322,41 @@ test('with 4 players the tie is broken among the leaders only', () => {
   assert.deepEqual(m.scores, [1, 0, 1, 0]);
   assert.deepEqual(endByScore(m).winner, [0, 2]);
   assert.equal(m.tiebreak, 'draw');
+});
+
+// 4×4 where player 0 makes all 7 OSO and every cell is in one (tests/e2e/end.spec.js plays it too).
+const PLENO = [
+  [0, 'O'],
+  [1, 'S'],
+  [2, 'O'],
+  [3, 'O'],
+  [4, 'S'],
+  [5, 'O'],
+  [6, 'O'],
+  [7, 'S'],
+  [9, 'S'],
+  [8, 'O'],
+  [11, 'O'],
+  [12, 'O'],
+  [13, 'O'],
+  [14, 'O'],
+  [15, 'O'],
+  [10, 'S'],
+];
+test('«en pleno»: one winner with every point and every cell in some OSO', () => {
+  const m = newMatch({ size: 4 });
+  for (const [index, letter] of PLENO) assert.ok(place(m, m.current, index, letter, 0).ok);
+  assert.deepEqual(m.scores, [7, 0]);
+  assert.equal(isPleno(m, 0), true);
+  assert.equal(isPleno(m, 1), false);
+  assert.equal(isPleno(m, null), false);
+  assert.equal(isPleno(m, [0, 1]), false);
+});
+
+test('not «en pleno» if the rival scored or a cell is in no OSO', () => {
+  const m = newMatch({ size: 4 });
+  for (const [index, letter] of PLENO) assert.ok(place(m, m.current, index, letter, 0).ok);
+  assert.equal(isPleno({ ...m, scores: [7, 1] }, 0), false);
+  const fewer = new Map([...m.scored].filter(([k]) => !k.split('-').includes('15')));
+  assert.equal(isPleno({ ...m, scored: fewer }, 0), false);
 });

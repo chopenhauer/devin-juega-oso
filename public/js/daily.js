@@ -96,18 +96,17 @@ export function dailyChallenge(key = dayKey(), letters = GAME.daily.letters) {
 // The machine's luck for one game of the challenge: the same moves give the same answers.
 export const dailyRandom = (key) => seededRandom(seedOf(`oso:${key}:machine`));
 
-// What is kept on the phone: { last, streak, results: { key: { mine, theirs, won } } }.
+// What is kept on the phone: { last, streak, results: { key: { mine, theirs, won, pleno? } } }.
 // Only the first finished game of each day counts; the streak counts days played in a row.
 export const emptyDaily = () => ({ last: null, streak: 0, results: {} });
 const KEEP_DAYS = 60;
 
-export function recordDaily(state, key, { mine, theirs, won }) {
+export function recordDaily(state, key, { mine, theirs, won, pleno = false }) {
   if (state.results[key]) return { state, first: false };
   const streak = state.last === addDays(key, -1) ? state.streak + 1 : 1;
+  const result = { mine, theirs, won, ...(pleno && { pleno: true }) };
   const results = Object.fromEntries(
-    Object.entries({ ...state.results, [key]: { mine, theirs, won } }).filter(
-      ([k]) => k > addDays(key, -KEEP_DAYS),
-    ),
+    Object.entries({ ...state.results, [key]: result }).filter(([k]) => k > addDays(key, -KEEP_DAYS)),
   );
   return { state: { last: key, streak, results }, first: true };
 }
@@ -129,11 +128,11 @@ export function msToNext(now = new Date()) {
   return hi - now.getTime();
 }
 
-// The 7 retos up to `key` (oldest first) and whether each one was played: the week of the streak.
+// The 7 retos up to `key` (oldest first), whether each one was played and won «en pleno».
 export const lastWeek = (state, key) =>
   Array.from({ length: 7 }, (_, i) => {
     const day = addDays(key, i - 6);
-    return { key: day, played: !!state.results[day] };
+    return { key: day, played: !!state.results[day], pleno: !!state.results[day]?.pleno };
   });
 // «X» or «miércoles» for a reto's day.
 export const weekdayName = (key, style = 'narrow', locale = 'es') =>

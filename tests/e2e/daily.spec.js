@@ -133,6 +133,20 @@ test('only the first game counts: the result stays on the landing and the share 
   await expect(page.locator('#sessionBoard')).toBeHidden();
   await expect(page.locator('#otherBoard')).toBeHidden();
   await expect(page.locator('#changePlayers')).toBeHidden();
+  // Won, the big button is another game and repeating the reto is secondary; otherwise «Revancha».
+  const won = await page.evaluate(
+    () => JSON.parse(localStorage.getItem('oso.daily.v1')).results['2026-10-26'].won,
+  );
+  if (won) {
+    await expect(page.locator('#playMore')).toBeVisible();
+    await expect(page.locator('#playMore')).toBeFocused();
+    await expect(page.locator('#rematch')).toHaveClass(/secondary/);
+    await expect(page.locator('#rematch')).toHaveText('Repetir el reto');
+  } else {
+    await expect(page.locator('#playMore')).toBeHidden();
+    await expect(page.locator('#rematch')).toHaveClass(/primary/);
+    await expect(page.locator('#rematch')).toContainText('Revancha');
+  }
   const [end] = await events(page, 'daily_end');
   expect(end).toEqual(expect.objectContaining({ daily_number: 299, daily_first: true, daily_streak: 1 }));
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('oso.daily.v1')));
@@ -192,12 +206,18 @@ test('the end shows the streak and the week from the saved retos, missed days to
   await page.addInitScript(() => {
     if (localStorage.getItem('oso.daily.v1')) return;
     const r = { mine: 5, theirs: 3, won: true };
-    const results = { '2026-10-22': r, '2026-10-23': r, '2026-10-25': r };
+    const pleno = { mine: 22, theirs: 0, won: true, pleno: true };
+    const results = { '2026-10-22': r, '2026-10-23': pleno, '2026-10-25': r };
     localStorage.setItem('oso.daily.v1', JSON.stringify({ last: '2026-10-25', streak: 1, results }));
   });
   await play(page);
   await finish(page);
   await expect(page.locator('#dailyStreakTitle')).toHaveText('🔥 2 días seguidos');
+  // Friday was won «en pleno»: a ★ instead of the ✓.
+  await expect(page.locator('#dailyStreakDays li.pleno')).toHaveCount(1);
+  await expect(page.locator('#dailyStreakDays li').nth(3)).toHaveClass(/pleno/);
+  await expect(page.locator('#dailyStreakDays li').nth(3).locator('.streak-mark')).toHaveText('★');
+  await expect(page.locator('#dailyStreakDays li').nth(3)).toContainText('viernes: superado en pleno');
   const days = page.locator('#dailyStreakDays li');
   await expect(days.locator('.streak-day')).toHaveText(['M', 'X', 'J', 'V', 'S', 'D', 'L']);
   expect(await days.evaluateAll((li) => li.map((e) => e.classList.contains('played')))).toEqual([

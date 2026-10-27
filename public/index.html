@@ -1131,6 +1131,10 @@
           <div id="winnerCard" class="winner-card">
             <div id="winnerAvatar" class="winner-avatar">🐻</div>
             <div data-i18n="winnerTitle" id="winnerTitle" class="winner-title">¡Ganador!</div>
+            <p id="plenoBadge" class="pleno-badge hidden">
+              <strong data-i18n="pleno.title">🌟 ¡En pleno!</strong>
+              <span data-i18n="pleno.sub">Todas las fichas puntúan y todos los puntos son tuyos</span>
+            </p>
             <p id="endPhrase" class="end-phrase hidden"></p>
             <p id="endScore" class="end-score hidden"></p>
             <div id="winnerSub" class="winner-sub"></div>
@@ -1160,6 +1164,9 @@
               <p id="sessionNudge" class="session-nudge hidden"></p>
             </section>
             <div class="winner-actions">
+              <button data-i18n-html="playMore" id="playMore" class="primary play-more hidden" type="button">
+                🎮 Jugar otra partida<span class="btn-sub">en línea, juntos o contra la máquina</span>
+              </button>
               <button
                 data-i18n-html="rematch"
                 data-i18n-attr="aria-label:rematch.label"

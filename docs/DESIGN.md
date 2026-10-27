@@ -100,7 +100,7 @@ móvil y escritorio (los dos proyectos de Playwright) y, si cambia la disposici�
 - **Ficha O/S elegida** (`.letter.selected`): el relieve va dentro de la ficha (`inset`) y el anillo del jugador por fuera con `outline-offset`, para que no se mezclen.
 - **Extras** (`.power`, `.sos-power`): icono + contador; su nombre accesible es «Pista, quedan 1» o «… (ya usado)».
 - **Casillas** (`.cell`): botones con nombre «Fila 2, columna 3: O» o «… vacía».
-- **Diálogos**: la ayuda y la pantalla de victoria son `role="dialog"`; al ganar, el foco va a «Revancha». Los avisos cortos (`.info-dialog`) usan `<dialog>` nativo con `showModal()`, fuera de `.app` para que el fondo cubra toda la pantalla, y se cierran con su botón o con Escape.
+- **Diálogos**: la ayuda y la pantalla de victoria son `role="dialog"`; al ganar, el foco va a «Revancha» (o a «🎮 Jugar otra partida» si se gana el reto del día). Los avisos cortos (`.info-dialog`) usan `<dialog>` nativo con `showModal()`, fuera de `.app` para que el fondo cubra toda la pantalla, y se cierran con su botón o con Escape.
 - **Landing del reto** (`/reto`, `.daily-step`): título y fecha, tablero, la configuración en `.daily-chips`
   (texto pequeño en `--muted`, separado por «·», sin chips para que no compita con el tablero), y luego o la invitación (`#dailyLead`) o la caja
   `#dailyDone` (resultado grande a la izquierda, estado y racha a la derecha) con `#dailyNext`

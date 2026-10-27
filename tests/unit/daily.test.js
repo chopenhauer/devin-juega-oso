@@ -13,6 +13,7 @@ import {
   msToNext,
   isDailyPath,
   dateLabel,
+  lastWeek,
 } from '../../public/js/daily.js';
 import { newMatch, place, streaks, sos } from '../../public/js/match.js';
 
@@ -102,6 +103,18 @@ test('only the first game of each day counts, and the streak counts days in a ro
   assert.equal(s.streak, 1);
   ({ state: s } = recordDaily(s, '2027-02-01', { mine: 4, theirs: 3, won: true }));
   assert.deepEqual(Object.keys(s.results), ['2027-02-01']);
+});
+
+test('a reto won «en pleno» is saved and marked in the week; the others stay as they were', () => {
+  let s = emptyDaily();
+  ({ state: s } = recordDaily(s, '2026-10-24', { mine: 5, theirs: 3, won: true }));
+  ({ state: s } = recordDaily(s, '2026-10-25', { mine: 22, theirs: 0, won: true, pleno: true }));
+  assert.deepEqual(s.results['2026-10-24'], { mine: 5, theirs: 3, won: true });
+  assert.deepEqual(s.results['2026-10-25'], { mine: 22, theirs: 0, won: true, pleno: true });
+  assert.deepEqual(lastWeek(s, '2026-10-25').slice(-2), [
+    { key: '2026-10-24', played: true, pleno: false },
+    { key: '2026-10-25', played: true, pleno: true },
+  ]);
 });
 
 const DAY_PLUS_HOUR = 25 * 3600000;

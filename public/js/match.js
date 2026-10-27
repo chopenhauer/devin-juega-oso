@@ -260,3 +260,11 @@ export function leave(m, p) {
   if (m.over) return fail('over');
   return { ok: true, events: [end(m, 1 - p, 'abandono', false)] };
 }
+
+// «En pleno»: one winner with every point, and every cell of the board in some OSO (or SOS).
+export function isPleno(m, winner) {
+  if (!Number.isInteger(winner) || !m.scores[winner]) return false;
+  if (m.scores.some((s, i) => i !== winner && s > 0)) return false;
+  const covered = new Set([...m.scored.keys()].flatMap((k) => k.split('-')));
+  return covered.size === m.size * m.size;
+}
