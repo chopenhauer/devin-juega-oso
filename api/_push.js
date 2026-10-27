@@ -14,14 +14,10 @@ import { sendPush } from './_webpush.js';
 export const SUBS = 'push:subs';
 const RATE = { limit: 30, window: 600 };
 // Only the browsers' push services: the cron must never post to any other address.
-// Chrome's endpoints are on fcm.googleapis.com, and on jmt*.google.com in some builds.
-const HOSTS = [
-  'fcm.googleapis.com',
-  'google.com',
-  'push.services.mozilla.com',
-  'push.apple.com',
-  'notify.windows.com',
-];
+// Chrome's endpoints are on fcm.googleapis.com, and on jmt*.google.com in some builds (only those:
+// any other google.com host is not a push service).
+const HOSTS = ['fcm.googleapis.com', 'push.services.mozilla.com', 'push.apple.com', 'notify.windows.com'];
+const CHROME_JMT = /^jmt\d*\.google\.com$/;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 
 const hash = (text) => createHash('sha256').update(text).digest('base64url');
@@ -36,7 +32,8 @@ export function cleanSubscription(input) {
     return null;
   }
   const host = url.hostname;
-  if (url.protocol !== 'https:' || !HOSTS.some((h) => host === h || host.endsWith(`.${h}`))) return null;
+  const known = CHROME_JMT.test(host) || HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
+  if (url.protocol !== 'https:' || url.port || url.username || url.password || !known) return null;
   if (input.endpoint.length > 1000 || !bytes(input.keys?.p256dh, 65) || !bytes(input.keys?.auth, 16))
     return null;
   return { endpoint: input.endpoint, keys: { p256dh: input.keys.p256dh, auth: input.keys.auth } };
@@ -94,7 +91,12 @@ export function createPushCron(
       url: '/reto?utm_source=push&utm_medium=notification&utm_campaign=reto_del_dia',
     };
     const stats = { push_sent: 0, push_gone: 0, push_fail: 0, push_played_today: 0 };
-    const subs = Object.entries(await store.all(SUBS));
+    const subs = [];
+    for (const [id, sub] of Object.entries(await store.all(SUBS))) {
+      // Saved before the host list was tightened: never post there, forget it.
+      if (cleanSubscription(sub)) subs.push([id, sub]);
+      else await store.drop(SUBS, id);
+    }
     const due = subs.filter(([, s]) => s.played !== key);
     stats.push_played_today = subs.length - due.length;
     for (let i = 0; i < due.length; i += 25) {

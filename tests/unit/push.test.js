@@ -24,7 +24,13 @@ test('only accepts real push services and well-formed keys', () => {
   assert.ok(cleanSubscription(sub()));
   assert.ok(cleanSubscription(sub(1, 'web.push.apple.com')));
   assert.ok(cleanSubscription(sub(1, 'jmt17.google.com')));
+  assert.ok(cleanSubscription(sub(1, 'jmt.google.com')));
   assert.equal(cleanSubscription(sub(1, 'evilgoogle.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'evil.google.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'google.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'jmt17.google.com.evil.com')), null);
+  assert.equal(cleanSubscription(sub(1, 'fcm.googleapis.com:8443')), null);
+  assert.equal(cleanSubscription(sub(1, 'user@fcm.googleapis.com')), null);
   assert.ok(cleanSubscription(sub(1, 'updates.push.services.mozilla.com')));
   assert.equal(cleanSubscription(sub(1, 'evil.example.com')), null);
   assert.equal(cleanSubscription(sub(1, 'fcm.googleapis.com.evil.com')), null);
@@ -96,4 +102,15 @@ test('in winter time it is the other UTC run that sends', async () => {
   const send = async () => 201;
   assert.deepEqual(await cron(s.store, WINTER - 3600e3, send)(), { skipped: 'hour' });
   assert.equal((await cron(s.store, WINTER, send)()).push_sent, 1);
+});
+
+test('the cron never posts to a saved address that is not a push service, and forgets it', async () => {
+  const s = setup();
+  await s.post({ subscription: sub(1) });
+  await s.store.put(SUBS, 'old', sub(2, 'evil.google.com'));
+  const sent = [];
+  const send = async (to) => (sent.push(to.endpoint), 201);
+  assert.equal((await cron(s.store, SUMMER, send)()).push_sent, 1);
+  assert.deepEqual(sent, [sub(1).endpoint]);
+  assert.equal('old' in (await s.subs()), false);
 });
