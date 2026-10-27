@@ -29,7 +29,7 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 
 ## [4.7.3] - 2026-10-27
 
-**🧪 Laboratorio: los datos de GA4, siempre como texto**
+**🧪 Laboratorio: los datos de GA4, siempre como texto** ([0ed1993](https://github.com/chopenhauer/devin-juega-oso/commit/0ed19931c413ceaf6c8f6b359b4116f571063052))
 
 - **Por qué:** el escaneo de seguridad vio que cualquiera que conozca el ID de medición público
   puede mandar a GA4 una partida falsa con `lab_version` hecho de HTML. `/api/lab-data` lo pasaba
