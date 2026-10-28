@@ -27,6 +27,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.11] - 2026-10-28
+
+**🔎 El service worker borra las cachés viejas de una en una (Norma)**
+
+- **Por qué:** un escaneo de Norma del 28-10-2026 marcó un `Promise.all` sin límite en `sw.js`, el
+  que borra las cachés de versiones anteriores al activarse.
+- **Qué cambia:** las borra de una en una. En la práctica no había riesgo: solo hay cachés de este
+  sitio y el nombre (`oso-v1`) no ha cambiado nunca, así que hoy no hay ninguna que borrar.
+- **Versión de corrección:** es un cambio interno.
+
 ## [4.7.10] - 2026-10-28
 
 **🔎 Peticiones con tiempo máximo y sin funciones dentro de bucles (Norma)**

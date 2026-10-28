@@ -69,7 +69,11 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches
       .keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      // Old caches of this site (one per past CACHE name), deleted one at a time.
+      .then(async (keys) => {
+        for (const k of keys) if (k !== CACHE) await caches.delete(k);
+      })
       .then(() => self.clients.claim()),
   );
 });
