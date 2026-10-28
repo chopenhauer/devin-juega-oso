@@ -69,7 +69,8 @@ function route(url) {
 }
 
 createServer(async (req, res) => {
-  const url = new URL(req.url, 'http://localhost');
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  const url = new URL(req.url, `http://${req.headers.host}`);
   if (handlers[url.pathname]) return api(req, res, handlers[url.pathname]);
   const path = decodeURIComponent(route(url));
   const file = normalize(join(root, path === '/' ? 'index.html' : path));

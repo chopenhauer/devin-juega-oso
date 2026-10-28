@@ -8,7 +8,9 @@ const settings = document.getElementById('cookieSettings');
 let stored = null;
 try {
   stored = localStorage.getItem(KEY);
-} catch {
+} catch (e) {
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  swallowed('consent.read', e);
   /* storage unavailable: ask every visit */
 }
 banner.classList.toggle('hidden', stored === 'granted' || stored === 'denied');

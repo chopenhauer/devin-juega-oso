@@ -27,6 +27,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.8] - 2026-10-27
+
+**🔎 Los últimos `catch` vacíos, con aviso en la consola**
+
+- **Por qué:** un tercer escaneo de Norma (27-10-2026) marcó los 7 `catch` vacíos que quedaban, la
+  llamada a `bootOnline()` sin `.catch()` y la URL `http://localhost` de `scripts/serve.js`.
+- **Qué cambia:**
+  - Los 7 `catch` usan `swallowed()` de `report.js`, como en la 4.7.6: un `console.warn` la primera
+    vez que falla cada sitio (el sonido, la pista del 🎨, la caché del laboratorio, la pregunta de
+    los avisos, el contador de visitas y leer el consentimiento). `ga.js` no es un módulo y llama a
+    `console.warn` directamente. Ya no queda ningún `catch` vacío en `public/js`.
+  - Si recuperar la partida en línea al cargar falla por algo inesperado, ahora queda en la
+    consola. El inicio sigue funcionando igual.
+  - `scripts/serve.js` (el servidor local de las pruebas, que no se publica) lee la dirección de la
+    cabecera `Host` de cada petición, en vez de suponer `localhost`.
+- **Versión de corrección:** es un cambio interno.
+
 ## [4.7.7] - 2026-10-27
 
 **🔎 Otra vez el aviso del «token» en el marcador de la sesión**

@@ -6,7 +6,9 @@ const KEY = 'oso.consent.v1';
 export const count = (data) => {
   try {
     navigator.sendBeacon?.('/api/visita', JSON.stringify(data));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('visit.count', e);
     /* counting is best effort */
   }
 };

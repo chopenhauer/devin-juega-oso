@@ -284,13 +284,17 @@ const { timeFor } = Engine;
     themeToggle.classList.remove('hint');
     try {
       localStorage.setItem(THEME_HINT_KEY, '1');
-    } catch {
+    } catch (e) {
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      swallowed('theme.saveHint', e);
       /* ignore */
     }
   }
   try {
     themeToggle.classList.toggle('hint', !localStorage.getItem(THEME_HINT_KEY));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('theme.readHint', e);
     /* ignore */
   }
   const soundToggle = q('soundToggle'),
@@ -2675,7 +2679,9 @@ const { timeFor } = Engine;
     }
     if (code) offerJoin(code);
   }
-  bootOnline();
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  // Resuming is a bonus on load: if it breaks, the home screen still works and the console says why.
+  bootOnline().catch((e) => swallowed('online.resume', e));
 
   // A challenge link (challenge.js): onboarding.js sets the game up; here go its theme, note and result.
   const challenge = parseChallenge(location.search);

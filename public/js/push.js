@@ -5,6 +5,7 @@ import { t } from './i18n.js';
 import { GAME } from './config.js';
 import { readDaily } from './daily.js';
 import { track } from './telemetry.js';
+import { swallowed } from './report.js';
 
 const KEY = 'oso.push.v1';
 const q = (id) => document.getElementById(id);
@@ -26,7 +27,9 @@ function asked() {
 function remember() {
   try {
     localStorage.setItem(KEY, JSON.stringify({ asked: true }));
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    swallowed('push.saveAsked', e);
     /* storage unavailable: it may ask again after another reto */
   }
 }

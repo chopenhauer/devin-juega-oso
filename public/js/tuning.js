@@ -65,7 +65,9 @@ if (typeof window !== 'undefined' && typeof fetch === 'function') {
       if (!cached) applyTuning(s);
       try {
         localStorage.setItem(KEY, JSON.stringify(s));
-      } catch {
+      } catch (e) {
+        // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+        swallowed('lab.saveCache', e);
         /* storage unavailable */
       }
     })

@@ -13,7 +13,9 @@
   let granted = false;
   try {
     granted = localStorage.getItem('oso.consent.v1') === 'granted';
-  } catch {
+  } catch (e) {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    console.warn('OSO: ga.readConsent', e);
     /* storage unavailable: keep denied */
   }
   w.dataLayer = w.dataLayer || [];

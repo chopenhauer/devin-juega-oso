@@ -115,7 +115,9 @@ const SOUNDS = {
 let muted = false;
 try {
   muted = localStorage.getItem(KEY) === 'off';
-} catch {
+} catch (e) {
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  swallowed('sound.readMute', e);
   /* ignore */
 }
 let ctx = null;
