@@ -27,6 +27,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.7] - 2026-10-27
+
+**🔎 Otra vez el aviso del «token» en el marcador de la sesión**
+
+- **Por qué:** Norma volvió a marcar «token en `localStorage`» en `app.js`, en la línea que guarda
+  `oso.session.v1`. Es el mismo falso positivo de la 4.7.5: ahí solo va el marcador de las partidas
+  seguidas (jugadores, avatares, puntos y ganador), no una credencial. La clave de verdad, la del
+  asiento en línea, ya va en una cookie `HttpOnly` desde la 4.7.5.
+- **Qué cambia:** en `recordSession` las variables se llaman ahora `SCOREBOARD_STORAGE`,
+  `scoreboard` y `group` en vez de `SESSION_KEY`, `session` y `key`, que es lo que hacía pensar en un
+  token, con un comentario que lo explica. La clave guardada sigue siendo `oso.session.v1`, así que
+  nadie pierde su marcador.
+- **Versión de corrección:** es un cambio interno.
+
 ## [4.7.6] - 2026-10-27
 
 **🔎 Avisos en la consola cuando algo opcional falla**

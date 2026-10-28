@@ -1773,34 +1773,36 @@ const { timeFor } = Engine;
     share('menu');
   });
 
-  const SESSION_KEY = 'oso.session.v1';
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  // Not a credential: only the scoreboard of the games in a row (players, avatars, scores, winners).
+  const SCOREBOARD_STORAGE = 'oso.session.v1';
   let sessionGames = [];
   function recordSession(winner) {
-    let session = null;
+    let scoreboard = null;
     try {
-      session = JSON.parse(localStorage.getItem(SESSION_KEY));
+      scoreboard = JSON.parse(localStorage.getItem(SCOREBOARD_STORAGE));
     } catch (e) {
       // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
       swallowed('session.read', e);
       /* unreadable or unavailable: start a new session */
     }
     const n = scores.length;
-    const key = sessionKey({
+    const group = sessionKey({
       mode: gameMode,
       difficulty,
       names: names.slice(0, n),
       avatars: avatars.slice(0, n),
     });
-    session = recordGame(session, key, { scores, winner, size });
-    sessionGames = session.games;
+    scoreboard = recordGame(scoreboard, group, { scores, winner, size });
+    sessionGames = scoreboard.games;
     try {
-      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      localStorage.setItem(SCOREBOARD_STORAGE, JSON.stringify(scoreboard));
     } catch (e) {
       // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
       swallowed('session.save', e);
       /* ignore */
     }
-    return standings(session);
+    return standings(scoreboard);
   }
   const sessionMetaText = (st) =>
     `${t('session.games', { count: st.games })}${st.draws ? t('session.draws', { count: st.draws }) : ''}`;
