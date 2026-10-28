@@ -27,6 +27,25 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.10] - 2026-10-28
+
+**🔎 Peticiones con tiempo máximo y sin funciones dentro de bucles (Norma)**
+
+- **Por qué:** un escaneo de Norma del 28-10-2026 marcó 4 `fetch` sin tiempo máximo y 7 funciones
+  creadas dentro de un bucle en `app.js`.
+- **Qué cambia:**
+  - **En línea:** si el servidor no contesta en 8 s (`online.requestSeconds` en `config.js`), la
+    petición se deja y cuenta como un fallo de red: sale «📡 Sin conexión, reintentando…» y el
+    juego vuelve a preguntar. Antes, una petición colgada paraba las preguntas al servidor y la
+    partida se quedaba quieta sin avisar.
+  - **Textos (`es.json`):** si tardan más de 10 s, se piden otra vez una sola vez.
+  - **Servidor:** Redis tiene 5 s para contestar; si no, la petición acaba en error 500 en vez de
+    esperar hasta que Vercel la corte. Cada aviso del reto tiene 10 s; si un servicio de avisos no
+    contesta, cuenta como `push_fail` y los demás avisos salen igual.
+  - **`app.js`:** los botones de 👍/👎, los de «Ver la partida» y el ajuste de los textos de los
+    botones del final se enganchan con una función que está fuera del bucle. Funcionan igual.
+- **Versión de corrección:** es un cambio interno y un valor nuevo de `config.js`.
+
 ## [4.7.9] - 2026-10-28
 
 **🔎 Código más fácil de leer, sin cambiar nada del juego (Norma)**

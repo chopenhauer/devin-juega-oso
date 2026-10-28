@@ -86,6 +86,7 @@ test('posts the encrypted body with the push headers', async () => {
   assert.equal(seen.url, 'https://web.push.apple.com/QK');
   assert.equal(seen.init.headers['Content-Encoding'], 'aes128gcm');
   assert.equal(seen.init.headers.Topic, 'reto');
+  assert.ok(seen.init.signal instanceof AbortSignal);
   assert.match(seen.init.headers.Authorization, /^vapid t=/);
   assert.equal(b.decrypt(seen.init.body), '{"title":"OSO"}');
 });

@@ -32,6 +32,9 @@ export function redisStore(url, token, prefix = '') {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      // Redis answers in milliseconds; a hung call fails as a 500 instead of holding the function.
+      signal: AbortSignal.timeout(5_000),
     });
     const data = await res.json();
     if (!res.ok || data.error) throw new Error(`redis ${res.status} ${data.error ?? ''}`);

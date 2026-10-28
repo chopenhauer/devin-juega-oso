@@ -48,6 +48,8 @@ export const GAME = freeze({
     nudgeSeconds: 20,
     machineOfferSeconds: 60,
     pollMs: 1000,
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    requestSeconds: 8,
     roomsPerConnection: 20,
     roomsWindowMinutes: 10,
     roomHours: 24,
@@ -155,6 +157,8 @@ export const HELP = {
   'online.machineOfferSeconds':
     'Si nadie entra en la sala en este tiempo, se ofrece jugar contra la máquina mientras llega tu rival.',
   'online.pollMs': 'Cada cuánto pregunta el juego al servidor. Menos = más rápido pero más peticiones.',
+  'online.requestSeconds':
+    'Si el servidor no contesta en este tiempo, se deja la petición y sale «Reintentando…» hasta que vuelve.',
   'online.roomsPerConnection':
     'Salas que puede abrir una misma conexión en la ventana de abajo (anti-abuso).',
   'online.roomsWindowMinutes': 'Ventana del límite anterior.',

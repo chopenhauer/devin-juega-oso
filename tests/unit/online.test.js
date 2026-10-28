@@ -1,6 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { cheer, codeFromUrl, qualityParams, newQuality, urlWithoutRoom } from '../../public/js/online.js';
+import {
+  cheer,
+  codeFromUrl,
+  fetchRoom,
+  qualityParams,
+  newQuality,
+  send,
+  urlWithoutRoom,
+} from '../../public/js/online.js';
 
 test('the room code leaves the address but the UTM tags stay for GA', () => {
   assert.equal(
@@ -30,4 +38,18 @@ test('invite codes are read from the URL and quality is summarised in percentile
   assert.equal(qualityParams(q).move_rtt_p50_ms, 300);
   assert.equal(qualityParams(q).move_rtt_p95_ms, 1000);
   assert.equal(qualityParams(q).sync_p95_ms, 0);
+});
+
+test('a request to the room that hangs gives up and counts as a network error', async (t) => {
+  const seen = [];
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    seen.push(init.signal);
+    throw new DOMException('timed out', 'TimeoutError');
+  });
+  const quality = newQuality();
+  assert.deepEqual(await fetchRoom('K7QD2', 3, quality), { ok: false, http: 0, error: 'network' });
+  assert.deepEqual(await send({ action: 'ping' }), { ok: false, http: 0, error: 'network' });
+  assert.equal(quality.poll_errors, 1);
+  assert.ok(seen.every((s) => s instanceof AbortSignal));
+  assert.equal(seen.length, 2);
 });

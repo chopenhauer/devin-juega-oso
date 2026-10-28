@@ -25,7 +25,13 @@ async function load(lang) {
     const { readFile } = await import('node:fs/promises');
     return JSON.parse(await readFile(url, 'utf8'));
   }
-  const res = await fetch(url);
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  // Without the texts the game can't start, so a request stuck for 10 s is tried once more.
+  const get = () => fetch(url, { signal: AbortSignal.timeout?.(10_000) });
+  const res = await get().catch((e) => {
+    if (e.name !== 'TimeoutError') throw e;
+    return get();
+  });
   if (!res.ok) throw new Error(`No se pudieron cargar los textos (${lang})`);
   return res.json();
 }

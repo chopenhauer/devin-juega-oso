@@ -8,6 +8,9 @@ const KEY = 'oso.online.v1';
 const ENDPOINT = '/api/sala';
 const CODE_RE = /^[ABCDEFGHJKMNPQRSTUVWXYZ2-9]{5}$/;
 export const POLL_MS = GAME.online.pollMs;
+// Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+// A request that hangs would stop the polling for good; with a deadline it counts as a network error.
+const deadline = () => AbortSignal.timeout?.(GAME.online.requestSeconds * 1000);
 
 export function saveSeat(seat) {
   try {
@@ -83,10 +86,12 @@ async function parse(res) {
 export async function send(body, quality) {
   const start = performance.now();
   try {
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
     const res = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: deadline(),
     });
     const data = await parse(res);
     if (quality && body.action === 'move') {
@@ -105,7 +110,8 @@ export async function fetchRoom(code, rev = 0, quality = null, open = false) {
   if (quality) quality.polls++;
   try {
     const query = `code=${code}&rev=${rev}${open ? '&open=1' : ''}`;
-    const data = await parse(await fetch(`${ENDPOINT}?${query}`, { cache: 'no-store' }));
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const data = await parse(await fetch(`${ENDPOINT}?${query}`, { cache: 'no-store', signal: deadline() }));
     if (quality && !data.ok) quality.poll_errors++;
     // How long the rival's change waited on the server before reaching us.
     if (quality && data.ok && !data.same && data.updated)

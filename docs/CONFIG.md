@@ -78,6 +78,7 @@ Cómo cambiar uno:
 | `online.nudgeSeconds` | 20 | Sin mover este tiempo, sale «¿Sigues ahí?» y se anima a quien espera. |
 | `online.machineOfferSeconds` | 60 | Si nadie entra en la sala en este tiempo, se ofrece jugar contra la máquina mientras llega tu rival. |
 | `online.pollMs` | 1000 | Cada cuánto pregunta el juego al servidor. Menos = más rápido pero más peticiones. |
+| `online.requestSeconds` | 8 | Si el servidor no contesta en este tiempo, se deja la petición y sale «Reintentando…» hasta que vuelve. |
 | `online.roomsPerConnection` | 20 | Salas que puede abrir una misma conexión en la ventana de abajo (anti-abuso). |
 | `online.roomsWindowMinutes` | 10 | Ventana del límite anterior. |
 | `online.roomHours` | 24 | Horas que se guarda una sala con partida empezada (para revanchas y reconexión). |

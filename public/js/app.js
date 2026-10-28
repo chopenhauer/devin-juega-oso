@@ -1563,10 +1563,8 @@ const { timeFor } = Engine;
     feedbackMomentNow = moment;
     q('feedbackAsk').classList.toggle('hidden', !moment);
   }
-  for (const [id, rating] of [
-    ['feedbackUp', 'up'],
-    ['feedbackDown', 'down'],
-  ]) {
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  function onFeedback(id, rating) {
     q(id).addEventListener('click', () => {
       track('feedback', { ...modeParams(), rating, moment: feedbackMomentNow });
       answerFeedback();
@@ -1574,6 +1572,8 @@ const { timeFor } = Engine;
       q('thanksDialog').showModal();
     });
   }
+  onFeedback('feedbackUp', 'up');
+  onFeedback('feedbackDown', 'down');
   q('thanksDialog').addEventListener('close', () => q('rematch').focus({ preventScroll: true }));
 
   // «Ver la partida»: the last game again, move by move, with each OSO made and each one left ready.
@@ -1658,17 +1658,17 @@ const { timeFor } = Engine;
     q('replayDialog').showModal();
     replayPlay(true);
   });
-  for (const [id, to] of [
-    ['replayFirst', () => 0],
-    ['replayPrev', () => replay.at - 1],
-    ['replayNext', () => replay.at + 1],
-    ['replayLast', () => replay.steps.length],
-  ]) {
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  function onReplayStep(id, to) {
     q(id).addEventListener('click', () => {
       replayPlay(false);
       replayShow(to());
     });
   }
+  onReplayStep('replayFirst', () => 0);
+  onReplayStep('replayPrev', () => replay.at - 1);
+  onReplayStep('replayNext', () => replay.at + 1);
+  onReplayStep('replayLast', () => replay.steps.length);
   q('replayPlay').addEventListener('click', () => {
     if (replay.timer) return replayPlay(false);
     if (replay.at >= replay.steps.length) replayShow(0);
@@ -1776,7 +1776,8 @@ const { timeFor } = Engine;
     }
   }
   // Their width comes from the grid, not from the text, so changing the text can't loop.
-  for (const id of Object.keys(SHORT_LABELS)) {
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  function watchEndLabel(id) {
     let width = 0;
     new ResizeObserver(([entry]) => {
       const w = entry.contentRect.width;
@@ -1785,6 +1786,7 @@ const { timeFor } = Engine;
       fitEndLabels();
     }).observe(q(id));
   }
+  Object.keys(SHORT_LABELS).forEach(watchEndLabel);
   q('shareMenu').addEventListener('click', () => {
     closeMenu();
     share('menu');

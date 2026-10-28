@@ -90,6 +90,9 @@ export async function sendPush(
       ...(topic ? { Topic: topic } : {}),
     },
     body: encrypt(JSON.stringify(payload), subscription.keys),
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    // A push service that doesn't answer counts as a failed send (push_fail) and the rest go on.
+    signal: AbortSignal.timeout(10_000),
   });
   return res.status;
 }
