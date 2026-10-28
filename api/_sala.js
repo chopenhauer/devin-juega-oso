@@ -85,11 +85,13 @@ export function publicView(room, now) {
     game: room.game,
     theme: room.theme ?? 'classic',
     seats: room.seats.map(({ name, avatar, rematch, left, here }) => ({
-      left: !!left,
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      left: Boolean(left),
       here: here ?? 0,
       name,
       avatar,
-      rematch: !!rematch,
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      rematch: Boolean(rematch),
     })),
     match: m && {
       ...room.match,

@@ -353,7 +353,8 @@ export function themeMenuFor(date, current = 'classic') {
     .sort((a, b) => {
       const wa = THEMES[a].when,
         wb = THEMES[b].when;
-      return !!wa.from - !!wb.from || distance(wa, t) - distance(wb, t);
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      return Number(Boolean(wa.from)) - Number(Boolean(wb.from)) || distance(wa, t) - distance(wb, t);
     });
   const menu = ['classic', ...near].slice(0, MENU_MAX);
   const upcoming = dated

@@ -42,7 +42,8 @@ export function showInstall(quiet = false) {
     : installKind({
         installed: displayMode() === 'standalone',
         declined: dismissed(),
-        canPrompt: !!prompt,
+        // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+        canPrompt: Boolean(prompt),
         ios: isIos(),
       });
   waiting = !quiet && !kind;
@@ -97,7 +98,8 @@ if (typeof document !== 'undefined') {
     installKind({
       installed: displayMode() === 'standalone',
       declined: false,
-      canPrompt: !!prompt,
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      canPrompt: Boolean(prompt),
       ios: isIos(),
     });
   const storyOffer = (on) =>

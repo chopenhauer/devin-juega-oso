@@ -23,7 +23,13 @@ const isSolo = () => $('modeSolo').classList.contains('selected');
 const fourLocked = () => $('modeFour').hasAttribute('data-locked');
 const isFour = () => $('modeFour').classList.contains('selected');
 const isOnline = () => !isSolo() && !isFour() && $('whereOnline').getAttribute('aria-pressed') === 'true';
-const modeNow = () => (isSolo() ? 'solo' : isFour() ? 'four' : isOnline() ? 'online' : 'two');
+// Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+const modeNow = () => {
+  if (isSolo()) return 'solo';
+  if (isFour()) return 'four';
+  if (isOnline()) return 'online';
+  return 'two';
+};
 const setSetupMode = (mode) => {
   setup.classList.toggle('solo-setup', mode === 'solo');
   setup.classList.toggle('four-setup', mode === 'four');
@@ -270,7 +276,13 @@ if (daily) {
   home.setAttribute('aria-label', t('daily.home'));
 }
 const challenge = daily ?? parseChallenge(location.search);
-startFunnel(daily ? 'daily' : challenge ? 'challenge' : prefs.seenIntro ? 'return' : 'first');
+// Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+function funnelEntry() {
+  if (daily) return 'daily';
+  if (challenge) return 'challenge';
+  return prefs.seenIntro ? 'return' : 'first';
+}
+startFunnel(funnelEntry());
 function presetChallenge() {
   $('modeSolo').click();
   $(difficultyId(challenge.difficulty)).click();
@@ -323,7 +335,8 @@ function dailyTexts() {
   // At the change of day a landing left open shows the new reto, unless a game is under way.
   if (today.key !== daily.key && !setup.classList.contains('hidden')) return location.reload();
   const streak = Daily.currentStreak(state, today.key);
-  $('dailyLead').classList.toggle('hidden', !!done);
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  $('dailyLead').classList.toggle('hidden', Boolean(done));
   $('dailyLead').textContent = streak ? t('daily.lead_streak', { count: streak }) : t('daily.lead');
   ['dailyDone', 'dailyNext', 'dailyPractice'].forEach((id) => $(id).classList.toggle('hidden', !done));
   if (done) {

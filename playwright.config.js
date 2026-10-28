@@ -5,7 +5,8 @@ const port = 4173;
 export default defineConfig({
   testDir: 'tests/e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   // The CI runner is about three times slower than a laptop: give it room instead of flaking.
   timeout: process.env.CI ? 60_000 : 30_000,

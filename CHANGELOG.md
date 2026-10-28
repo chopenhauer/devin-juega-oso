@@ -27,6 +27,23 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.7.9] - 2026-10-28
+
+**🔎 Código más fácil de leer, sin cambiar nada del juego (Norma)**
+
+- **Por qué:** dos escaneos de Norma del 28-10-2026 marcaron 10 cadenas de `? :` anidadas y 26
+  `!!valor`. Son avisos de estilo: ninguno era un fallo.
+- **Qué cambia:**
+  - Las 10 cadenas de `? :` pasan a funciones pequeñas con `if` y `return`, en el mismo orden: el
+    texto de la barra de turno, las etiquetas y los avisos de la sala en línea, el error al abrir
+    una invitación, el texto final del reto y el foco del menú lateral (`app.js`), y el modo y la
+    entrada del embudo en `onboarding.js`.
+  - Los 26 `!!valor` pasan a `Boolean(valor)` en `app.js`, `onboarding.js`, `push.js`, `install.js`,
+    `daily.js`, `themes.js`, `api/_sala.js` y `playwright.config.js`.
+- **Cómo se hizo:** tres sesiones de Devin en paralelo, cada una con una parte del código sin tocar
+  las mismas líneas, y luego juntas en una sola rama.
+- **Versión de corrección:** es un cambio interno.
+
 ## [4.7.8] - 2026-10-27
 
 **🔎 Los últimos `catch` vacíos, con aviso en la consola**

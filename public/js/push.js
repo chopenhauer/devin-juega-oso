@@ -10,8 +10,9 @@ import { swallowed } from './report.js';
 const KEY = 'oso.push.v1';
 const q = (id) => document.getElementById(id);
 
+// Recommended by Norma — fixed with Devin (Cognition AI) via Devin
 export const pushSupported = (w = globalThis) =>
-  !!(w.navigator?.serviceWorker && w.PushManager && w.Notification);
+  Boolean(w.navigator?.serviceWorker && w.PushManager && w.Notification);
 
 // Whether the end of a reto game should ask: first game of that day, never asked, never answered.
 export const shouldAsk = ({ supported, permission, asked, first, quiet }) =>
@@ -19,7 +20,8 @@ export const shouldAsk = ({ supported, permission, asked, first, quiet }) =>
 
 function asked() {
   try {
-    return !!JSON.parse(localStorage.getItem(KEY))?.asked;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    return Boolean(JSON.parse(localStorage.getItem(KEY))?.asked);
   } catch {
     return false;
   }
@@ -87,7 +89,8 @@ export async function syncPushMenu() {
   const menu = q('pushMenu');
   menu.classList.toggle('hidden', !pushSupported());
   if (!pushSupported()) return;
-  const on = Notification.permission === 'granted' && !!(await subscription().catch(() => null));
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  const on = Notification.permission === 'granted' && Boolean(await subscription().catch(() => null));
   menu.textContent = on ? t('push.menu_on') : t('pushMenu');
   menu.setAttribute('aria-pressed', String(on));
 }

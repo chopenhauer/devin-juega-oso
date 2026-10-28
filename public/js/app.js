@@ -111,7 +111,8 @@ const { timeFor } = Engine;
   avatars = [...avatars, ...avatarChoices.filter((a) => !avatars.includes(a)).slice(0, 2)];
   const playerCount = () => (gameMode === 'four' ? 4 : 2);
   // Online, the other seat is played from another device.
-  const remote = (p) => !!online && p !== online.seat;
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  const remote = (p) => Boolean(online) && p !== online.seat;
   const rivalsOf = (p) => [...Array(playerCount()).keys()].filter((o) => o !== p);
   // Later players give way when their avatar is already taken by an earlier one.
   function dedupeAvatars() {
@@ -186,7 +187,8 @@ const { timeFor } = Engine;
     skinTokens.forEach((k) => document.body.style.removeProperty(k));
     skinTokens = Object.keys(tokens);
     skinTokens.forEach((k) => document.body.style.setProperty(k, tokens[k]));
-    document.body.classList.toggle('skin', !!t.bg);
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    document.body.classList.toggle('skin', Boolean(t.bg));
     if (t.motion) document.body.dataset.motion = t.motion;
     else delete document.body.dataset.motion;
   }
@@ -751,6 +753,16 @@ const { timeFor } = Engine;
       over || replaying || left > GAME.clock.lowSeconds ? 0 : 1 - Math.max(0, left) / GAME.clock.lowSeconds,
     );
   }
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  function turnBarStatus() {
+    if (over) return t('status.over');
+    if (clockPaused) return t('status.paused');
+    if (replaying) return t('status.sos');
+    if (machineThinking) return t('status.machine');
+    if (remote(current))
+      return t('game.waiting', { avatar: avatars[current], name: names[current], word: targetWord });
+    return t('game.turn_word', { avatar: avatars[current], name: names[current], word: targetWord });
+  }
   function updateControls() {
     sides.forEach((s, i) => {
       s.classList.toggle('hidden', i >= scores.length);
@@ -809,20 +821,11 @@ const { timeFor } = Engine;
       .forEach((e) => (e.textContent = targetWord === 'SOS' ? t('score.sos') : t('common.puntos_oso')));
     game.classList.toggle('solo', gameMode === 'solo');
     game.classList.toggle('four', gameMode === 'four');
-    game.classList.toggle('online', !!online);
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    game.classList.toggle('online', Boolean(online));
     game.classList.toggle('guest', online?.seat === 1);
 
-    turnBarTop.textContent = over
-      ? t('status.over')
-      : clockPaused
-        ? t('status.paused')
-        : replaying
-          ? t('status.sos')
-          : machineThinking
-            ? t('status.machine')
-            : remote(current)
-              ? t('game.waiting', { avatar: avatars[current], name: names[current], word: targetWord })
-              : t('game.turn_word', { avatar: avatars[current], name: names[current], word: targetWord });
+    turnBarTop.textContent = turnBarStatus();
   }
 
   function stopGame() {
@@ -919,7 +922,8 @@ const { timeFor } = Engine;
   function handleEnd(events) {
     const end = events.find((e) => e.type === 'end');
     if (end) finish(end.winner, end.reason, end.timedOut);
-    return !!end;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    return Boolean(end);
   }
   // 4 players: the player keeps their points, the others carry on until only one has time left.
   function knockOut(p) {
@@ -1355,7 +1359,8 @@ const { timeFor } = Engine;
     setHtml(q('rematch'), t('rematch.sized', { size }));
     q('rematch').setAttribute('aria-label', t('rematch.sized_label', { size }));
     // The reto goes straight to the rematch: other boards and players are for normal games.
-    q('otherBoard').classList.toggle('hidden', !!online || dailyOn());
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    q('otherBoard').classList.toggle('hidden', Boolean(online) || dailyOn());
     q('changePlayers').classList.toggle('hidden', dailyOn());
     q('changePlayers').textContent = online ? 'Salir' : t('changePlayers');
     // A reto won is done for today: the big button invites to another game, repeating it is secondary.
@@ -1419,10 +1424,17 @@ const { timeFor } = Engine;
     countWrap(w, reason, st.games);
     const secret = dueSecret();
     syncSecretGift();
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
     showFeedback(
-      nextFeedback({ mode: gameMode, winner: w, sessionGames: st.games, quiet: !!secret || pushAsking }),
+      nextFeedback({
+        mode: gameMode,
+        winner: w,
+        sessionGames: st.games,
+        quiet: Boolean(secret) || pushAsking,
+      }),
     );
-    showInstall(!!secret || !!feedbackMomentNow || pushAsking);
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    showInstall(Boolean(secret) || Boolean(feedbackMomentNow) || pushAsking);
   }
 
   // The year's totals on this device, for the OSO wrap (docs/ideas/oso-wrap.md).
@@ -1676,7 +1688,8 @@ const { timeFor } = Engine;
     sharePlace = null;
   async function share(place) {
     const result = place === 'end' ? lastResult : null;
-    shareDaily = !!result?.daily;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    shareDaily = Boolean(result?.daily);
     shareChallenge =
       result?.mode === 'solo' && !shareDaily
         ? `reto=${challengeParam({ ...result, mine: result.scores[0], theirs: result.scores[1] })}${theme === 'classic' ? '' : `&tema=${theme}`}`
@@ -2118,7 +2131,8 @@ const { timeFor } = Engine;
     const mine = v.seats[online.seat],
       theirs = v.seats[1 - online.seat];
     const rival = theirs?.name ?? t('online.rival');
-    q('rematch').disabled = !!mine?.rematch || !!theirs?.left;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    q('rematch').disabled = Boolean(mine?.rematch) || Boolean(theirs?.left);
     if (theirs?.left) q('winnerSub').textContent = t('online.left_room', { name: rival });
     else if (mine?.rematch) q('winnerSub').textContent = t('online.rematch_wait', { name: rival });
     else if (theirs?.rematch) q('winnerSub').textContent = t('online.rematch_asked', { name: rival });
@@ -2307,8 +2321,10 @@ const { timeFor } = Engine;
     const cards = [0, 1].map((i) => namesIn[i].closest('.pconfig'));
     cards.forEach((card, i) => {
       const other = on && i !== me && seats[i];
-      card.classList.toggle('remote', !!other);
-      card.querySelector('.avatars').inert = !!other;
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      card.classList.toggle('remote', Boolean(other));
+      // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+      card.querySelector('.avatars').inert = Boolean(other);
       if (other) {
         card.querySelector('.online-seat-avatar').textContent = other.avatar;
         card.querySelector('.online-seat-name').textContent = other.name;
@@ -2318,24 +2334,26 @@ const { timeFor } = Engine;
     syncAvatars();
     const host = me === 0,
       ready = seats.length === 2;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const seatLabel = (i) => {
+      if (!on) return t('player.n', { n: i + 1 });
+      if (i === me) return t('online.you');
+      return host ? t('online.rival_cap') : t('online.invites');
+    };
     cards.forEach((card, i) => {
-      card.querySelector('.small-label').textContent = !on
-        ? t('player.n', { n: i + 1 })
-        : i === me
-          ? t('online.you')
-          : host
-            ? t('online.rival_cap')
-            : t('online.invites');
+      card.querySelector('.small-label').textContent = seatLabel(i);
     });
     cards[1].classList.toggle('inviting', on && host && !ready);
-    q('openRoom').classList.toggle('hidden', !!online);
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    q('openRoom').classList.toggle('hidden', Boolean(online));
     q('roomShare').classList.toggle('hidden', !online);
     q('roomCodeLine').classList.toggle('hidden', !online);
     if (online) {
       q('onlineCode').textContent = online.code;
       q('onlineWhatsapp').href = whatsappHref(t('share.room'), Online.inviteUrl(online.code, 'whatsapp'));
     }
-    const offer = on && host && !!online?.offerReady && !ready;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const offer = on && host && Boolean(online?.offerReady) && !ready;
     q('waitMachine').classList.toggle('hidden', !offer);
     if (offer && !online.offerTracked) {
       online.offerTracked = true;
@@ -2343,38 +2361,36 @@ const { timeFor } = Engine;
     }
     const rival = seats[1 - me]?.name;
     document.title = on && host && online && ready ? t('online.arrived_title', { name: rival }) : baseTitle;
-    const seatNews = !on
-      ? ''
-      : host
-        ? online
-          ? ready
-            ? t('online.arrived', { name: rival })
-            : t('online.waiting')
-          : ''
-        : online
-          ? t('online.in')
-          : t('online.guest_lead', { name: seats[0]?.name ?? t('online.someone') });
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const seatNewsText = () => {
+      if (!on) return '';
+      if (host) {
+        if (!online) return '';
+        return ready ? t('online.arrived', { name: rival }) : t('online.waiting');
+      }
+      return online
+        ? t('online.in')
+        : t('online.guest_lead', { name: seats[0]?.name ?? t('online.someone') });
+    };
+    const seatNews = seatNewsText();
     q('sizeSelect').disabled = on && !host;
     q('startGame').classList.toggle('hidden', on && !host);
     q('startGame').disabled = on && host && online?.status !== 'lobby';
-    const boardNews = !on
-      ? ''
-      : !host
-        ? t('online.host_choosing', { name: seats[0]?.name ?? t('online.rival_cap') })
-        : ready
-          ? t('online.arrived_pick', { name: rival })
-          : online
-            ? t('online.waiting')
-            : t('online.open_first');
-    toast(
-      closedNews?.step === setupStep
-        ? closedNews.text
-        : setupStep === 'players'
-          ? seatNews
-          : setupStep === 'board'
-            ? boardNews
-            : '',
-    );
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const boardNewsText = () => {
+      if (!on) return '';
+      if (!host) return t('online.host_choosing', { name: seats[0]?.name ?? t('online.rival_cap') });
+      if (ready) return t('online.arrived_pick', { name: rival });
+      return online ? t('online.waiting') : t('online.open_first');
+    };
+    const boardNews = boardNewsText();
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const stepNews = () => {
+      if (closedNews?.step === setupStep) return closedNews.text;
+      if (setupStep === 'players') return seatNews;
+      return setupStep === 'board' ? boardNews : '';
+    };
+    toast(stepNews());
   }
   // Host: the rival came in, maybe while the host was in WhatsApp. A sound, the tab title and
   // straight on to the board.
@@ -2572,17 +2588,18 @@ const { timeFor } = Engine;
     if (r.error !== 'started' && r.error !== 'alone') toast(onlineError(r.error));
   }
 
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  function inviteError(room) {
+    if (!room.ok) return room.error;
+    if (room.closed === 'expired') return 'expired';
+    return room.status !== 'waiting' ? 'full' : null;
+  }
   // Guest: the invite link opens the players step with the host's card.
   async function offerJoin(code) {
     window.history.replaceState(null, '', Online.urlWithoutRoom());
     const room = await Online.fetchRoom(code, 0, null, true);
-    const error = !room.ok
-      ? room.error
-      : room.closed === 'expired'
-        ? 'expired'
-        : room.status !== 'waiting'
-          ? 'full'
-          : null;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const error = inviteError(room);
     if (error) {
       track('online_join_fail', { reason: error });
       return onlineFail(error);
@@ -2685,8 +2702,12 @@ const { timeFor } = Engine;
 
   // A challenge link (challenge.js): onboarding.js sets the game up; here go its theme, note and result.
   const challenge = parseChallenge(location.search);
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
   const challenged = () =>
-    !!challenge && gameMode === 'solo' && size === challenge.size && difficulty === challenge.difficulty;
+    Boolean(challenge) &&
+    gameMode === 'solo' &&
+    size === challenge.size &&
+    difficulty === challenge.difficulty;
   if (challenge) {
     if (challenge.theme) applyTheme(challenge.theme, false, 'challenge');
     const level = t(`summary.${challenge.difficulty}`);
@@ -2706,8 +2727,9 @@ const { timeFor } = Engine;
   let dailyRng = null;
   // The end of the first reto of the day is asking for the 🔔 notice: the other questions wait.
   let pushAsking = false;
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
   const dailyOn = () =>
-    !!daily && gameMode === 'solo' && size === daily.size && difficulty === daily.difficulty;
+    Boolean(daily) && gameMode === 'solo' && size === daily.size && difficulty === daily.difficulty;
   const dailyParams = () => ({ daily_number: daily.number });
   if (daily) {
     const done = Daily.readDaily().results[daily.key];
@@ -2744,13 +2766,13 @@ const { timeFor } = Engine;
     const streak = Daily.currentStreak(state, daily.key);
     if (first) Wrap.saveWrap(Wrap.recordDaily(Wrap.readWrap(), { day: daily.key, won: w === 0, streak }));
     const n = { number: daily.number };
-    const text = !first
-      ? t('daily.again', n)
-      : w === 0
-        ? t(endPleno ? 'daily.won_pleno' : 'daily.won', n)
-        : w === 1
-          ? t('daily.lost', n)
-          : t('daily.draw', n);
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const endText = () => {
+      if (!first) return t('daily.again', n);
+      if (w === 0) return t(endPleno ? 'daily.won_pleno' : 'daily.won', n);
+      return w === 1 ? t('daily.lost', n) : t('daily.draw', n);
+    };
+    const text = endText();
     q('challengeResult').textContent = text;
     showStreak(state, streak);
     track('daily_end', {
@@ -2864,13 +2886,19 @@ const { timeFor } = Engine;
   menuBtns.forEach((b) => b.addEventListener('click', () => openMenu(b)));
   menuScrim.addEventListener('click', () => closeMenu());
   q('closeMenu').addEventListener('click', () => closeMenu());
+  // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+  function nextMenuItem(back, i, count) {
+    if (!back) return (i + 1) % count;
+    return i <= 0 ? count - 1 : i - 1;
+  }
   document.addEventListener('keydown', (e) => {
     if (!sidebar.classList.contains('open')) return;
     if (e.key === 'Escape') closeMenu();
     if (e.key !== 'Tab') return;
     const items = [...sidebar.querySelectorAll('button, a[href]')];
     const i = items.indexOf(document.activeElement);
-    const next = e.shiftKey ? (i <= 0 ? items.length - 1 : i - 1) : (i + 1) % items.length;
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    const next = nextMenuItem(e.shiftKey, i, items.length);
     e.preventDefault();
     items[next].focus();
   });

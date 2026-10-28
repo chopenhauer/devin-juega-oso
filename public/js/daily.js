@@ -133,7 +133,8 @@ export function msToNext(now = new Date()) {
 export const lastWeek = (state, key) =>
   Array.from({ length: 7 }, (_, i) => {
     const day = addDays(key, i - 6);
-    return { key: day, played: !!state.results[day], pleno: !!state.results[day]?.pleno };
+    // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
+    return { key: day, played: Boolean(state.results[day]), pleno: Boolean(state.results[day]?.pleno) };
   });
 // «X» or «miércoles» for a reto's day.
 export const weekdayName = (key, style = 'narrow', locale = 'es') =>
