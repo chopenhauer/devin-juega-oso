@@ -1523,7 +1523,7 @@ const { timeFor } = Engine;
     q('endPhrase').classList.toggle('hidden', !text);
   }
   const endAction = (action) => track('end_action', { ...modeParams(), action, end_phrase: lastPhrase });
-  // The details wait folded in «Ver detalles»; with four players they are the scoreboard, so open.
+  // The details wait folded in «Ver estadísticas»; with four players they are the scoreboard, so open.
   function showEndStats(w, open) {
     const stats = Match.streaks(m);
     const won = [w].flat();

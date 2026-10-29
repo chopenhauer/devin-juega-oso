@@ -123,7 +123,7 @@ test('a full game against the machine ends with a winner screen', async ({ page 
   await expect(overlay).toBeVisible({ timeout: 5000 });
   await expect(page.locator('#winnerTitle')).not.toBeEmpty();
   // Points, longest streak and streaks of each player: what breaks a tie on points.
-  // They are folded in «Ver detalles» unless the streaks decided the game.
+  // They are folded in «Ver estadísticas» unless the streaks decided the game.
   const rows = page.locator('#endStatsRows tr');
   await expect(page.locator('#endStats')).toBeHidden();
   await page.click('#endDetails summary');
@@ -174,7 +174,7 @@ test('a tie on points is broken by the longest streak', async ({ page }) => {
   await expect(page.locator('#winnerSub')).toHaveText('Desempate: racha más larga');
   await expect(page.locator('#endScore .end-points')).toHaveText('4 – 4');
   await expect(page.locator('#endScore .end-side.winner')).toHaveText('🐼Jugador 2');
-  // The subtitle says the streaks decided it; the numbers wait folded in «Ver detalles».
+  // The subtitle says the streaks decided it; the numbers wait folded in «Ver estadísticas».
   await expect(page.locator('#endDetails')).not.toHaveAttribute('open', '');
   await page.click('#endDetails summary');
   const rows = page.locator('#endStatsRows tr');

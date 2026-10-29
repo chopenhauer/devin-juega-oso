@@ -27,6 +27,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.8.1] - 2026-10-29
+
+**📊 «Ver detalles» pasa a llamarse «Ver estadísticas»**
+
+- **Qué cambia:** el desplegable de la pantalla final con los números de la partida dice ahora
+  «📊 Ver estadísticas» (JoseLuis, 29-10-2026). Muestra lo mismo que antes.
+- **Medición:** GA4 sigue recibiendo `end_action = details`, así que los datos de antes y de ahora se
+  pueden comparar.
+- **Versión de corrección:** es un cambio de texto.
+
 ## [4.8.0] - 2026-10-29
 
 **🤖 Contra la máquina mientras llega tu rival, también al elegir el tablero**
