@@ -2357,9 +2357,11 @@ const { timeFor } = Engine;
     // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
     const offer = on && host && Boolean(online?.offerReady) && !ready;
     q('waitMachine').classList.toggle('hidden', !offer);
+    q('boardWaitMachine').classList.toggle('hidden', !offer);
+    const offerPlace = setupStep === 'board' ? 'board' : 'players';
     if (offer && !online.offerTracked) {
       online.offerTracked = true;
-      track('online_machine', { action: 'offered' });
+      track('online_machine', { action: 'offered', place: offerPlace });
     }
     const rival = seats[1 - me]?.name;
     document.title = on && host && online && ready ? t('online.arrived_title', { name: rival }) : baseTitle;
@@ -2405,8 +2407,9 @@ const { timeFor } = Engine;
   // rival comes in, with a button to leave that game and go and play them.
   let parked = null;
   let parkTimeout;
-  q('waitMachine').addEventListener('click', () => {
-    track('online_machine', { action: 'accepted' });
+  // The same offer is in the rival's card (players step) and under «¡A jugar!» (board step).
+  function playMachineWhileWaiting(place) {
+    track('online_machine', { action: 'accepted', place });
     parked = online;
     online = null;
     clearTimeout(pollTimeout);
@@ -2414,7 +2417,9 @@ const { timeFor } = Engine;
     startLocalGame();
     game.classList.remove('same-view');
     parkPoll();
-  });
+  }
+  q('waitMachine').addEventListener('click', () => playMachineWhileWaiting('players'));
+  q('boardWaitMachine').addEventListener('click', () => playMachineWhileWaiting('board'));
   function parkPoll() {
     clearTimeout(parkTimeout);
     if (parked) parkTimeout = setTimeout(pollParked, Online.POLL_MS * 2);

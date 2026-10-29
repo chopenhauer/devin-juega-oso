@@ -398,6 +398,36 @@ test('alone in the room for a minute, the host plays the machine and goes with t
   expect(errors).toEqual([]);
 });
 
+test('a host already on the board step is offered the machine too, and comes back to the board', async ({
+  browser,
+}) => {
+  const errors = [];
+  const [host, guest] = [await player(browser, errors), await player(browser, errors)];
+  await host.clock.install();
+  const code = await createRoom(host);
+  await host.click('#stepNext');
+  await expect(host.locator('#startGame')).toBeDisabled();
+  await expect(host.locator('#boardWaitMachine')).toBeHidden();
+  await host.clock.fastForward(61_000);
+  await expect(host.locator('#boardWaitMachine')).toBeVisible();
+  await expect(host.locator('#onlineToast')).toContainText('Esperando a tu rival');
+  await host.click('#boardWaitMachine');
+  await expect(host.locator('#gameScreen')).toBeVisible();
+  await expect(host.locator('#machineBadge')).toBeVisible();
+
+  await guest.goto(`/?sala=${code}`);
+  await guest.fill('#nickname2', 'Leo');
+  await guest.click('#stepNext');
+  await expect(host.locator('#rivalBanner')).toContainText('✅ Ha llegado Leo');
+  await host.click('#rivalGo');
+  await expect(host.locator('#onlineToast')).toContainText('Leo ya está aquí');
+  await expect(host.locator('#boardWaitMachine')).toBeHidden();
+  await host.click('#startGame');
+  await expect(guest.locator('#gameScreen')).toBeVisible();
+  await expect(host.locator('#machineBadge')).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
 test('if the room closes while the host plays the machine, the game goes on and says so', async ({
   browser,
 }) => {

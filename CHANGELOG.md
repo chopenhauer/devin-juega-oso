@@ -27,6 +27,21 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.8.0] - 2026-10-29
+
+**🤖 Contra la máquina mientras llega tu rival, también al elegir el tablero**
+
+- **Por qué:** si abrías la sala y pasabas a «Elige el tablero» antes de que entrara tu rival, solo
+  veías «⏳ Esperando a tu rival…» y «¡A jugar!» apagado. La oferta de jugar contra la máquina solo
+  salía en la tarjeta del rival, en el paso anterior (JoseLuis, 29-10-2026).
+- **Qué cambia:** pasado el mismo minuto (`online.machineOfferSeconds`), debajo de «¡A jugar!» sale
+  «🤖 vs. máquina mientras llega». Funciona igual que el botón de la tarjeta: la sala
+  sigue abierta, se juega con el tablero elegido y, cuando entra tu rival, sale «✅ Ha llegado…» con
+  el botón para ir con él. Al volver, estás otra vez en «Elige el tablero».
+- **Medición:** `online_machine` lleva ahora `place` (`players` o `board`) en `offered` y
+  `accepted`. `place` ya está registrado en GA4, así que no hay que registrar nada.
+- **Versión menor:** es un botón nuevo.
+
 ## [4.7.11] - 2026-10-28
 
 **🔎 El service worker borra las cachés viejas de una en una (Norma)**
