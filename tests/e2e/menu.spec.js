@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { hold } from './helpers.js';
 
 test.beforeEach(async ({ page }, testInfo) => {
   await page.addInitScript(
@@ -118,4 +119,33 @@ test('pausing from the menu stops the clocks and hides the board until resuming'
   await expect(pause).toBeHidden();
   await expect(page.locator('.cell.filled')).toHaveCount(0);
   await expect.poll(clocks, { timeout: 5000 }).not.toEqual(frozen);
+});
+
+test('facing: the secret shop turns toward the player who opens it', async ({ page }) => {
+  await startGame(page);
+  const shop = page.locator('#shopDialog');
+  const shopRotation = () => shop.evaluate((e) => getComputedStyle(e).rotate.replace('none', '0deg'));
+  await page.click('#hint1');
+  await hold(page, page.locator('#hint1'), shop);
+  expect(await shopRotation()).toBe(await panelRotation(page, '#side1'));
+  await page.click('#shopDialog button.secondary');
+  await expect(shop).toBeHidden();
+
+  await page.locator('#board .cell').first().click();
+  await expect(page.locator('#side2')).toHaveClass(/active/);
+  await page.click('#hint2');
+  await hold(page, page.locator('#hint2'), shop);
+  const p2 = await panelRotation(page, '#side2');
+  expect(p2).not.toBe('0deg');
+  expect(await shopRotation()).toBe(p2);
+});
+
+test('same view: the secret shop stays upright for the top player', async ({ page }) => {
+  await startGame(page, { view: 'same' });
+  const shop = page.locator('#shopDialog');
+  await page.locator('#board .cell').first().click();
+  await expect(page.locator('#side2')).toHaveClass(/active/);
+  await page.click('#hint2');
+  await hold(page, page.locator('#hint2'), shop);
+  expect(['none', '0deg']).toContain(await shop.evaluate((e) => getComputedStyle(e).rotate));
 });

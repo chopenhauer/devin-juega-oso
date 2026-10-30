@@ -27,6 +27,16 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.8.2] - 2026-10-30
+
+**🛒 La tienda secreta mira hacia quien la abre**
+
+- **Qué arregla:** en el modo enfrentado, si el jugador de arriba mantenía pulsado un extra gastado,
+  la ventana «Tienda secreta» le salía del revés (JoseLuis, 30-10-2026). Ahora gira igual que su
+  panel y su menú ☰: boca abajo para el de arriba, de lado en la tableta y con 4 jugadores.
+- **Lo que no cambia:** con una sola vista, contra la máquina o en línea sale derecha, como antes.
+- **Versión de corrección:** es un arreglo de diseño.
+
 ## [4.8.1] - 2026-10-29
 
 **📊 «Ver detalles» pasa a llamarse «Ver estadísticas»**

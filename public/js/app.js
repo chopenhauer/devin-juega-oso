@@ -1161,6 +1161,8 @@ const { timeFor } = Engine;
     q('shopNote').textContent =
       power === 'sos' && enough ? t('shop.sos_warn', { word: targetWord === 'SOS' ? 'OSO' : 'SOS' }) : '';
     q('shopBuy').classList.toggle('hidden', !enough);
+    // Facing seats: the shop turns toward whoever opened it, like their panel and ☰ menu.
+    q('shopDialog').style.setProperty('--dialog-rot', `${panelAngle(sides[p])}deg`);
     q('shopDialog').showModal();
     track('secret_found', { secret: 'tienda', told: readSecrets().told.includes('tienda') });
     countWrapOnce('secrets', 'tienda');
