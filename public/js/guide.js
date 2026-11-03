@@ -8,3 +8,11 @@ try {
 } catch (e) {
   swallowed('guide.count', e);
 }
+
+// The rule demos move only while on screen, like the visible card in the onboarding.
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) e.target.classList.toggle('playing', e.isIntersecting);
+  });
+  for (const card of document.querySelectorAll('.guide .rule-slide')) io.observe(card);
+}

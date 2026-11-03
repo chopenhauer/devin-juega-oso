@@ -28,111 +28,255 @@
     <script type="module" src="/js/guide.js"></script>
   </head>
   <body class="legal-page">
-    <main class="legal guide">
+    <main class="guide">
       <a class="legal-back" href="/?desde=como-jugar">← Ir al juego</a>
-      <h1>Cómo jugar a OSO</h1>
-      <p class="legal-meta">Las reglas del juego de papel y lápiz, y cómo jugarlo en el móvil</p>
 
-      <p>
-        El <strong>OSO</strong> es un juego de mesa de toda la vida para dos o más personas. Solo hace falta
-        una cuadrícula y dos letras: la <strong>O</strong> y la <strong>S</strong>. Gana quien forme más veces
-        la palabra <strong>O-S-O</strong>.
-      </p>
-      <p class="guide-cta">
-        <a id="guidePlay" class="guide-button" href="/?desde=como-jugar">▶️ Jugar ahora, gratis</a>
-      </p>
+      <header class="panel guide-hero">
+        <div class="brand-bear" aria-hidden="true">🐻</div>
+        <div class="brand" aria-hidden="true"><span>O</span><span>S</span><span>O</span></div>
+        <div class="tagline" aria-hidden="true">Conecta · forma · gana</div>
+        <h1>Cómo jugar a OSO</h1>
+        <p class="step-lead">
+          El <strong>OSO</strong> es un juego de papel y lápiz de toda la vida para dos o más personas. Solo
+          hace falta una cuadrícula y dos letras: la <strong>O</strong> y la <strong>S</strong>. Gana quien
+          forme más veces la palabra <strong>O-S-O</strong>.
+        </p>
+        <div class="intro-actions">
+          <a id="guidePlay" class="primary" href="/?desde=como-jugar">▶️ Jugar ahora, gratis</a>
+          <a class="secondary" href="/reto?desde=como-jugar">🗓️ Probar el reto del día</a>
+        </div>
+      </header>
 
-      <h2 id="reglas">Reglas del OSO</h2>
-      <ol>
-        <li>Se juega en un tablero cuadrado, por ejemplo de 5×5 casillas, que empieza vacío.</li>
-        <li>
-          Por turnos, cada jugador escribe <strong>una O o una S</strong> en una casilla vacía. Puede elegir
-          la letra en cada turno.
-        </li>
-        <li>
-          Si con su letra forma <strong>O-S-O</strong> en horizontal, en vertical o en diagonal, suma
-          <strong>un punto</strong> por cada OSO nuevo y <strong>vuelve a jugar</strong>.
-        </li>
-        <li>Si no forma ningún OSO, el turno pasa al siguiente jugador.</li>
-        <li>Cuando el tablero se llena, <strong>gana quien tenga más puntos</strong>.</li>
-      </ol>
+      <section aria-labelledby="reglas">
+        <h2 id="reglas" class="guide-title">📜 Reglas del OSO</h2>
+        <ol class="guide-cards">
+          <li class="rule-card rule-slide guide-card">
+            <span class="guide-num" aria-hidden="true">1</span>
+            <div class="rule-emoji" aria-hidden="true">▦</div>
+            <h3 class="step-title">Un tablero vacío</h3>
+            <p class="step-lead">
+              Se juega en un tablero cuadrado, por ejemplo de 5×5 casillas, que empieza sin ninguna letra.
+            </p>
+          </li>
+          <li class="rule-card rule-slide guide-card">
+            <span class="guide-num" aria-hidden="true">2</span>
+            <div class="rule-emoji" aria-hidden="true">✏️</div>
+            <h3 class="step-title">Por turnos, pon una O o una S</h3>
+            <div class="demo demo-place" aria-hidden="true">
+              <div class="demo-row">
+                <span class="demo-tile">O</span
+                ><span class="demo-tile target"><span class="demo-landed">S</span></span
+                ><span class="demo-tile empty"></span>
+              </div>
+              <div class="demo-picker">
+                <span class="demo-pick">O</span><span class="demo-pick selected">S</span>
+              </div>
+              <span class="demo-ghost">S<span class="demo-hand">👆</span></span>
+            </div>
+            <p class="step-lead">
+              Cada jugador escribe <strong>una O o una S</strong> en una casilla vacía. Puede elegir la letra
+              en cada turno.
+            </p>
+          </li>
+          <li class="rule-card rule-slide guide-card">
+            <span class="guide-num" aria-hidden="true">3</span>
+            <div class="rule-emoji" aria-hidden="true">⭐</div>
+            <h3 class="step-title">Forma O-S-O y suma un punto</h3>
+            <div class="demo demo-score" aria-hidden="true">
+              <div class="demo-row win">
+                <span class="demo-tile">O</span><span class="demo-tile">S</span
+                ><span class="demo-tile target"><span class="demo-landed">O</span></span>
+              </div>
+              <span class="demo-plus">+1</span>
+              <div class="demo-picker">
+                <span class="demo-pick selected">O</span><span class="demo-pick">S</span>
+              </div>
+              <span class="demo-ghost">O<span class="demo-hand">👆</span></span>
+            </div>
+            <div class="demo-dirs" aria-hidden="true">
+              <span>↔ horizontal</span><span>↕ vertical</span><span>⤡ diagonal</span>
+            </div>
+            <p class="step-lead">
+              Si con tu letra formas <strong>O-S-O</strong> en horizontal, vertical o diagonal, sumas
+              <strong>un punto</strong> por cada OSO nuevo y <strong>vuelves a jugar</strong>. Si no, el turno
+              pasa al siguiente.
+            </p>
+          </li>
+          <li class="rule-card rule-slide guide-card">
+            <span class="guide-num" aria-hidden="true">4</span>
+            <div class="rule-emoji" aria-hidden="true">🏆</div>
+            <h3 class="step-title">Gana quien tenga más puntos</h3>
+            <p class="step-lead">
+              Cuando el tablero se llena, <strong>gana quien haya formado más OSOs</strong>. En la app, si
+              empatáis, gana la racha de OSOs seguidos más larga.
+            </p>
+          </li>
+        </ol>
+      </section>
 
-      <h2 id="ejemplo">Un ejemplo</h2>
-      <p>
-        En una fila hay <strong>O _ O</strong>. Si pones una S en el hueco, formas O-S-O y sumas un punto.
-        Pero si en tu turno pones una S junto a una O y dejas el hueco <strong>O S _</strong>, el rival solo
-        tiene que poner una O para puntuar. Por eso cada letra cuenta.
-      </p>
+      <section aria-labelledby="ejemplo">
+        <h2 id="ejemplo" class="guide-title">🔍 Un ejemplo</h2>
+        <div class="guide-cards guide-pair">
+          <div class="rule-card guide-card">
+            <div class="demo-row win" aria-label="O, S, O">
+              <span class="demo-tile">O</span><span class="demo-tile">S</span><span class="demo-tile">O</span>
+            </div>
+            <h3 class="step-title">✅ Punto para ti</h3>
+            <p class="step-lead">
+              En una fila hay <strong>O _ O</strong>. Pones una S en el hueco y sumas un punto.
+            </p>
+          </div>
+          <div class="rule-card guide-card">
+            <div class="demo-row" aria-label="O, S, hueco vacío">
+              <span class="demo-tile">O</span><span class="demo-tile">S</span
+              ><span class="demo-tile empty guide-danger"></span>
+            </div>
+            <h3 class="step-title">⚠️ Punto regalado</h3>
+            <p class="step-lead">
+              Si dejas <strong>O S _</strong>, a tu rival le basta con poner una O. Por eso cada letra cuenta.
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <h2 id="papel">Con papel y boli</h2>
-      <p>
-        Dibuja una cuadrícula y escribid las letras por turnos. Cuando alguien forme un OSO, lo tacha con una
-        línea y apunta su punto. Muchas veces no teníamos papel y boli para jugar, así que hicimos una
-        aplicación para llevarlo siempre en el móvil. María José enseñó el juego a Julia y Martina mientras
-        esperaban a que terminara natación en el Club Esportiu Mediterrani, y Julia y su padre lo convirtieron
-        en esta app para jugar en cualquier sitio.
-      </p>
+      <section aria-labelledby="papel" class="panel guide-story">
+        <div class="rule-emoji" aria-hidden="true">📝</div>
+        <h2 id="papel" class="guide-title">Con papel y boli</h2>
+        <p>
+          Dibuja una cuadrícula y escribid las letras por turnos. Cuando alguien forme un OSO, lo tacha con
+          una línea y apunta su punto.
+        </p>
+        <p>
+          Muchas veces no teníamos papel y boli para jugar, así que hicimos una aplicación para llevarlo
+          siempre en el móvil. María José enseñó el juego a Julia y Martina mientras esperaban a que terminara
+          natación en el Club Esportiu Mediterrani, y Julia y su padre lo convirtieron en esta app para jugar
+          en cualquier sitio.
+        </p>
+      </section>
 
-      <h2 id="app">En juegaoso.com</h2>
-      <p>El juego cuenta los puntos y marca cada OSO por ti. Además, añade algunas cosas:</p>
-      <ul>
-        <li><strong>Contra la máquina</strong>, en Fácil, Difícil o Extremo.</li>
-        <li>
-          <strong>Juntos en el mismo móvil o tableta</strong>, 2 o 4 jugadores, cada uno con su lado del
-          tablero.
-        </li>
-        <li><strong>En línea</strong>: mandas un enlace y tu rival juega desde su móvil.</li>
-        <li>
-          <strong>Reto del día</strong>: el mismo tablero para todo el mundo y un intento al día para hacer
-          racha.
-        </li>
-        <li><strong>Tableros</strong> de 4×4 a 8×8 casillas.</li>
-        <li>
-          <strong>Reloj</strong>: cada jugador tiene su tiempo y gana unos segundos con cada OSO. Si se le
-          acaba, pierde.
-        </li>
-        <li>
-          <strong>4 extras de un solo uso</strong>: Pista te sugiere una jugada, Ver marca la última jugada
-          del rival, Cambio convierte una letra del tablero (O ↔ S) y SOS cambia el objetivo a S-O-S.
-        </li>
-        <li>
-          <strong>Empate</strong>: si acabáis con los mismos puntos, gana quien hizo la racha de OSOs más
-          larga.
-        </li>
-      </ul>
-      <p>Funciona sin conexión, se puede instalar como una app y no pide cuenta ni datos personales.</p>
+      <section aria-labelledby="app">
+        <h2 id="app" class="guide-title">📱 En juegaoso.com</h2>
+        <p class="step-lead guide-lead">
+          El juego cuenta los puntos y marca cada OSO por ti. Además, puedes jugar:
+        </p>
+        <ul class="guide-modes">
+          <li>
+            <span class="mode-emoji" aria-hidden="true">🤖</span><b>Contra la máquina</b>Fácil, Difícil o
+            Extremo
+          </li>
+          <li>
+            <span class="mode-emoji" aria-hidden="true">👥</span><b>Juntos</b>2 o 4 en el mismo móvil o
+            tableta
+          </li>
+          <li>
+            <span class="mode-emoji" aria-hidden="true">🌐</span><b>En línea</b>Mandas un enlace y tu rival
+            juega desde su móvil
+          </li>
+          <li>
+            <span class="mode-emoji" aria-hidden="true">🗓️</span><b>Reto del día</b>El mismo tablero para
+            todos, un intento al día
+          </li>
+        </ul>
+        <div class="guide-cards guide-pair">
+          <div class="rule-card rule-slide guide-card">
+            <div class="rule-emoji" aria-hidden="true">🎁</div>
+            <h3 class="step-title">4 extras de un solo uso</h3>
+            <ul class="extras-list">
+              <li>
+                <span class="extra-emoji" aria-hidden="true">💡</span
+                ><span><b>Pista</b> te sugiere una jugada</span>
+              </li>
+              <li>
+                <span class="extra-emoji" aria-hidden="true">👁️</span
+                ><span><b>Ver</b> marca la última jugada rival</span>
+              </li>
+              <li>
+                <span class="extra-emoji" aria-hidden="true">🔄</span
+                ><span><b>Cambio</b> convierte una letra del tablero (O ↔ S)</span>
+              </li>
+              <li>
+                <span class="extra-emoji" aria-hidden="true">🛟</span
+                ><span><b>SOS</b> cambia el objetivo a S-O-S para los dos</span>
+              </li>
+            </ul>
+          </div>
+          <div class="rule-card rule-slide guide-card">
+            <div class="rule-emoji" aria-hidden="true">⏱️</div>
+            <h3 class="step-title">Vigila tu reloj</h3>
+            <div class="demo-clock countdown" aria-hidden="true">
+              <span>0:07</span><span>0:06</span><span>0:05</span><span>0:04</span><span>0:03</span
+              ><span>0:02</span><span>0:01</span><span>0:00</span>
+            </div>
+            <p class="step-lead">
+              Cada jugador tiene su tiempo y gana unos segundos con cada OSO. Si se le acaba, pierde. Hay
+              tableros de 4×4 a 8×8.
+            </p>
+          </div>
+        </div>
+        <p class="step-lead guide-lead">
+          Funciona sin conexión, se puede instalar como una app y no pide cuenta ni datos personales.
+        </p>
+      </section>
 
-      <h2 id="consejos">Consejos para ganar</h2>
-      <ul>
-        <li>
-          No dejes nunca <strong>O S _</strong> ni <strong>O _ O</strong> a tu rival: es un punto regalado.
-        </li>
-        <li>Al principio, pon letras lejos de las demás para no abrir jugadas.</li>
-        <li>
-          Cuando quedan pocas casillas, cuenta qué huecos dan punto y guarda tus turnos seguros para el final.
-        </li>
-        <li>Si formas un OSO, mira si con la siguiente letra puedes hacer otro: puedes encadenar varios.</li>
-      </ul>
+      <section aria-labelledby="consejos">
+        <h2 id="consejos" class="guide-title">🧠 Consejos para ganar</h2>
+        <ul class="extras-list guide-tips">
+          <li>
+            <span class="extra-emoji" aria-hidden="true">🚫</span
+            ><span>No dejes nunca <b>O S _</b> ni <b>O _ O</b> a tu rival: es un punto regalado.</span>
+          </li>
+          <li>
+            <span class="extra-emoji" aria-hidden="true">↔️</span
+            ><span>Al principio, pon letras lejos de las demás para no abrir jugadas.</span>
+          </li>
+          <li>
+            <span class="extra-emoji" aria-hidden="true">🔢</span
+            ><span
+              >Cuando quedan pocas casillas, cuenta qué huecos dan punto y guarda los turnos seguros.</span
+            >
+          </li>
+          <li>
+            <span class="extra-emoji" aria-hidden="true">🔗</span
+            ><span
+              >Si formas un OSO, mira si con la siguiente letra haces otro: puedes encadenar varios.</span
+            >
+          </li>
+        </ul>
+      </section>
 
-      <h2 id="preguntas">Preguntas frecuentes</h2>
-      <h3>¿Cuántos jugadores pueden jugar?</h3>
-      <p>
-        Con papel, los que queráis. En la app, contra la máquina, de 2 a 4 en el mismo dispositivo o 2 en
-        línea.
-      </p>
-      <h3>¿Es gratis?</h3>
-      <p>Sí. No hay publicidad ni compras.</p>
-      <h3>¿Para qué edades es?</h3>
-      <p>
-        Para cualquiera que sepa leer la O y la S. Es un buen juego para entrenar la atención y pensar
-        jugadas.
-      </p>
+      <section aria-labelledby="preguntas">
+        <h2 id="preguntas" class="guide-title">❓ Preguntas frecuentes</h2>
+        <div class="guide-faq">
+          <details open>
+            <summary>¿Cuántos jugadores pueden jugar?</summary>
+            <p>
+              Con papel, los que queráis. En la app, contra la máquina, de 2 a 4 en el mismo dispositivo o 2
+              en línea.
+            </p>
+          </details>
+          <details>
+            <summary>¿Es gratis?</summary>
+            <p>Sí. No hay publicidad ni compras.</p>
+          </details>
+          <details>
+            <summary>¿Para qué edades es?</summary>
+            <p>
+              Para cualquiera que sepa leer la O y la S. Es un buen juego para entrenar la atención y pensar
+              jugadas.
+            </p>
+          </details>
+        </div>
+      </section>
 
-      <p class="guide-cta">
-        <a class="guide-button" href="/?desde=como-jugar">▶️ Jugar a OSO</a>
-        <a class="guide-link" href="/reto?desde=como-jugar">🗓️ Probar el reto del día</a>
-      </p>
-      <p class="legal-meta"><a href="/privacidad">Privacidad</a></p>
+      <footer class="panel guide-hero guide-end">
+        <div class="brand guide-brand-sm" aria-hidden="true"><span>O</span><span>S</span><span>O</span></div>
+        <p class="step-title">¿Echamos una?</p>
+        <div class="intro-actions">
+          <a class="primary" href="/?desde=como-jugar">▶️ Jugar a OSO</a>
+          <a class="secondary" href="/reto?desde=como-jugar">🗓️ Probar el reto del día</a>
+        </div>
+      </footer>
+      <p class="legal-meta guide-foot"><a href="/privacidad">Privacidad</a></p>
     </main>
   </body>
 </html>

@@ -34,7 +34,9 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
   cuadrados, como Wordle (⭐ en pleno, 🟧 jugado, ⬜ sin jugar), y el enlace a `/reto` con
   `utm_campaign=racha`. En GA4, `share` con `place = streak`.
 - **Página `/como-jugar`:** las reglas del OSO para quien lo busca en Google: cómo se juega con papel y
-  en la app, un ejemplo, consejos, preguntas frecuentes y «▶️ Jugar ahora». Tiene título, descripción,
+  en la app, un ejemplo, consejos, preguntas frecuentes y «▶️ Jugar ahora». Usa las piezas de la
+  bienvenida: el oso y las fichas O-S-O, las tarjetas de reglas con sus animaciones (solo se mueven
+  en pantalla y nunca con «reducir movimiento»), las fichas de modo, la lista de extras y los botones. Tiene título, descripción,
   `canonical` y Open Graph propios, está en el `sitemap.xml` nuevo (con `robots.txt`), funciona sin
   conexión y se enlaza desde la ayuda ❓ del juego (en el pie no cabe en una línea en móviles pequeños).
 - **Medición sin cookies de llegadas y compartidos** (`/api/visita`, también para quien no acepta
