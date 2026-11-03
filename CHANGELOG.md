@@ -27,6 +27,20 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.9.2] - 2026-11-03
+
+**🤖 App Android para Google Play**
+
+- **`public/.well-known/assetlinks.json`:** dice a Android que la app `com.juegaoso.app` es nuestra,
+  para que abra la web a pantalla completa, sin barra de Chrome. Es lo único que cambia en la web.
+- **`android/`:** la app, una Trusted Web Activity generada con Bubblewrap desde
+  `android/twa-manifest.json`. Entra por `/?utm_campaign=play&utm_source=play`, así que las visitas
+  desde Play ya se cuentan como la campaña `play`. Cómo se genera, se firma y se sube, y el borrador
+  de la ficha de la tienda, en [`docs/ANDROID.md`](docs/ANDROID.md).
+- **Decisiones:** TWA y no app nativa, porque cada versión de la web llega sola a la app y no hay que
+  subir nada a Play. La clave de subida vive fuera del repo y Google guarda la clave de la app (Play
+  App Signing). `minSdk` 24 (Android 7), el mínimo de la librería de Google para TWA.
+
 ## [4.9.1] - 2026-11-03
 
 **🔎 Ajustes de SEO tras dar de alta juegaoso.com en Search Console**

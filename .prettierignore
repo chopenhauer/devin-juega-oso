@@ -6,3 +6,5 @@ playwright-report/
 docs/tokens.json
 public/sala.html
 docs/CONFIG.md
+android/app/
+android/gradle/
