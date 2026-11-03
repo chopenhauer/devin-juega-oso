@@ -26,13 +26,13 @@ test.afterEach(async ({}, testInfo) => {
 test('the server counts each load and each banner choice, without cookies', async ({ page }) => {
   const beacon = (body) =>
     page.waitForRequest((r) => r.url().endsWith('/api/visita') && r.postData() === JSON.stringify(body));
-  let sent = beacon({ consent: 'unset' });
+  let sent = beacon({ consent: 'unset', fresh: true });
   await page.goto('/');
   await sent;
   sent = beacon({ choice: 'denied' });
   await page.click('#consentDeny');
   await sent;
-  sent = beacon({ consent: 'denied' });
+  sent = beacon({ consent: 'denied', fresh: true });
   await page.reload();
   await sent;
   expect(await page.evaluate(() => document.cookie)).toBe('');

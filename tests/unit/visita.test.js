@@ -64,3 +64,36 @@ test('counts the 🔔 reto notices that are tapped', async () => {
   assert.equal(await s.post({ push: 'other' }), 400);
   assert.equal((await s.counters()).push_click, 1);
 });
+
+test('counts where a visit came from, only for known campaigns and sources', async () => {
+  const s = setup();
+  await s.post({ consent: 'unset', campaign: 'racha', source: 'whatsapp', fresh: true });
+  await s.post({ consent: 'granted', campaign: 'racha', source: 'native', fresh: false });
+  await s.post({ consent: 'denied', campaign: 'buscador' });
+  await s.post({ consent: 'unset', campaign: 'hackeo', source: 'x'.repeat(500), fresh: 'yes' });
+  const c = await s.counters();
+  assert.equal(c.visits, 4);
+  assert.equal(c.visits_new, 1);
+  assert.deepEqual(
+    [c.arrive_racha, c.arrive_racha_new, c.arrive_src_whatsapp, c.arrive_src_native, c.arrive_buscador],
+    [2, 1, 1, 1, 1],
+  );
+  assert.deepEqual(
+    Object.keys(c).filter((k) => k.startsWith('arrive_')),
+    ['arrive_racha', 'arrive_racha_new', 'arrive_src_whatsapp', 'arrive_src_native', 'arrive_buscador'],
+  );
+});
+
+test('counts shares by channel and place, and visits to /como-jugar', async () => {
+  const s = setup();
+  assert.equal(await s.post({ share: 'whatsapp', place: 'streak' }), 204);
+  assert.equal(await s.post({ share: 'native', place: 'end' }), 204);
+  assert.equal(await s.post({ share: 'telegram', place: 'end' }), 400);
+  assert.equal(await s.post({ share: 'copy', place: 'anywhere' }), 400);
+  assert.equal(await s.post({ page: 'como_jugar', campaign: 'buscador' }), 204);
+  assert.equal(await s.post({ page: 'otra' }), 400);
+  const c = await s.counters();
+  assert.equal(c.shares, 2);
+  assert.deepEqual([c.share_whatsapp_streak, c.share_native_end], [1, 1]);
+  assert.deepEqual([c.page_como_jugar, c.arrive_buscador, c.visits], [1, 1, undefined]);
+});

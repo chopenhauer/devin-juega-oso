@@ -1,6 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { emailHref, shareText, shareUrl, whatsappHref, SHARE_SUBJECT } from '../../public/js/share.js';
+import {
+  emailHref,
+  shareText,
+  shareUrl,
+  streakText,
+  whatsappHref,
+  SHARE_SUBJECT,
+} from '../../public/js/share.js';
 
 test('shared links say where the visit came from', () => {
   assert.equal(
@@ -80,4 +87,23 @@ test('a win with the same points says the streaks broke the tie', () => {
     shareText({ mode: 'solo', winner: 1, scores: [4, 4], size: 5, difficulty: 'hard' }),
     /me ganó por rachas/,
   );
+});
+
+test('the streak goes to /reto with its own campaign and the week as squares', () => {
+  assert.equal(
+    shareUrl('whatsapp', null, true, 'racha'),
+    'https://juegaoso.com/reto?utm_source=whatsapp&utm_medium=share&utm_campaign=racha',
+  );
+  const week = [
+    {},
+    {},
+    { played: true },
+    { played: true, pleno: true },
+    {},
+    { played: true },
+    { played: true },
+  ];
+  const text = streakText(2, week);
+  assert.match(text, /^🔥 Llevo 2 días seguidos en el reto del día de OSO/);
+  assert.ok(text.includes('⬜⬜🟧⭐⬜🟧🟧'));
 });

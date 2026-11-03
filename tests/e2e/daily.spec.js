@@ -131,6 +131,7 @@ test('only the first game counts: the result stays on the landing and the share 
   await expect(page.locator('#dailyStreakDays li.today')).toHaveClass(/played/);
   await expect(page.locator('#dailyStreakNext')).toHaveText('Reto n.º 300 en 16 h 0 min');
   await expect(page.locator('#sessionBoard')).toBeHidden();
+  await expect(page.locator('#streakShare')).toBeHidden();
   await expect(page.locator('#otherBoard')).toBeHidden();
   await expect(page.locator('#changePlayers')).toBeHidden();
   // Won, the big button is another game and repeating the reto is secondary; otherwise «Revancha».
@@ -231,6 +232,37 @@ test('the end shows the streak and the week from the saved retos, missed days to
   ]);
   await expect(days.nth(4)).toContainText('sábado: sin jugar');
   await expect(page.locator('.daily-streak-cta')).toHaveText('¡Vuelve mañana para mantener tu racha!');
+
+  // 2 days or more: the streak can be shared, with the week as squares and a link to /reto.
+  const visits = [];
+  await page.route('**/api/visita', (route) => {
+    visits.push(route.request().postDataJSON());
+    return route.fulfill({ status: 204 });
+  });
+  await page.click('#streakShare');
+  await expect(page.locator('#shareDialog')).toBeVisible();
+  await expect(page.locator('#shareMessage')).toContainText(
+    '🔥 Llevo 2 días seguidos en el reto del día de OSO',
+  );
+  await expect(page.locator('#shareMessage')).toContainText('⬜⬜🟧⭐⬜🟧🟧');
+  await expect(page.locator('#shareImage')).toBeHidden();
+  expect(await page.locator('#shareWhatsapp').getAttribute('href')).toContain(
+    encodeURIComponent('https://juegaoso.com/reto?utm_source=whatsapp&utm_medium=share&utm_campaign=racha'),
+  );
+  await page
+    .locator('#shareWhatsapp')
+    .evaluate((a) => a.addEventListener('click', (e) => e.preventDefault()));
+  await page.click('#shareWhatsapp');
+  expect(await events(page, 'share')).toEqual([
+    expect.objectContaining({ channel: 'whatsapp', place: 'streak' }),
+  ]);
+  await expect.poll(() => visits).toContainEqual({ share: 'whatsapp', place: 'streak' });
+
+  // The reto's landing offers it too, once played.
+  await page.goto('/reto');
+  await expect(page.locator('#dailyDoneShare')).toBeVisible();
+  await page.click('#dailyDoneShare');
+  await expect(page.locator('#shareMessage')).toContainText('🔥 Llevo 2 días seguidos');
 });
 
 test('with a saved name /reto says who plays and lets change it', async ({ page }) => {

@@ -2,6 +2,7 @@
 // with no cookies and nothing that identifies anyone, so we know how many visits GA4 cannot see.
 // funnel.js also counts here the setup screens seen before the first game.
 import { swallowed } from './report.js';
+import { origin, fresh } from './campaigns.js';
 const KEY = 'oso.consent.v1';
 export const count = (data) => {
   try {
@@ -22,5 +23,6 @@ try {
   swallowed('visit.readConsent', e);
   /* storage unavailable: undecided */
 }
-count({ consent });
+// Where this visit came from, counted for everyone, so shared links are measured without cookies.
+count({ consent, ...origin(location.search, document.referrer), fresh: fresh() });
 window.addEventListener('oso:consent', (e) => count({ choice: e.detail }));

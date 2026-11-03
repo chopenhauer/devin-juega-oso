@@ -9,12 +9,19 @@ export const SHARE_SUBJECT = t('share.subject');
 // `source` tells GA where the visit came from (whatsapp, email, copy, native).
 // `challenge` is the query of a challenge link (challenge.js), which gets its own campaign;
 // `daily` links to /reto, the reto del día (daily.js).
-export const shareUrl = (source, challenge = null, daily = false) =>
-  `${SITE_URL}${daily ? 'reto' : ''}?${challenge ? `${challenge}&` : ''}utm_source=${encodeURIComponent(source)}&utm_medium=share&utm_campaign=${daily ? 'reto_del_dia' : challenge ? 'reto' : 'boca_oreja'}`;
+// `campaign` names links that are not a result, such as the streak (`racha`, to /reto).
+export const shareUrl = (source, challenge = null, daily = false, campaign = null) =>
+  `${SITE_URL}${daily ? 'reto' : ''}?${challenge ? `${challenge}&` : ''}utm_source=${encodeURIComponent(source)}&utm_medium=share&utm_campaign=${campaign ?? (daily ? 'reto_del_dia' : challenge ? 'reto' : 'boca_oreja')}`;
 
 export const withLink = (text, url) => `${text}\n\n${url}`;
 
 // Text to share. With a finished game it brags about the result, never with player names.
+// The streak of the reto del día, with the week as squares, like Wordle: ⭐ en pleno, 🟧 played, ⬜ missed.
+export function streakText(count, week) {
+  const marks = week.map(({ played, pleno }) => (pleno ? '⭐' : played ? '🟧' : '⬜')).join('');
+  return t('share.streak', { count, week: marks });
+}
+
 export function shareText(result = null) {
   if (!result) return t('share.invite');
   const { mode, winner, scores } = result;

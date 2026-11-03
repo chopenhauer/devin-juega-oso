@@ -21,6 +21,7 @@ test('sw.js keeps everything the game needs to start offline, and nothing else',
   const needed = [
     '/',
     '/privacidad',
+    '/como-jugar',
     '/manifest.webmanifest',
     '/favicon.svg',
     ...['js', 'css', 'locales', 'img', 'icons'].flatMap(files),

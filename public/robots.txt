@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /api/
+Disallow: /laboratorio
+Disallow: /design
+
+Sitemap: https://juegaoso.com/sitemap.xml

@@ -347,6 +347,7 @@ function dailyTexts() {
         : t('daily.done_lost');
     $('dailyDoneScore').textContent = t('daily.done_score', { mine: done.mine, theirs: done.theirs });
     $('dailyDoneStreak').textContent = t('daily.streak_title', { count: streak });
+    $('dailyDoneShare').classList.toggle('hidden', streak < 2);
     $('dailyNext').textContent = t('daily.next', { wait });
   }
   $('dailyPlay').textContent = done ? t('daily.play_again') : t('daily.play');

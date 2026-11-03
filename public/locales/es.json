@@ -440,6 +440,12 @@
   "share.daily.won": "Reto del día n.º {number} ({date}) de OSO 🐻: he ganado a la máquina {mine} a {theirs}.\n\n¿Lo superas?",
   "share.daily.lost": "Reto del día n.º {number} ({date}) de OSO 🐻: la máquina me ganó {theirs} a {mine}.\n\n¿Puedes con ella?",
   "share.daily.draw": "Reto del día n.º {number} ({date}) de OSO 🐻: empatamos a {mine}.\n\n¿Le ganas?",
+  "share.streak": {
+    "one": "🔥 Llevo {count} día de racha en el reto del día de OSO 🐻\n\n{week}\n\nTe apuntas mañana?",
+    "other": "🔥 Llevo {count} días seguidos en el reto del día de OSO 🐻\n\n{week}\n\nTe apuntas?"
+  },
+  "streakShare": "📣 Presume de racha",
+  "howToLink": "Las reglas completas, con ejemplos y consejos →",
   "daily.toggle_label": "Reto del día",
   "daily.line_new": "🗓️ Reto del día n.º {number} →",
   "daily.line_done": "🗓️ Reto n.º {number}: {mine} a {theirs} · otro en {wait}",

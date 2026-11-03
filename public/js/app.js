@@ -7,7 +7,7 @@ import { t, translateDom, setHtml } from './i18n.js';
 import { play, isMuted, setMuted } from './sound.js';
 import { track, gameParams, gameEndParams, nextFeedback, answerFeedback, displayMode } from './telemetry.js';
 import { nextSecret, knownSecrets, readSecrets, initSecrets, countGame, tellSecret } from './secrets.js';
-import { shareText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
+import { shareText, streakText, shareUrl, whatsappHref, emailHref, withLink, SITE_URL } from './share.js';
 import { parseChallenge, challengeParam, challengeTarget, challengeOutcome } from './challenge.js';
 import * as Daily from './daily.js';
 import * as Wrap from './wrap.js';
@@ -19,6 +19,7 @@ import * as Online from './online.js';
 import { GAME, BOARD_SIZES, configValue } from './config.js';
 import { onLongPress } from './hold.js';
 import { swallowed } from './report.js';
+import { count as countVisit } from './visit.js';
 const { timeFor } = Engine;
 (() => {
   const { BONUS } = Match;
@@ -1685,25 +1686,27 @@ const { timeFor } = Engine;
 
   // Word of mouth: the phone's own share sheet when there is one, otherwise WhatsApp, email or copy.
   let shareChallenge = null,
-    shareDaily = false;
+    shareDaily = false,
+    shareCampaign = null;
   let lastResult = null,
     sharePlace = null;
   async function share(place) {
     const result = place === 'end' ? lastResult : null;
     // Recommended by Norma — fixed with Devin (Cognition AI) via Devin
-    shareDaily = Boolean(result?.daily);
+    shareDaily = Boolean(result?.daily) || place === 'streak';
+    shareCampaign = place === 'streak' ? 'racha' : null;
     shareChallenge =
       result?.mode === 'solo' && !shareDaily
         ? `reto=${challengeParam({ ...result, mine: result.scores[0], theirs: result.scores[1] })}${theme === 'classic' ? '' : `&tema=${theme}`}`
         : null;
-    const text = shareText(result);
+    const text = place === 'streak' ? todayStreakText() : shareText(result);
     const card = place === 'end' ? await shareCard : null;
     if (navigator.share) {
       try {
         // The link goes inside the text, after a blank line: with `url` apart, Android glues it on with a space.
         const data = {
           title: t('common.oso_el_juego_de'),
-          text: withLink(text, shareUrl('native', shareChallenge, shareDaily)),
+          text: withLink(text, shareUrl('native', shareChallenge, shareDaily, shareCampaign)),
         };
         if (card && navigator.canShare?.({ files: [card] })) data.files = [card];
         await navigator.share(data);
@@ -1715,8 +1718,11 @@ const { timeFor } = Engine;
     }
     sharePlace = place;
     q('shareMessage').textContent = text;
-    q('shareWhatsapp').href = whatsappHref(text, shareUrl('whatsapp', shareChallenge, shareDaily));
-    q('shareEmail').href = emailHref(text, shareUrl('email', shareChallenge, shareDaily));
+    q('shareWhatsapp').href = whatsappHref(
+      text,
+      shareUrl('whatsapp', shareChallenge, shareDaily, shareCampaign),
+    );
+    q('shareEmail').href = emailHref(text, shareUrl('email', shareChallenge, shareDaily, shareCampaign));
     q('shareStatus').textContent = '';
     const image = q('shareImage');
     if (image.href.startsWith('blob:')) URL.revokeObjectURL(image.href);
@@ -1724,15 +1730,21 @@ const { timeFor } = Engine;
     image.classList.toggle('hidden', !card);
     q('shareDialog').showModal();
   }
+  function todayStreakText() {
+    const state = Daily.readDaily();
+    const key = Daily.dayKey();
+    return streakText(Daily.currentStreak(state, key), Daily.lastWeek(state, key));
+  }
   function trackShare(channel, place) {
     track('share', { channel, place });
+    countVisit({ share: channel, place });
     countWrapOnce('shares', channel);
   }
   q('shareImage').addEventListener('click', () => trackShare('image', sharePlace));
   q('shareWhatsapp').addEventListener('click', () => trackShare('whatsapp', sharePlace));
   q('shareEmail').addEventListener('click', () => trackShare('email', sharePlace));
   q('shareCopy').addEventListener('click', async () => {
-    const url = shareUrl('copy', shareChallenge, shareDaily);
+    const url = shareUrl('copy', shareChallenge, shareDaily, shareCampaign);
     try {
       await navigator.clipboard.writeText(url);
       q('shareStatus').textContent = t('share.copied');
@@ -1742,6 +1754,7 @@ const { timeFor } = Engine;
     }
   });
   shareToggle.addEventListener('click', () => share('start'));
+  ['streakShare', 'dailyDoneShare'].forEach((id) => q(id).addEventListener('click', () => share('streak')));
   q('shareResult').addEventListener('click', () => {
     endAction('share');
     share('end');
@@ -2818,6 +2831,8 @@ const { timeFor } = Engine;
         return li;
       }),
     );
+    // A streak of 2 days or more is worth showing off; one day is already «Compartir resultado».
+    q('streakShare').classList.toggle('hidden', streak < 2);
     const { h, m } = Daily.waitParts(Daily.msToNext());
     q('dailyStreakNext').textContent = t('daily.streak_next', {
       number: Daily.dailyNumber(Daily.addDays(daily.key, 1)),

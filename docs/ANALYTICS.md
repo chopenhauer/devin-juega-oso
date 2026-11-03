@@ -150,6 +150,29 @@ en línea. No guarda IP ni nada del navegador.
 - Vercel Web Analytics (`public/js/vercel-analytics.js`, solo en producción) da otra cifra de
   visitantes sin cookies para contrastar. Lo consulta la API `/v1/query/web-analytics/visits`.
 
+## Llegadas y compartidos (sin cookies)
+
+`/api/visita` suma también, en el mismo `stats:YYYY-MM`, de dónde viene cada visita y cuántas veces
+se comparte, para todo el mundo y no solo para quien acepta cookies (`public/js/campaigns.js`):
+
+- `arrive_<campaña>`: la visita trae `utm_campaign` (los enlaces que se comparten desde el juego:
+  `boca_oreja`, `reto`, `reto_del_dia`, `en_linea`, `racha`; las campañas de fuera: `qr`, `cartel`,
+  `play`, `profes`, `anuncio`), viene de `/como-jugar` (`como_jugar`) o de un buscador (`buscador`).
+  Cualquier otra campaña cuenta como `otra`, así que nadie puede crear campos nuevos.
+- `arrive_<campaña>_new` y `visits_new`: el dispositivo aún no ha empezado ninguna partida.
+- `arrive_src_<fuente>`: el `utm_source` (`native`, `whatsapp`, `email`, `copy`, `qr`, `play`…).
+- `shares` y `share_<canal>_<sitio>`: cada vez que se comparte (canal y sitio como en el evento
+  `share` de GA4).
+- `page_como_jugar`: visitas a `/como-jugar`.
+
+**Factor viral** (`npm run online:report`): nuevos por un enlace compartido
+(`arrive_{boca_oreja,reto,reto_del_dia,en_linea,racha}_new`) entre `shares`. Por encima de 1, cada
+vez que se comparte llega más de una persona nueva.
+
+**Campañas de fuera del juego:** usar `utm_medium` libre y una `utm_campaign` de la lista (por
+ejemplo, el QR del club: `?utm_source=qr&utm_medium=cartel&utm_campaign=qr`). Para una campaña nueva,
+añadirla a `CAMPAIGNS` antes de usarla.
+
 ## Avisos del reto (sin cookies)
 
 `api/_push.js` suma en el mismo hash mensual, sin guardar nada de quien recibe el aviso:

@@ -1452,6 +1452,24 @@ select option {
   font-size: var(--fs-2xs);
   font-weight: var(--fw-semibold);
 }
+.streak-share {
+  grid-column: 1 / -1;
+  min-height: 2.75rem;
+  margin: var(--space-2) auto 0;
+  padding: 0 var(--space-3-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  background: var(--blanco-a12);
+  color: inherit;
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+}
+.help-link {
+  color: inherit;
+  font-weight: var(--fw-bold);
+}
 .winner-actions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -4118,6 +4136,27 @@ body.legal-page {
 .legal-meta {
   margin: 0;
   opacity: 0.75;
+}
+
+/* RULES PAGE (/como-jugar) */
+.legal h3 {
+  margin: var(--space-4) 0 var(--space-1);
+  font-size: var(--fs-base);
+}
+.guide-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+}
+.legal .guide-button {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--r-pill);
+  background: linear-gradient(135deg, var(--sol-400), var(--naranja-500));
+  color: var(--noche-950);
+  text-decoration: none;
 }
 
 /* SHARE (word of mouth) */

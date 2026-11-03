@@ -6,6 +6,7 @@ const CACHE = 'oso-v1';
 const SHELL = [
   '/',
   '/privacidad',
+  '/como-jugar',
   '/manifest.webmanifest',
   '/favicon.svg',
   '/icons/icon-192.png',
@@ -20,6 +21,7 @@ const SHELL = [
   '/img/robot-hard.svg',
   '/img/robot-extreme.svg',
   '/js/app.js',
+  '/js/campaigns.js',
   '/js/challenge.js',
   '/js/daily.js',
   '/js/clarity.js',
@@ -28,6 +30,7 @@ const SHELL = [
   '/js/consent.js',
   '/js/engine.js',
   '/js/funnel.js',
+  '/js/guide.js',
   '/js/hold.js',
   '/js/ga.js',
   '/js/i18n.js',

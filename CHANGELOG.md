@@ -27,6 +27,28 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.9.0] - 2026-11-03
+
+- **Presume de racha:** con 2 días seguidos o más en el reto del día, la tarjeta de la racha del final
+  y la portada de `/reto` (ya jugado) traen «📣 Presume de racha». Comparte un texto con la semana en
+  cuadrados, como Wordle (⭐ en pleno, 🟧 jugado, ⬜ sin jugar), y el enlace a `/reto` con
+  `utm_campaign=racha`. En GA4, `share` con `place = streak`.
+- **Página `/como-jugar`:** las reglas del OSO para quien lo busca en Google: cómo se juega con papel y
+  en la app, un ejemplo, consejos, preguntas frecuentes y «▶️ Jugar ahora». Tiene título, descripción,
+  `canonical` y Open Graph propios, está en el `sitemap.xml` nuevo (con `robots.txt`), funciona sin
+  conexión y se enlaza desde la ayuda ❓ del juego (en el pie no cabe en una línea en móviles pequeños).
+- **Medición sin cookies de llegadas y compartidos** (`/api/visita`, también para quien no acepta
+  cookies):
+  - Cada visita dice de qué campaña y fuente viene (los `utm_*` del enlace, `buscador` si viene de
+    Google u otro buscador, o `como_jugar`) y si el dispositivo aún no ha jugado nunca (`visits_new`,
+    `arrive_<campaña>_new`). Solo cuentan campañas y fuentes conocidas; las demás, como `otra`.
+  - Cada vez que se comparte suma `shares` y `share_<canal>_<sitio>`.
+  - `npm run online:report` saca los nuevos que llegan por un enlace compartido y cuántos trae cada
+    vez que se comparte: el factor viral.
+- **Decisión:** la racha se comparte desde 2 días; con 1 día ya está «Compartir resultado». El botón
+  de `/como-jugar` lleva `?desde=como-jugar` y no `utm_*`, para que GA4 siga viendo la visita como
+  orgánica de Google.
+
 ## [4.8.2] - 2026-10-30
 
 **🛒 La tienda secreta mira hacia quien la abre**

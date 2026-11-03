@@ -1,5 +1,7 @@
 // The online funnel and health from the server's anonymous counters (docs/ONLINE.md).
 // Usage: npm run online:report [-- https://juegaoso.com]
+import { CAMPAIGNS, SHARED } from '../public/js/campaigns.js';
+
 const base = process.argv[2] ?? 'https://juegaoso.com';
 const { month, counters: c } = await (await fetch(`${base}/api/sala?stats=1`)).json();
 const n = (k) => c[k] ?? 0;
@@ -75,3 +77,23 @@ for (const [entry, title] of ENTRIES) {
   for (const [step, value] of counts)
     console.log(`${step.padEnd(36)} ${String(value).padStart(5)}  ${pct(value, top)}`);
 }
+
+// Where the visits came from (api/_visita.js): every visit, also without cookies.
+const arrivals = CAMPAIGNS.filter((k) => n(`arrive_${k}`));
+if (arrivals.length) {
+  console.log('\nLlegadas por enlace o campaña (las nuevas aún no habían jugado en ese dispositivo)\n');
+  for (const k of arrivals)
+    console.log(`${k.padEnd(36)} ${String(n(`arrive_${k}`)).padStart(5)}  ${n(`arrive_${k}_new`)} nuevas`);
+}
+const viaShare = sum(SHARED.map((k) => `arrive_${k}_new`));
+const sharedBy = Object.keys(c)
+  .filter((k) => k.startsWith('share_'))
+  .map((k) => `${k.slice(6)} ${c[k]}`);
+console.log(`\nCompartido ${n('shares')} veces${sharedBy.length ? ` (${sharedBy.join(' · ')})` : ''}`);
+console.log(
+  `Nuevos por un enlace compartido: ${viaShare} de ${n('visits_new')} visitas nuevas (${pct(viaShare, n('visits_new'))})`,
+);
+console.log(
+  `Nuevos por cada vez que se comparte: ${n('shares') ? (viaShare / n('shares')).toFixed(2) : '—'}`,
+);
+console.log(`/como-jugar abierta ${n('page_como_jugar')} veces`);
