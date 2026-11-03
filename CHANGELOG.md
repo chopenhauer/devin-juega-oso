@@ -27,6 +27,28 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.9.1] - 2026-11-03
+
+**🔎 Ajustes de SEO tras dar de alta juegaoso.com en Search Console**
+
+- **`/como-jugar`:** título y h1 «Cómo jugar al OSO» (como se busca), descripción más corta para que
+  Google no la corte y `og:image:alt`. «Con papel y boli» explica la cuadrícula, quién empieza y las
+  diagonales, y hay 3 preguntas nuevas: quién empieza, en qué se diferencia del tres en raya y si es lo
+  mismo que el SOS.
+- **Datos estructurados (JSON-LD):** `WebSite` y `VideoGame` en la portada, y `Article` con
+  `BreadcrumbList` en `/como-jugar`. No llevan valoraciones ni datos inventados.
+- **`/reto` sale del `sitemap.xml`:** su `canonical` es la portada, porque es el mismo juego. Ahora el
+  sitemap ya no contradice al `canonical`.
+- **`/privacidad`:** tiene `canonical` y descripción.
+- **Barra final:** `/como-jugar/` y las demás URLs con barra al final redirigen a la URL sin barra
+  (`trailingSlash: false` en `vercel.json`).
+- **Decisiones:**
+  - Los botones de `/como-jugar` siguen con `?desde=como-jugar`. Con `Referrer-Policy: no-referrer`, el
+    juego no puede saber de otra forma que la visita viene de la guía, y el `canonical` ya lo
+    consolida.
+  - En la bienvenida no se pone un enlace visible a la guía, para no abrir una salida en la pantalla
+    donde más gente se va. El enlace sigue en la ayuda ❓.
+
 ## [4.9.0] - 2026-11-03
 
 - **Presume de racha:** con 2 días seguidos o más en el reto del día, la tarjeta de la racha del final

@@ -51,14 +51,14 @@ test('the privacy policy has no serious accessibility violations', async ({ page
 
 test('the rules page /como-jugar is accessible and leads to the game', async ({ page }) => {
   await page.goto('/como-jugar');
-  await expect(page.locator('h1')).toHaveText('Cómo jugar a OSO');
+  await expect(page.locator('h1')).toHaveText('Cómo jugar al OSO');
   await expect(page).toHaveTitle(/reglas/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     'href',
     'https://juegaoso.com/como-jugar',
   );
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /O-S-O/);
-  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Cómo jugar a OSO/);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Cómo jugar al OSO/);
   await expectNoSeriousViolations(page);
   await page.click('#guidePlay');
   await expect(page).toHaveURL(/\/\?desde=como-jugar$/);

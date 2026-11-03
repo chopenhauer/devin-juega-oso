@@ -41,6 +41,32 @@
     <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="OSO" />
     <link rel="preload" href="/fonts/fredoka-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://juegaoso.com/#web",
+            "name": "OSO",
+            "alternateName": "Juega OSO",
+            "url": "https://juegaoso.com/",
+            "inLanguage": "es"
+          },
+          {
+            "@type": ["VideoGame", "WebApplication"],
+            "name": "OSO",
+            "url": "https://juegaoso.com/",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Web",
+            "inLanguage": "es",
+            "genre": "Juego de letras",
+            "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 4 },
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+          }
+        ]
+      }
+    </script>
     <link rel="stylesheet" href="/css/tokens.css" />
     <link rel="stylesheet" href="/css/styles.css" />
     <script src="/js/install-early.js"></script>
