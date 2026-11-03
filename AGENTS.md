@@ -9,7 +9,8 @@ reglas hay que respetar. El detalle vive en los documentos enlazados; aquí solo
   mismo dispositivo, o 1 contra 1 en línea. Producción: https://juegaoso.com (y
   https://devin-juega-oso.vercel.app).
 - **Proyecto familiar de STEM** de JoseLuis con su hija Julia: ella influye en el roadmap y en las
-  decisiones. Es un pet-project web, con licencia MIT; no hay planes de app nativa.
+  decisiones. Es un pet-project web, con licencia MIT. En Android se publica en Google Play como una TWA
+  que abre la web ([`docs/ANDROID.md`](docs/ANDROID.md)); no hay app nativa.
 - **Sin build ni framework**: HTML, CSS y JavaScript (módulos ES) servidos tal cual desde
   `public/`, más una Vercel Function para las salas en línea. Cero dependencias en producción.
 

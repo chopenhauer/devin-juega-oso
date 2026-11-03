@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.juegaoso.app",
+      "sha256_cert_fingerprints": [
+        "F4:80:65:11:A0:F4:96:A9:E5:97:B0:73:15:2E:86:24:2E:E5:4C:AC:00:1D:99:6B:0F:71:A0:67:B8:D1:4C:6E"
+      ]
+    }
+  }
+]

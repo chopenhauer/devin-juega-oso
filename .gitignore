@@ -5,3 +5,13 @@ playwright-report/
 public/sala.html
 public/reto.html
 .DS_Store
+
+# Android (Bubblewrap): build outputs and local paths; the signing key lives outside the repo.
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/*.apk
+android/*.aab
+android/*.idsig
+*.keystore
