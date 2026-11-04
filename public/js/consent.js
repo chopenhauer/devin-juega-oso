@@ -15,6 +15,11 @@ try {
 }
 banner.classList.toggle('hidden', stored === 'granted' || stored === 'denied');
 
+// The setup card keeps the banner's room, so the banner never covers the card's buttons.
+new ResizeObserver(() =>
+  document.documentElement.style.setProperty('--consent-room', `${banner.offsetHeight}px`),
+).observe(banner);
+
 function choose(value) {
   try {
     localStorage.setItem(KEY, value);

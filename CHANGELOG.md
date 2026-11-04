@@ -37,6 +37,8 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Decisión:** dejar que la tarjeta se desplace en los móviles bajos en vez de encogerla para que
   quepa. Encogerla habría dejado los botones y los textos por debajo del tamaño mínimo cómodo; en las
   pantallas donde ya cabía (iPad, escritorio, móviles altos) no cambia nada.
+- **Aviso de cookies:** mientras se ve, la tarjeta le deja su sitio debajo, así que tampoco tapa
+  «Siguiente».
 - **Capas:** `--z-bars` (9) queda justo por debajo de `--z-toolbar` (10). La barra de arriba cuelga
   del pie, así que solo sale con él: en el inicio, y no con la ayuda ❓ abierta ni durante la partida.
 - **Pruebas:** una nueva comprueba en 5 pantallas (móvil, iPad y escritorio), en la portada y en
