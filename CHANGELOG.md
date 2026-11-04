@@ -27,6 +27,21 @@ Las versiones hasta la 1.8.2 se reconstruyeron a partir del historial de `main`.
 - **Equipos con 4 jugadores** (idea, versión mayor): elegir entre cada uno por su cuenta o 2 contra 2, con
   nombre de equipo opcional («Equipo 1» contra «Equipo 2» por defecto).
 
+## [4.9.2] - 2026-11-04
+
+**📐 La tarjeta del inicio ya no se esconde bajo los botones ni bajo el pie**
+
+- **Barras fijas con fondo sólido:** en el inicio, los botones redondos de arriba y el pie de página
+  van sobre dos barras del color del fondo del tema, y la tarjeta se desplaza por debajo. Al principio
+  y al final del desplazamiento no queda nada tapado, y un toque en una barra no llega a la tarjeta.
+- **Decisión:** dejar que la tarjeta se desplace en los móviles bajos en vez de encogerla para que
+  quepa. Encogerla habría dejado los botones y los textos por debajo del tamaño mínimo cómodo; en las
+  pantallas donde ya cabía (iPad, escritorio, móviles altos) no cambia nada.
+- **Capas:** `--z-bars` (9) queda justo por debajo de `--z-toolbar` (10). La barra de arriba cuelga
+  del pie, así que solo sale con él: en el inicio, y no con la ayuda ❓ abierta ni durante la partida.
+- **Pruebas:** una nueva comprueba en 5 pantallas (móvil, iPad y escritorio), en la portada y en
+  `/reto`, que la tarjeta no queda debajo de las barras y que estas son opacas.
+
 ## [4.9.1] - 2026-11-03
 
 **🔎 Ajustes de SEO tras dar de alta juegaoso.com en Search Console**

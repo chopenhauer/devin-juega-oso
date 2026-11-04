@@ -22,7 +22,7 @@ en `body`, todo lo que depende de él se recalcula solo.
 `--fs-display` (56) `--fs-hero` (80) `--fs-hero-xl` (100); peso `--fw-semibold` `--fw-bold`;
 espacios de 4 en 4 px (`--space-1` = 4 px, `--space-2-5` = 10 px…); radios `--r-4xs` … `--r-pill`;
 duraciones `--dur-fast` `--dur-quick` `--dur-base`; curvas `--ease-soft` `--ease-pop`
-`--ease-bounce` `--ease-spring`; capas `--z-toolbar` (10) … `--z-modal` (100). No hay tamaños de
+`--ease-bounce` `--ease-spring`; capas `--z-bars` (9, barras del inicio) `--z-toolbar` (10) … `--z-modal` (100). No hay tamaños de
 letra sueltos ni de componente: las letras del tablero usan `--fs-2xl` y `--fs-3xl`, y el título de
 victoria `--fs-display-sm`. La única excepción es el 🛟 gigante (`--fs-sos-hero` y `--fs-sos-ring`),
 que crece con la pantalla. `tests/unit/design-system.test.js` falla si aparece un tamaño nuevo.

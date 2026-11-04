@@ -23,6 +23,38 @@ const fits = (page) =>
     y: document.documentElement.scrollHeight <= innerHeight,
   }));
 
+// Setup screens scroll beneath two solid bars (the round buttons on top, the credits below): at
+// either end of the scroll the card is clear of both, and a tap on a bar stays on the bar.
+async function expectClearOfBars(page) {
+  const bars = await page.evaluate(() => {
+    const top = getComputedStyle(document.querySelector('.credits'), '::before');
+    const credits = getComputedStyle(document.querySelector('.credits'));
+    const buttons = [...document.querySelectorAll('.online-toggle, .daily-toggle, .theme-toggle')]
+      .filter((el) => el.offsetParent)
+      .map((el) => el.getBoundingClientRect().bottom);
+    return {
+      top: parseFloat(top.height),
+      buttons: Math.max(...buttons),
+      colours: [top.backgroundColor, credits.backgroundColor],
+    };
+  });
+  for (const c of bars.colours) expect(c, 'solid bar').toMatch(/^rgb\(/);
+  expect(bars.buttons).toBeLessThanOrEqual(bars.top);
+  const scroll = (y) => page.evaluate((top) => scrollTo({ top, behavior: 'instant' }), y);
+  await scroll(0);
+  expect((await page.locator('.panel').boundingBox()).y).toBeGreaterThanOrEqual(bars.top - 1);
+  await scroll(1e5);
+  const card = await page.locator('.panel').boundingBox();
+  const credits = await page.locator('.credits').boundingBox();
+  expect(card.y + card.height).toBeLessThanOrEqual(credits.y + 1);
+  const hit = await page.evaluate(
+    ([x, y]) => Boolean(document.elementFromPoint(x, y)?.closest('.credits')),
+    [credits.x + 4, credits.y + credits.height / 2],
+  );
+  expect(hit, 'a tap on the credits bar stays on it').toBe(true);
+  await scroll(0);
+}
+
 // The rendered text of an element sits inside it and on one line.
 const oneLineInside = (page, sel) =>
   page.locator(sel).evaluateAll((els) =>
@@ -53,15 +85,21 @@ for (const vp of PHONES) {
       extraHTTPHeaders: { 'x-real-ip': `responsive-${vp.width}` },
     });
 
-    test('setup: footer and mode labels on one line, nothing overflows', async ({ page }) => {
+    test('setup: footer and mode labels on one line, the card clear of the bars', async ({ page }) => {
       await page.goto('/');
       await page.click('#introSkip');
-      expect(await fits(page)).toEqual({ x: true, y: true });
+      expect((await fits(page)).x).toBe(true);
+      await expectClearOfBars(page);
       const credits = await page.locator('.credits').boundingBox();
-      const lineHeight = await page
-        .locator('.credits')
-        .evaluate((el) => parseFloat(getComputedStyle(el).fontSize) * 2);
-      expect(credits.height).toBeLessThan(lineHeight);
+      const line = await page.locator('.credits').evaluate((el) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return {
+          height: range.getBoundingClientRect().height,
+          max: parseFloat(getComputedStyle(el).fontSize) * 2,
+        };
+      });
+      expect(line.height).toBeLessThan(line.max);
       expect(credits.x + credits.width).toBeLessThanOrEqual(vp.width);
       const labels = await page.locator('.mode-btn > span:last-child').evaluateAll((els) =>
         els.map((el) => {
@@ -89,7 +127,8 @@ for (const vp of PHONES) {
       await page.click('#stepNext');
       await page.click('#openRoom');
       await expect(page.locator('#onlineCode')).toHaveText(/^[A-Z2-9]{5}$/);
-      expect(await fits(page)).toEqual({ x: true, y: true });
+      expect((await fits(page)).x).toBe(true);
+      await expectClearOfBars(page);
       for (const a of await oneLineInside(page, '.avatars[data-player="0"] .avatar-btn')) {
         expect(a.inside, a.text).toBe(true);
       }
@@ -121,6 +160,33 @@ for (const vp of PHONES) {
         expect(b.y + b.height, sel).toBeLessThanOrEqual(vp.height);
       }
     });
+  });
+}
+
+// Taller phones, a tablet and a desktop: the home and the reto del día, whose card is the tallest.
+const SCREENS = [
+  { width: 360, height: 640 },
+  { width: 393, height: 740 },
+  { width: 412, height: 800 },
+  { width: 820, height: 1180 },
+  { width: 1440, height: 900 },
+];
+for (const vp of SCREENS) {
+  test(`${vp.width}×${vp.height}: the setup card never sits under the top buttons or the credits`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(vp);
+    await page.addInitScript(() => localStorage.setItem('oso.prefs.v1', JSON.stringify({ seenIntro: true })));
+    for (const path of ['/', '/reto']) {
+      await page.goto(path);
+      await expect(page.locator('#setupScreen')).toBeVisible();
+      expect((await fits(page)).x, path).toBe(true);
+      await expectClearOfBars(page);
+    }
+    await page.goto('/');
+    await page.click('#helpToggle');
+    await expect(page.locator('#helpModal')).toBeVisible();
+    await expect(page.locator('.credits')).toBeHidden();
   });
 }
 
